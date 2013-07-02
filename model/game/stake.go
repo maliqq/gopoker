@@ -4,18 +4,21 @@ import (
 	"fmt"
 )
 
+import (
+	"gopoker/model/bet"
+)
+
 type Stake struct {
 	Size float64
 
 	WithAnte    bool
 	WithBringIn bool
 
-	BigBlind   float64
-	SmallBlind float64
-
+	BringIn float64
 	Ante float64
 
-	BringIn float64
+	BigBlind   float64
+	SmallBlind float64
 }
 
 const (
@@ -26,16 +29,51 @@ const (
 	BringInAmount    = 0.125
 )
 
+var (
+	betAmounts = map[bet.Type]float64{
+		bet.Ante: AnteAmount,
+		bet.BringIn: BringInAmount,
+		bet.SmallBlind: SmallBlindAmount,
+		bet.BigBlind: BigBlindAmount,
+		bet.GuestBlind: BigBlindAmount,
+		bet.Straddle: BigBetAmount,
+	}
+)
+
 func NewStake(size float64) *Stake {
 	return &Stake{Size: size}
 }
 
-func (stake *Stake) Amount(n float64) float64 {
-	return stake.Size * n
+func (stake *Stake) Amount(betType bet.Type) float64 {
+	switch betType {
+	case bet.Ante:
+		if stake.Ante != 0. {
+			return stake.Ante
+		}
+
+	case bet.BringIn:
+		if stake.BringIn != 0. {
+			return stake.BringIn
+		}
+
+	case bet.SmallBlind:
+		if stake.SmallBlind != 0. {
+			return stake.SmallBlind
+		}
+
+	case bet.BigBlind:
+		if stake.BigBlind != 0. {
+			return stake.BigBlind
+		}
+	}
+
+	k := betAmounts[betType]
+	
+	return k * stake.Size
 }
 
 func (stake *Stake) BigBetAmount() float64 {
-	return stake.Amount(BigBetAmount)
+	return stake.Size * BigBetAmount
 }
 
 func (stake *Stake) Blinds() (float64, float64) {
@@ -43,35 +81,19 @@ func (stake *Stake) Blinds() (float64, float64) {
 }
 
 func (stake *Stake) BigBlindAmount() float64 {
-	if stake.BigBlind == 0. {
-		return stake.Amount(BigBlindAmount)
-	}
-
-	return stake.BigBlind
+	return stake.Amount(bet.BigBlind)
 }
 
 func (stake *Stake) SmallBlindAmount() float64 {
-	if stake.SmallBlind == 0. {
-		return stake.Amount(SmallBlindAmount)
-	}
-
-	return stake.SmallBlind
+	return stake.Amount(bet.SmallBlind)
 }
 
 func (stake *Stake) AnteAmount() float64 {
-	if stake.Ante == 0. {
-		return stake.Amount(AnteAmount)
-	}
-
-	return stake.Ante
+	return stake.Amount(bet.Ante)
 }
 
 func (stake *Stake) BringInAmount() float64 {
-	if stake.BringIn == 0. {
-		return stake.Amount(BringInAmount)
-	}
-
-	return stake.BringIn
+	return stake.Amount(bet.BringIn)
 }
 
 func (stake *Stake) HasAnte() bool {
