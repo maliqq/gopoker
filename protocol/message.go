@@ -27,6 +27,7 @@ func NewMessage(payload Payload) *Message {
 
 	if name == "" {
 		fmt.Printf("payload: %#v", payload)
+
 		panic("unknown message type")
 	}
 
@@ -41,6 +42,19 @@ func (msg *Message) String() string {
 	s, _ := json.Marshal(msg)
 
 	return string(s)
+}
+
+// error
+type Error struct {
+	Description string
+}
+
+func NewError(err error) *Message {
+	return NewMessage(
+		Error{
+			Description: err.Error(),
+		},
+	)
 }
 
 // table info

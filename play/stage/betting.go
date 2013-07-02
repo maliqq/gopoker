@@ -5,6 +5,10 @@ import (
 	"time"
 )
 
+import (
+	"gopoker/protocol"
+)
+
 const (
 	DefaultTimer = 30 * time.Second
 )
@@ -22,7 +26,11 @@ func (stage *Stage) BettingRound() {
 
 		select {
 		case msg := <-play.NextTurn:
-			betting.Add(seat, msg)
+			err := betting.Add(seat, msg)
+
+			if err != nil {
+				play.Broadcast.One(seat.Player) <- protocol.NewError(err)
+			}
 
 		case <-time.After(DefaultTimer):
 			fmt.Printf("timeout!")
