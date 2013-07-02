@@ -1,5 +1,16 @@
 package poker
 
+import (
+	"math/rand"
+	"regexp"
+	"strconv"
+	"time"
+)
+
+import (
+	"gopoker/poker/card"
+)
+
 type Cards []Card
 
 type groupFunc func(card *Card, prev *Card) int

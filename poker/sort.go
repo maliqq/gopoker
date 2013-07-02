@@ -1,5 +1,9 @@
 package poker
 
+import (
+	"sort"
+)
+
 type BySuit struct{ Cards }
 
 type ByKind struct {

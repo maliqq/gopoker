@@ -1,5 +1,9 @@
 package poker
 
+import (
+	"sort"
+)
+
 type Ordering int
 
 type OrderedCards struct {

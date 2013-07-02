@@ -3,12 +3,7 @@ package poker
 import (
 	"errors"
 	"fmt"
-	"math/rand"
-	"regexp"
-	"sort"
-	"strconv"
 	"strings"
-	"time"
 )
 
 import (
