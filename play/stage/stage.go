@@ -7,6 +7,7 @@ import (
 type Stage struct {
 	*context.Play
 	*context.Betting
+	*context.Discarding
 }
 
 func NewStage(play *context.Play) *Stage {

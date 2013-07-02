@@ -8,7 +8,7 @@ import (
 	"gopoker/model/seat"
 )
 
-func (stage *Stage) Start() {
+func (stage *Stage) Initialize() {
 	play := stage.Play
 
 	gameOptions := play.Game.Options

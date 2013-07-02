@@ -1,6 +1,6 @@
 package stage
 
-func (stage *Stage) Stop() {
+func (stage *Stage) Finalize() {
 	play := stage.Play
 
 	gameOptions := play.Game.Options

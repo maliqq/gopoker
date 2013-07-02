@@ -20,9 +20,9 @@ var (
 	DefaultStrategy = Strategy{
 		// start
 		func(stage *stage.Stage) {
-			log.Printf("[play] start\n")
+			log.Println("[play] initialize")
 
-			stage.Start()
+			stage.Initialize()
 		},
 
 		// streets
@@ -39,9 +39,9 @@ var (
 
 		// stop
 		func(stage *stage.Stage) {
-			log.Printf("[play] stop")
+			log.Println("[play] finalize")
 
-			stage.Stop()
+			stage.Finalize()
 		},
 	}
 )
