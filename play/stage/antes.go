@@ -19,4 +19,6 @@ func (stage *Stage) postAntes() {
 
 		play.Broadcast.All <- protocol.NewAddBet(pos, newBet)
 	}
+
+	stage.resetBetting()
 }

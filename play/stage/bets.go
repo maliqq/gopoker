@@ -13,11 +13,16 @@ const (
 	DefaultTimer = 30 * time.Second
 )
 
-func (stage *Stage) BettingRound() {
+func (stage *Stage) resetBetting() {
 	play := stage.Play
 	betting := stage.Betting
 
 	betting.Reset()
+}
+
+func (stage *Stage) BettingRound() {
+	play := stage.Play
+	betting := stage.Betting
 
 	for _, pos := range play.Table.SeatsInPot() {
 		seat := play.Table.Seat(pos)
@@ -36,4 +41,6 @@ func (stage *Stage) BettingRound() {
 			fmt.Printf("timeout!")
 		}
 	}
+
+	stage.resetBetting()
 }
