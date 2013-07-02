@@ -1,0 +1,78 @@
+package model
+
+import (
+	"gopoker/poker"
+)
+
+type Deal struct {
+	dealer  *Dealer
+	Pockets map[Id]*poker.Cards
+	Board   poker.Cards
+}
+
+func NewDeal() *Deal {
+	return &Deal{
+		dealer:  NewDealer(),
+		Pockets: map[Id]*poker.Cards{},
+		Board:   poker.Cards{},
+	}
+}
+
+func (this *Deal) Pocket(player *Player) *poker.Cards {
+	cards, found := this.Pockets[player.Id]
+
+	if !found {
+		cards = &poker.Cards{}
+		this.Pockets[player.Id] = cards
+	}
+
+	return cards
+}
+
+func (this *Deal) DealBoard(cardsNum int) *poker.Cards {
+	cards := this.dealer.Share(cardsNum)
+
+	this.Board = append(this.Board, *cards...)
+
+	return cards
+}
+
+func (this *Deal) DealPocket(player *Player, cardsNum int) *poker.Cards {
+	pocket := this.Pocket(player)
+
+	cards := this.dealer.Deal(cardsNum)
+	*pocket = append(*pocket, *cards...)
+
+	return cards
+}
+
+func (this *Deal) Discard(player *Player, cards *poker.Cards) *poker.Cards {
+	pocket := this.Pocket(player)
+	newCards := this.dealer.Discard(cards)
+
+	diff := poker.DiffCards(pocket, cards)
+	*pocket = append(*diff, *newCards...)
+
+	return newCards
+}
+
+func (this *Deal) Rank(cards *poker.Cards, ranking poker.Ranking, hasBoard bool) *poker.Hand {
+	if !hasBoard {
+		hand, _ := ranking.Detect(cards)
+
+		return hand
+	}
+
+	var bestHand *poker.Hand
+	for _, pair := range cards.CombinePairs() {
+		handCards := append(pair, this.Board...)
+
+		hand, _ := ranking.Detect(&handCards)
+
+		if bestHand == nil || hand.Compare(bestHand) > 0 {
+			bestHand = hand
+		}
+	}
+
+	return bestHand
+}
