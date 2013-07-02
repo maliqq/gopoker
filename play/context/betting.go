@@ -40,6 +40,10 @@ func (betting *Betting) String() string {
 	)
 }
 
+func (betting *Betting) Current() int {
+	return betting.requireBet.Pos
+}
+
 func (betting *Betting) Reset() {
 	req := betting.requireBet
 

@@ -32,7 +32,7 @@ func (stage *Stage) BettingRound() {
 	play := stage.Play
 	betting := stage.Betting
 
-	for _, pos := range play.Table.SeatsInPot() {
+	for _, pos := range play.Table.Seats.From(betting.Current()).InPlay() {
 		seat := play.Table.Seat(pos)
 
 		play.Broadcast.One(seat.Player) <- betting.RequireBet(pos, seat, play.Game)
