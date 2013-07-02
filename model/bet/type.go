@@ -2,7 +2,6 @@ package bet
 
 import (
 	"fmt"
-	"reflect"
 )
 
 type ForcedBet string
@@ -64,11 +63,21 @@ func (b Bet) String() string {
 }
 
 func (b Bet) IsActive() bool {
-	return reflect.TypeOf(b.Type).Name() == "ActiveBet"
+	switch b.Type.(type) {
+	case ActiveBet:
+		return true
+	}
+
+	return false
 }
 
 func (b Bet) IsForced() bool {
-	return reflect.TypeOf(b.Type).Name() == "ForcedBet"
+	switch b.Type.(type) {
+	case PassiveBet:
+		return true
+	}
+
+	return false
 }
 
 func NewBet(t Type, amount float64) *Bet {
