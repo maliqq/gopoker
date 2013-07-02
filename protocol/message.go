@@ -39,7 +39,14 @@ func NewMessage(payload Payload) *Message {
 }
 
 func (msg *Message) String() string {
-	s, _ := json.Marshal(msg)
+	s, err := json.Marshal(msg)
+
+	if err != nil {
+		fmt.Printf("Message: %#v\n", msg)
+		fmt.Printf("Error: %s\n", err)
+
+		panic("error marshaling message")
+	}
 
 	return string(s)
 }
