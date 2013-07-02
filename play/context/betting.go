@@ -8,7 +8,7 @@ import (
 import (
 	"gopoker/model"
 	"gopoker/model/bet"
-	"gopoker/model/seat"
+	"gopoker/model/game"
 	"gopoker/protocol"
 )
 
@@ -46,66 +46,108 @@ func (betting *Betting) Reset() {
 	req.Call, req.Min, req.Max, betting.raiseCount = 0., 0., 0., 0
 }
 
-func (betting *Betting) RequireBet(pos int, s *model.Seat, game *model.Game) *protocol.Message {
+func (betting *Betting) ForceBet(pos int, betType bet.Type, stake *game.Stake) *bet.Bet {
+	req := betting.requireBet
+
+	amount := stake.Amount(betType)
+
+	req.Pos = pos
+	req.Call = amount
+
+	return &bet.Bet{
+		Type: betType,
+		Amount: amount,
+	}
+}
+
+func (betting *Betting) RequireBet(pos int, seat *model.Seat, game *model.Game) *protocol.Message {
 	req := betting.requireBet
 
 	req.Pos = pos
-	req.Min, req.Max = game.Limit.RaiseRange(game.Stake, s.Stack+s.Bet, betting.Pot.Total(), betting.BigBets)
-	req.Call -= s.Bet
+	req.Min, req.Max = game.Limit.RaiseRange(game.Stake, seat.Stack+seat.Bet, betting.Pot.Total(), betting.BigBets)
+	req.Call -= seat.Bet
 
 	return protocol.NewRequireBet(req)
 }
 
-func (betting *Betting) AddBet(s *model.Seat, newBet *bet.Bet) error {
+func (betting *Betting) ValidateBet(seat *model.Seat, newBet *bet.Bet) error {
+	require := betting.requireBet
+
+	switch newBet.Type {
+	case bet.Check:
+		if require.Call != 0. {
+			return fmt.Errorf("Can't check, need to call: %.2f", require.Call)
+		}
+
+	case bet.Call, bet.Raise:
+		amount := newBet.Amount
+		all_in := amount == seat.Stack
+
+		if amount > seat.Stack {
+			return fmt.Errorf("Bet amount is greater than available stack: amount=%.2f stack=%.2f", amount, seat.Stack)
+		}
+
+		if newBet.Type == bet.Call && amount != require.Call {
+			return fmt.Errorf("Call mismatch: amount=%.2f call=%.2f", amount, require.Call)
+		}
+
+		if newBet.Type == bet.Raise {
+			if require.Max == 0. {
+				return fmt.Errorf("Raise not allowed in current betting: amount=%.2f", amount)
+			}
+	
+			raiseAmount := require.Call - amount
+
+			if raiseAmount > require.Max {
+				return fmt.Errorf("Raise invalid: amount=%.2f max=%.2f", amount, require.Max)
+			}
+
+			if raiseAmount < require.Min && !all_in {
+				return fmt.Errorf("Raise invalid: amount=%.2f min=%.2f", amount, require.Min)
+			}
+		}
+	}
+
+	return nil
+}
+
+func (betting *Betting) AddBet(seat *model.Seat, newBet *bet.Bet) error {
 	require := betting.requireBet
 
 	switch newBet.Type {
 	case bet.Fold:
-		s.Fold()
-
-	case bet.Check:
-		if require.Call != 0. {
-			return fmt.Errorf("Can't check, need call: %.2f", require.Call)
-		}
+		seat.Fold()
 
 	default:
-		if newBet.Amount != 0. {
+		err := betting.ValidateBet(seat, newBet)
+
+		if err != nil {
+			seat.Fold() // force fold
+
+		} else {
 			amount := newBet.Amount
+			all_in := amount == seat.Stack
 
-			if newBet.IsActive() {
-				// call, raise
-				if newBet.Amount > s.Stack {
-					return fmt.Errorf("Amount is greater than available stack: amount=%.2f stack=%.2f", amount, s.Stack)
-				}
+			if newBet.IsForced() {
+				// ante, blinds
+				require.Call = amount
 
-				if newBet.Type == bet.Raise {
-					valid := true
-					if require.Max == 0. || require.Max < amount {
-						valid = false
-					}
-					if require.Min > amount && amount+require.Call != s.Stack {
-						valid = false
-					}
+				seat.SetBet(amount)
 
-					if !valid {
-						return fmt.Errorf("Raise is invalid: amount=%.2f stack=%.2f", amount, s.Stack)
-					}
-
+			} else if newBet.IsActive() {
+				// raise, call
+				if newBet.Type == bet.Raise { 
 					betting.raiseCount++
 					require.Call += amount
 				}
 
-				s.PutBet(amount)
+				seat.PutBet(amount)
 
-			} else if newBet.IsForced() {
-				// ante, blinds
-				require.Call = amount
-
-				s.SetBet(amount)
+				betting.Pot.Add(seat.Player.Id, amount, all_in)
 			}
-
-			betting.Pot.Add(s.Player.Id, amount, s.State == seat.AllIn)
 		}
+
+		return err
 	}
 
 	return nil
@@ -118,7 +160,9 @@ func (betting *Betting) Add(seat *model.Seat, msg *protocol.Message) error {
 
 	err := betting.AddBet(seat, &newBet)
 
-	if err == nil {
+	if err != nil {
+		log.Printf("[betting.error] %s", err)
+	} else {
 		betting.log(msg)
 	}
 

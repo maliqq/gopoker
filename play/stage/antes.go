@@ -13,13 +13,10 @@ func (stage *Stage) postAntes() {
 	for _, pos := range play.Table.SeatsInPlay() {
 		seat := play.Table.Seat(pos)
 
-		newBet := &bet.Bet{
-			Type:   bet.Ante,
-			Amount: stake.AnteAmount(),
-		}
-
-		play.Broadcast.All <- protocol.NewAddBet(pos, newBet)
+		newBet := stage.Betting.ForceBet(pos, bet.Ante, stake)
 
 		stage.Betting.AddBet(seat, newBet)
+		
+		play.Broadcast.All <- protocol.NewAddBet(pos, newBet)
 	}
 }

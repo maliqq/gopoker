@@ -11,34 +11,32 @@ import (
 
 func (stage *Stage) postSmallBlind(pos int) {
 	play := stage.Play
-
-	t := play.Table
 	stake := play.Game.Stake
 
-	b := bet.NewBet(bet.SmallBlind, stake.SmallBlindAmount())
+	t := play.Table
+	newBet := stage.Betting.ForceBet(pos, bet.SmallBlind, stake)
 
-	err := stage.Betting.AddBet(t.Seat(pos), b)
+	err := stage.Betting.AddBet(t.Seat(pos), newBet)
 	if err != nil {
 		log.Fatalf("Error adding small blind for %d: %s", pos, err)
 	}
 
-	play.Broadcast.All <- protocol.NewAddBet(pos, b)
+	play.Broadcast.All <- protocol.NewAddBet(pos, newBet)
 }
 
 func (stage *Stage) postBigBlind(pos int) {
 	play := stage.Play
-
-	t := play.Table
 	stake := play.Game.Stake
 
-	b := bet.NewBet(bet.BigBlind, stake.BigBlindAmount())
+	t := play.Table
+	newBet := stage.Betting.ForceBet(pos, bet.BigBlind, stake)
 
-	err := stage.Betting.AddBet(t.Seat(pos), b)
+	err := stage.Betting.AddBet(t.Seat(pos), newBet)
 	if err != nil {
 		log.Fatalf("Error adding big blind for %d: %s", pos, err)
 	}
 
-	play.Broadcast.All <- protocol.NewAddBet(pos, b)
+	play.Broadcast.All <- protocol.NewAddBet(pos, newBet)
 }
 
 func (stage *Stage) postBlinds() {
