@@ -3,7 +3,7 @@ package poker
 import (
 	"math/rand"
 	"regexp"
-	"strconv"
+	"encoding/json"
 	"time"
 )
 
@@ -109,7 +109,7 @@ func (c Cards) MarshalJSON() ([]byte, error) {
 	//if len(c) == 0 {
 	//  return []byte("null"), nil
 	//}
-	return []byte(strconv.Quote(c.BinaryString())), nil
+	return json.Marshal(c.Binary())
 }
 
 func ShuffleCards(c *Cards) *Cards {
