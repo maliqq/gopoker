@@ -52,12 +52,12 @@ func (slice seatSlice) Waiting() []int {
 
 func (slice seatSlice) InPlay() []int {
 	return slice.Where(func(s *Seat) bool {
-		return s.State == seat.Play
+		return s.State == seat.Play || s.State == seat.Bet
 	})
 }
 
 func (slice seatSlice) InPot() []int {
 	return slice.Where(func(s *Seat) bool {
-		return s.State == seat.Play || s.State == seat.AllIn || s.State == seat.Bet
+		return s.State == seat.Play || s.State == seat.Bet || s.State == seat.AllIn
 	})
 }
