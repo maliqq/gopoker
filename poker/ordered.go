@@ -31,16 +31,15 @@ func (o *OrderedCards) Gaps() *[]Cards {
 	return cards.GroupCards(func(card *Card, prev *Card) int {
 		d := card.Index(o.ord) - prev.Index(o.ord)
 
-		switch d {
-		case 0:
+		if d == 0 {
 			return -1
-
-		case 1:
-			return 1
-
-		default:
-			return 0
 		}
+		
+		if d == 1 {
+			return 1
+		}
+
+		return 0
 	})
 }
 
