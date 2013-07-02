@@ -83,9 +83,9 @@ func (pocket *PocketCards) Detect(rankers []Ranker) *Hand {
 }
 
 func (h *Hand) String() string {
-	return fmt.Sprintf("rank=%s pocket=%s high=%s value=%s kicker=%s",
+	return fmt.Sprintf("rank=%s high=%s value=%s kicker=%s",
 		h.Rank,
-		h.pocket.Cards(),
+		//h.pocket.Cards(),
 		h.High,
 		h.Value,
 		h.Kicker,
@@ -93,9 +93,9 @@ func (h *Hand) String() string {
 }
 
 func (h *Hand) ConsoleString() string {
-	return fmt.Sprintf("rank=%s pocket=%s high=%s value=%s kicker=%s",
+	return fmt.Sprintf("rank=%s high=%s value=%s kicker=%s",
 		h.Rank,
-		h.pocket.Cards().ConsoleString(),
+		//h.pocket.Cards().ConsoleString(),
 		h.High.ConsoleString(),
 		h.Value.ConsoleString(),
 		h.Kicker.ConsoleString(),
