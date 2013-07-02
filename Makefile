@@ -1,5 +1,7 @@
-format:
+SHELL=bash
+fmt:
 	gofmt -w .
+push-fmt: fmt
 	git add -A
 	git commit -m 'gofmt'
 	git push origin HEAD
@@ -12,4 +14,4 @@ get-deps:
 	go get code.google.com/p/go.net
 	go get code.google.com/p/goprotobuf
 sloc:
-	cloc . | grep Go
+	cloc . | grep Go | awk -e '{ print $$5 }'
