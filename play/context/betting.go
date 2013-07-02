@@ -55,7 +55,7 @@ func (betting *Betting) ForceBet(pos int, betType bet.Type, stake *game.Stake) *
 	req.Call = amount
 
 	return &bet.Bet{
-		Type: betType,
+		Type:   betType,
 		Amount: amount,
 	}
 }
@@ -95,7 +95,7 @@ func (betting *Betting) ValidateBet(seat *model.Seat, newBet *bet.Bet) error {
 			if require.Max == 0. {
 				return fmt.Errorf("Raise not allowed in current betting: amount=%.2f", amount)
 			}
-	
+
 			raiseAmount := require.Call - amount
 
 			if raiseAmount > require.Max {
@@ -136,7 +136,7 @@ func (betting *Betting) AddBet(seat *model.Seat, newBet *bet.Bet) error {
 
 			} else if newBet.IsActive() {
 				// raise, call
-				if newBet.Type == bet.Raise { 
+				if newBet.Type == bet.Raise {
 					betting.raiseCount++
 					require.Call += amount
 				}

@@ -15,7 +15,7 @@ type Stake struct {
 	WithBringIn bool
 
 	BringIn float64
-	Ante float64
+	Ante    float64
 
 	BigBlind   float64
 	SmallBlind float64
@@ -31,12 +31,12 @@ const (
 
 var (
 	betAmounts = map[bet.Type]float64{
-		bet.Ante: AnteAmount,
-		bet.BringIn: BringInAmount,
+		bet.Ante:       AnteAmount,
+		bet.BringIn:    BringInAmount,
 		bet.SmallBlind: SmallBlindAmount,
-		bet.BigBlind: BigBlindAmount,
+		bet.BigBlind:   BigBlindAmount,
 		bet.GuestBlind: BigBlindAmount,
-		bet.Straddle: BigBetAmount,
+		bet.Straddle:   BigBetAmount,
 	}
 )
 
@@ -68,7 +68,7 @@ func (stake *Stake) Amount(betType bet.Type) float64 {
 	}
 
 	k := betAmounts[betType]
-	
+
 	return k * stake.Size
 }
 

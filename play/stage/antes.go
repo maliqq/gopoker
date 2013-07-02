@@ -16,7 +16,7 @@ func (stage *Stage) postAntes() {
 		newBet := stage.Betting.ForceBet(pos, bet.Ante, stake)
 
 		stage.Betting.AddBet(seat, newBet)
-		
+
 		play.Broadcast.All <- protocol.NewAddBet(pos, newBet)
 	}
 }

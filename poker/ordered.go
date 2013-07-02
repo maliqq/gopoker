@@ -34,7 +34,7 @@ func (o *OrderedCards) Gaps() *[]Cards {
 		if d == 0 {
 			return -1
 		}
-		
+
 		if d == 1 {
 			return 1
 		}
