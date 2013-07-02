@@ -1,4 +1,4 @@
-- [ ] wait players
-- [ ] start next deal
-- [ ] websocket client
-- [ ] storage
+* wait players
+* start next deal
+* websocket client
+* storage
