@@ -26,6 +26,7 @@ var pairs = []pair{
 
 func Draw(n int) []Position {
 	var r = make([]Position, n)
+
 	i := 0
 	for _, pair := range pairs {
 		if n > pair.max {
@@ -33,5 +34,6 @@ func Draw(n int) []Position {
 			i++
 		}
 	}
+
 	return r
 }

@@ -11,6 +11,7 @@ func NewSeats(size int) []*Seat {
 	for i := 0; i < size; i++ {
 		seats[i] = NewSeat()
 	}
+
 	return seats
 }
 

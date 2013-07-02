@@ -25,6 +25,7 @@ func (broker *Broker) Bind(key string, channel MessageChannel) {
 
 func (broker *Broker) For(key string) MessageChannel {
 	ch, _ := broker.Send[key]
+
 	return ch
 }
 
@@ -57,6 +58,7 @@ func (n *Notify) RouteType() string {
 	if len(n.Only) != 0 {
 		return "only"
 	}
+
 	return ""
 }
 
@@ -91,6 +93,7 @@ func (broker *Broker) Dispatch(n *Notify, msg *Message) {
 
 	if n.One != "" {
 		broker.send(n.One, msg)
+
 		return
 	}
 
@@ -107,6 +110,7 @@ func (broker *Broker) Dispatch(n *Notify, msg *Message) {
 					}
 				}
 			}
+
 			if len(n.Except) != 0 {
 				skip = false
 				for _, Except := range n.Except {
@@ -116,10 +120,12 @@ func (broker *Broker) Dispatch(n *Notify, msg *Message) {
 					}
 				}
 			}
+
 			if skip {
 				continue
 			}
 		}
+
 		broker.send(key, msg)
 	}
 }

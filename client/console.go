@@ -143,8 +143,8 @@ func readReply(r *protocol.RequireBet) *protocol.Message {
 
 func parseBet(r *protocol.RequireBet, betString string) *bet.Bet {
 	var b *bet.Bet
-	switch betString {
 
+	switch betString {
 	case "":
 		if r.Call == 0. {
 			b = bet.NewCheck()
@@ -181,5 +181,6 @@ func parseBet(r *protocol.RequireBet, betString string) *bet.Bet {
 			}
 		}
 	}
+
 	return b
 }

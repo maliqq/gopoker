@@ -33,6 +33,7 @@ func (pot *SidePot) Total() float64 {
 	for _, amount := range pot.Members {
 		sum += amount
 	}
+
 	return sum
 }
 
@@ -41,6 +42,7 @@ func (pot *Pot) Total() float64 {
 	for _, sidePot := range pot.SidePots() {
 		sum += sidePot.Total()
 	}
+
 	return sum
 }
 
@@ -123,6 +125,7 @@ func (pot *SidePot) Split(member Id, remain float64) (*SidePot, *SidePot) {
 			side.Members[key] = value
 		}
 	}
+
 	return main, side
 }
 
