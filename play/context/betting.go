@@ -154,7 +154,7 @@ func (betting *Betting) AddBet(seat *model.Seat, newBet *bet.Bet) error {
 	return nil
 }
 
-func (betting *Betting) Add(seat *model.Seat, msg *protocol.Message) error {
+func (betting *Betting) Add(seat *model.Seat, msg *protocol.Message) {
 	newBet := msg.Payload.(protocol.AddBet).Bet
 
 	log.Printf("Player %s %s\n", seat.Player, newBet.String())
@@ -166,8 +166,6 @@ func (betting *Betting) Add(seat *model.Seat, msg *protocol.Message) error {
 	} else {
 		betting.log(msg)
 	}
-
-	return err
 }
 
 func (betting *Betting) log(msg *protocol.Message) {

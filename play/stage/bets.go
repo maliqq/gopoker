@@ -19,6 +19,12 @@ func (stage *Stage) resetBetting() {
 
 	betting.Reset()
 
+	for _, pos := range play.Table.SeatsInPlay() {
+		seat := play.Table.Seat(pos)
+
+		seat.SetPlaying()
+	}
+
 	play.Broadcast.All <- protocol.NewPotSummary(betting.Pot)
 }
 
@@ -33,11 +39,7 @@ func (stage *Stage) BettingRound() {
 
 		select {
 		case msg := <-play.NextTurn:
-			err := betting.Add(seat, msg)
-
-			if err != nil {
-				play.Broadcast.One(seat.Player) <- protocol.NewError(err)
-			}
+			betting.Add(seat, msg)
 
 		case <-time.After(DefaultTimer):
 			fmt.Printf("timeout!")
