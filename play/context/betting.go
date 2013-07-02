@@ -61,13 +61,16 @@ func (betting *Betting) ForceBet(pos int, betType bet.Type, stake *game.Stake) *
 }
 
 func (betting *Betting) RequireBet(pos int, seat *model.Seat, game *model.Game) *protocol.Message {
-	req := betting.requireBet
+	require := betting.requireBet
 
-	req.Pos = pos
-	req.Min, req.Max = game.Limit.RaiseRange(game.Stake, seat.Stack+seat.Bet, betting.Pot.Total(), betting.BigBets)
-	req.Call -= seat.Bet
+	newRequire := protocol.RequireBet{
+		Pos: pos,
+		Call: require.Call - seat.Bet,
+	}
 
-	return protocol.NewRequireBet(req)
+	newRequire.Min, newRequire.Max = game.Limit.RaiseRange(game.Stake, seat.Stack+seat.Bet, betting.Pot.Total(), betting.BigBets)
+
+	return protocol.NewRequireBet(&newRequire)
 }
 
 func ValidateBet(require *protocol.RequireBet, seat *model.Seat, newBet *bet.Bet) error {
@@ -140,9 +143,9 @@ func (betting *Betting) AddBet(seat *model.Seat, newBet *bet.Bet) error {
 				}
 
 				seat.PutBet(amount)
-
-				betting.Pot.Add(seat.Player.Id, amount, all_in)
 			}
+
+			betting.Pot.Add(seat.Player.Id, amount, all_in)
 		}
 
 		return err
