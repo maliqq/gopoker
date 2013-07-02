@@ -61,9 +61,18 @@ func main() {
 
 				fmt.Printf("Require %s\n", r)
 
-				reply := readReply(&r)
+				var newBet *bet.Bet
+				for newBet == nil {
+					newBet = readBet(&r)
 
-				playContext.Receive <- reply
+					err := context.ValidateBet(&r, playContext.Table.Seat(r.Pos), newBet)
+					if err != nil {
+						fmt.Println(err.Error())
+						newBet = nil
+					}
+				}
+
+				playContext.Receive <- protocol.NewAddBet(r.Pos, newBet)
 
 			case protocol.DealCards:
 
@@ -124,21 +133,17 @@ func createPlayContext(me protocol.MessageChannel) *context.Play {
 	return playContext
 }
 
-func readReply(r *protocol.RequireBet) *protocol.Message {
-	var reply *protocol.Message
+func readBet(r *protocol.RequireBet) *bet.Bet {
+	var b *bet.Bet
 
-	for reply == nil {
+	for b == nil {
 		fmt.Print(">>> ")
 		betString, _ := bufio.NewReader(os.Stdin).ReadString('\n')
 
-		b := parseBet(r, strings.TrimRight(betString, "\n"))
-
-		if b != nil {
-			reply = protocol.NewAddBet(r.Pos, b)
-		}
+		b = parseBet(r, strings.TrimRight(betString, "\n"))
 	}
 
-	return reply
+	return b
 }
 
 func parseBet(r *protocol.RequireBet, betString string) *bet.Bet {
