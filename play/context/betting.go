@@ -64,7 +64,7 @@ func (betting *Betting) RequireBet(pos int, seat *model.Seat, game *model.Game) 
 	require := betting.requireBet
 
 	newRequire := protocol.RequireBet{
-		Pos: pos,
+		Pos:  pos,
 		Call: require.Call - seat.Bet,
 	}
 
