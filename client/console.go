@@ -111,6 +111,12 @@ func main() {
 				player := playContext.Table.Player(payload.Pos)
 
 				fmt.Printf("Player %s has %s (%s)\n", player, payload.Cards.ConsoleString(), payload.Hand.ConsoleString())
+			
+			case protocol.Winner:
+
+				payload := msg.Payload.(protocol.Winner)
+
+				fmt.Printf("Player %s won %.2f\n", payload.Player, payload.Amount)
 			}
 		}
 	}
