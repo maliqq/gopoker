@@ -50,18 +50,21 @@ func NewCard(i byte) (*Card, error) {
 	if i < 0 || int(i) >= CardsNum {
 		return nil, errors.New("invalid card")
 	}
+
 	return &Card{card.Kind(i >> 2), card.Suit(i % 4)}, nil
 }
 
 func MakeCard(kind int, suit int) (*Card, error) {
-	k, err1 := card.MakeKind(kind)
-	if err1 != nil {
-		return nil, err1
+	k, kindErr := card.MakeKind(kind)
+	if kindErr != nil {
+		return nil, kindErr
 	}
-	s, err2 := card.MakeSuit(suit)
-	if err2 != nil {
-		return nil, err2
+
+	s, suitErr := card.MakeSuit(suit)
+	if suitErr != nil {
+		return nil, suitErr
 	}
+
 	return &Card{k, s}, nil
 }
 
@@ -79,6 +82,7 @@ func ParseCard(s string) (*Card, error) {
 
 		return card, nil
 	}
+
 	return nil, errors.New(fmt.Sprintf("can't parse card %s", s))
 }
 
@@ -92,6 +96,7 @@ func (c Card) Index(ord Ordering) int {
 		}
 		return int(c.kind) + 1
 	}
+
 	return -1
 }
 

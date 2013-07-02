@@ -50,6 +50,7 @@ func (r Rank) String() string {
 
 func (r Rank) MarshalJSON() ([]byte, error) {
 	s := r.String()
+
 	return []byte(strconv.Quote(s)), nil
 }
 
@@ -60,5 +61,6 @@ func (a Rank) Compare(b Rank) int {
 	if a == b {
 		return 0
 	}
+
 	return 1
 }

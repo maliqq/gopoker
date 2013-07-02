@@ -66,17 +66,21 @@ func (suit Suit) UnicodeString() string {
 
 func AllKinds() []Kind {
 	kinds := make([]Kind, KindsNum)
+
 	for i := 0; i < 13; i++ {
 		kinds[i] = Kind(i)
 	}
+
 	return kinds
 }
 
 func AllSuits() []Suit {
 	suits := make([]Suit, SuitsNum)
+
 	for i := 0; i < 4; i++ {
 		suits[i] = Suit(i)
 	}
+
 	return suits
 }
 
@@ -84,6 +88,7 @@ func MakeKind(kind int) (Kind, error) {
 	if kind < 0 || kind >= len(Kinds) {
 		return 0, fmt.Errorf("invalid kind index %d", kind)
 	}
+
 	return Kind(kind), nil
 }
 
@@ -91,5 +96,6 @@ func MakeSuit(suit int) (Suit, error) {
 	if suit < 0 || suit >= len(Suits) {
 		return 0, fmt.Errorf("invalid suit index %d", suit)
 	}
+
 	return Suit(suit), nil
 }

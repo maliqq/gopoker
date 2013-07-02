@@ -1,9 +1,9 @@
 package poker
 
 import (
+	"encoding/json"
 	"math/rand"
 	"regexp"
-	"encoding/json"
 	"time"
 )
 
@@ -44,7 +44,9 @@ func NewDeck() *Cards {
 func ParseCards(s string) (*Cards, error) {
 	r, _ := regexp.Compile("(?i)[akqjt2-9]{1}[schd]{1}")
 	match := r.FindAllString(s, len(s)/2+1)
+
 	cards := make(Cards, len(match))
+
 	i := 0
 	for _, c := range match {
 		card, err := ParseCard(c)
@@ -54,6 +56,7 @@ func ParseCards(s string) (*Cards, error) {
 		cards[i] = *card
 		i++
 	}
+
 	return &cards, nil
 }
 
@@ -66,6 +69,7 @@ func ParseBinary(s []byte) (*Cards, error) {
 		}
 		cards[i] = *card
 	}
+
 	return &cards, nil
 }
 
@@ -74,6 +78,7 @@ func (c Cards) String() string {
 	for _, card := range c {
 		s += card.String()
 	}
+
 	return s
 }
 
@@ -82,6 +87,7 @@ func (c Cards) Binary() []byte {
 	for i, card := range c {
 		b[i] = card.Byte()
 	}
+
 	return b
 }
 
@@ -90,6 +96,7 @@ func (c Cards) UnicodeString() string {
 	for _, card := range c {
 		s += card.UnicodeString()
 	}
+
 	return s
 }
 
@@ -98,6 +105,7 @@ func (c Cards) ConsoleString() string {
 	for _, card := range c {
 		s += card.ConsoleString() + " "
 	}
+
 	return s
 }
 
@@ -121,6 +129,7 @@ func ShuffleCards(c *Cards) *Cards {
 		j := rand.Intn(i + 1)
 		cards[i], cards[j] = cards[j], cards[i]
 	}
+
 	return &cards
 }
 
@@ -157,6 +166,7 @@ func (cards *Cards) GroupCards(test groupFunc) *[]Cards {
 		if i == 0 {
 			group[j] = card
 			j++
+
 		} else {
 			prev := (*cards)[i-1]
 			result := test(&card, &prev)
@@ -164,6 +174,7 @@ func (cards *Cards) GroupCards(test groupFunc) *[]Cards {
 			if result == 1 {
 				group[j] = card
 				j++
+
 			} else if result == 0 {
 				groups[k] = group[0:j]
 				k++
@@ -201,13 +212,15 @@ func (c Cards) CombinePairs() []Cards {
 
 func CountGroups(groups *[]Cards) *map[int][]Cards {
 	count := map[int][]Cards{}
+
 	for _, group := range *groups {
 		length := len(group)
-		_, present := count[length]
-		if !present {
+		if _, present := count[length]; !present {
 			count[length] = []Cards{}
 		}
+
 		count[length] = append(count[length], group)
 	}
+
 	return &count
 }

@@ -44,5 +44,6 @@ func (r Ranking) Detect(cards *Cards) (*Hand, error) {
 	case DeuceSeven:
 		return isDeuceSeven(cards)
 	}
+
 	return nil, errors.New(fmt.Sprintf("unknown ranking: %s", r))
 }
