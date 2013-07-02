@@ -21,6 +21,15 @@ func NewSeat() *Seat {
 	return &Seat{State: seat.Empty}
 }
 
+func (this *Seat) String() string {
+	return fmt.Sprintf("state=%s player=%s stack=%.2f bet=%.2f",
+		this.State,
+		this.Player,
+		this.Stack,
+		this.Bet,
+	)
+}
+
 func (this *Seat) Clear() {
 	this.State = seat.Empty
 	this.Player = nil
