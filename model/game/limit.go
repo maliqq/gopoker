@@ -8,6 +8,8 @@ const (
 	NoLimit    Limit = "no-limit"
 )
 
+// FIXME
+/*
 func (limit Limit) BlindsRange(stake *Stake) (float64, float64) {
 	sb, bb := stake.Blinds()
 
@@ -17,9 +19,10 @@ func (limit Limit) BlindsRange(stake *Stake) (float64, float64) {
 
 	return sb, bb
 }
+*/
 
 func (limit Limit) RaiseRange(stake *Stake, stackSize float64, potSize float64, bigBets bool) (float64, float64) {
-	sb, bb := stake.Blinds()
+	_, bb := stake.Blinds()
 
 	switch limit {
 	case NoLimit:
@@ -30,9 +33,9 @@ func (limit Limit) RaiseRange(stake *Stake, stackSize float64, potSize float64, 
 
 	case FixedLimit:
 		if bigBets {
-			return bb, bb
+			return bb * 2, bb * 2
 		}
-		return sb, sb
+		return bb, bb
 	}
 
 	return 0., 0.
