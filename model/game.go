@@ -58,6 +58,7 @@ var Games = map[game.Type]*GameOptions{
 		Pocket:       2,
 		DefaultLimit: game.NoLimit,
 	},
+
 	game.Omaha: &GameOptions{
 		Group:        game.Holdem,
 		HasBoard:     true,
@@ -67,6 +68,7 @@ var Games = map[game.Type]*GameOptions{
 		Hi:           poker.High,
 		DefaultLimit: game.PotLimit,
 	},
+
 	game.Omaha8: &GameOptions{
 		Group:        game.Holdem,
 		HasBoard:     true,
@@ -77,6 +79,7 @@ var Games = map[game.Type]*GameOptions{
 		Lo:           poker.AceFive8,
 		DefaultLimit: game.PotLimit,
 	},
+
 	game.Stud: &GameOptions{
 		Group:        game.SevenCard,
 		HasAnte:      true,
@@ -87,6 +90,7 @@ var Games = map[game.Type]*GameOptions{
 		Hi:           poker.High,
 		DefaultLimit: game.FixedLimit,
 	},
+
 	game.Stud8: &GameOptions{
 		Group:        game.SevenCard,
 		HasAnte:      true,
@@ -98,6 +102,7 @@ var Games = map[game.Type]*GameOptions{
 		Lo:           poker.AceFive8,
 		DefaultLimit: game.FixedLimit,
 	},
+
 	game.Razz: &GameOptions{
 		Group:        game.SevenCard,
 		HasAnte:      true,
@@ -108,6 +113,7 @@ var Games = map[game.Type]*GameOptions{
 		Hi:           poker.AceFive,
 		DefaultLimit: game.FixedLimit,
 	},
+
 	game.London: &GameOptions{
 		Group:        game.SevenCard,
 		HasAnte:      true,
@@ -118,6 +124,7 @@ var Games = map[game.Type]*GameOptions{
 		Hi:           poker.AceSix,
 		DefaultLimit: game.FixedLimit,
 	},
+
 	game.FiveCard: &GameOptions{
 		Group:        game.SingleDraw,
 		HasBlinds:    true,
@@ -129,6 +136,7 @@ var Games = map[game.Type]*GameOptions{
 		Hi:           poker.High,
 		DefaultLimit: game.FixedLimit,
 	},
+
 	game.Single27: &GameOptions{
 		Group:        game.SingleDraw,
 		HasBlinds:    true,
@@ -140,6 +148,7 @@ var Games = map[game.Type]*GameOptions{
 		Hi:           poker.DeuceSeven,
 		DefaultLimit: game.FixedLimit,
 	},
+
 	game.Triple27: &GameOptions{
 		Group:        game.TripleDraw,
 		HasBlinds:    true,
@@ -151,6 +160,7 @@ var Games = map[game.Type]*GameOptions{
 		Hi:           poker.DeuceSeven,
 		DefaultLimit: game.FixedLimit,
 	},
+
 	game.Badugi: &GameOptions{
 		Group:        game.TripleDraw,
 		HasBlinds:    true,
@@ -171,6 +181,7 @@ var Mixes = map[game.Type][]MixOptions{
 		MixOptions{Type: game.Stud, Limit: game.FixedLimit},
 		MixOptions{Type: game.Stud8, Limit: game.FixedLimit},
 	},
+
 	game.Eight: []MixOptions{
 		MixOptions{Type: game.Triple27, Limit: game.FixedLimit},
 		MixOptions{Type: game.Texas, Limit: game.FixedLimit},
