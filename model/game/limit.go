@@ -30,9 +30,9 @@ func (limit Limit) RaiseRange(stake *Stake, stackSize float64, potSize float64, 
 
 	case FixedLimit:
 		if bigBets {
-			return bb, bb * 2
+			return bb, bb
 		}
-		return sb, bb
+		return sb, sb
 	}
 
 	return 0., 0.
