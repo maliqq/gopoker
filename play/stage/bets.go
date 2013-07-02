@@ -18,6 +18,8 @@ func (stage *Stage) resetBetting() {
 	betting := stage.Betting
 
 	betting.Reset()
+
+	play.Broadcast.All <- protocol.NewPotSummary(betting.Pot)
 }
 
 func (stage *Stage) BettingRound() {

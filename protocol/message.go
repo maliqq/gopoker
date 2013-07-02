@@ -202,6 +202,18 @@ func NewAddBet(pos int, bet *bet.Bet) *Message {
 	)
 }
 
+type PotSummary struct {
+	Amount float64
+}
+
+func NewPotSummary(pot *model.Pot) *Message {
+	return NewMessage(
+		PotSummary{
+			Amount: pot.Total(),
+		},
+	)
+}
+
 type Chat struct {
 	Pos     int
 	Message string

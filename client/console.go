@@ -98,6 +98,12 @@ func main() {
 
 				fmt.Printf("Player %s: %s\n", player, payload.Bet)
 
+			case protocol.PotSummary:
+
+				payload := msg.Payload.(protocol.PotSummary)
+
+				fmt.Printf("Pot size: %.2f\n", payload.Amount)
+
 			case protocol.ShowHand:
 
 				payload := msg.Payload.(protocol.ShowHand)
@@ -112,7 +118,9 @@ func main() {
 
 func createPlayContext(me protocol.MessageChannel) *context.Play {
 	size := 3
-	game := model.NewGame(game.Texas, game.FixedLimit, game.NewStake(*betsize))
+	stake := game.NewStake(*betsize)
+	//stake.WithAnte = true
+	game := model.NewGame(game.Texas, game.FixedLimit, stake)
 	table := model.NewTable(size)
 	playContext := context.NewPlay(game, table)
 
