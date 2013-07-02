@@ -83,7 +83,7 @@ func (broker *Broker) send(key string, msg *Message) {
 }
 
 func (broker *Broker) Dispatch(n *Notify, msg *Message) {
-	log.Printf("%s%s | %#v%s\n", console.CYAN, n, msg, console.RESET)
+	log.Printf("%s%s | %s%s\n", console.CYAN, n, msg, console.RESET)
 
 	if n.None {
 		return
