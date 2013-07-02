@@ -70,9 +70,7 @@ func (betting *Betting) RequireBet(pos int, seat *model.Seat, game *model.Game) 
 	return protocol.NewRequireBet(req)
 }
 
-func (betting *Betting) ValidateBet(seat *model.Seat, newBet *bet.Bet) error {
-	require := betting.requireBet
-
+func ValidateBet(require *protocol.RequireBet, seat *model.Seat, newBet *bet.Bet) error {
 	switch newBet.Type {
 	case bet.Check:
 		if require.Call != 0. {
@@ -119,7 +117,7 @@ func (betting *Betting) AddBet(seat *model.Seat, newBet *bet.Bet) error {
 		seat.Fold()
 
 	default:
-		err := betting.ValidateBet(seat, newBet)
+		err := ValidateBet(require, seat, newBet)
 
 		if err != nil {
 			seat.Fold() // force fold
