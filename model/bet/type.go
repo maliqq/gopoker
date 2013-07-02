@@ -2,6 +2,7 @@ package bet
 
 import (
 	"fmt"
+	"reflect"
 )
 
 type ForcedBet string
@@ -60,6 +61,14 @@ func (b Bet) String() string {
 		return fmt.Sprintf("%s %.2f", string(b.Type.Value()), b.Amount)
 	}
 	return string(b.Type.Value())
+}
+
+func (b Bet) IsActive() bool {
+	return reflect.TypeOf(b.Type).Name() == "ActiveBet"
+}
+
+func (b Bet) IsForced() bool {
+	return reflect.TypeOf(b.Type).Name() == "ForcedBet"
 }
 
 func NewBet(t Type, amount float64) *Bet {

@@ -41,9 +41,13 @@ func (this *Seat) Fold() {
 }
 
 func (this *Seat) SetBet(amount float64) {
-	this.State = seat.Bet
-
 	this.Bet += this.AdvanceStack(-amount)
+}
+
+func (this *Seat) PutBet(amount float64) {
+	this.SetBet(amount)
+
+	this.State = seat.Bet
 }
 
 func (this *Seat) SetPlayer(player *Player) error {

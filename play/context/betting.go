@@ -3,7 +3,6 @@ package context
 import (
 	"fmt"
 	"log"
-	"reflect"
 )
 
 import (
@@ -43,7 +42,7 @@ func (betting *Betting) String() string {
 
 func (betting *Betting) Reset() {
 	req := betting.requireBet
-	
+
 	req.Call, req.Min, req.Max, betting.raiseCount = 0., 0., 0., 0
 }
 
@@ -73,9 +72,8 @@ func (betting *Betting) AddBet(s *model.Seat, newBet *bet.Bet) error {
 		if newBet.Amount != 0. {
 			amount := newBet.Amount
 
-			switch reflect.TypeOf(newBet).Name() {
-			// raise, call
-			case "ActiveBet":
+			if newBet.IsActive() {
+				// call, raise
 				if newBet.Amount > s.Stack {
 					return fmt.Errorf("Amount is greater than available stack: amount=%.2f stack=%.2f", amount, s.Stack)
 				}
@@ -97,12 +95,14 @@ func (betting *Betting) AddBet(s *model.Seat, newBet *bet.Bet) error {
 					require.Call += amount
 				}
 
-			// ante, blinds
-			case "ForcedBet":
-				require.Call = amount
-			}
+				s.PutBet(amount)
 
-			s.SetBet(amount)
+			} else if newBet.IsForced() {
+				// ante, blinds
+				require.Call = amount
+
+				s.SetBet(amount)
+			}
 
 			betting.Pot.Add(s.Player.Id, amount, s.State == seat.AllIn)
 		}
