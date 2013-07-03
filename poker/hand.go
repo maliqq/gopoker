@@ -142,22 +142,3 @@ func (a *Hand) Compare(b *Hand) int {
 
 	return 0
 }
-
-type ByHand struct {
-	hands []*Hand
-}
-
-func (h ByHand) Len() int {
-	return len(h.hands)
-}
-
-func (h ByHand) Swap(i, j int) {
-	h.hands[i], h.hands[j] = h.hands[j], h.hands[i]
-}
-
-func (h ByHand) Less(i, j int) bool {
-	a := h.hands[i]
-	b := h.hands[j]
-
-	return a.Compare(b) == -1
-}
