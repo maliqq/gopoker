@@ -5,22 +5,58 @@ import (
 	"gopoker/poker/hand"
 )
 
+var (
+	HighRanks = []rankFunc{
+		func(pocket *PocketCards) (hand.Rank, *Hand) {
+			return hand.StraightFlush, pocket.isStraightFlush()
+		},
+
+		func(pocket *PocketCards) (hand.Rank, *Hand) {
+			return hand.ThreeKind, pocket.isThreeKind()
+		},
+
+		func(pocket *PocketCards) (hand.Rank, *Hand) {
+			return hand.TwoPair, pocket.isTwoPair()
+		},
+
+		func(pocket *PocketCards) (hand.Rank, *Hand) {
+			return hand.OnePair, pocket.isOnePair()
+		},
+
+		func(pocket *PocketCards) (hand.Rank, *Hand) {
+			return hand.HighCard, pocket.isHighCard()
+		},
+	}
+
+	NoFlushRanks = []rankFunc{
+		func(pocket *PocketCards) (hand.Rank, *Hand) {
+			return hand.FourKind, pocket.isFourKind()
+		},
+
+		func(pocket *PocketCards) (hand.Rank, *Hand) {
+			return hand.FullHouse, pocket.isFullHouse()
+		},
+
+		func(pocket *PocketCards) (hand.Rank, *Hand) {
+			return hand.Straight, pocket.isStraight()
+		},
+	}
+
+	NoStraightRanks = []rankFunc{
+		func(pocket *PocketCards) (hand.Rank, *Hand) {
+			return hand.FourKind, pocket.isFourKind()
+		},
+
+		func(pocket *PocketCards) (hand.Rank, *Hand) {
+			return hand.FullHouse, pocket.isFullHouse()
+		},
+	}
+)
+
 func (pocket *PocketCards) isStraightFlush() *Hand {
 	maybeFlush := pocket.isFlush()
 	if maybeFlush == nil {
-		hand := pocket.Detect([]rankFunc{
-			func(pocket *PocketCards) (hand.Rank, *Hand) {
-				return hand.FourKind, pocket.isFourKind()
-			},
-
-			func(pocket *PocketCards) (hand.Rank, *Hand) {
-				return hand.FullHouse, pocket.isFullHouse()
-			},
-
-			func(pocket *PocketCards) (hand.Rank, *Hand) {
-				return hand.Straight, pocket.isStraight()
-			},
-		})
+		hand := pocket.Detect(NoFlushRanks)
 
 		if hand != nil {
 			hand.rank = true
@@ -41,15 +77,7 @@ func (pocket *PocketCards) isStraightFlush() *Hand {
 		return maybeStraight
 	}
 
-	maybeHigher := pocket.Detect([]rankFunc{
-		func(pocket *PocketCards) (hand.Rank, *Hand) {
-			return hand.FourKind, pocket.isFourKind()
-		},
-
-		func(pocket *PocketCards) (hand.Rank, *Hand) {
-			return hand.FullHouse, pocket.isFullHouse()
-		},
-	})
+	maybeHigher := pocket.Detect(NoStraightRanks)
 
 	if maybeHigher != nil {
 		maybeHigher.rank = true
@@ -205,27 +233,7 @@ func isHigh(c *Cards) (*Hand, error) {
 
 	pocket := NewPocket(&OrderedCards{c, AceHigh})
 
-	hand := pocket.Detect([]rankFunc{
-		func(pocket *PocketCards) (hand.Rank, *Hand) {
-			return hand.StraightFlush, pocket.isStraightFlush()
-		},
-
-		func(pocket *PocketCards) (hand.Rank, *Hand) {
-			return hand.ThreeKind, pocket.isThreeKind()
-		},
-
-		func(pocket *PocketCards) (hand.Rank, *Hand) {
-			return hand.TwoPair, pocket.isTwoPair()
-		},
-
-		func(pocket *PocketCards) (hand.Rank, *Hand) {
-			return hand.OnePair, pocket.isOnePair()
-		},
-
-		func(pocket *PocketCards) (hand.Rank, *Hand) {
-			return hand.HighCard, pocket.isHighCard()
-		},
-	})
+	hand := pocket.Detect(HighRanks)
 
 	return hand, nil
 }
