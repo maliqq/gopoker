@@ -13,8 +13,6 @@ import (
 
 type Cards []Card
 
-type groupFunc func(card *Card, prev *Card) int
-
 func AllCards() *Cards {
 	kinds := card.AllKinds()
 	suits := card.AllSuits()
@@ -153,6 +151,8 @@ func DiffCards(a *Cards, b *Cards) *Cards {
 
 	return &slice
 }
+
+type groupFunc func(card *Card, prev *Card) int
 
 func (cards *Cards) GroupCards(test groupFunc) *[]Cards {
 	length := len(*cards)

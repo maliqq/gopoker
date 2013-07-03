@@ -8,18 +8,18 @@ import (
 func (pocket *PocketCards) isStraightFlush() *Hand {
 	maybeFlush := pocket.isFlush()
 	if maybeFlush == nil {
-		hand := pocket.Detect([]Ranker{
-			Ranker{hand.FourKind, func(pocket *PocketCards) *Hand {
-				return pocket.isFourKind()
-			}},
+		hand := pocket.Detect([]rankFunc{
+			func(pocket *PocketCards) (hand.Rank, *Hand) {
+				return hand.FourKind, pocket.isFourKind()
+			},
 
-			Ranker{hand.FullHouse, func(pocket *PocketCards) *Hand {
-				return pocket.isFullHouse()
-			}},
+			func(pocket *PocketCards) (hand.Rank, *Hand) {
+				return hand.FullHouse, pocket.isFullHouse()
+			},
 
-			Ranker{hand.Straight, func(pocket *PocketCards) *Hand {
-				return pocket.isStraight()
-			}},
+			func(pocket *PocketCards) (hand.Rank, *Hand) {
+				return hand.Straight, pocket.isStraight()
+			},
 		})
 
 		if hand != nil {
@@ -41,14 +41,14 @@ func (pocket *PocketCards) isStraightFlush() *Hand {
 		return maybeStraight
 	}
 
-	maybeHigher := pocket.Detect([]Ranker{
-		Ranker{hand.FourKind, func(pocket *PocketCards) *Hand {
-			return pocket.isFourKind()
-		}},
+	maybeHigher := pocket.Detect([]rankFunc{
+		func(pocket *PocketCards) (hand.Rank, *Hand) {
+			return hand.FourKind, pocket.isFourKind()
+		},
 
-		Ranker{hand.FullHouse, func(pocket *PocketCards) *Hand {
-			return pocket.isFullHouse()
-		}},
+		func(pocket *PocketCards) (hand.Rank, *Hand) {
+			return hand.FullHouse, pocket.isFullHouse()
+		},
 	})
 
 	if maybeHigher != nil {
@@ -205,26 +205,26 @@ func isHigh(c *Cards) (*Hand, error) {
 
 	pocket := NewPocket(&OrderedCards{c, AceHigh})
 
-	hand := pocket.Detect([]Ranker{
-		Ranker{hand.StraightFlush, func(pocket *PocketCards) *Hand {
-			return pocket.isStraightFlush()
-		}},
+	hand := pocket.Detect([]rankFunc{
+		func(pocket *PocketCards) (hand.Rank, *Hand) {
+			return hand.StraightFlush, pocket.isStraightFlush()
+		},
 
-		Ranker{hand.ThreeKind, func(pocket *PocketCards) *Hand {
-			return pocket.isThreeKind()
-		}},
+		func(pocket *PocketCards) (hand.Rank, *Hand) {
+			return hand.ThreeKind, pocket.isThreeKind()
+		},
 
-		Ranker{hand.TwoPair, func(pocket *PocketCards) *Hand {
-			return pocket.isTwoPair()
-		}},
+		func(pocket *PocketCards) (hand.Rank, *Hand) {
+			return hand.TwoPair, pocket.isTwoPair()
+		},
 
-		Ranker{hand.OnePair, func(pocket *PocketCards) *Hand {
-			return pocket.isOnePair()
-		}},
+		func(pocket *PocketCards) (hand.Rank, *Hand) {
+			return hand.OnePair, pocket.isOnePair()
+		},
 
-		Ranker{hand.HighCard, func(pocket *PocketCards) *Hand {
-			return pocket.isHighCard()
-		}},
+		func(pocket *PocketCards) (hand.Rank, *Hand) {
+			return hand.HighCard, pocket.isHighCard()
+		},
 	})
 
 	return hand, nil

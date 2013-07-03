@@ -56,15 +56,17 @@ func (p *PocketCards) Ordering() Ordering {
 	return p.cards.ord
 }
 
-func (pocket *PocketCards) Detect(rankers []Ranker) *Hand {
-	var hand *Hand
+type rankFunc func(*PocketCards)(hand.Rank, *Hand)
 
-	for _, ranker := range rankers {
-		hand = ranker.rankFunc(pocket)
+func (pocket *PocketCards) Detect(ranks []rankFunc) *Hand {
+	var result *Hand
+
+	for _, r := range ranks {
+		rank, hand := r(pocket)
 
 		if hand != nil {
 			if !hand.rank {
-				hand.Rank = ranker.rank
+				hand.Rank = rank
 			}
 			if hand.high {
 				hand.High = Cards{hand.Value[0]}
@@ -75,11 +77,13 @@ func (pocket *PocketCards) Detect(rankers []Ranker) *Hand {
 
 			hand.pocket = pocket
 
+			result = hand
+
 			break
 		}
 	}
 
-	return hand
+	return result
 }
 
 func (h *Hand) String() string {

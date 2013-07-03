@@ -188,22 +188,22 @@ func isBadugi(c *Cards) (*Hand, error) {
 
 	pocket := NewPocket(&OrderedCards{c, AceLow})
 
-	hand := pocket.Detect([]Ranker{
-		Ranker{hand.BadugiOne, func(pocket *PocketCards) *Hand {
-			return pocket.isBadugiOne()
-		}},
+	hand := pocket.Detect([]rankFunc{
+		func(pocket *PocketCards) (hand.Rank, *Hand) {
+			return hand.BadugiOne, pocket.isBadugiOne()
+		},
 
-		Ranker{hand.BadugiFour, func(pocket *PocketCards) *Hand {
-			return pocket.isBadugiFour()
-		}},
+		func(pocket *PocketCards) (hand.Rank, *Hand) {
+			return hand.BadugiFour, pocket.isBadugiFour()
+		},
 
-		Ranker{hand.BadugiThree, func(pocket *PocketCards) *Hand {
-			return pocket.isBadugiThree()
-		}},
+		func(pocket *PocketCards) (hand.Rank, *Hand) {
+			return hand.BadugiThree, pocket.isBadugiThree()
+		},
 
-		Ranker{hand.BadugiTwo, func(pocket *PocketCards) *Hand {
-			return pocket.isBadugiTwo()
-		}},
+		func(pocket *PocketCards) (hand.Rank, *Hand) {
+			return hand.BadugiTwo, pocket.isBadugiTwo()
+		},
 	})
 
 	return hand, nil
