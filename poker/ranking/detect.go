@@ -1,8 +1,4 @@
-package poker
-
-import (
-	"gopoker/poker/ranking"
-)
+package ranking
 
 type detectFunc func(*Cards) (*Hand, error)
 
@@ -33,3 +29,7 @@ var (
 		},
 	}
 )
+
+func (r Type) Detect(cards *Cards) {
+	return Detect[r](cards)
+}
