@@ -56,7 +56,7 @@ func (p *PocketCards) Ordering() Ordering {
 	return p.cards.ord
 }
 
-type rankFunc func(*PocketCards)(hand.Rank, *Hand)
+type rankFunc func(*PocketCards) (hand.Rank, *Hand)
 
 func (pocket *PocketCards) Detect(ranks []rankFunc) *Hand {
 	var result *Hand
