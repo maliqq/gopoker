@@ -2,6 +2,7 @@ package model
 
 import (
 	"gopoker/poker"
+	"gopoker/poker/ranking"
 )
 
 type Deal struct {
@@ -56,9 +57,9 @@ func (this *Deal) Discard(player *Player, cards *poker.Cards) *poker.Cards {
 	return newCards
 }
 
-func (this *Deal) Rank(cards *poker.Cards, ranking poker.Ranking, hasBoard bool) *poker.Hand {
+func (this *Deal) Rank(cards *poker.Cards, ranking ranking.Type, hasBoard bool) *poker.Hand {
 	if !hasBoard {
-		hand, _ := ranking.Detect(cards)
+		hand, _ := poker.Detect[ranking](cards)
 
 		return hand
 	}
@@ -67,7 +68,7 @@ func (this *Deal) Rank(cards *poker.Cards, ranking poker.Ranking, hasBoard bool)
 	for _, pair := range cards.CombinePairs() {
 		handCards := append(pair, this.Board...)
 
-		hand, _ := ranking.Detect(&handCards)
+		hand, _ := poker.Detect[ranking](&handCards)
 
 		if bestHand == nil || hand.Compare(bestHand) > 0 {
 			bestHand = hand
