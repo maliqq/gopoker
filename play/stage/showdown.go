@@ -3,12 +3,13 @@ package stage
 import (
 	"gopoker/model"
 	"gopoker/poker"
+	"gopoker/poker/ranking"
 	"gopoker/protocol"
 )
 
 type showdownHands map[model.Id]*poker.Hand
 
-func (stage *Stage) showdown(ranking poker.Ranking, withBoard bool) *showdownHands {
+func (stage *Stage) showdown(ranking ranking.Type, withBoard bool) *showdownHands {
 	play := stage.Play
 
 	d := play.Deal

@@ -83,7 +83,7 @@ func ParseCard(s string) (*Card, error) {
 		return card, nil
 	}
 
-	return nil, errors.New(fmt.Sprintf("can't parse card %s", s))
+	return nil, fmt.Errorf("can't parse card %s", s)
 }
 
 func (c Card) Index(ord Ordering) int {

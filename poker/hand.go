@@ -56,15 +56,17 @@ func (p *PocketCards) Ordering() Ordering {
 	return p.cards.ord
 }
 
-func (pocket *PocketCards) Detect(rankers []Ranker) *Hand {
-	var hand *Hand
+type rankFunc func(*PocketCards) (hand.Rank, *Hand)
 
-	for _, ranker := range rankers {
-		hand = ranker.rankFunc(pocket)
+func (pocket *PocketCards) Detect(ranks []rankFunc) *Hand {
+	var result *Hand
+
+	for _, r := range ranks {
+		rank, hand := r(pocket)
 
 		if hand != nil {
 			if !hand.rank {
-				hand.Rank = ranker.rank
+				hand.Rank = rank
 			}
 			if hand.high {
 				hand.High = Cards{hand.Value[0]}
@@ -75,11 +77,13 @@ func (pocket *PocketCards) Detect(rankers []Ranker) *Hand {
 
 			hand.pocket = pocket
 
+			result = hand
+
 			break
 		}
 	}
 
-	return hand
+	return result
 }
 
 func (h *Hand) String() string {
@@ -104,52 +108,37 @@ func (h *Hand) ConsoleString() string {
 
 type compareFunc func(*Hand, *Hand) int
 
+var (
+	compareWith = func(ord Ordering) []compareFunc {
+		return []compareFunc{
+			func(a *Hand, b *Hand) int {
+				return a.Rank.Compare(b.Rank)
+			},
+
+			func(a *Hand, b *Hand) int {
+				return a.High.Compare(b.High, ord)
+			},
+
+			func(a *Hand, b *Hand) int {
+				return a.Value.Compare(b.Value, ord)
+			},
+
+			func(a *Hand, b *Hand) int {
+				return a.Kicker.Compare(b.Kicker, ord)
+			},
+		}
+	}
+)
+
 func (a *Hand) Compare(b *Hand) int {
 	ord := a.pocket.Ordering()
 
-	comparers := []compareFunc{
-		func(a *Hand, b *Hand) int {
-			return a.Rank.Compare(b.Rank)
-		},
-
-		func(a *Hand, b *Hand) int {
-			return a.High.Compare(b.High, ord)
-		},
-
-		func(a *Hand, b *Hand) int {
-			return a.Value.Compare(b.Value, ord)
-		},
-
-		func(a *Hand, b *Hand) int {
-			return a.Kicker.Compare(b.Kicker, ord)
-		},
-	}
-
-	for _, f := range comparers {
-		result := f(a, b)
+	for _, compare := range compareWith(ord) {
+		result := compare(a, b)
 		if result != 0 {
 			return result
 		}
 	}
 
 	return 0
-}
-
-type ByHand struct {
-	hands []*Hand
-}
-
-func (h ByHand) Len() int {
-	return len(h.hands)
-}
-
-func (h ByHand) Swap(i, j int) {
-	h.hands[i], h.hands[j] = h.hands[j], h.hands[i]
-}
-
-func (h ByHand) Less(i, j int) bool {
-	a := h.hands[i]
-	b := h.hands[j]
-
-	return a.Compare(b) == -1
 }

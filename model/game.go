@@ -6,7 +6,7 @@ import (
 
 import (
 	"gopoker/model/game"
-	"gopoker/poker"
+	"gopoker/poker/ranking"
 )
 
 type GameOptions struct {
@@ -24,8 +24,8 @@ type GameOptions struct {
 	Pocket    int
 	Streets   int
 
-	Hi poker.Ranking
-	Lo poker.Ranking
+	Hi ranking.Type
+	Lo ranking.Type
 
 	DefaultLimit game.Limit
 }
@@ -54,7 +54,7 @@ var Games = map[game.Type]*GameOptions{
 		HasBoard:     true,
 		HasBlinds:    true,
 		Max:          10,
-		Hi:           poker.High,
+		Hi:           ranking.High,
 		Pocket:       2,
 		DefaultLimit: game.NoLimit,
 	},
@@ -65,7 +65,7 @@ var Games = map[game.Type]*GameOptions{
 		HasBlinds:    true,
 		Max:          10,
 		Pocket:       4,
-		Hi:           poker.High,
+		Hi:           ranking.High,
 		DefaultLimit: game.PotLimit,
 	},
 
@@ -75,8 +75,8 @@ var Games = map[game.Type]*GameOptions{
 		HasBlinds:    true,
 		Max:          10,
 		Pocket:       4,
-		Hi:           poker.High,
-		Lo:           poker.AceFive8,
+		Hi:           ranking.High,
+		Lo:           ranking.AceFive8,
 		DefaultLimit: game.PotLimit,
 	},
 
@@ -87,7 +87,7 @@ var Games = map[game.Type]*GameOptions{
 		HasVela:      true,
 		Max:          8,
 		Pocket:       7,
-		Hi:           poker.High,
+		Hi:           ranking.High,
 		DefaultLimit: game.FixedLimit,
 	},
 
@@ -98,8 +98,8 @@ var Games = map[game.Type]*GameOptions{
 		HasVela:      true,
 		Max:          8,
 		Pocket:       7,
-		Hi:           poker.High,
-		Lo:           poker.AceFive8,
+		Hi:           ranking.High,
+		Lo:           ranking.AceFive8,
 		DefaultLimit: game.FixedLimit,
 	},
 
@@ -110,7 +110,7 @@ var Games = map[game.Type]*GameOptions{
 		HasVela:      true,
 		Max:          8,
 		Pocket:       7,
-		Hi:           poker.AceFive,
+		Hi:           ranking.AceFive,
 		DefaultLimit: game.FixedLimit,
 	},
 
@@ -121,7 +121,7 @@ var Games = map[game.Type]*GameOptions{
 		HasVela:      true,
 		Max:          8,
 		Pocket:       7,
-		Hi:           poker.AceSix,
+		Hi:           ranking.AceSix,
 		DefaultLimit: game.FixedLimit,
 	},
 
@@ -133,7 +133,7 @@ var Games = map[game.Type]*GameOptions{
 		Max:          6,
 		Pocket:       5,
 		Streets:      1,
-		Hi:           poker.High,
+		Hi:           ranking.High,
 		DefaultLimit: game.FixedLimit,
 	},
 
@@ -145,7 +145,7 @@ var Games = map[game.Type]*GameOptions{
 		Max:          6,
 		Pocket:       5,
 		Streets:      1,
-		Hi:           poker.DeuceSeven,
+		Hi:           ranking.DeuceSeven,
 		DefaultLimit: game.FixedLimit,
 	},
 
@@ -157,7 +157,7 @@ var Games = map[game.Type]*GameOptions{
 		Max:          6,
 		Pocket:       5,
 		Streets:      3,
-		Hi:           poker.DeuceSeven,
+		Hi:           ranking.DeuceSeven,
 		DefaultLimit: game.FixedLimit,
 	},
 
@@ -168,7 +168,7 @@ var Games = map[game.Type]*GameOptions{
 		Reshuffle:    true,
 		Max:          6,
 		Pocket:       4,
-		Hi:           poker.Badugi,
+		Hi:           ranking.Badugi,
 		DefaultLimit: game.FixedLimit,
 	},
 }

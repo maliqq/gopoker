@@ -5,6 +5,26 @@ import (
 	"gopoker/poker/hand"
 )
 
+var (
+	BadugiRanks = []rankFunc{
+		func(pocket *PocketCards) (hand.Rank, *Hand) {
+			return hand.BadugiOne, pocket.isBadugiOne()
+		},
+
+		func(pocket *PocketCards) (hand.Rank, *Hand) {
+			return hand.BadugiFour, pocket.isBadugiFour()
+		},
+
+		func(pocket *PocketCards) (hand.Rank, *Hand) {
+			return hand.BadugiThree, pocket.isBadugiThree()
+		},
+
+		func(pocket *PocketCards) (hand.Rank, *Hand) {
+			return hand.BadugiTwo, pocket.isBadugiTwo()
+		},
+	}
+)
+
 func (pocket *PocketCards) isBadugiOne() *Hand {
 	if len(pocket.groupKind) == 1 {
 		cards := *pocket.Cards()
@@ -188,23 +208,7 @@ func isBadugi(c *Cards) (*Hand, error) {
 
 	pocket := NewPocket(&OrderedCards{c, AceLow})
 
-	hand := pocket.Detect([]Ranker{
-		Ranker{hand.BadugiOne, func(pocket *PocketCards) *Hand {
-			return pocket.isBadugiOne()
-		}},
-
-		Ranker{hand.BadugiFour, func(pocket *PocketCards) *Hand {
-			return pocket.isBadugiFour()
-		}},
-
-		Ranker{hand.BadugiThree, func(pocket *PocketCards) *Hand {
-			return pocket.isBadugiThree()
-		}},
-
-		Ranker{hand.BadugiTwo, func(pocket *PocketCards) *Hand {
-			return pocket.isBadugiTwo()
-		}},
-	})
+	hand := pocket.Detect(BadugiRanks)
 
 	return hand, nil
 }

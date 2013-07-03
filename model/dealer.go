@@ -29,7 +29,7 @@ func NewDealer() *Dealer {
 
 func (dealer *Dealer) give(n int) (*poker.Cards, error) {
 	if l := len(dealer.Deck); l < n {
-		return nil, errors.New(fmt.Sprintf("can't deal %d cards in deck with %d cards", n, l))
+		return nil, fmt.Errorf("can't deal %d cards in deck with %d cards", n, l)
 	}
 
 	cards := dealer.Deck[0:n]
