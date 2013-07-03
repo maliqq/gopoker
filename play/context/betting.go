@@ -117,45 +117,43 @@ func ValidateBet(require *protocol.RequireBet, seat *model.Seat, newBet *bet.Bet
 }
 
 func (betting *Betting) AddBet(seat *model.Seat, newBet *bet.Bet) error {
-	require := betting.requireBet
-
-	switch newBet.Type {
-	case bet.Fold:
+	if newBet.Type == bet.Fold {
 		seat.Fold()
 
-	default:
-		err := ValidateBet(require, seat, newBet)
-
-		if err != nil {
-			seat.Fold() // force fold
-
-		} else {
-			amount := newBet.Amount
-			all_in := amount == seat.Stack
-
-			if newBet.IsForced() {
-				// ante, blinds
-				require.Call = amount
-
-				seat.SetBet(amount)
-
-			} else if newBet.IsActive() {
-				// raise, call
-				if newBet.Type == bet.Raise {
-					betting.raiseCount++
-					require.Call += amount
-				}
-
-				seat.PutBet(amount)
-			}
-
-			betting.Pot.Add(seat.Player.Id, amount, all_in)
-		}
-
-		return err
+		return nil
 	}
 
-	return nil
+	require := betting.requireBet
+
+	err := ValidateBet(require, seat, newBet)
+
+	if err != nil {
+		seat.Fold() // force fold
+
+	} else {
+		amount := newBet.Amount
+		all_in := amount == seat.Stack
+
+		if newBet.IsForced() {
+			// ante, blinds
+			require.Call = amount
+
+			seat.SetBet(amount)
+
+		} else if newBet.IsActive() {
+			// raise, call
+			if newBet.Type == bet.Raise {
+				betting.raiseCount++
+				require.Call += amount
+			}
+
+			seat.PutBet(amount)
+		}
+
+		betting.Pot.Add(seat.Player.Id, amount, all_in)
+	}
+
+	return err
 }
 
 func (betting *Betting) Add(seat *model.Seat, msg *protocol.Message) {
