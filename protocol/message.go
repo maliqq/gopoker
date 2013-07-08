@@ -11,6 +11,7 @@ import (
 	"gopoker/model"
 	"gopoker/model/bet"
 	"gopoker/model/deal"
+	"gopoker/model/seat"
 	"gopoker/poker"
 )
 
@@ -79,13 +80,24 @@ func NewMoveButton(pos int) *Message {
 	)
 }
 
-type JoinTable struct {
+type JoinPlayer struct {
+	Player *model.Player
 	Pos    int
 	Amount float64
 }
 
+func NewJoinPlayer(player *model.Player, pos int, stack float64) *Message {
+	return NewMessage(
+		JoinPlayer{
+			Player: player,
+			Pos: pos,
+			Amount: stack,
+		},
+	)
+}
+
 type LeaveTable struct {
-	Pos int
+	Player *model.Player
 }
 
 type ChangeTableState struct {
@@ -98,7 +110,7 @@ type SeatState struct {
 
 type ChangeSeatState struct {
 	Pos   int
-	State string
+	State seat.State
 }
 
 // seat info
@@ -161,12 +173,26 @@ func NewRequireDiscard(pos int) *Message {
 
 type DiscardCards struct {
 	Pos int
+	Cards poker.Cards
+}
+
+func NewDiscardCards(pos int, cards *poker.Cards) *Message {
+	return NewMessage(
+		DiscardCards{
+			Pos: pos,
+			Cards: *cards,
+		},
+	)
+}
+
+type Discarded struct {
+	Pos int
 	Num int
 }
 
-func NewDiscardCards(pos int, cardsNum int) *Message {
+func NewDiscarded(pos int, cardsNum int) *Message {
 	return NewMessage(
-		DiscardCards{
+		Discarded{
 			Pos: pos,
 			Num: cardsNum,
 		},

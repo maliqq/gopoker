@@ -14,7 +14,7 @@ func (stage *Stage) discard(p *model.Player, cards *poker.Cards) {
 
 	cardsNum := len(*cards)
 
-	play.Broadcast.All <- protocol.NewDiscardCards(pos, cardsNum)
+	play.Broadcast.All <- protocol.NewDiscarded(pos, cardsNum)
 
 	if cardsNum > 0 {
 		newCards := play.Deal.Discard(p, cards)
