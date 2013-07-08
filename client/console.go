@@ -64,7 +64,7 @@ func main() {
 
 				var newBet *bet.Bet
 				for newBet == nil {
-					newBet = readBet(&r)
+					newBet, _ := readBet(&r)
 
 					err := context.ValidateBet(&r, play.Table.Seat(r.Pos), newBet)
 					if err != nil {
@@ -121,6 +121,7 @@ func main() {
 			}
 		}
 	}
+	fmt.Println("bye")
 }
 
 func createPlay(me protocol.MessageChannel) *context.Play {
@@ -148,17 +149,24 @@ func createPlay(me protocol.MessageChannel) *context.Play {
 	return play
 }
 
-func readBet(r *protocol.RequireBet) *bet.Bet {
+func readBet(r *protocol.RequireBet) (*bet.Bet, string) {
 	var b *bet.Bet
+	var betString string
 
 	for b == nil {
 		fmt.Print(">>> ")
-		betString, _ := bufio.NewReader(os.Stdin).ReadString('\n')
+		betString, _ = bufio.NewReader(os.Stdin).ReadString('\n')
 
-		b = parseBet(r, strings.TrimRight(betString, "\n"))
+		betString = strings.TrimRight(betString, "\n")
+
+		if betString == "exit" {
+			return nil, "exit"
+		}
+
+		b = parseBet(r, betString)
 	}
 
-	return b
+	return b, betString
 }
 
 func parseBet(r *protocol.RequireBet, betString string) *bet.Bet {
