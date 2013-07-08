@@ -20,6 +20,8 @@ type Betting struct {
 
 	*model.Pot
 	Log []*protocol.Message
+
+	Receive chan *protocol.Message
 }
 
 func NewBetting() *Betting {
@@ -28,30 +30,32 @@ func NewBetting() *Betting {
 
 		Pot: model.NewPot(),
 		Log: []*protocol.Message{},
+
+		Receive: make(chan *protocol.Message),
 	}
 }
 
-func (betting *Betting) String() string {
+func (this *Betting) String() string {
 	return fmt.Sprintf("Require %s %s raiseCount: %d bigBets: %t pot total: %.2f",
-		betting.requireBet,
-		betting.raiseCount,
-		betting.BigBets,
-		betting.Pot.Total(),
+		this.requireBet,
+		this.raiseCount,
+		this.BigBets,
+		this.Pot.Total(),
 	)
 }
 
-func (betting *Betting) Current() int {
-	return betting.requireBet.Pos
+func (this *Betting) Current() int {
+	return this.requireBet.Pos
 }
 
-func (betting *Betting) Reset() {
-	req := betting.requireBet
+func (this *Betting) Reset() {
+	req := this.requireBet
 
-	req.Call, req.Min, req.Max, betting.raiseCount = 0., 0., 0., 0
+	req.Call, req.Min, req.Max, this.raiseCount = 0., 0., 0., 0
 }
 
-func (betting *Betting) ForceBet(pos int, betType bet.Type, stake *game.Stake) *bet.Bet {
-	req := betting.requireBet
+func (this *Betting) ForceBet(pos int, betType bet.Type, stake *game.Stake) *bet.Bet {
+	req := this.requireBet
 
 	amount := stake.Amount(betType)
 
@@ -64,15 +68,15 @@ func (betting *Betting) ForceBet(pos int, betType bet.Type, stake *game.Stake) *
 	}
 }
 
-func (betting *Betting) RequireBet(pos int, seat *model.Seat, game *model.Game) *protocol.Message {
-	require := betting.requireBet
+func (this *Betting) RequireBet(pos int, seat *model.Seat, game *model.Game) *protocol.Message {
+	require := this.requireBet
 
 	newRequire := protocol.RequireBet{
 		Pos:  pos,
 		Call: require.Call - seat.Bet,
 	}
 
-	newRequire.Min, newRequire.Max = game.Limit.RaiseRange(game.Stake, seat.Stack+seat.Bet, betting.Pot.Total(), betting.BigBets)
+	newRequire.Min, newRequire.Max = game.Limit.RaiseRange(game.Stake, seat.Stack+seat.Bet, this.Pot.Total(), this.BigBets)
 
 	return protocol.NewRequireBet(&newRequire)
 }
@@ -98,7 +102,7 @@ func ValidateBet(require *protocol.RequireBet, seat *model.Seat, newBet *bet.Bet
 
 		if newBet.Type == bet.Raise {
 			if require.Max == 0. {
-				return fmt.Errorf("Raise not allowed in current betting: amount=%.2f", amount)
+				return fmt.Errorf("Raise not allowed in current this: amount=%.2f", amount)
 			}
 
 			raiseAmount := require.Call - amount
@@ -116,14 +120,14 @@ func ValidateBet(require *protocol.RequireBet, seat *model.Seat, newBet *bet.Bet
 	return nil
 }
 
-func (betting *Betting) AddBet(seat *model.Seat, newBet *bet.Bet) error {
+func (this *Betting) AddBet(seat *model.Seat, newBet *bet.Bet) error {
 	if newBet.Type == bet.Fold {
 		seat.Fold()
 
 		return nil
 	}
 
-	require := betting.requireBet
+	require := this.requireBet
 
 	err := ValidateBet(require, seat, newBet)
 
@@ -143,33 +147,33 @@ func (betting *Betting) AddBet(seat *model.Seat, newBet *bet.Bet) error {
 		} else if newBet.IsActive() {
 			// raise, call
 			if newBet.Type == bet.Raise {
-				betting.raiseCount++
+				this.raiseCount++
 				require.Call += amount
 			}
 
 			seat.PutBet(amount)
 		}
 
-		betting.Pot.Add(seat.Player.Id, amount, all_in)
+		this.Pot.Add(seat.Player.Id, amount, all_in)
 	}
 
 	return err
 }
 
-func (betting *Betting) Add(seat *model.Seat, msg *protocol.Message) {
+func (this *Betting) Add(seat *model.Seat, msg *protocol.Message) {
 	newBet := msg.Payload.(protocol.AddBet).Bet
 
 	log.Printf("Player %s %s\n", seat.Player, newBet.String())
 
-	err := betting.AddBet(seat, &newBet)
+	err := this.AddBet(seat, &newBet)
 
 	if err != nil {
-		log.Printf("[betting.error] %s", err)
+		log.Printf("[this.error] %s", err)
 	} else {
-		betting.log(msg)
+		this.log(msg)
 	}
 }
 
-func (betting *Betting) log(msg *protocol.Message) {
-	betting.Log = append(betting.Log, msg)
+func (this *Betting) log(msg *protocol.Message) {
+	this.Log = append(this.Log, msg)
 }

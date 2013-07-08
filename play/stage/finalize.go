@@ -1,19 +1,31 @@
 package stage
 
-func (stage *Stage) Finalize() {
-	play := stage.Play
+import (
+	"log"
+)
 
+import (
+	"gopoker/play/context"
+)
+
+var Finalize = func(play *context.Play) {
+	log.Println("[play] finalize")
+
+	finalize(play)
+}
+
+func finalize(play *context.Play) {
 	gameOptions := play.Game.Options
 
 	var highHands, lowHands *showdownHands
 
 	if gameOptions.Lo != "" {
-		lowHands = stage.showdown(gameOptions.Lo, gameOptions.HasBoard)
+		lowHands = showdown(play, gameOptions.Lo, gameOptions.HasBoard)
 	}
 
 	if gameOptions.Hi != "" {
-		highHands = stage.showdown(gameOptions.Hi, gameOptions.HasBoard)
+		highHands = showdown(play, gameOptions.Hi, gameOptions.HasBoard)
 	}
 
-	stage.results(highHands, lowHands)
+	results(play, highHands, lowHands)
 }

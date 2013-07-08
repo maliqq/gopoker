@@ -5,13 +5,12 @@ import (
 	"gopoker/poker"
 	"gopoker/poker/ranking"
 	"gopoker/protocol"
+	"gopoker/play/context"
 )
 
 type showdownHands map[model.Id]*poker.Hand
 
-func (stage *Stage) showdown(ranking ranking.Type, withBoard bool) *showdownHands {
-	play := stage.Play
-
+func showdown(play *context.Play, ranking ranking.Type, withBoard bool) *showdownHands {
 	d := play.Deal
 
 	hands := showdownHands{}

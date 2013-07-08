@@ -9,105 +9,69 @@ import (
 	"gopoker/model"
 	"gopoker/protocol"
 	"gopoker/util/console"
-)
-
-type State string
-
-const (
-	Active = "active"
-	Waiting = "waiting"
-	Paused = "paused"
-	Closed = "closed"
+	"gopoker/play/command"
 )
 
 type Play struct {
-	State
 	*model.Deal
 	*model.Table
 	*model.Game
 
 	*protocol.Broadcast
 	Receive  chan *protocol.Message
-	Betting chan *protocol.Message
-	Discarding chan *protocol.Message
-
-	NextDeal chan int
+	Control  chan command.Type
+	
+	*Betting
+	*Discarding
 }
 
-func (play *Play) String() string {
-	return fmt.Sprintf("Game: %s\nTable: %s\n", play.Game, play.Table)
+func (this *Play) String() string {
+	return fmt.Sprintf("Game: %s\nTable: %s\n", this.Game, this.Table)
 }
 
 func NewPlay(game *model.Game, table *model.Table) *Play {
 	play := &Play{
-		State:      Waiting,
-		Game:       game,
-		Table:      table,
-		Broadcast:  protocol.NewBroadcast(),
-		Receive:    make(chan *protocol.Message),
-		Betting:    make(chan *protocol.Message),
-		NextDeal:   make(chan int),
-	}
-	
-	if game.Options.Discards {
-		play.Discarding = make(chan *protocol.Message)
+		Game:      game,
+		Table:     table,
+		Broadcast: protocol.NewBroadcast(),
+		Receive:   make(chan *protocol.Message),
+		Control:   make(chan command.Type),
 	}
 
-	play.receive()
+	go play.receive()
 
 	return play
 }
 
-func (play *Play) Start() {
-	play.receive()
+func (this *Play) NextDeal() {
+	this.Deal = model.NewDeal()
+	this.Betting = NewBetting()
+	if this.Game.Options.Discards {
+		this.Discarding = NewDiscarding()
+	}
 }
 
-func (play *Play) Close() {
-	play.State = Closed
-}
-
-func (play *Play) Pause() {
-	play.State = Paused
-}
-
-func (play *Play) Resume() {
-	play.State = Active
-}
-
-func (play *Play) nextDeal() {
-	play.Deal = model.NewDeal()
-	play.State = Active
-}
-
-func (play *Play) receive() {
+func (this *Play) receive() {
 	for {
-		select {
-		case msg := <-play.Receive:
-			log.Printf(console.Color(console.YELLOW, msg.String()))
+		msg := <-this.Receive
+		log.Printf(console.Color(console.YELLOW, msg.String()))
 
-			switch msg.Payload.(type) {
-			case protocol.JoinPlayer:
-				join := msg.Payload.(protocol.JoinPlayer)
-				play.Table.AddPlayer(join.Player, join.Pos, join.Amount)
+		switch msg.Payload.(type) {
+		case protocol.JoinTable:
+			join := msg.Payload.(protocol.JoinTable)
 
-			case protocol.LeaveTable:
-				leave := msg.Payload.(protocol.LeaveTable)
-				play.Table.RemovePlayer(leave.Player)
+			this.Table.AddPlayer(join.Player, join.Pos, join.Amount)
 
-			case protocol.ChangeSeatState:
-				change := msg.Payload.(protocol.ChangeSeatState)
-				seat := play.Table.Seat(change.Pos)
-				seat.State = change.State
-			
-			case protocol.DiscardCards:
-				play.Discarding <- msg
+		case protocol.LeaveTable:
+			leave := msg.Payload.(protocol.LeaveTable)
 
-			case protocol.AddBet:
-				play.Betting <- msg
-			}
+			this.Table.RemovePlayer(leave.Player)
 
-		case <-play.NextDeal:
-			play.nextDeal()
+		case protocol.AddBet:
+			this.Betting.Receive <- msg
+
+		case protocol.DiscardCards:
+			this.Discarding.Receive <- msg
 		}
 	}
 }

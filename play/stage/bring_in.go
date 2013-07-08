@@ -1,12 +1,21 @@
 package stage
 
 import (
-	"gopoker/poker"
+	"log"
 )
 
-func (stage *Stage) BringIn() {
-	play := stage.Play
+import (
+	"gopoker/poker"
+	"gopoker/play/context"
+)
 
+var BringIn = func(play *context.Play) {
+  log.Println("[play.stage] bring in")
+
+  bringIn(play)
+}
+
+func bringIn(play *context.Play) {
 	minPos := 0
 	var card poker.Card
 
@@ -26,9 +35,9 @@ func (stage *Stage) BringIn() {
 		}
 	}
 
-	stage.setButton(minPos)
+	setButton(play, minPos)
 
 	seat := play.Table.Seat(minPos)
 
-	play.Broadcast.One(seat.Player) <- stage.Betting.RequireBet(minPos, seat, play.Game)
+	play.Broadcast.One(seat.Player) <- play.Betting.RequireBet(minPos, seat, play.Game)
 }

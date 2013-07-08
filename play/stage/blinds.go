@@ -7,16 +7,16 @@ import (
 import (
 	"gopoker/model/bet"
 	"gopoker/protocol"
+	"gopoker/play/context"
 )
 
-func (stage *Stage) postSmallBlind(pos int) {
-	play := stage.Play
+func postSmallBlind(play *context.Play, pos int) {
 	stake := play.Game.Stake
 
 	t := play.Table
-	newBet := stage.Betting.ForceBet(pos, bet.SmallBlind, stake)
+	newBet := play.Betting.ForceBet(pos, bet.SmallBlind, stake)
 
-	err := stage.Betting.AddBet(t.Seat(pos), newBet)
+	err := play.Betting.AddBet(t.Seat(pos), newBet)
 	if err != nil {
 		log.Fatalf("Error adding small blind for %d: %s", pos, err)
 	}
@@ -24,14 +24,13 @@ func (stage *Stage) postSmallBlind(pos int) {
 	play.Broadcast.All <- protocol.NewAddBet(pos, newBet)
 }
 
-func (stage *Stage) postBigBlind(pos int) {
-	play := stage.Play
+func postBigBlind(play *context.Play, pos int) {
 	stake := play.Game.Stake
 
 	t := play.Table
-	newBet := stage.Betting.ForceBet(pos, bet.BigBlind, stake)
+	newBet := play.Betting.ForceBet(pos, bet.BigBlind, stake)
 
-	err := stage.Betting.AddBet(t.Seat(pos), newBet)
+	err := play.Betting.AddBet(t.Seat(pos), newBet)
 	if err != nil {
 		log.Fatalf("Error adding big blind for %d: %s", pos, err)
 	}
@@ -39,10 +38,9 @@ func (stage *Stage) postBigBlind(pos int) {
 	play.Broadcast.All <- protocol.NewAddBet(pos, newBet)
 }
 
-func (stage *Stage) postBlinds() {
-	stage.moveButton()
+func postBlinds(play *context.Play) {
+	moveButton(play)
 
-	play := stage.Play
 	t := play.Table
 
 	active := t.Seats.From(t.Button).Active()
@@ -57,8 +55,8 @@ func (stage *Stage) postBlinds() {
 	//headsUp := len(active) == 2 && len(waiting) == 0 || len(active) == 1 && len(waiting) == 1
 
 	sb := active[0]
-	stage.postSmallBlind(sb)
+	postSmallBlind(play, sb)
 
 	bb := active[1]
-	stage.postBigBlind(bb)
+	postBigBlind(play, bb)
 }
