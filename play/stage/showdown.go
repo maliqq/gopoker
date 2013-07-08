@@ -2,10 +2,10 @@ package stage
 
 import (
 	"gopoker/model"
+	"gopoker/play/context"
 	"gopoker/poker"
 	"gopoker/poker/ranking"
 	"gopoker/protocol"
-	"gopoker/play/context"
 )
 
 type showdownHands map[model.Id]*poker.Hand

@@ -2,8 +2,8 @@ package stage
 
 import (
 	"gopoker/model/bet"
-	"gopoker/protocol"
 	"gopoker/play/context"
+	"gopoker/protocol"
 )
 
 func postAntes(play *context.Play) {

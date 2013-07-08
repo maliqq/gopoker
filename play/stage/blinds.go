@@ -6,8 +6,8 @@ import (
 
 import (
 	"gopoker/model/bet"
-	"gopoker/protocol"
 	"gopoker/play/context"
+	"gopoker/protocol"
 )
 
 func postSmallBlind(play *context.Play, pos int) {

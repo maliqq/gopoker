@@ -90,7 +90,7 @@ func NewJoinTable(player *model.Player, pos int, amount float64) *Message {
 	return NewMessage(
 		JoinTable{
 			Player: player,
-			Pos: pos,
+			Pos:    pos,
 			Amount: amount,
 		},
 	)
@@ -194,14 +194,14 @@ func NewDiscarded(pos int, cardsNum int) *Message {
 }
 
 type DiscardCards struct {
-	Pos int
+	Pos   int
 	Cards poker.Cards
 }
 
 func NewDiscardCards(pos int, cards *poker.Cards) *Message {
 	return NewMessage(
 		DiscardCards{
-			Pos: pos,
+			Pos:   pos,
 			Cards: *cards,
 		},
 	)

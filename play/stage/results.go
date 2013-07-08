@@ -2,9 +2,9 @@ package stage
 
 import (
 	"gopoker/model"
+	"gopoker/play/context"
 	"gopoker/poker"
 	"gopoker/protocol"
-	"gopoker/play/context"
 )
 
 func best(sidePot *model.SidePot, hands *showdownHands) (model.Id, *poker.Hand) {

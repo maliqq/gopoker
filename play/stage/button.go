@@ -1,8 +1,8 @@
 package stage
 
 import (
-	"gopoker/protocol"
 	"gopoker/play/context"
+	"gopoker/protocol"
 )
 
 func setButton(play *context.Play, pos int) {

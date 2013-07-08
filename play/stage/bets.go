@@ -2,13 +2,13 @@ package stage
 
 import (
 	"fmt"
-	"time"
 	"log"
+	"time"
 )
 
 import (
-	"gopoker/protocol"
 	"gopoker/play/context"
+	"gopoker/protocol"
 )
 
 const (
@@ -17,15 +17,15 @@ const (
 
 var (
 	BigBets = func(play *context.Play) {
-	  log.Println("[play.stage] big bets")
+		log.Println("[play.stage] big bets")
 
-	  play.Betting.BigBets = true
+		play.Betting.BigBets = true
 	}
 
 	BettingRound = func(play *context.Play) {
-	  log.Println("[play.stage] betting")
+		log.Println("[play.stage] betting")
 
-	  bettingRound(play)
+		bettingRound(play)
 	}
 )
 

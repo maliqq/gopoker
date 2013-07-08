@@ -5,14 +5,14 @@ import (
 )
 
 import (
-	"gopoker/poker"
 	"gopoker/play/context"
+	"gopoker/poker"
 )
 
 var BringIn = func(play *context.Play) {
-  log.Println("[play.stage] bring in")
+	log.Println("[play.stage] bring in")
 
-  bringIn(play)
+	bringIn(play)
 }
 
 func bringIn(play *context.Play) {

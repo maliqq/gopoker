@@ -7,9 +7,9 @@ import (
 
 import (
 	"gopoker/model"
+	"gopoker/play/command"
 	"gopoker/protocol"
 	"gopoker/util/console"
-	"gopoker/play/command"
 )
 
 type Play struct {
@@ -18,9 +18,9 @@ type Play struct {
 	*model.Game
 
 	*protocol.Broadcast
-	Receive  chan *protocol.Message
-	Control  chan command.Type
-	
+	Receive chan *protocol.Message
+	Control chan command.Type
+
 	*Betting
 	*Discarding
 }

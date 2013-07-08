@@ -1,24 +1,24 @@
 package play
 
 import (
-  "gopoker/play/context"
-  "gopoker/play/strategy"
-  "gopoker/play/command"
+	"gopoker/play/command"
+	"gopoker/play/context"
+	"gopoker/play/strategy"
 )
 
 func Run(play *context.Play) {
 Loop:
-  for {
-    select {
-    case cmd := <-play.Control:
-      switch cmd {
-      case command.NextDeal:
-        play.NextDeal()
-        strategy.Default.Proceed(play)
+	for {
+		select {
+		case cmd := <-play.Control:
+			switch cmd {
+			case command.NextDeal:
+				play.NextDeal()
+				strategy.Default.Proceed(play)
 
-      case command.Exit:
-        break Loop
-      }
-    }
-  }
+			case command.Exit:
+				break Loop
+			}
+		}
+	}
 }

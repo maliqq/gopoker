@@ -6,8 +6,8 @@ import (
 
 import (
 	"gopoker/model/deal"
-	"gopoker/protocol"
 	"gopoker/play/context"
+	"gopoker/protocol"
 )
 
 func dealHole(play *context.Play, cardsNum int) {
@@ -50,13 +50,13 @@ func dealing(play *context.Play, dealingType deal.Type, cardsNum int) {
 }
 
 func Dealing(dealType deal.Type, dealNum int) func(*context.Play) {
-  return func(play *context.Play) {
-    if dealNum == 0 && dealType == deal.Hole {
-      dealNum = play.Game.Options.Pocket
-    }
+	return func(play *context.Play) {
+		if dealNum == 0 && dealType == deal.Hole {
+			dealNum = play.Game.Options.Pocket
+		}
 
-    log.Printf("[play.stage] dealing %s %d cards\n", dealType, dealNum)
+		log.Printf("[play.stage] dealing %s %d cards\n", dealType, dealNum)
 
-    dealing(play, dealType, dealNum)
-  }
+		dealing(play, dealType, dealNum)
+	}
 }

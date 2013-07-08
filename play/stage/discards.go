@@ -7,14 +7,14 @@ import (
 import (
 	"gopoker/model"
 	"gopoker/model/deal"
+	"gopoker/play/context"
 	"gopoker/poker"
 	"gopoker/protocol"
-	"gopoker/play/context"
 )
 
 var DiscardingRound = func(play *context.Play) {
-  log.Println("[play.stage] discarding")
-  log.Fatalf("not implemented")
+	log.Println("[play.stage] discarding")
+	log.Fatalf("not implemented")
 }
 
 func discard(play *context.Play, p *model.Player, cards *poker.Cards) {
