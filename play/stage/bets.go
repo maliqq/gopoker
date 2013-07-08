@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	DefaultTimer = 30 * time.Second
+	DefaultTimer = 30
 )
 
 func (stage *Stage) resetBetting() {
@@ -38,10 +38,10 @@ func (stage *Stage) BettingRound() {
 		play.Broadcast.One(seat.Player) <- betting.RequireBet(pos, seat, play.Game)
 
 		select {
-		case msg := <-play.NextTurn:
+		case msg := <-play.Betting:
 			betting.Add(seat, msg)
 
-		case <-time.After(DefaultTimer):
+		case <-time.After(time.Duration(DefaultTimer) * time.Second):
 			fmt.Printf("timeout!")
 		}
 	}
