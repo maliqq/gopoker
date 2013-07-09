@@ -205,7 +205,7 @@ func parseBet(r *protocol.RequireBet, betString string) *bet.Bet {
 			if err == nil {
 				b = bet.NewRaise(amount)
 			} else {
-				fmt.Printf("error: %s", err.Error())
+				fmt.Printf("error: %s\n", err.Error())
 			}
 		}
 	}
