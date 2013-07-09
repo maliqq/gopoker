@@ -1,28 +1,31 @@
 package server
 
 import (
-	"gopoker/play"
 	"net/http"
 )
 
+import (
+	"gopoker/model"
+)
+
 type CallResult struct {
-	Success bool
+  Success bool
 }
 
 type RoomParams struct {
-	Id   string
-	Size int
-	Game *play.Game
+  Id   string
+  Size int
+  Game *model.Game
 }
 
 type RoomId struct {
-	Id string
+  Id string
 }
 
 func (n *Node) CreateRoom(req *http.Request, params *RoomParams, r *CallResult) error {
 	room := new(Room)
 	room.Id = params.Id
-	room.Table = play.CreateTable(params.Size)
+	room.Table = model.NewTable(params.Size)
 
 	n.Rooms[params.Id] = room
 	defer func() { go room.Start() }()

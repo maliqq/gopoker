@@ -2,15 +2,18 @@ package server
 
 import (
 	"fmt"
-	"gopoker/play"
 	"log"
+)
+
+import (
+	"gopoker/model"
 )
 
 type Room struct {
 	Id string
 
-	Game  *play.Game
-	Table *play.Table
+	Game  *model.Game
+	Table *model.Table
 
 	recv chan string
 	send chan string

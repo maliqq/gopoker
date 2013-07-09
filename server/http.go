@@ -2,42 +2,42 @@ package server
 
 import (
 	"encoding/json"
-	"gopoker/play"
-	"gopoker/poker"
 	"net/http"
 )
 
+import (
+	"gopoker/model"
+	"gopoker/poker"
+	"gopoker/poker/ranking"
+)
+
 type HttpService struct {
-	node *Node
+  node *Node
 }
 
 type CompareResult struct {
-	A      *poker.Hand
-	B      *poker.Hand
-	Result int
+  A      *poker.Hand
+  B      *poker.Hand
+  Result int
 }
 
 type OddsResult struct {
-	A     *poker.Cards
-	B     *poker.Cards
-	Total int
-	Wins  float64
-	Ties  float64
-	Loses float64
+  A     *poker.Cards
+  B     *poker.Cards
+  Total int
+  Wins  float64
+  Ties  float64
+  Loses float64
 }
 
 type pocketHand struct {
-	Pocket poker.Cards
-	Hand   *poker.Hand
+  Pocket poker.Cards
+  Hand   *poker.Hand
 }
 
 type dealHand struct {
-	Board   poker.Cards
-	Pockets []pocketHand
-}
-
-func (service HttpService) Hello(resp http.ResponseWriter, req *http.Request) {
-	resp.Write([]byte("Hello, world!"))
+  Board   poker.Cards
+  Pockets []pocketHand
 }
 
 func (service HttpService) DetectHand(resp http.ResponseWriter, req *http.Request) {
@@ -47,22 +47,19 @@ func (service HttpService) DetectHand(resp http.ResponseWriter, req *http.Reques
 	if r == "" {
 		r = "high"
 	}
-
-	ranking := poker.High
-	switch ranking {
-	case "badugi":
-		ranking = poker.Badugi
-	}
+	ranking := ranking.Type(r)
 
 	if c := q.Get("cards"); c != "" {
 		cards, err := poker.ParseCards(c)
 		if err != nil {
-			return resp.Write([]byte(err.Error()))
+			resp.Write([]byte(err.Error()))
+			return
 		}
 
-		hand, err2 := ranking.Detect(cards)
-		if err2 != nil {
-			return resp.Write([]byte(err2.Error()))
+		hand, err := poker.Detect[ranking](cards)
+		if err != nil {
+			resp.Write([]byte(err.Error()))
+			return
 		}
 		s, _ := json.Marshal(hand)
 
@@ -78,14 +75,14 @@ func (service HttpService) CompareHands(resp http.ResponseWriter, req *http.Requ
 	a, _ := poker.ParseCards(q.Get("a"))
 	b, _ := poker.ParseCards(q.Get("b"))
 
-	dealer := play.NewDealer()
+	dealer := model.NewDealer()
 	dealer.Burn(a)
 	dealer.Burn(b)
 	board := dealer.Share(5)
 	c1 := append(*a, *board...)
 	c2 := append(*b, *board...)
-	h1, _ := poker.High.Detect(&c1)
-	h2, _ := poker.High.Detect(&c2)
+	h1, _ := poker.Detect[ranking.High](&c1)
+	h2, _ := poker.Detect[ranking.High](&c2)
 
 	s, _ := json.Marshal(&CompareResult{
 		h1, h2, h1.Compare(h2),
@@ -103,14 +100,14 @@ func (service HttpService) CalculateOdds(resp http.ResponseWriter, req *http.Req
 	total := 10000
 	wins, ties, loses := 0, 0, 0
 	for i := 0; i <= total; i++ {
-		dealer := play.NewDealer()
+		dealer := model.NewDealer()
 		dealer.Burn(a)
 		dealer.Burn(b)
 		board := dealer.Share(5)
 		c1 := append(*a, *board...)
 		c2 := append(*b, *board...)
-		h1, _ := poker.High.Detect(&c1)
-		h2, _ := poker.High.Detect(&c2)
+		h1, _ := poker.Detect[ranking.High](&c1)
+		h2, _ := poker.Detect[ranking.High](&c2)
 
 		switch h1.Compare(h2) {
 		case -1:
@@ -134,7 +131,7 @@ func (service HttpService) CalculateOdds(resp http.ResponseWriter, req *http.Req
 }
 
 func (service HttpService) RandomHand(resp http.ResponseWriter, req *http.Request) {
-	dealer := play.NewDealer()
+	dealer := model.NewDealer()
 	board := dealer.Share(5)
 
 	h := make([]pocketHand, 9)
@@ -143,7 +140,7 @@ func (service HttpService) RandomHand(resp http.ResponseWriter, req *http.Reques
 		pocket := dealer.Deal(2)
 		cards := append(*pocket, *board...)
 		//log.Printf("dealer=%s", dealer.String())
-		hand, _ := poker.High.Detect(&cards)
+		hand, _ := poker.Detect[ranking.High](&cards)
 		h[i].Pocket = *pocket
 		h[i].Hand = hand
 		i++
@@ -159,7 +156,7 @@ func (service HttpService) RandomHand(resp http.ResponseWriter, req *http.Reques
 }
 
 func (service HttpService) GenerateDeck(resp http.ResponseWriter, req *http.Request) {
-	s, _ := json.Marshal(play.NewDealer())
+	s, _ := json.Marshal(model.NewDealer())
 	resp.Write([]byte(s))
 }
 
