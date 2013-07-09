@@ -3,7 +3,6 @@ package strategy
 import (
 	"gopoker/model/deal"
 	"gopoker/model/game"
-	"gopoker/play/stage"
 )
 
 type Street string
@@ -49,71 +48,71 @@ var Streets = map[game.Group][]Street{
 var StreetStrategies = map[Street]Strategy{
 	// holdem poker
 	Preflop: Strategy{
-		stage.Dealing(deal.Hole, 0),
-		stage.BettingRound,
+		Dealing(deal.Hole, 0),
+		BettingRound,
 	},
 	Flop: Strategy{
-		stage.Dealing(deal.Board, 3),
-		stage.BettingRound,
+		Dealing(deal.Board, 3),
+		BettingRound,
 	},
 	Turn: Strategy{
-		stage.Dealing(deal.Board, 1),
-		stage.BigBets,
-		stage.BettingRound,
+		Dealing(deal.Board, 1),
+		BigBets,
+		BettingRound,
 	},
 	River: Strategy{
-		stage.Dealing(deal.Board, 1),
-		stage.BettingRound,
+		Dealing(deal.Board, 1),
+		BettingRound,
 	},
 
 	// seven card poker
 	Second: Strategy{
-		stage.Dealing(deal.Hole, 2),
+		Dealing(deal.Hole, 2),
 	},
 	Third: Strategy{
-		stage.Dealing(deal.Door, 1),
-		stage.BringIn,
-		stage.BettingRound,
+		Dealing(deal.Door, 1),
+		BringIn,
+		BettingRound,
 	},
 	Fourth: Strategy{
-		stage.Dealing(deal.Door, 1),
-		stage.BettingRound,
+		Dealing(deal.Door, 1),
+		BettingRound,
 	},
 	Fifth: Strategy{
-		stage.Dealing(deal.Door, 1),
-		stage.BigBets,
-		stage.BettingRound,
+		Dealing(deal.Door, 1),
+		BigBets,
+		BettingRound,
 	},
 	Sixth: Strategy{
-		stage.Dealing(deal.Door, 1),
-		stage.BettingRound,
+		Dealing(deal.Door, 1),
+		BettingRound,
 	},
 	Seventh: Strategy{
-		stage.Dealing(deal.Hole, 1),
-		stage.BettingRound,
+		Dealing(deal.Hole, 1),
+		BettingRound,
 	},
 
 	// draw poker
 	Predraw: Strategy{
-		stage.Dealing(deal.Hole, 5),
-		stage.BettingRound,
-		stage.DiscardingRound,
+		Dealing(deal.Hole, 5),
+		BettingRound,
+		DiscardingRound,
 	},
 	Draw: Strategy{
-		stage.BigBets,
-		stage.BettingRound,
-		stage.DiscardingRound,
+		BigBets,
+		BettingRound,
+		DiscardingRound,
 	},
 	FirstDraw: Strategy{
-		stage.BettingRound,
-		stage.DiscardingRound,
+		BettingRound,
+		DiscardingRound,
 	},
 	SecondDraw: Strategy{
-		stage.BettingRound,
-		stage.DiscardingRound,
+		BettingRound,
+		DiscardingRound,
 	},
 	ThirdDraw: Strategy{
-		stage.BettingRound,
-		stage.DiscardingRound,
+		BettingRound,
+		DiscardingRound,
 	},
 }

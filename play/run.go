@@ -1,6 +1,10 @@
 package play
 
 import (
+	_"fmt"
+)
+
+import (
 	"gopoker/play/command"
 	"gopoker/play/context"
 	"gopoker/play/strategy"
