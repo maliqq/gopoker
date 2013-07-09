@@ -9,17 +9,17 @@ import (
 )
 
 type CallResult struct {
-  Success bool
+	Success bool
 }
 
 type RoomParams struct {
-  Id   string
-  Size int
-  Game *model.Game
+	Id   string
+	Size int
+	Game *model.Game
 }
 
 type RoomId struct {
-  Id string
+	Id string
 }
 
 func (n *Node) CreateRoom(req *http.Request, params *RoomParams, r *CallResult) error {

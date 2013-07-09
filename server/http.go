@@ -12,32 +12,32 @@ import (
 )
 
 type HttpService struct {
-  node *Node
+	node *Node
 }
 
 type CompareResult struct {
-  A      *poker.Hand
-  B      *poker.Hand
-  Result int
+	A      *poker.Hand
+	B      *poker.Hand
+	Result int
 }
 
 type OddsResult struct {
-  A     *poker.Cards
-  B     *poker.Cards
-  Total int
-  Wins  float64
-  Ties  float64
-  Loses float64
+	A     *poker.Cards
+	B     *poker.Cards
+	Total int
+	Wins  float64
+	Ties  float64
+	Loses float64
 }
 
 type pocketHand struct {
-  Pocket poker.Cards
-  Hand   *poker.Hand
+	Pocket poker.Cards
+	Hand   *poker.Hand
 }
 
 type dealHand struct {
-  Board   poker.Cards
-  Pockets []pocketHand
+	Board   poker.Cards
+	Pockets []pocketHand
 }
 
 func (service HttpService) DetectHand(resp http.ResponseWriter, req *http.Request) {
