@@ -9,13 +9,9 @@ import (
 	"gopoker/poker"
 )
 
-var BringIn = func(play *context.Play) {
+func BringIn(play *context.Play) {
 	log.Println("[play.stage] bring in")
 
-	bringIn(play)
-}
-
-func bringIn(play *context.Play) {
 	minPos := 0
 	var card poker.Card
 

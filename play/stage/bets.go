@@ -15,20 +15,6 @@ const (
 	DefaultTimer = 30
 )
 
-var (
-	BigBets = func(play *context.Play) {
-		log.Println("[play.stage] big bets")
-
-		play.Betting.BigBets = true
-	}
-
-	BettingRound = func(play *context.Play) {
-		log.Println("[play.stage] betting")
-
-		bettingRound(play)
-	}
-)
-
 func resetBetting(play *context.Play) {
 	betting := play.Betting
 
@@ -43,7 +29,9 @@ func resetBetting(play *context.Play) {
 	play.Broadcast.All <- protocol.NewPotSummary(betting.Pot)
 }
 
-func bettingRound(play *context.Play) {
+func BettingRound(play *context.Play) {
+	log.Println("[play.stage] betting")
+
 	betting := play.Betting
 
 	for _, pos := range play.Table.Seats.From(betting.Current()).InPlay() {
@@ -61,4 +49,10 @@ func bettingRound(play *context.Play) {
 	}
 
 	resetBetting(play)
+}
+
+func BigBets(play *context.Play) {
+	log.Println("[play.stage] big bets")
+
+	play.Betting.BigBets = true
 }

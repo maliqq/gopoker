@@ -9,13 +9,9 @@ import (
 	"gopoker/play/context"
 )
 
-var Initialize = func(play *context.Play) {
+func Initialize(play *context.Play) {
 	log.Println("[play] initialize")
 
-	initialize(play)
-}
-
-func initialize(play *context.Play) {
 	gameOptions := play.Game.Options
 	stake := play.Game.Stake
 

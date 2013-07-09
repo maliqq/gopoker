@@ -8,13 +8,9 @@ import (
 	"gopoker/play/context"
 )
 
-var Finalize = func(play *context.Play) {
+func Finalize(play *context.Play) {
 	log.Println("[play] finalize")
 
-	finalize(play)
-}
-
-func finalize(play *context.Play) {
 	gameOptions := play.Game.Options
 
 	var highHands, lowHands *showdownHands
