@@ -1,13 +1,16 @@
 package stage
 
 import (
+	"log"
+)
+
+import (
 	"gopoker/model/deal"
+	"gopoker/play/context"
 	"gopoker/protocol"
 )
 
-func (stage *Stage) dealHole(cardsNum int) {
-	play := stage.Play
-
+func dealHole(play *context.Play, cardsNum int) {
 	for _, pos := range play.Table.SeatsInPlay() {
 		player := play.Table.Player(pos)
 
@@ -17,9 +20,7 @@ func (stage *Stage) dealHole(cardsNum int) {
 	}
 }
 
-func (stage *Stage) dealDoor(cardsNum int) {
-	play := stage.Play
-
+func dealDoor(play *context.Play, cardsNum int) {
 	for _, pos := range play.Table.SeatsInPlay() {
 		player := play.Table.Player(pos)
 
@@ -29,23 +30,33 @@ func (stage *Stage) dealDoor(cardsNum int) {
 	}
 }
 
-func (stage *Stage) dealBoard(cardsNum int) {
-	play := stage.Play
-
+func dealBoard(play *context.Play, cardsNum int) {
 	cards := play.Deal.DealBoard(cardsNum)
 
 	play.Broadcast.All <- protocol.NewDealShared(cards, deal.Board)
 }
 
-func (stage *Stage) Dealing(dealingType deal.Type, cardsNum int) {
+func dealing(play *context.Play, dealingType deal.Type, cardsNum int) {
 	switch dealingType {
 	case deal.Hole:
-		stage.dealHole(cardsNum)
+		dealHole(play, cardsNum)
 
 	case deal.Door:
-		stage.dealDoor(cardsNum)
+		dealDoor(play, cardsNum)
 
 	case deal.Board:
-		stage.dealBoard(cardsNum)
+		dealBoard(play, cardsNum)
+	}
+}
+
+func Dealing(dealType deal.Type, dealNum int) func(*context.Play) {
+	return func(play *context.Play) {
+		if dealNum == 0 && dealType == deal.Hole {
+			dealNum = play.Game.Options.Pocket
+		}
+
+		log.Printf("[play.stage] dealing %s %d cards\n", dealType, dealNum)
+
+		dealing(play, dealType, dealNum)
 	}
 }

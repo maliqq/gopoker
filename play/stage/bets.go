@@ -2,10 +2,12 @@ package stage
 
 import (
 	"fmt"
+	"log"
 	"time"
 )
 
 import (
+	"gopoker/play/context"
 	"gopoker/protocol"
 )
 
@@ -13,9 +15,22 @@ const (
 	DefaultTimer = 30
 )
 
-func (stage *Stage) resetBetting() {
-	play := stage.Play
-	betting := stage.Betting
+var (
+	BigBets = func(play *context.Play) {
+		log.Println("[play.stage] big bets")
+
+		play.Betting.BigBets = true
+	}
+
+	BettingRound = func(play *context.Play) {
+		log.Println("[play.stage] betting")
+
+		bettingRound(play)
+	}
+)
+
+func resetBetting(play *context.Play) {
+	betting := play.Betting
 
 	betting.Reset()
 
@@ -28,9 +43,8 @@ func (stage *Stage) resetBetting() {
 	play.Broadcast.All <- protocol.NewPotSummary(betting.Pot)
 }
 
-func (stage *Stage) BettingRound() {
-	play := stage.Play
-	betting := stage.Betting
+func bettingRound(play *context.Play) {
+	betting := play.Betting
 
 	for _, pos := range play.Table.Seats.From(betting.Current()).InPlay() {
 		seat := play.Table.Seat(pos)
@@ -38,7 +52,7 @@ func (stage *Stage) BettingRound() {
 		play.Broadcast.One(seat.Player) <- betting.RequireBet(pos, seat, play.Game)
 
 		select {
-		case msg := <-play.Betting:
+		case msg := <-betting.Receive:
 			betting.Add(seat, msg)
 
 		case <-time.After(time.Duration(DefaultTimer) * time.Second):
@@ -46,5 +60,5 @@ func (stage *Stage) BettingRound() {
 		}
 	}
 
-	stage.resetBetting()
+	resetBetting(play)
 }

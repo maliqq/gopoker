@@ -1,20 +1,17 @@
 package stage
 
 import (
+	"gopoker/play/context"
 	"gopoker/protocol"
 )
 
-func (stage *Stage) setButton(pos int) {
-	play := stage.Play
-
+func setButton(play *context.Play, pos int) {
 	play.Table.SetButton(pos)
 
 	play.Broadcast.All <- protocol.NewMoveButton(pos)
 }
 
-func (stage *Stage) moveButton() {
-	play := stage.Play
-
+func moveButton(play *context.Play) {
 	gameOptions := play.Game.Options
 
 	// button moves only for draw and holdem

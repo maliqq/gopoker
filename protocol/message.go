@@ -80,24 +80,32 @@ func NewMoveButton(pos int) *Message {
 	)
 }
 
-type JoinPlayer struct {
+type JoinTable struct {
 	Player *model.Player
 	Pos    int
 	Amount float64
 }
 
-func NewJoinPlayer(player *model.Player, pos int, stack float64) *Message {
+func NewJoinTable(player *model.Player, pos int, amount float64) *Message {
 	return NewMessage(
-		JoinPlayer{
+		JoinTable{
 			Player: player,
-			Pos: pos,
-			Amount: stack,
+			Pos:    pos,
+			Amount: amount,
 		},
 	)
 }
 
 type LeaveTable struct {
 	Player *model.Player
+}
+
+func NewLeaveTable(player *model.Player) *Message {
+	return NewMessage(
+		LeaveTable{
+			Player: player,
+		},
+	)
 }
 
 type ChangeTableState struct {
@@ -171,20 +179,6 @@ func NewRequireDiscard(pos int) *Message {
 	)
 }
 
-type DiscardCards struct {
-	Pos int
-	Cards poker.Cards
-}
-
-func NewDiscardCards(pos int, cards *poker.Cards) *Message {
-	return NewMessage(
-		DiscardCards{
-			Pos: pos,
-			Cards: *cards,
-		},
-	)
-}
-
 type Discarded struct {
 	Pos int
 	Num int
@@ -195,6 +189,20 @@ func NewDiscarded(pos int, cardsNum int) *Message {
 		Discarded{
 			Pos: pos,
 			Num: cardsNum,
+		},
+	)
+}
+
+type DiscardCards struct {
+	Pos   int
+	Cards poker.Cards
+}
+
+func NewDiscardCards(pos int, cards *poker.Cards) *Message {
+	return NewMessage(
+		DiscardCards{
+			Pos:   pos,
+			Cards: *cards,
 		},
 	)
 }

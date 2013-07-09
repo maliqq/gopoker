@@ -2,6 +2,7 @@ package stage
 
 import (
 	"gopoker/model"
+	"gopoker/play/context"
 	"gopoker/poker"
 	"gopoker/protocol"
 )
@@ -22,10 +23,8 @@ func best(sidePot *model.SidePot, hands *showdownHands) (model.Id, *poker.Hand) 
 	return winner, best
 }
 
-func (stage *Stage) results(highHands *showdownHands, lowHands *showdownHands) {
-	play := stage.Play
-
-	pot := stage.Betting.Pot
+func results(play *context.Play, highHands *showdownHands, lowHands *showdownHands) {
+	pot := play.Betting.Pot
 
 	hi := highHands != nil
 	lo := lowHands != nil

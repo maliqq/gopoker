@@ -1,15 +1,23 @@
 package stage
 
 import (
+	"log"
+)
+
+import (
 	"gopoker/model"
 	"gopoker/model/deal"
+	"gopoker/play/context"
 	"gopoker/poker"
 	"gopoker/protocol"
 )
 
-func (stage *Stage) discard(p *model.Player, cards *poker.Cards) {
-	play := stage.Play
+var DiscardingRound = func(play *context.Play) {
+	log.Println("[play.stage] discarding")
+	log.Fatalf("not implemented")
+}
 
+func discard(play *context.Play, p *model.Player, cards *poker.Cards) {
 	pos, _ := play.Table.Pos(p)
 
 	cardsNum := len(*cards)
@@ -21,8 +29,4 @@ func (stage *Stage) discard(p *model.Player, cards *poker.Cards) {
 
 		play.Broadcast.One(p) <- protocol.NewDealPocket(pos, newCards, deal.Discard)
 	}
-}
-
-func (stage *Stage) DiscardingRound() {
-
 }

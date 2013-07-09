@@ -15,9 +15,9 @@ import (
 	"gopoker/model/bet"
 	"gopoker/model/deal"
 	"gopoker/model/game"
-	"gopoker/play"
+	runner "gopoker/play"
+	"gopoker/play/command"
 	"gopoker/play/context"
-	_ "gopoker/play/stage"
 	"gopoker/protocol"
 	"gopoker/util/console"
 )
@@ -42,11 +42,12 @@ func main() {
 	}
 
 	me := make(protocol.MessageChannel)
-	playContext := createPlayContext(me)
+	play := createPlay(me)
 
-	fmt.Printf("%s\n", playContext)
+	fmt.Printf("%s\n", play)
 
-	go play.Start(playContext)
+	go runner.Run(play)
+	play.Control <- command.NextDeal
 
 	for {
 		select {
@@ -63,16 +64,16 @@ func main() {
 
 				var newBet *bet.Bet
 				for newBet == nil {
-					newBet = readBet(&r)
+					newBet, _ := readBet(&r)
 
-					err := context.ValidateBet(&r, playContext.Table.Seat(r.Pos), newBet)
+					err := context.ValidateBet(&r, play.Table.Seat(r.Pos), newBet)
 					if err != nil {
 						fmt.Println(err.Error())
 						newBet = nil
 					}
 				}
 
-				playContext.Receive <- protocol.NewAddBet(r.Pos, newBet)
+				play.Receive <- protocol.NewAddBet(r.Pos, newBet)
 
 			case protocol.DealCards:
 
@@ -94,7 +95,7 @@ func main() {
 
 				payload := msg.Payload.(protocol.AddBet)
 
-				player := playContext.Table.Player(payload.Pos)
+				player := play.Table.Player(payload.Pos)
 
 				fmt.Printf("Player %s: %s\n", player, payload.Bet)
 
@@ -108,7 +109,7 @@ func main() {
 
 				payload := msg.Payload.(protocol.ShowHand)
 
-				player := playContext.Table.Player(payload.Pos)
+				player := play.Table.Player(payload.Pos)
 
 				fmt.Printf("Player %s has %s (%s)\n", player, payload.Cards.ConsoleString(), payload.Hand.ConsoleString())
 
@@ -120,15 +121,16 @@ func main() {
 			}
 		}
 	}
+	fmt.Println("bye")
 }
 
-func createPlayContext(me protocol.MessageChannel) *context.Play {
+func createPlay(me protocol.MessageChannel) *context.Play {
 	size := 3
 	stake := game.NewStake(*betsize)
 	//stake.WithAnte = true
 	game := model.NewGame(game.Texas, game.FixedLimit, stake)
 	table := model.NewTable(size)
-	playContext := context.NewPlay(game, table)
+	play := context.NewPlay(game, table)
 
 	ids := []model.Id{"A", "B", "C", "D", "E", "F", "G", "H", "I"}
 	stack := 1500.
@@ -140,24 +142,31 @@ func createPlayContext(me protocol.MessageChannel) *context.Play {
 
 		if i < size {
 			table.AddPlayer(player, i, stack)
-			playContext.Broadcast.Bind(player, me)
+			play.Broadcast.Bind(player, me)
 		}
 	}
 
-	return playContext
+	return play
 }
 
-func readBet(r *protocol.RequireBet) *bet.Bet {
+func readBet(r *protocol.RequireBet) (*bet.Bet, string) {
 	var b *bet.Bet
+	var betString string
 
 	for b == nil {
 		fmt.Print(">>> ")
-		betString, _ := bufio.NewReader(os.Stdin).ReadString('\n')
+		betString, _ = bufio.NewReader(os.Stdin).ReadString('\n')
 
-		b = parseBet(r, strings.TrimRight(betString, "\n"))
+		betString = strings.TrimRight(betString, "\n")
+
+		if betString == "exit" {
+			return nil, "exit"
+		}
+
+		b = parseBet(r, betString)
 	}
 
-	return b
+	return b, betString
 }
 
 func parseBet(r *protocol.RequireBet, betString string) *bet.Bet {

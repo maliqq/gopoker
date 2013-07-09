@@ -6,16 +6,21 @@ import (
 
 import (
 	"gopoker/model/seat"
+	"gopoker/play/context"
 )
 
-func (stage *Stage) Initialize() {
-	play := stage.Play
+var Initialize = func(play *context.Play) {
+	log.Println("[play] initialize")
 
+	initialize(play)
+}
+
+func initialize(play *context.Play) {
 	gameOptions := play.Game.Options
 	stake := play.Game.Stake
 
 	// reset seats
-	log.Printf("[play.start] reset seats\n")
+	log.Printf("[play.initialize] reset seats\n")
 
 	for _, s := range play.Table.Seats {
 		switch s.State {
@@ -25,14 +30,14 @@ func (stage *Stage) Initialize() {
 	}
 
 	if gameOptions.HasAnte || stake.HasAnte() {
-		log.Printf("[play.start] post antes\n")
+		log.Printf("[play.initialize] post antes\n")
 
-		stage.postAntes()
+		postAntes(play)
 	}
 
 	if gameOptions.HasBlinds {
-		log.Printf("[play.start] post blinds\n")
+		log.Printf("[play.initialize] post blinds\n")
 
-		stage.postBlinds()
+		postBlinds(play)
 	}
 }
