@@ -1,7 +1,7 @@
 package play
 
 import (
-	_"fmt"
+	_ "fmt"
 )
 
 import (

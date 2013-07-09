@@ -1,111 +1,111 @@
 package strategy
 
 import (
-  "log"
+	"log"
 )
 
 import (
-  "gopoker/model/deal"
-  "gopoker/play/context"
+	"gopoker/model/deal"
+	"gopoker/play/context"
 )
 
 type Stage func(*context.Play)
 
 func ResetSeats(play *context.Play) {
-  play.ResetSeats()
+	play.ResetSeats()
 }
 
 func PostAntes(play *context.Play) {
-  gameOptions := play.Game.Options
-  stake := play.Game.Stake
+	gameOptions := play.Game.Options
+	stake := play.Game.Stake
 
-  if gameOptions.HasAnte || stake.HasAnte() {
-    log.Println("[play] post antes")
+	if gameOptions.HasAnte || stake.HasAnte() {
+		log.Println("[play] post antes")
 
-    play.PostAntes()
-    play.ResetBets()
-  }
+		play.PostAntes()
+		play.ResetBets()
+	}
 }
 
 func PostBlinds(play *context.Play) {
-  gameOptions := play.Game.Options
-  if gameOptions.HasBlinds {
-    log.Println("[play] post blinds")
-    
-    play.MoveButton()
-    play.PostBlinds()
-  }
+	gameOptions := play.Game.Options
+	if gameOptions.HasBlinds {
+		log.Println("[play] post blinds")
+
+		play.MoveButton()
+		play.PostBlinds()
+	}
 }
 
 func BringIn(play *context.Play) {
-  log.Println("[play.stage] bring in")
+	log.Println("[play.stage] bring in")
 
-  play.BringIn()
+	play.BringIn()
 }
 
 func StartStreets(play *context.Play) {
-  streets, _ := Streets[play.Game.Options.Group]
+	streets, _ := Streets[play.Game.Options.Group]
 
-  for _, street := range streets {
-    log.Printf("[play.street] %s\n", street)
+	for _, street := range streets {
+		log.Printf("[play.street] %s\n", street)
 
-    StreetStrategies[street].Proceed(play)
-  }
+		StreetStrategies[street].Proceed(play)
+	}
 }
 
 func Dealing(dealingType deal.Type, cardsNum int) Stage {
-  return func(play *context.Play) {
-    if cardsNum == 0 && dealingType == deal.Hole {
-      cardsNum = play.Game.Options.Pocket
-    }
+	return func(play *context.Play) {
+		if cardsNum == 0 && dealingType == deal.Hole {
+			cardsNum = play.Game.Options.Pocket
+		}
 
-    log.Printf("[play.stage] dealing %s %d cards\n", dealingType, cardsNum)
+		log.Printf("[play.stage] dealing %s %d cards\n", dealingType, cardsNum)
 
-    switch dealingType {
-    case deal.Hole:
-      play.DealHole(cardsNum)
+		switch dealingType {
+		case deal.Hole:
+			play.DealHole(cardsNum)
 
-    case deal.Door:
-      play.DealDoor(cardsNum)
+		case deal.Door:
+			play.DealDoor(cardsNum)
 
-    case deal.Board:
-      play.DealBoard(cardsNum)
-    }
-  }
+		case deal.Board:
+			play.DealBoard(cardsNum)
+		}
+	}
 }
 
 func BettingRound(play *context.Play) {
-  log.Println("[play.stage] betting")
-  
-  play.StartBettingRound()
+	log.Println("[play.stage] betting")
+
+	play.StartBettingRound()
 }
 
 func DiscardingRound(play *context.Play) {
-  log.Println("[play.stage] discarding")
-  
-  log.Fatalf("not implemented")
+	log.Println("[play.stage] discarding")
+
+	log.Fatalf("not implemented")
 }
 
 func BigBets(play *context.Play) {
-  log.Println("[play.stage] big bets")
+	log.Println("[play.stage] big bets")
 
-  play.Betting.BigBets = true
+	play.Betting.BigBets = true
 }
 
 func Showdown(play *context.Play) {
-  log.Println("[play] showdown")
+	log.Println("[play] showdown")
 
-  gameOptions := play.Game.Options
+	gameOptions := play.Game.Options
 
-  var highHands, lowHands *context.ShowdownHands
+	var highHands, lowHands *context.ShowdownHands
 
-  if gameOptions.Lo != "" {
-    lowHands = play.ShowHands(gameOptions.Lo, gameOptions.HasBoard)
-  }
+	if gameOptions.Lo != "" {
+		lowHands = play.ShowHands(gameOptions.Lo, gameOptions.HasBoard)
+	}
 
-  if gameOptions.Hi != "" {
-    highHands = play.ShowHands(gameOptions.Hi, gameOptions.HasBoard)
-  }
+	if gameOptions.Hi != "" {
+		highHands = play.ShowHands(gameOptions.Hi, gameOptions.HasBoard)
+	}
 
-  play.Winners(highHands, lowHands)
+	play.Winners(highHands, lowHands)
 }
