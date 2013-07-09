@@ -168,7 +168,7 @@ func (this *Betting) Add(seat *model.Seat, msg *protocol.Message) {
 	err := this.AddBet(seat, &newBet)
 
 	if err != nil {
-		log.Printf("[this.error] %s", err)
+		log.Printf("[betting.error] %s", err)
 	} else {
 		this.log(msg)
 	}
