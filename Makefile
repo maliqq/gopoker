@@ -1,10 +1,3 @@
-SHELL=bash
-fmt:
-	gofmt -w .
-push-fmt: fmt
-	git add -A
-	git commit -m 'gofmt'
-	git push origin HEAD
 get-deps:
 	go get github.com/bmizerany/pq
 	go get github.com/alecthomas/gozmq
@@ -13,5 +6,3 @@ get-deps:
 	go get github.com/gorilla/rpc
 	go get code.google.com/p/go.net
 	go get code.google.com/p/goprotobuf
-sloc:
-	cloc . | grep Go | awk -e '{ print $$5 }'
