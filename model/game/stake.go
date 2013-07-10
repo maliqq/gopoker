@@ -29,16 +29,14 @@ const (
 	BringInAmount    = 0.125
 )
 
-var (
-	betAmounts = map[bet.Type]float64{
-		bet.Ante:       AnteAmount,
-		bet.BringIn:    BringInAmount,
-		bet.SmallBlind: SmallBlindAmount,
-		bet.BigBlind:   BigBlindAmount,
-		bet.GuestBlind: BigBlindAmount,
-		bet.Straddle:   BigBetAmount,
-	}
-)
+var betAmounts = map[bet.Type]float64{
+	bet.Ante:       AnteAmount,
+	bet.BringIn:    BringInAmount,
+	bet.SmallBlind: SmallBlindAmount,
+	bet.BigBlind:   BigBlindAmount,
+	bet.GuestBlind: BigBlindAmount,
+	bet.Straddle:   BigBetAmount,
+}
 
 func NewStake(size float64) *Stake {
 	return &Stake{Size: size}

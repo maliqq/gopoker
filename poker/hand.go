@@ -108,27 +108,25 @@ func (h *Hand) ConsoleString() string {
 
 type compareFunc func(*Hand, *Hand) int
 
-var (
-	compareWith = func(ord Ordering) []compareFunc {
-		return []compareFunc{
-			func(a *Hand, b *Hand) int {
-				return a.Rank.Compare(b.Rank)
-			},
+var compareWith = func(ord Ordering) []compareFunc {
+	return []compareFunc{
+		func(a *Hand, b *Hand) int {
+			return a.Rank.Compare(b.Rank)
+		},
 
-			func(a *Hand, b *Hand) int {
-				return a.High.Compare(b.High, ord)
-			},
+		func(a *Hand, b *Hand) int {
+			return a.High.Compare(b.High, ord)
+		},
 
-			func(a *Hand, b *Hand) int {
-				return a.Value.Compare(b.Value, ord)
-			},
+		func(a *Hand, b *Hand) int {
+			return a.Value.Compare(b.Value, ord)
+		},
 
-			func(a *Hand, b *Hand) int {
-				return a.Kicker.Compare(b.Kicker, ord)
-			},
-		}
+		func(a *Hand, b *Hand) int {
+			return a.Kicker.Compare(b.Kicker, ord)
+		},
 	}
-)
+}
 
 func (a *Hand) Compare(b *Hand) int {
 	ord := a.pocket.Ordering()
