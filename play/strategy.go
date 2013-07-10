@@ -1,4 +1,4 @@
-package strategy
+package play
 
 import (
 	"gopoker/model/deal"
@@ -86,7 +86,7 @@ var ByStreet = map[street.Type]Strategy{
 	},
 }
 
-var Default = Strategy{
+var DefaultStrategy = Strategy{
 	//DealStart,
 	ResetSeats, // FIXME
 	//MoveButton,
