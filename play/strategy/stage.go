@@ -6,6 +6,7 @@ import (
 
 import (
 	"gopoker/model/deal"
+	"gopoker/play/street"
 	"gopoker/play/context"
 )
 
@@ -38,12 +39,10 @@ func PostBlinds(play *context.Play) {
 }
 
 func StartStreets(play *context.Play) {
-	streets, _ := Streets[play.Game.Options.Group]
-
-	for _, street := range streets {
+	for _, street := range street.Get(play.Game.Options.Group) {
 		log.Printf("[play] %s\n", street)
-
-		StreetStrategies[street].Proceed(play)
+		
+		ByStreet[street].Proceed(play)
 	}
 }
 
