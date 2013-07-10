@@ -20,7 +20,7 @@ type Discarding struct {
 func NewDiscarding(d *model.Deal) *Discarding {
 	return &Discarding{
 		Required: &protocol.RequireDiscard{},
-		Receive: make(chan *protocol.Message),
+		Receive:  make(chan *protocol.Message),
 	}
 }
 

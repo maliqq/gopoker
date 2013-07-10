@@ -19,8 +19,8 @@ func Init(play *context.Play) {
 }
 
 func PostAntes(play *context.Play) {
-	gameOptions := play.Game().Options
-	stake := play.Game().Stake
+	gameOptions := play.Game.Options
+	stake := play.Game.Stake
 
 	if gameOptions.HasAnte || stake.HasAnte() {
 		log.Println("[play] post antes")
@@ -31,7 +31,7 @@ func PostAntes(play *context.Play) {
 }
 
 func PostBlinds(play *context.Play) {
-	gameOptions := play.Game().Options
+	gameOptions := play.Game.Options
 	if gameOptions.HasBlinds {
 		log.Println("[play] post blinds")
 
@@ -41,7 +41,7 @@ func PostBlinds(play *context.Play) {
 }
 
 func StartStreets(play *context.Play) {
-	for _, street := range street.Get(play.Game().Options.Group) {
+	for _, street := range street.Get(play.Game.Options.Group) {
 		log.Printf("[play] %s\n", street)
 
 		ByStreet[street].Proceed(play)
@@ -57,7 +57,7 @@ func BringIn(play *context.Play) {
 func Dealing(dealingType deal.Type, cardsNum int) Stage {
 	return func(play *context.Play) {
 		if cardsNum == 0 && dealingType == deal.Hole {
-			cardsNum = play.Game().Options.Pocket
+			cardsNum = play.Game.Options.Pocket
 		}
 
 		log.Printf("[play] dealing %s %d cards\n", dealingType, cardsNum)
@@ -97,7 +97,7 @@ func BigBets(play *context.Play) {
 func Showdown(play *context.Play) {
 	log.Println("[play] showdown")
 
-	gameOptions := play.Game().Options
+	gameOptions := play.Game.Options
 
 	var highHands, lowHands *context.ShowdownHands
 

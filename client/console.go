@@ -11,7 +11,6 @@ import (
 )
 
 import (
-	"gopoker/poker"
 	"gopoker/model"
 	"gopoker/model/bet"
 	"gopoker/model/deal"
@@ -19,6 +18,7 @@ import (
 	runner "gopoker/play"
 	"gopoker/play/command"
 	"gopoker/play/context"
+	"gopoker/poker"
 	"gopoker/protocol"
 	"gopoker/util/console"
 )
@@ -148,7 +148,6 @@ func createPlay(me protocol.MessageChannel) *context.Play {
 	g := model.NewGame(game.LimitedGame(*gametoplay), game.FixedLimit, stake)
 	table := model.NewTable(size)
 	play := context.NewPlay(g, table)
-	fmt.Printf("play.Game()=%#v", play.Game())
 
 	ids := []model.Id{"A", "B", "C", "D", "E", "F", "G", "H", "I"}
 	stack := 1500.

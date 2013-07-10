@@ -11,6 +11,7 @@ import (
 	"gopoker/model"
 	"gopoker/model/bet"
 	"gopoker/model/deal"
+	"gopoker/model/game"
 	"gopoker/model/seat"
 	"gopoker/poker"
 )
@@ -258,6 +259,33 @@ type ChangeDealState struct {
 }
 
 type ChangeGame struct {
+	Type game.LimitedGame
+	game.Limit
+	game.Stake
+}
+
+func NewChangeGame(g *model.Game) *Message {
+	return NewMessage(
+		ChangeGame{
+			Type: g.Type,
+		},
+	)
+}
+
+func NewChangeLimit(g *model.Game) *Message {
+	return NewMessage(
+		ChangeGame{
+			Limit: g.Limit,
+		},
+	)
+}
+
+func NewChangeStake(g *model.Game) *Message {
+	return NewMessage(
+		ChangeGame{
+			Stake: *g.Stake,
+		},
+	)
 }
 
 // new street

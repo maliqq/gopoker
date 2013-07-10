@@ -6,14 +6,14 @@ type AnyGame string
 type Group string
 
 type Type interface {
-	Value() AnyGame
+	Game() AnyGame
 }
 
-func (l LimitedGame) Value() AnyGame {
+func (l LimitedGame) Game() AnyGame {
 	return AnyGame(l)
 }
 
-func (m MixedGame) Value() AnyGame {
+func (m MixedGame) Game() AnyGame {
 	return AnyGame(m)
 }
 

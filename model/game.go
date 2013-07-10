@@ -31,24 +31,25 @@ type GameOptions struct {
 }
 
 type MixOptions struct {
-	game.Type
+	Type game.LimitedGame
 	game.Limit
 }
 
 type Game struct {
-	game.Type
+	Type game.LimitedGame
 	game.Limit
 	Stake   *game.Stake
 	Options *GameOptions
 }
 
 type Mix struct {
-	game.Type
+	Type game.MixedGame
 	*game.Stake
 	Games []*Game
 }
 
 type Variation interface {
+	IsMixed() bool
 }
 
 var Games = map[game.LimitedGame]*GameOptions{
@@ -197,50 +198,59 @@ var Mixes = map[game.MixedGame][]MixOptions{
 	},
 }
 
-func NewGame(variation game.Type, limit game.Limit, stake *game.Stake) *Game {
-	switch variation.(type) {
-	case game.LimitedGame:
-		options, _ := Games[variation.(game.LimitedGame)]
+func NewGame(g game.Type, limit game.Limit, stake *game.Stake) *Game {
+	limitedGame, success := g.(game.LimitedGame)
 
-		return &Game{
-			Type:    variation,
-			Limit:   limit,
-			Stake:   stake,
-			Options: options,
-		}
-
-	default:
-		fmt.Printf("got: %s\n", variation)
+	if !success {
+		fmt.Printf("got: %s\n", g)
 		panic("can't create game")
 	}
+
+	options := Games[limitedGame]
+
+	return &Game{
+		Type:    limitedGame,
+		Limit:   limit,
+		Stake:   stake,
+		Options: options,
+	}
+}
+
+func (game *Game) IsMixed() bool {
+	return false
 }
 
 func (game *Game) String() string {
 	return fmt.Sprintf("%s %s %s", game.Type, game.Limit, game.Stake)
 }
 
-func NewMix(variation game.Type, stake *game.Stake) *Mix {
-	switch variation.(type) {
-	case game.MixedGame:
-		options, _ := Mixes[variation.(game.MixedGame)]
+func NewMix(g game.Type, stake *game.Stake) *Mix {
+	mixedGame, success := g.(game.MixedGame)
 
-		games := make([]*Game, len(options))
-		for i, mixOptions := range options {
-			games[i] = NewGame(mixOptions.Type, mixOptions.Limit, stake)
-		}
+	if !success {
+		fmt.Printf("got: %s\n", g)
 
-		return &Mix{
-			Type:  variation,
-			Stake: stake,
-			Games: games,
-		}
-
-	default:
-		fmt.Printf("got: %s\n", variation)
 		panic("can't create mix")
+	}
+
+	options, _ := Mixes[mixedGame]
+
+	games := make([]*Game, len(options))
+	for i, mixOptions := range options {
+		games[i] = NewGame(mixOptions.Type, mixOptions.Limit, stake)
+	}
+
+	return &Mix{
+		Type:  mixedGame,
+		Stake: stake,
+		Games: games,
 	}
 }
 
 func (mix *Mix) String() string {
 	return fmt.Sprintf("%s %s", mix.Type, mix.Stake)
+}
+
+func (mix *Mix) IsMixed() bool {
+	return true
 }

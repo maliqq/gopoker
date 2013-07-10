@@ -28,14 +28,15 @@ func NewGameRotation(mix *model.Mix, every int) *GameRotation {
 func (rotation *GameRotation) Next() *model.Game {
 	if rotation.counter >= rotation.every {
 		rotation.counter = 0
-		rotation.Rotate()
-	} else {
-		rotation.counter++
+		rotation.rotate()
+		return rotation.Current()
 	}
-	return rotation.Current()
+
+	rotation.counter++
+	return nil
 }
 
-func (rotation *GameRotation) Rotate() {
+func (rotation *GameRotation) rotate() {
 	rotation.index++
 	if rotation.index >= len(rotation.Mix.Games) {
 		rotation.index = 0
