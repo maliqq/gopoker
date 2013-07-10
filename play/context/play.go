@@ -271,20 +271,6 @@ func (this *Play) StartBettingRound() {
 	}
 }
 
-func (this *Play) discard(p *model.Player, cards *poker.Cards) {
-	pos, _ := this.Table.Pos(p)
-
-	cardsNum := len(*cards)
-
-	this.Broadcast.All <- protocol.NewDiscarded(pos, cardsNum)
-
-	if cardsNum > 0 {
-		newCards := this.Deal.Discard(p, cards)
-
-		this.Broadcast.One(p) <- protocol.NewDealPocket(pos, newCards, deal.Discard)
-	}
-}
-
 func (this *Play) ResetBetting() {
 	betting := this.Betting
 
@@ -297,6 +283,23 @@ func (this *Play) ResetBetting() {
 	}
 
 	this.Broadcast.All <- protocol.NewPotSummary(betting.Pot)
+}
+
+/*********************************
+* Discarding
+*********************************/
+func (this *Play) discard(p *model.Player, cards *poker.Cards) {
+	pos, _ := this.Table.Pos(p)
+
+	cardsNum := len(*cards)
+
+	this.Broadcast.All <- protocol.NewDiscarded(pos, cardsNum)
+
+	if cardsNum > 0 {
+		newCards := this.Deal.Discard(p, cards)
+
+		this.Broadcast.One(p) <- protocol.NewDealPocket(pos, newCards, deal.Discard)
+	}
 }
 
 /*********************************
