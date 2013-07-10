@@ -45,7 +45,7 @@ type Game struct {
 type Mix struct {
 	game.Type
 	*game.Stake
-	games []*Game
+	Games []*Game
 }
 
 var Games = map[game.Type]*GameOptions{
@@ -220,6 +220,10 @@ func NewMixedGame(variation game.Type, stake *game.Stake) *Mix {
 	return &Mix{
 		Type:  variation,
 		Stake: stake,
-		games: games,
+		Games: games,
 	}
+}
+
+func (mix *Mix) String() string {
+	return fmt.Sprintf("%s %s", mix.Type, mix.Stake)
 }
