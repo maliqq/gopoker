@@ -2,19 +2,19 @@ package game
 
 type LimitedGame string
 type MixedGame string
-type AnyGame string
+type Game string
 type Group string
 
 type Type interface {
-	Game() AnyGame
+	Game() Game
 }
 
-func (l LimitedGame) Game() AnyGame {
-	return AnyGame(l)
+func (g LimitedGame) Game() Game {
+	return Game(g)
 }
 
-func (m MixedGame) Game() AnyGame {
-	return AnyGame(m)
+func (g MixedGame) Game() Game {
+	return Game(g)
 }
 
 const (

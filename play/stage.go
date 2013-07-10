@@ -54,25 +54,32 @@ func BringIn(play *context.Play) {
 	play.BringIn()
 }
 
-func Dealing(dealingType deal.Type, cardsNum int) Stage {
-	return func(play *context.Play) {
-		if cardsNum == 0 && dealingType == deal.Hole {
-			cardsNum = play.Game.Options.Pocket
-		}
+type dealing struct {
+	deal.Type
+	n int
+}
 
-		log.Printf("[play] dealing %s %d cards\n", dealingType, cardsNum)
-
-		switch dealingType {
-		case deal.Hole:
-			play.DealHole(cardsNum)
-
-		case deal.Door:
-			play.DealDoor(cardsNum)
-
-		case deal.Board:
-			play.DealBoard(cardsNum)
-		}
+func (d dealing) Stage(play *context.Play) {
+	n := d.n
+	if d.n == 0 && d.Type == deal.Hole {
+		n = play.Game.Options.Pocket
 	}
+	log.Printf("[play] dealing %s %d cards\n", d.Type, n)
+
+	switch d.Type {
+	case deal.Hole:
+		play.DealHole(n)
+
+	case deal.Door:
+		play.DealDoor(n)
+
+	case deal.Board:
+		play.DealBoard(n)
+	}
+}
+
+func Dealing(t deal.Type, n int) Stage {
+	return dealing{t, n}.Stage
 }
 
 func Betting(play *context.Play) {

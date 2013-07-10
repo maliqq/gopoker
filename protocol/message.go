@@ -267,14 +267,7 @@ type ChangeGame struct {
 func NewChangeGame(g *model.Game) *Message {
 	return NewMessage(
 		ChangeGame{
-			Type: g.Type,
-		},
-	)
-}
-
-func NewChangeLimit(g *model.Game) *Message {
-	return NewMessage(
-		ChangeGame{
+			Type:  g.Type,
 			Limit: g.Limit,
 		},
 	)

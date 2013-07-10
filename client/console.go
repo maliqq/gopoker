@@ -24,9 +24,10 @@ import (
 )
 
 var (
-	logfile    = flag.String("logfile", "", "Log file path")
-	betsize    = flag.Float64("betsize", 20., "Bet size")
-	gametoplay = flag.String("game", "texas", "Game to play")
+	logfile     = flag.String("logfile", "", "Log file path")
+	betsize     = flag.Float64("betsize", 20., "Bet size")
+	mixedGame   = flag.String("mix", "", "Mix to play")
+	limitedGame = flag.String("game", "texas", "Game to play")
 )
 
 func main() {
@@ -135,6 +136,12 @@ func main() {
 				payload := msg.Payload.(protocol.Winner)
 
 				fmt.Printf("Player %s won %.2f\n", payload.Player, payload.Amount)
+
+			case protocol.ChangeGame:
+
+				payload := msg.Payload.(protocol.ChangeGame)
+
+				fmt.Printf("Game changed to %s %s\n", payload.Type, payload.Limit)
 			}
 		}
 	}
@@ -145,9 +152,17 @@ func createPlay(me protocol.MessageChannel) *context.Play {
 	size := 3
 	stake := game.NewStake(*betsize)
 	//stake.WithAnte = true
-	g := model.NewGame(game.LimitedGame(*gametoplay), game.FixedLimit, stake)
+
+	var variation model.Variation
+	if *mixedGame != "" {
+		variation = model.NewMix(game.MixedGame(*mixedGame), stake)
+	} else {
+		limit := game.FixedLimit
+		variation = model.NewGame(game.LimitedGame(*limitedGame), limit, stake)
+	}
+
 	table := model.NewTable(size)
-	play := context.NewPlay(g, table)
+	play := context.NewPlay(variation, table)
 
 	ids := []model.Id{"A", "B", "C", "D", "E", "F", "G", "H", "I"}
 	stack := 1500.

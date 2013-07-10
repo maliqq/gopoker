@@ -62,7 +62,7 @@ func NewPlay(variation model.Variation, table *model.Table) *Play {
 	if variation.IsMixed() {
 		mix := variation.(*model.Mix)
 		play.Mix = mix
-		play.GameRotation = NewGameRotation(mix, 0)
+		play.GameRotation = NewGameRotation(mix, 1)
 		play.Game = play.GameRotation.Current()
 	} else {
 		play.Game = variation.(*model.Game)
