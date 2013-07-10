@@ -63,7 +63,7 @@ func TestTableAddPlayer(t *testing.T) {
 func TestTablePosition(t *testing.T) {
 	table := NewTable(2)
 
-	emptySeats := table.GetSeats(0, func(s *Seat) bool {
+	emptySeats := table.Seats.From(0).Where(func(s *Seat) bool {
 		return s.State == seat.Empty
 	})
 

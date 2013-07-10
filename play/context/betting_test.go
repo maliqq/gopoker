@@ -15,12 +15,13 @@ func TestBetting(t *testing.T) {
 		Stack:  200.,
 	}
 	stake := game.NewStake(10.)
+	t.Logf("Stake: %s", stake)
 
 	// no limit
 	g := model.NewGame(game.Texas, game.NoLimit, stake)
 
 	b.RequireBet(0, seat, g)
-	req := b.requireBet
+	req := b.Required
 
 	t.Logf("Required: %s", req)
 
@@ -40,7 +41,7 @@ func TestBetting(t *testing.T) {
 	g = model.NewGame(game.Texas, game.FixedLimit, stake)
 
 	b.RequireBet(0, seat, g)
-	req = b.requireBet
+	req = b.Required
 
 	t.Logf("Required: %s", req)
 
@@ -48,7 +49,7 @@ func TestBetting(t *testing.T) {
 		t.Fatalf("required.Call mismatch")
 	}
 
-	if req.Min != stake.SmallBlindAmount() {
+	if req.Min != stake.BigBlindAmount() {
 		t.Fatalf("required.Min mismatch")
 	}
 
@@ -60,7 +61,7 @@ func TestBetting(t *testing.T) {
 	g = model.NewGame(game.Omaha, game.PotLimit, stake)
 
 	b.RequireBet(0, seat, g)
-	req = b.requireBet
+	req = b.Required
 
 	t.Logf("Required: %s", req)
 

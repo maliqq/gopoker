@@ -61,7 +61,7 @@ func TestParse(t *testing.T) {
 }
 
 func TestGenerate(t *testing.T) {
-	t.Logf("random deck: %s", Deck())
+	t.Logf("random deck: %s", NewDeck())
 }
 
 func TestSortByKind(t *testing.T) {
