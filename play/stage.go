@@ -12,8 +12,9 @@ import (
 
 type Stage func(*context.Play)
 
-func ResetSeats(play *context.Play) {
+func Init(play *context.Play) {
 	play.ResetSeats()
+	play.RotateGame()
 }
 
 func PostAntes(play *context.Play) {

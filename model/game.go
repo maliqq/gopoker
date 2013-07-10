@@ -48,7 +48,10 @@ type Mix struct {
 	Games []*Game
 }
 
-var Games = map[game.Type]*GameOptions{
+type Variation interface {
+}
+
+var Games = map[game.LimitedGame]*GameOptions{
 	game.Texas: &GameOptions{
 		Group:        game.Holdem,
 		HasBoard:     true,
@@ -173,7 +176,7 @@ var Games = map[game.Type]*GameOptions{
 	},
 }
 
-var Mixes = map[game.Type][]MixOptions{
+var Mixes = map[game.MixedGame][]MixOptions{
 	game.Horse: []MixOptions{
 		MixOptions{Type: game.Texas, Limit: game.FixedLimit},
 		MixOptions{Type: game.Omaha8, Limit: game.FixedLimit},
@@ -195,13 +198,20 @@ var Mixes = map[game.Type][]MixOptions{
 }
 
 func NewGame(variation game.Type, limit game.Limit, stake *game.Stake) *Game {
-	options, _ := Games[variation]
+	switch variation.(type) {
+	case game.LimitedGame:
+		options, _ := Games[variation.(game.LimitedGame)]
 
-	return &Game{
-		Type:    variation,
-		Limit:   limit,
-		Stake:   stake,
-		Options: options,
+		return &Game{
+			Type:    variation,
+			Limit:   limit,
+			Stake:   stake,
+			Options: options,
+		}
+	
+	default:
+		fmt.Printf("got: %s\n", variation)
+		panic("can't create game")
 	}
 }
 
@@ -209,18 +219,25 @@ func (game *Game) String() string {
 	return fmt.Sprintf("%s %s %s", game.Type, game.Limit, game.Stake)
 }
 
-func NewMixedGame(variation game.Type, stake *game.Stake) *Mix {
-	options, _ := Mixes[variation]
+func NewMix(variation game.Type, stake *game.Stake) *Mix {
+	switch variation.(type) {
+	case game.MixedGame:
+		options, _ := Mixes[variation.(game.MixedGame)]
 
-	games := make([]*Game, len(options))
-	for i, mixOptions := range options {
-		games[i] = NewGame(mixOptions.Type, mixOptions.Limit, stake)
-	}
+		games := make([]*Game, len(options))
+		for i, mixOptions := range options {
+			games[i] = NewGame(mixOptions.Type, mixOptions.Limit, stake)
+		}
 
-	return &Mix{
-		Type:  variation,
-		Stake: stake,
-		Games: games,
+		return &Mix{
+			Type:  variation,
+			Stake: stake,
+			Games: games,
+		}
+	
+	default:
+		fmt.Printf("got: %s\n", variation)
+		panic("can't create mix")
 	}
 }
 

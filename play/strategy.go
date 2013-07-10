@@ -88,7 +88,7 @@ var ByStreet = map[street.Type]Strategy{
 
 var DefaultStrategy = Strategy{
 	//DealStart,
-	ResetSeats, // FIXME
+	Init,
 	//MoveButton,
 	PostAntes,
 	PostBlinds,

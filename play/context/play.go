@@ -24,27 +24,56 @@ import (
 type Play struct {
 	*model.Deal
 	*model.Table
-	*model.Game
+	model.Variation
 
 	*protocol.Broadcast
 	Receive chan *protocol.Message
 	Control chan command.Type
 
+	*GameRotation
 	*Betting
 	*Discarding
 }
 
 func (this *Play) String() string {
-	return fmt.Sprintf("Game: %s\nTable: %s\n", this.Game, this.Table)
+	return fmt.Sprintf("Game: %s\nTable: %s\n", this.Game(), this.Table)
 }
 
-func NewPlay(game *model.Game, table *model.Table) *Play {
+// always returns current game
+func (this *Play) Game() *model.Game {
+	switch this.Variation.(type) {
+	case model.Game:
+		return this.Variation.(*model.Game)
+	case model.Mix:
+		return this.GameRotation.Current()
+	}
+
+	return nil
+}
+
+func (this *Play) RotateGame() {
+	switch this.Variation.(type) {
+	case model.Game:
+		// do nothing
+	case model.Mix:
+		this.GameRotation.Rotate()
+	}
+}
+
+func NewPlay(variation model.Variation, table *model.Table) *Play {
 	play := &Play{
-		Game:      game,
+		Variation: variation,
 		Table:     table,
 		Broadcast: protocol.NewBroadcast(),
 		Receive:   make(chan *protocol.Message),
 		Control:   make(chan command.Type),
+	}
+
+	switch variation.(type) {
+	case model.Game:
+		// ok
+	case model.Mix:
+		play.GameRotation = NewGameRotation(variation.(*model.Mix), 0)
 	}
 
 	go play.receive()
@@ -83,7 +112,7 @@ func (this *Play) receive() {
 func (this *Play) StartNextDeal() {
 	this.Deal = model.NewDeal()
 	this.Betting = NewBetting()
-	if this.Game.Options.Discards {
+	if this.Game().Options.Discards {
 		this.Discarding = NewDiscarding()
 	}
 }
@@ -108,7 +137,7 @@ func (this *Play) ResetSeats() {
 * Antes
 *********************************/
 func (this *Play) PostAntes() {
-	stake := this.Game.Stake
+	stake := this.Game().Stake
 
 	for _, pos := range this.Table.SeatsInPlay() {
 		seat := this.Table.Seat(pos)
@@ -125,7 +154,7 @@ func (this *Play) PostAntes() {
 * Blinds
 *********************************/
 func (this *Play) postSmallBlind(pos int) {
-	stake := this.Game.Stake
+	stake := this.Game().Stake
 
 	t := this.Table
 	newBet := this.Betting.ForceBet(pos, bet.SmallBlind, stake)
@@ -139,7 +168,7 @@ func (this *Play) postSmallBlind(pos int) {
 }
 
 func (this *Play) postBigBlind(pos int) {
-	stake := this.Game.Stake
+	stake := this.Game().Stake
 
 	t := this.Table
 	newBet := this.Betting.ForceBet(pos, bet.BigBlind, stake)
@@ -214,7 +243,7 @@ func (this *Play) BringIn() {
 
 	seat := this.Table.Seat(minPos)
 
-	this.Broadcast.One(seat.Player) <- this.Betting.RequireBet(minPos, seat, this.Game)
+	this.Broadcast.One(seat.Player) <- this.Betting.RequireBet(minPos, seat, this.Game())
 }
 
 /*********************************
@@ -259,7 +288,7 @@ func (this *Play) StartBettingRound() {
 	for _, pos := range this.Table.Seats.From(betting.Current()).InPlay() {
 		seat := this.Table.Seat(pos)
 
-		this.Broadcast.One(seat.Player) <- betting.RequireBet(pos, seat, this.Game)
+		this.Broadcast.One(seat.Player) <- betting.RequireBet(pos, seat, this.Game())
 
 		select {
 		case msg := <-betting.Receive:

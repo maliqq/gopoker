@@ -1,28 +1,40 @@
 package game
 
-type Type string
-
+type LimitedGame string
+type MixedGame string
+type AnyGame string
 type Group string
 
-const (
-	// simple
-	Texas    Type = "texas"
-	Omaha    Type = "omaha"
-	Omaha8   Type = "omaha8"
-	Stud     Type = "stud"
-	Stud8    Type = "stud8"
-	Razz     Type = "razz"
-	London   Type = "london"
-	FiveCard Type = "five-card"
-	Single27 Type = "single27"
-	Triple27 Type = "triple27"
-	Badugi   Type = "badugi"
-	// mixed
-	Horse Type = "horse"
-	Eight Type = "eight"
-)
+type Type interface {
+	Value() AnyGame
+}
+
+func (l LimitedGame) Value() AnyGame {
+	return AnyGame(l)
+}
+
+func (m MixedGame) Value() AnyGame {
+	return AnyGame(m)
+}
 
 const (
+	Texas    LimitedGame = "texas"
+	Omaha    LimitedGame = "omaha"
+	Omaha8   LimitedGame = "omaha8"
+	Stud     LimitedGame = "stud"
+	Stud8    LimitedGame = "stud8"
+	Razz     LimitedGame = "razz"
+	London   LimitedGame = "london"
+	FiveCard LimitedGame = "five-card"
+	Single27 LimitedGame = "single27"
+	Triple27 LimitedGame = "triple27"
+	Badugi   LimitedGame = "badugi"
+	
+	// mixes
+	Horse MixedGame = "horse"
+	Eight MixedGame = "eight"
+
+	// groups
 	Holdem     Group = "holdem"
 	SevenCard  Group = "seven-card"
 	SingleDraw Group = "single-draw"
