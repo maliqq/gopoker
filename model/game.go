@@ -208,7 +208,7 @@ func NewGame(variation game.Type, limit game.Limit, stake *game.Stake) *Game {
 			Stake:   stake,
 			Options: options,
 		}
-	
+
 	default:
 		fmt.Printf("got: %s\n", variation)
 		panic("can't create game")
@@ -234,7 +234,7 @@ func NewMix(variation game.Type, stake *game.Stake) *Mix {
 			Stake: stake,
 			Games: games,
 		}
-	
+
 	default:
 		fmt.Printf("got: %s\n", variation)
 		panic("can't create mix")

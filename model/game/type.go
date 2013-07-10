@@ -29,7 +29,7 @@ const (
 	Single27 LimitedGame = "single27"
 	Triple27 LimitedGame = "triple27"
 	Badugi   LimitedGame = "badugi"
-	
+
 	// mixes
 	Horse MixedGame = "horse"
 	Eight MixedGame = "eight"
