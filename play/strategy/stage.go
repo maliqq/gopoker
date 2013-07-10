@@ -37,12 +37,6 @@ func PostBlinds(play *context.Play) {
 	}
 }
 
-func BringIn(play *context.Play) {
-	log.Println("[play] bring in")
-
-	play.BringIn()
-}
-
 func StartStreets(play *context.Play) {
 	streets, _ := Streets[play.Game.Options.Group]
 
@@ -51,6 +45,12 @@ func StartStreets(play *context.Play) {
 
 		StreetStrategies[street].Proceed(play)
 	}
+}
+
+func BringIn(play *context.Play) {
+	log.Println("[play] bring in")
+
+	play.BringIn()
 }
 
 func Dealing(dealingType deal.Type, cardsNum int) Stage {
@@ -74,14 +74,14 @@ func Dealing(dealingType deal.Type, cardsNum int) Stage {
 	}
 }
 
-func BettingRound(play *context.Play) {
+func Betting(play *context.Play) {
 	log.Println("[play] betting")
 
 	play.StartBettingRound()
 	play.ResetBetting()
 }
 
-func DiscardingRound(play *context.Play) {
+func Discarding(play *context.Play) {
 	log.Println("[play] discarding")
 
 	log.Fatalf("not implemented")

@@ -49,20 +49,20 @@ var StreetStrategies = map[Street]Strategy{
 	// holdem poker
 	Preflop: Strategy{
 		Dealing(deal.Hole, 0),
-		BettingRound,
+		Betting,
 	},
 	Flop: Strategy{
 		Dealing(deal.Board, 3),
-		BettingRound,
+		Betting,
 	},
 	Turn: Strategy{
 		Dealing(deal.Board, 1),
 		BigBets,
-		BettingRound,
+		Betting,
 	},
 	River: Strategy{
 		Dealing(deal.Board, 1),
-		BettingRound,
+		Betting,
 	},
 
 	// seven card poker
@@ -72,47 +72,47 @@ var StreetStrategies = map[Street]Strategy{
 	Third: Strategy{
 		Dealing(deal.Door, 1),
 		BringIn,
-		BettingRound,
+		Betting,
 	},
 	Fourth: Strategy{
 		Dealing(deal.Door, 1),
-		BettingRound,
+		Betting,
 	},
 	Fifth: Strategy{
 		Dealing(deal.Door, 1),
 		BigBets,
-		BettingRound,
+		Betting,
 	},
 	Sixth: Strategy{
 		Dealing(deal.Door, 1),
-		BettingRound,
+		Betting,
 	},
 	Seventh: Strategy{
 		Dealing(deal.Hole, 1),
-		BettingRound,
+		Betting,
 	},
 
 	// draw poker
 	Predraw: Strategy{
 		Dealing(deal.Hole, 5),
-		BettingRound,
-		DiscardingRound,
+		Betting,
+		Discarding,
 	},
 	Draw: Strategy{
 		BigBets,
-		BettingRound,
-		DiscardingRound,
+		Betting,
+		Discarding,
 	},
 	FirstDraw: Strategy{
-		BettingRound,
-		DiscardingRound,
+		Betting,
+		Discarding,
 	},
 	SecondDraw: Strategy{
-		BettingRound,
-		DiscardingRound,
+		Betting,
+		Discarding,
 	},
 	ThirdDraw: Strategy{
-		BettingRound,
-		DiscardingRound,
+		Betting,
+		Discarding,
 	},
 }

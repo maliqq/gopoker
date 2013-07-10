@@ -28,7 +28,6 @@ func NewBetting() *Betting {
 		requireBet: &protocol.RequireBet{},
 
 		Pot: model.NewPot(),
-		Log: []*protocol.Message{},
 
 		Receive: make(chan *protocol.Message),
 	}
