@@ -2,8 +2,11 @@ package protocol
 
 import (
 	"fmt"
-	"gopoker/util/console"
 	"log"
+)
+
+import (
+	"gopoker/util/console"
 )
 
 type MessageChannel chan *Message

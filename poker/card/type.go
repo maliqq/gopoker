@@ -2,6 +2,9 @@ package card
 
 import (
 	"fmt"
+)
+
+import (
 	"gopoker/util/console"
 )
 

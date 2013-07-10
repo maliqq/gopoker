@@ -1,13 +1,16 @@
 package server
 
 import (
+	"log"
+	"net"
+	"net/http"
+)
+
+import (
 	"code.google.com/p/go.net/websocket"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/rpc"
 	"github.com/gorilla/rpc/json"
-	"log"
-	"net"
-	"net/http"
 )
 
 const (

@@ -2,6 +2,9 @@ package poker
 
 import (
 	"fmt"
+)
+
+import (
 	"gopoker/poker/hand"
 )
 

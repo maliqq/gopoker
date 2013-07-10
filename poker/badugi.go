@@ -2,6 +2,9 @@ package poker
 
 import (
 	"errors"
+)
+
+import (
 	"gopoker/poker/hand"
 )
 

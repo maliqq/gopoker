@@ -1,9 +1,12 @@
 package poker
 
 import (
-	"gopoker/poker/card"
 	"sort"
 	"testing"
+)
+
+import (
+	"gopoker/poker/card"
 )
 
 func TestAll(t *testing.T) {
