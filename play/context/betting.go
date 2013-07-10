@@ -19,7 +19,6 @@ type Betting struct {
 	BigBets bool
 
 	*model.Pot
-	Log []*protocol.Message
 
 	Receive chan *protocol.Message
 }
@@ -92,7 +91,6 @@ func (this *Betting) ValidateBet(seat *model.Seat, newBet *bet.Bet) error {
 
 	case bet.Call, bet.Raise:
 		amount := newBet.Amount
-		all_in := amount == seat.Stack
 
 		if amount > seat.Stack {
 			return fmt.Errorf("Bet amount is greater than available stack: amount=%.2f stack=%.2f", amount, seat.Stack)
@@ -113,7 +111,7 @@ func (this *Betting) ValidateBet(seat *model.Seat, newBet *bet.Bet) error {
 				return fmt.Errorf("Raise invalid: amount=%.2f max=%.2f", amount, require.Max)
 			}
 
-			if raiseAmount < require.Min && !all_in {
+			if raiseAmount < require.Min && amount != seat.Stack {
 				return fmt.Errorf("Raise invalid: amount=%.2f min=%.2f", amount, require.Min)
 			}
 		}
@@ -145,7 +143,8 @@ func (this *Betting) AddBet(seat *model.Seat, newBet *bet.Bet) error {
 
 	} else {
 		amount := newBet.Amount
-		all_in := amount == seat.Stack
+
+		this.Pot.Add(seat.Player.Id, amount, amount == seat.Stack)
 
 		if newBet.IsForced() {
 			// ante, blinds
@@ -159,8 +158,6 @@ func (this *Betting) AddBet(seat *model.Seat, newBet *bet.Bet) error {
 			}
 			seat.PutBet(amount)
 		}
-
-		this.Pot.Add(seat.Player.Id, amount, all_in)
 	}
 
 	return err
@@ -169,17 +166,11 @@ func (this *Betting) AddBet(seat *model.Seat, newBet *bet.Bet) error {
 func (this *Betting) Add(seat *model.Seat, msg *protocol.Message) {
 	newBet := msg.Payload.(protocol.AddBet).Bet
 
-	log.Printf("Player %s %s\n", seat.Player, newBet.String())
+	log.Printf("[betting] Player %s %s\n", seat.Player, newBet.String())
 
 	err := this.AddBet(seat, &newBet)
 
 	if err != nil {
-		log.Printf("[betting.error] %s", err)
-	} else {
-		this.log(msg)
+		log.Printf("[betting] %s", err)
 	}
-}
-
-func (this *Betting) log(msg *protocol.Message) {
-	this.Log = append(this.Log, msg)
 }
