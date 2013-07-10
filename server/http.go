@@ -160,7 +160,7 @@ func (service HttpService) GenerateDeck(resp http.ResponseWriter, req *http.Requ
 	resp.Write([]byte(s))
 }
 
-func (service HttpService) GetDeal(resp http.ResponseWriter, req *http.Request) {
+func (service HttpService) Deal(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
@@ -176,23 +176,23 @@ func (service HttpService) Muck(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
-func (service HttpService) GetPot(resp http.ResponseWriter, req *http.Request) {
+func (service HttpService) Pot(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
-func (service HttpService) GetStage(resp http.ResponseWriter, req *http.Request) {
+func (service HttpService) Stage(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
-func (service HttpService) GetResults(resp http.ResponseWriter, req *http.Request) {
+func (service HttpService) Results(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
-func (service HttpService) GetKnownHands(resp http.ResponseWriter, req *http.Request) {
+func (service HttpService) KnownHands(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
-func (service HttpService) GetTable(resp http.ResponseWriter, req *http.Request) {
+func (service HttpService) Table(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
@@ -212,7 +212,7 @@ func (service HttpService) AddOn(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
-func (service HttpService) GetTableSeating(resp http.ResponseWriter, req *http.Request) {
+func (service HttpService) TableSeating(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
@@ -220,6 +220,6 @@ func (service HttpService) Wait(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
-func (service HttpService) GetTableStats(resp http.ResponseWriter, req *http.Request) {
+func (service HttpService) TableStats(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }

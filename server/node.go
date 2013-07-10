@@ -58,78 +58,36 @@ func (n *Node) startHttpService() {
 	api := router.PathPrefix(httpApiRoot).Subrouter()
 
 	// misc
-	api.HandleFunc("/hand/detect", func(resp http.ResponseWriter, req *http.Request) {
-		service.DetectHand(resp, req)
-	}).Methods("GET", "POST")
-	api.HandleFunc("/hand/random", func(resp http.ResponseWriter, req *http.Request) {
-		service.RandomHand(resp, req)
-	}).Methods("GET")
-	api.HandleFunc("/hand/compare", func(resp http.ResponseWriter, req *http.Request) {
-		service.CompareHands(resp, req)
-	}).Methods("GET", "POST")
-	api.HandleFunc("/hand/odds", func(resp http.ResponseWriter, req *http.Request) {
-		service.CalculateOdds(resp, req)
-	}).Methods("GET", "POST")
+	api.HandleFunc("/hand/detect", service.DetectHand).Methods("GET", "POST")
+	api.HandleFunc("/hand/random", service.RandomHand).Methods("GET")
+	api.HandleFunc("/hand/compare", service.CompareHands).Methods("GET", "POST")
+	api.HandleFunc("/hand/odds", service.CalculateOdds).Methods("GET", "POST")
 
-	api.HandleFunc("/deck/generate", func(resp http.ResponseWriter, req *http.Request) {
-		service.GenerateDeck(resp, req)
-	}).Methods("GET")
+	api.HandleFunc("/deck/generate", service.GenerateDeck).Methods("GET")
 
 	// Deal
-	api.HandleFunc("/deal/{deal}", func(resp http.ResponseWriter, req *http.Request) {
-		service.GetDeal(resp, req)
-	}).Methods("GET")
+	api.HandleFunc("/deal/{deal}", service.Deal).Methods("GET")
 
-	api.HandleFunc("/deal/{deal}/bet", func(resp http.ResponseWriter, req *http.Request) {
-		service.Bet(resp, req)
-	}).Methods("PUT")
-	api.HandleFunc("/deal/{deal}/discard", func(resp http.ResponseWriter, req *http.Request) {
-		service.Discard(resp, req)
-	}).Methods("PUT")
-	api.HandleFunc("/deal/{deal}/muck", func(resp http.ResponseWriter, req *http.Request) {
-		service.Muck(resp, req)
-	}).Methods("PUT")
+	api.HandleFunc("/deal/{deal}/bet", service.Bet).Methods("PUT")
+	api.HandleFunc("/deal/{deal}/discard", service.Discard).Methods("PUT")
+	api.HandleFunc("/deal/{deal}/muck", service.Muck).Methods("PUT")
 
-	api.HandleFunc("/deal/{deal}/pot", func(resp http.ResponseWriter, req *http.Request) {
-		service.GetPot(resp, req)
-	}).Methods("GET")
-	api.HandleFunc("/deal/{deal}/stage", func(resp http.ResponseWriter, req *http.Request) {
-		service.GetStage(resp, req)
-	}).Methods("GET")
-	api.HandleFunc("/deal/{deal}/results", func(resp http.ResponseWriter, req *http.Request) {
-		service.GetResults(resp, req)
-	}).Methods("GET")
-	api.HandleFunc("/deal/{deal}/known_hands", func(resp http.ResponseWriter, req *http.Request) {
-		service.GetKnownHands(resp, req)
-	}).Methods("GET")
+	api.HandleFunc("/deal/{deal}/pot", service.Pot).Methods("GET")
+	api.HandleFunc("/deal/{deal}/stage", service.Stage).Methods("GET")
+	api.HandleFunc("/deal/{deal}/results", service.Results).Methods("GET")
+	api.HandleFunc("/deal/{deal}/known_hands", service.KnownHands).Methods("GET")
 
 	// Table
-	api.HandleFunc("/table/{table}", func(resp http.ResponseWriter, req *http.Request) {
-		service.GetTable(resp, req)
-	}).Methods("POST")
+	api.HandleFunc("/table/{table}", service.Table).Methods("POST")
 
-	api.HandleFunc("/table/{table}/join", func(resp http.ResponseWriter, req *http.Request) {
-		service.JoinTable(resp, req)
-	}).Methods("POST")
-	api.HandleFunc("/table/{table}/leave", func(resp http.ResponseWriter, req *http.Request) {
-		service.LeaveTable(resp, req)
-	}).Methods("DELETE")
-	api.HandleFunc("/table/{table}/rebuy", func(resp http.ResponseWriter, req *http.Request) {
-		service.Rebuy(resp, req)
-	}).Methods("POST")
-	api.HandleFunc("/table/{table}/addon", func(resp http.ResponseWriter, req *http.Request) {
-		service.AddOn(resp, req)
-	}).Methods("POST")
+	api.HandleFunc("/table/{table}/join", service.JoinTable).Methods("POST")
+	api.HandleFunc("/table/{table}/leave", service.LeaveTable).Methods("DELETE")
+	api.HandleFunc("/table/{table}/rebuy", service.Rebuy).Methods("POST")
+	api.HandleFunc("/table/{table}/addon", service.AddOn).Methods("POST")
 
-	api.HandleFunc("/table/{table}/seating", func(resp http.ResponseWriter, req *http.Request) {
-		service.GetTableSeating(resp, req)
-	}).Methods("GET")
-	api.HandleFunc("/table/{table}/wait", func(resp http.ResponseWriter, req *http.Request) {
-		service.Wait(resp, req)
-	}).Methods("PUT")
-	api.HandleFunc("/table/{table}/stats", func(resp http.ResponseWriter, req *http.Request) {
-		service.GetTableStats(resp, req)
-	}).Methods("GET")
+	api.HandleFunc("/table/{table}/seating", service.TableSeating).Methods("GET")
+	api.HandleFunc("/table/{table}/wait", service.Wait).Methods("PUT")
+	api.HandleFunc("/table/{table}/stats", service.TableStats).Methods("GET")
 
 	// WebSocket
 	router.Handle(wsRoot, websocket.Handler(WebSocketHandler))
