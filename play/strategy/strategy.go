@@ -12,15 +12,13 @@ func (strategy Strategy) Proceed(play *context.Play) {
 	}
 }
 
-var (
-	Default = Strategy{
-		//DealStart,
-		ResetSeats, // FIXME
-		//MoveButton,
-		PostAntes,
-		PostBlinds,
-		StartStreets,
-		Showdown,
-		//DealStop,
-	}
-)
+var Default = Strategy{
+	//DealStart,
+	ResetSeats, // FIXME
+	//MoveButton,
+	PostAntes,
+	PostBlinds,
+	StartStreets,
+	Showdown,
+	//DealStop,
+}
