@@ -23,7 +23,7 @@ func PostAntes(play *context.Play) {
 		log.Println("[play] post antes")
 
 		play.PostAntes()
-		play.ResetBets()
+		play.ResetBetting()
 	}
 }
 
@@ -38,7 +38,7 @@ func PostBlinds(play *context.Play) {
 }
 
 func BringIn(play *context.Play) {
-	log.Println("[play.stage] bring in")
+	log.Println("[play] bring in")
 
 	play.BringIn()
 }
@@ -47,7 +47,7 @@ func StartStreets(play *context.Play) {
 	streets, _ := Streets[play.Game.Options.Group]
 
 	for _, street := range streets {
-		log.Printf("[play.street] %s\n", street)
+		log.Printf("[play] %s\n", street)
 
 		StreetStrategies[street].Proceed(play)
 	}
@@ -59,7 +59,7 @@ func Dealing(dealingType deal.Type, cardsNum int) Stage {
 			cardsNum = play.Game.Options.Pocket
 		}
 
-		log.Printf("[play.stage] dealing %s %d cards\n", dealingType, cardsNum)
+		log.Printf("[play] dealing %s %d cards\n", dealingType, cardsNum)
 
 		switch dealingType {
 		case deal.Hole:
@@ -75,19 +75,20 @@ func Dealing(dealingType deal.Type, cardsNum int) Stage {
 }
 
 func BettingRound(play *context.Play) {
-	log.Println("[play.stage] betting")
+	log.Println("[play] betting")
 
 	play.StartBettingRound()
+	play.ResetBetting()
 }
 
 func DiscardingRound(play *context.Play) {
-	log.Println("[play.stage] discarding")
+	log.Println("[play] discarding")
 
 	log.Fatalf("not implemented")
 }
 
 func BigBets(play *context.Play) {
-	log.Println("[play.stage] big bets")
+	log.Println("[play] big bets")
 
 	play.Betting.BigBets = true
 }
@@ -108,4 +109,6 @@ func Showdown(play *context.Play) {
 	}
 
 	play.Winners(highHands, lowHands)
+
+	play.ScheduleNextDeal()
 }

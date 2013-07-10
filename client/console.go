@@ -66,7 +66,7 @@ func main() {
 				for newBet == nil {
 					newBet, _ = readBet(&r)
 
-					err := context.ValidateBet(&r, play.Table.Seat(r.Pos), newBet)
+					err := play.Betting.ValidateBet(play.Table.Seat(r.Pos), newBet)
 					if err != nil {
 						fmt.Println(err.Error())
 						newBet = nil

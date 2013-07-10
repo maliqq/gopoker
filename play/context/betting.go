@@ -81,7 +81,9 @@ func (this *Betting) RequireBet(pos int, seat *model.Seat, game *model.Game) *pr
 	return protocol.NewRequireBet(&newRequire)
 }
 
-func ValidateBet(require *protocol.RequireBet, seat *model.Seat, newBet *bet.Bet) error {
+func (this *Betting) ValidateBet(seat *model.Seat, newBet *bet.Bet) error {
+	require := this.requireBet
+
 	switch newBet.Type {
 	case bet.Check:
 		if require.Call != 0. {
@@ -120,6 +122,15 @@ func ValidateBet(require *protocol.RequireBet, seat *model.Seat, newBet *bet.Bet
 	return nil
 }
 
+func (this *Betting) Call(amount float64) {
+	this.requireBet.Call = amount
+}
+
+func (this *Betting) Raise(amount float64) {
+	this.raiseCount++
+	this.requireBet.Call += amount
+}
+
 func (this *Betting) AddBet(seat *model.Seat, newBet *bet.Bet) error {
 	if newBet.Type == bet.Fold {
 		seat.Fold()
@@ -127,9 +138,7 @@ func (this *Betting) AddBet(seat *model.Seat, newBet *bet.Bet) error {
 		return nil
 	}
 
-	require := this.requireBet
-
-	err := ValidateBet(require, seat, newBet)
+	err := this.ValidateBet(seat, newBet)
 
 	if err != nil {
 		seat.Fold() // force fold
@@ -140,17 +149,14 @@ func (this *Betting) AddBet(seat *model.Seat, newBet *bet.Bet) error {
 
 		if newBet.IsForced() {
 			// ante, blinds
-			require.Call = amount
-
+			this.Call(amount)
 			seat.SetBet(amount)
 
 		} else if newBet.IsActive() {
 			// raise, call
 			if newBet.Type == bet.Raise {
-				this.raiseCount++
-				require.Call += amount
+				this.Raise(amount)
 			}
-
 			seat.PutBet(amount)
 		}
 

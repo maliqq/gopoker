@@ -1,7 +1,7 @@
 package play
 
 import (
-	_ "fmt"
+	_"fmt"
 )
 
 import (
@@ -17,8 +17,8 @@ Loop:
 		case cmd := <-play.Control:
 			switch cmd {
 			case command.NextDeal:
-				play.NextDeal()
-				strategy.Default.Proceed(play)
+				play.StartNextDeal()
+				go strategy.Default.Proceed(play)
 
 			case command.Exit:
 				break Loop
