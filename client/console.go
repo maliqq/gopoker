@@ -11,6 +11,7 @@ import (
 )
 
 import (
+	"gopoker/poker"
 	"gopoker/model"
 	"gopoker/model/bet"
 	"gopoker/model/deal"
@@ -23,8 +24,9 @@ import (
 )
 
 var (
-	logfile = flag.String("logfile", "", "Log file path")
-	betsize = flag.Float64("betsize", 20., "Bet size")
+	logfile    = flag.String("logfile", "", "Log file path")
+	betsize    = flag.Float64("betsize", 20., "Bet size")
+	gametoplay = flag.String("game", "texas", "Game to play")
 )
 
 func main() {
@@ -60,7 +62,7 @@ func main() {
 
 				r := msg.Payload.(protocol.RequireBet)
 
-				fmt.Printf("Require %s\n", r)
+				fmt.Printf("%s\n", r)
 
 				var newBet *bet.Bet
 				for newBet == nil {
@@ -74,6 +76,21 @@ func main() {
 				}
 
 				play.Receive <- protocol.NewAddBet(r.Pos, newBet)
+
+			case protocol.RequireDiscard:
+
+				r := msg.Payload.(protocol.RequireDiscard)
+
+				seat := play.Table.Seat(r.Pos)
+
+				fmt.Printf("Your cards: [%s]\n", play.Deal.Pocket(seat.Player))
+
+				var cards *poker.Cards
+				for cards == nil {
+					cards = readCards()
+				}
+
+				play.Receive <- protocol.NewDiscardCards(r.Pos, cards)
 
 			case protocol.DealCards:
 
@@ -128,9 +145,10 @@ func createPlay(me protocol.MessageChannel) *context.Play {
 	size := 3
 	stake := game.NewStake(*betsize)
 	//stake.WithAnte = true
-	game := model.NewGame(game.Texas, game.FixedLimit, stake)
+	g := model.NewGame(game.LimitedGame(*gametoplay), game.FixedLimit, stake)
 	table := model.NewTable(size)
-	play := context.NewPlay(game, table)
+	play := context.NewPlay(g, table)
+	fmt.Printf("play.Game()=%#v", play.Game())
 
 	ids := []model.Id{"A", "B", "C", "D", "E", "F", "G", "H", "I"}
 	stack := 1500.
@@ -149,24 +167,41 @@ func createPlay(me protocol.MessageChannel) *context.Play {
 	return play
 }
 
+func readLine() string {
+	fmt.Print(">>> ")
+	str, _ := bufio.NewReader(os.Stdin).ReadString('\n')
+	str = strings.TrimRight(str, "\n")
+	return str
+}
+
 func readBet(r *protocol.RequireBet) (*bet.Bet, string) {
 	var b *bet.Bet
-	var betString string
+	var str string
 
 	for b == nil {
-		fmt.Print(">>> ")
-		betString, _ = bufio.NewReader(os.Stdin).ReadString('\n')
+		str = readLine()
 
-		betString = strings.TrimRight(betString, "\n")
-
-		if betString == "exit" {
+		if str == "exit" {
 			return nil, "exit"
 		}
 
-		b = parseBet(r, betString)
+		b = parseBet(r, str)
 	}
 
-	return b, betString
+	return b, str
+}
+
+func readCards() *poker.Cards {
+	var cards *poker.Cards
+	for cards == nil {
+		str := readLine()
+		var err error
+		cards, err = poker.ParseCards(str)
+		if err != nil {
+			fmt.Printf("error: %s\n", err)
+		}
+	}
+	return cards
 }
 
 func parseBet(r *protocol.RequireBet, betString string) *bet.Bet {

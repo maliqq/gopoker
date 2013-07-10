@@ -42,10 +42,13 @@ func (this *Play) String() string {
 // always returns current game
 func (this *Play) Game() *model.Game {
 	switch this.Variation.(type) {
-	case model.Game:
+	case *model.Game:
 		return this.Variation.(*model.Game)
-	case model.Mix:
+	case *model.Mix:
 		return this.GameRotation.Current()
+	default:
+		fmt.Printf("got: %#v\n", this.Variation)
+		panic("unknown game")
 	}
 
 	return nil
@@ -53,10 +56,13 @@ func (this *Play) Game() *model.Game {
 
 func (this *Play) RotateGame() {
 	switch this.Variation.(type) {
-	case model.Game:
+	case *model.Game:
 		// do nothing
-	case model.Mix:
+	case *model.Mix:
 		this.GameRotation.Rotate()
+	default:
+		fmt.Printf("got: %#v\n", this.Variation)
+		panic("unknown game")
 	}
 }
 
@@ -109,11 +115,11 @@ func (this *Play) receive() {
 /*********************************
 * Deals
 *********************************/
-func (this *Play) StartNextDeal() {
+func (this *Play) StartNewDeal() {
 	this.Deal = model.NewDeal()
 	this.Betting = NewBetting()
 	if this.Game().Options.Discards {
-		this.Discarding = NewDiscarding()
+		this.Discarding = NewDiscarding(this.Deal)
 	}
 }
 
@@ -327,7 +333,8 @@ func (this *Play) StartDiscardingRound() {
 
 		select {
 		case msg := <-discarding.Receive:
-			discarding.Add(seat, msg)
+			player, cards := discarding.Add(seat, msg)
+			this.discard(player, cards)
 
 		case <-time.After(time.Duration(DefaultTimer) * time.Second):
 			fmt.Println("timeout!")

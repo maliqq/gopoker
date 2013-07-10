@@ -1,6 +1,10 @@
 package model
 
 import (
+	"fmt"
+)
+
+import (
 	"gopoker/poker"
 	"gopoker/poker/ranking"
 )
@@ -48,6 +52,7 @@ func (this *Deal) DealPocket(player *Player, cardsNum int) *poker.Cards {
 }
 
 func (this *Deal) Discard(player *Player, cards *poker.Cards) *poker.Cards {
+	fmt.Printf("deal=%#v", this)
 	pocket := this.Pocket(player)
 	newCards := this.dealer.Discard(cards)
 

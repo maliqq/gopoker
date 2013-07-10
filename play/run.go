@@ -12,7 +12,6 @@ Loop:
 		case cmd := <-play.Control:
 			switch cmd {
 			case command.NextDeal:
-				play.StartNextDeal()
 				go DefaultStrategy.Proceed(play)
 
 			case command.Exit:
