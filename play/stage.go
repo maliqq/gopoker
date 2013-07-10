@@ -6,8 +6,8 @@ import (
 
 import (
 	"gopoker/model/deal"
-	"gopoker/play/street"
 	"gopoker/play/context"
+	"gopoker/play/street"
 )
 
 type Stage func(*context.Play)
@@ -41,7 +41,7 @@ func PostBlinds(play *context.Play) {
 func StartStreets(play *context.Play) {
 	for _, street := range street.Get(play.Game.Options.Group) {
 		log.Printf("[play] %s\n", street)
-		
+
 		ByStreet[street].Proceed(play)
 	}
 }

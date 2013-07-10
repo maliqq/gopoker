@@ -85,7 +85,9 @@ func (service HttpService) CompareHands(resp http.ResponseWriter, req *http.Requ
 	h2, _ := poker.Detect[ranking.High](&c2)
 
 	s, _ := json.Marshal(&CompareResult{
-		h1, h2, h1.Compare(h2),
+		A:      h1,
+		B:      h2,
+		Result: h1.Compare(h2),
 	})
 
 	resp.Write([]byte(s))
@@ -121,10 +123,12 @@ func (service HttpService) CalculateOdds(resp http.ResponseWriter, req *http.Req
 		}
 	}
 	s, _ := json.Marshal(&OddsResult{
-		a, b, total,
-		float64(wins) / float64(total),
-		float64(ties) / float64(total),
-		float64(loses) / float64(total),
+		A:     a,
+		B:     b,
+		Total: total,
+		Wins:  float64(wins) / float64(total),
+		Ties:  float64(ties) / float64(total),
+		Loses: float64(loses) / float64(total),
 	})
 
 	resp.Write([]byte(s))
