@@ -90,6 +90,10 @@ func (t *Table) Seat(pos int) *Seat {
 	return t.Seats[pos]
 }
 
+func (t *Table) SeatsFromButton() seatSlice {
+	return t.Seats.From(t.Button)
+}
+
 func (t *Table) SeatsInPlay() []int {
 	return t.Seats.From(t.Button).InPlay()
 }

@@ -317,6 +317,24 @@ func (this *Play) ResetBetting() {
 /*********************************
 * Discarding
 *********************************/
+func (this *Play) StartDiscardingRound() {
+	discarding := this.Discarding
+
+	for _, pos := range this.Table.SeatsFromButton().InPlay() {
+		seat := this.Table.Seat(pos)
+
+		this.Broadcast.One(seat.Player) <- discarding.RequireDiscard(pos)
+
+		select {
+		case msg := <-discarding.Receive:
+			discarding.Add(seat, msg)
+
+		case <-time.After(time.Duration(DefaultTimer) * time.Second):
+			fmt.Println("timeout!")
+		}
+	}
+}
+
 func (this *Play) discard(p *model.Player, cards *poker.Cards) {
 	pos, _ := this.Table.Pos(p)
 

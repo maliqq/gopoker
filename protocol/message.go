@@ -171,12 +171,8 @@ type RequireDiscard struct {
 	Pos int
 }
 
-func NewRequireDiscard(pos int) *Message {
-	return NewMessage(
-		RequireDiscard{
-			Pos: pos,
-		},
-	)
+func NewRequireDiscard(req *RequireDiscard) *Message {
+	return NewMessage(*req)
 }
 
 type Discarded struct {
