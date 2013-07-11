@@ -73,7 +73,7 @@ func (b Bet) IsActive() bool {
 
 func (b Bet) IsForced() bool {
 	switch b.Type.(type) {
-	case PassiveBet:
+	case ForcedBet:
 		return true
 	}
 

@@ -219,8 +219,11 @@ type RequireBet struct {
 	Max  float64
 }
 
-func NewRequireBet(req *RequireBet) *Message {
-	return NewMessage(*req)
+func NewRequireBet(seat *model.Seat, req *RequireBet) *Message {
+	newReq := *req
+	newReq.Call -= seat.Bet
+
+	return NewMessage(newReq)
 }
 
 func (r RequireBet) String() string {

@@ -159,7 +159,6 @@ func (hc *handCards) isStraight() *Hand {
 		if len(group) >= 5 {
 			cards := group.Arrange(hc.Ordering)
 
-			// FIXME: wheel straight
 			return &Hand{
 				Value: cards[0:5],
 				High:  Cards{cards[0]},

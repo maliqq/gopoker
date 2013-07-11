@@ -7,6 +7,7 @@ import (
 type GroupedCards []Cards
 
 func (g *GroupedCards) ArrangeByFirst(ord Ordering) *GroupedCards {
+	// copy
 	groups := *g
 
 	sort.Sort(ByFirst{groups, ord})
@@ -15,6 +16,7 @@ func (g *GroupedCards) ArrangeByFirst(ord Ordering) *GroupedCards {
 }
 
 func (g *GroupedCards) ArrangeByMax(ord Ordering) *GroupedCards {
+	// copy
 	groups := *g
 
 	sort.Sort(ByMax{groups, ord})
@@ -22,10 +24,10 @@ func (g *GroupedCards) ArrangeByMax(ord Ordering) *GroupedCards {
 	return &groups
 }
 
-func (groups *GroupedCards) Count() *map[int]GroupedCards {
+func (g *GroupedCards) Count() *map[int]GroupedCards {
 	count := map[int]GroupedCards{}
 
-	for _, group := range *groups {
+	for _, group := range *g {
 		length := len(group)
 		if _, present := count[length]; !present {
 			count[length] = GroupedCards{}

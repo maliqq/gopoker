@@ -63,17 +63,10 @@ func (this *Betting) ForceBet(pos int, betType bet.Type, stake *game.Stake) *bet
 }
 
 func (this *Betting) RequireBet(pos int, seat *model.Seat, game *model.Game) *protocol.Message {
-	newRequired := &protocol.RequireBet{
-		Pos:  pos,
-		Call: this.Required.Call - seat.Bet,
-	}
+	this.Required.Pos = pos
+	this.Required.Min, this.Required.Max = game.Limit.RaiseRange(game.Stake, seat.Stack+seat.Bet, this.Pot.Total(), this.BigBets)
 
-	newRequired.Min, newRequired.Max = game.Limit.RaiseRange(game.Stake, seat.Stack+seat.Bet, this.Pot.Total(), this.BigBets)
-
-	// FIXME
-	this.Required = newRequired
-
-	return protocol.NewRequireBet(newRequired)
+	return protocol.NewRequireBet(seat, this.Required)
 }
 
 func (this *Betting) ValidateBet(seat *model.Seat, newBet *bet.Bet) error {
@@ -92,23 +85,23 @@ func (this *Betting) ValidateBet(seat *model.Seat, newBet *bet.Bet) error {
 			return fmt.Errorf("Bet amount is greater than available stack: amount=%.2f stack=%.2f", amount, seat.Stack)
 		}
 
-		if newBet.Type == bet.Call && amount != require.Call {
-			return fmt.Errorf("Call mismatch: amount=%.2f call=%.2f", amount, require.Call)
+		if newBet.Type == bet.Call && amount != require.Call - seat.Bet {
+			return fmt.Errorf("Call mismatch: got amount=%.2f need to call=%.2f", amount, require.Call)
 		}
 
 		if newBet.Type == bet.Raise {
 			if require.Max == 0. {
-				return fmt.Errorf("Raise not allowed in current this: amount=%.2f", amount)
+				return fmt.Errorf("Raise not allowed in current betting: got amount=%.2f", amount)
 			}
 
 			raiseAmount := require.Call - amount
 
 			if raiseAmount > require.Max {
-				return fmt.Errorf("Raise invalid: amount=%.2f max=%.2f", amount, require.Max)
+				return fmt.Errorf("Raise invalid: got amount=%.2f required max=%.2f", amount, require.Max)
 			}
 
 			if raiseAmount < require.Min && amount != seat.Stack {
-				return fmt.Errorf("Raise invalid: amount=%.2f min=%.2f", amount, require.Min)
+				return fmt.Errorf("Raise invalid: got amount=%.2f required min=%.2f", amount, require.Min)
 			}
 		}
 	}

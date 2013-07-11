@@ -10,6 +10,9 @@ import (
 	"gopoker/play/street"
 )
 
+/*
+Strategy invoking
+*/
 type Stage func(*context.Play)
 
 func Init(play *context.Play) {
