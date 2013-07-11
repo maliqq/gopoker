@@ -70,10 +70,7 @@ func (hc *handCards) isStraightFlush() *Hand {
 	flushCards := maybeFlush.Value
 
 	newPocket := NewHandCards(
-		&ordCards{
-			Cards:    &flushCards,
-			Ordering: hc.Ordering(),
-		},
+		NewOrderedCards(&flushCards, hc.Ordering()),
 	)
 
 	if maybeStraight := newPocket.isStraight(); maybeStraight != nil {

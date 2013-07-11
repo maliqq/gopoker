@@ -21,7 +21,7 @@ type handCards struct {
 }
 
 type Hand struct {
-	*handCards
+	handCards *handCards
 
 	Rank   hand.Rank
 	Value  Cards

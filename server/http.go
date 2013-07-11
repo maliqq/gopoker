@@ -18,6 +18,7 @@ type HttpService struct {
 type CompareResult struct {
 	A      *poker.Hand
 	B      *poker.Hand
+	Board *poker.Cards
 	Result int
 }
 
@@ -61,6 +62,7 @@ func (service HttpService) DetectHand(resp http.ResponseWriter, req *http.Reques
 			resp.Write([]byte(err.Error()))
 			return
 		}
+		
 		s, _ := json.Marshal(hand)
 
 		resp.Write([]byte(s))
@@ -87,6 +89,7 @@ func (service HttpService) CompareHands(resp http.ResponseWriter, req *http.Requ
 	s, _ := json.Marshal(&CompareResult{
 		A:      h1,
 		B:      h2,
+		Board: board,
 		Result: h1.Compare(h2),
 	})
 

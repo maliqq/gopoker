@@ -115,3 +115,12 @@ func (this *ordCards) GroupBySuit() *[]Cards {
 		return 0
 	})
 }
+
+func (this *ordCards) Arrange() *Cards {
+	cards := make(Cards, len(*this.Cards))
+
+	copy(cards, *this.Cards)
+	sort.Sort(Arrange{ByKind{cards, this.Ordering}})
+
+	return &cards
+}

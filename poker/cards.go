@@ -110,7 +110,7 @@ func (c Cards) MarshalJSON() ([]byte, error) {
 	//if len(c) == 0 {
 	//  return []byte("null"), nil
 	//}
-	return json.Marshal(c.Binary())
+	return json.Marshal(c.UnicodeString())
 }
 
 func (this *Cards) Shuffle() *Cards {
