@@ -55,7 +55,7 @@ func (this *Deal) Discard(player *Player, cards *poker.Cards) *poker.Cards {
 	pocket := this.Pocket(player)
 	newCards := this.dealer.Discard(cards)
 
-	diff := poker.DiffCards(pocket, cards)
+	diff := pocket.Diff(cards)
 	*pocket = append(*diff, *newCards...)
 
 	return newCards

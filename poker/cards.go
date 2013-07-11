@@ -15,6 +15,7 @@ import (
 
 type Cards []Card
 
+// FIXME move to card/
 func AllCards() *Cards {
 	kinds := card.AllKinds()
 	suits := card.AllSuits()
@@ -38,7 +39,7 @@ func GenerateCards(n int) *Cards {
 }
 
 func NewDeck() *Cards {
-	return ShuffleCards(AllCards())
+	return AllCards().Shuffle()
 }
 
 func ParseCards(s string) (*Cards, error) {
@@ -120,7 +121,7 @@ func (c Cards) MarshalJSON() ([]byte, error) {
 	return json.Marshal(c.Binary())
 }
 
-func ShuffleCards(c *Cards) *Cards {
+func (c *Cards) Shuffle() *Cards {
 	// seed random
 	rand.Seed(time.Now().UnixNano())
 
@@ -133,7 +134,7 @@ func ShuffleCards(c *Cards) *Cards {
 	return &cards
 }
 
-func DiffCards(a *Cards, b *Cards) *Cards {
+func (a *Cards) Diff(b *Cards) *Cards {
 	result := make(Cards, len(*a))
 	present := make(map[int]bool, len(*b))
 
@@ -156,7 +157,7 @@ func DiffCards(a *Cards, b *Cards) *Cards {
 
 type groupFunc func(card *Card, prev *Card) int
 
-func (cards *Cards) GroupCards(test groupFunc) *[]Cards {
+func (cards *Cards) Group(test groupFunc) *[]Cards {
 	length := len(*cards)
 	groups := make([]Cards, length)
 	group := make(Cards, length)
@@ -208,13 +209,21 @@ func (c Cards) Combine(m int) []Cards {
 	}
 
 	k := 0
-	cards := make(Cards, m)
-	for i, j := range index[:m] {
-		cards[i] = c[j]
-	}
-	result[k] = cards
-	k++
 
+	getCards := func() Cards {
+		cards := make(Cards, m)
+		for i, j := range index {
+			cards[i] = c[j]
+		}
+		return cards
+	}
+
+	add := func() {
+		result[k] = getCards()
+		k++
+	}
+
+	add()
 	for {
 		i := m - 1
 		for ; i >= 0 && index[i] == i+n-m; i -= 1 {
@@ -229,12 +238,7 @@ func (c Cards) Combine(m int) []Cards {
 			index[j] = index[j-1] + 1
 		}
 
-		cards := make(Cards, m)
-		for i, j := range index {
-			cards[i] = c[j]
-		}
-		result[k] = cards
-		k++
+		add()
 	}
 
 	return result

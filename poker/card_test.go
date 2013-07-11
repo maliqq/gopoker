@@ -84,7 +84,7 @@ func TestSortBySuit(t *testing.T) {
 func TestDiff(t *testing.T) {
 	c1, _ := ParseCards("Ah2d3d7c")
 	c2, _ := ParseCards("6s2d3d8c")
-	result := DiffCards(c1, c2)
+	result := c1.Diff(c2)
 	t.Logf("result=%s", result)
 	if (*result).String() != "Ah7c" {
 		t.FailNow()

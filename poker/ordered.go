@@ -28,7 +28,7 @@ func (o *OrderedCards) Gaps() *[]Cards {
 
 	cards = append(cards, sorted...)
 
-	return cards.GroupCards(func(card *Card, prev *Card) int {
+	return cards.Group(func(card *Card, prev *Card) int {
 		d := card.Index(o.ord) - prev.Index(o.ord)
 
 		if d == 0 {
@@ -46,7 +46,7 @@ func (o *OrderedCards) Gaps() *[]Cards {
 func (o *OrderedCards) Kickers(cards *Cards) *Cards {
 	length := 5 - len(*cards)
 
-	diff := DiffCards(o.value, cards)
+	diff := o.value.Diff(cards)
 
 	sort.Sort(Arrange{ByKind{*diff, o.ord}})
 
@@ -62,7 +62,7 @@ func (o *OrderedCards) GroupedByKind() *[]Cards {
 
 	sort.Sort(ByKind{cards, o.ord})
 
-	return cards.GroupCards(func(card *Card, prev *Card) int {
+	return cards.Group(func(card *Card, prev *Card) int {
 		if card.kind == prev.kind {
 			return 1
 		}
@@ -78,7 +78,7 @@ func (o *OrderedCards) GroupedBySuit() *[]Cards {
 
 	sort.Sort(BySuit{cards})
 
-	return cards.GroupCards(func(card *Card, prev *Card) int {
+	return cards.Group(func(card *Card, prev *Card) int {
 		if card.suit == prev.suit {
 			return 1
 		}

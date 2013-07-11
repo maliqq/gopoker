@@ -75,7 +75,7 @@ func (pocket *PocketCards) isBadugiThree() *Hand {
 
 		a = &cards[0]
 
-		diff := DiffCards(pocket.Cards(), &cards)
+		diff := pocket.Cards().Diff(&cards)
 
 		for _, card := range *diff {
 			if a.kind != card.kind {
@@ -99,7 +99,7 @@ func (pocket *PocketCards) isBadugiThree() *Hand {
 	} else if !hasPaired && len(suited) == 1 {
 		a = suited[0].Min(pocket.Ordering())
 
-		diff := DiffCards(pocket.Cards(), &suited[0])
+		diff := pocket.Cards().Diff(&suited[0])
 
 		for _, card := range *diff {
 			if a.suit != card.suit {
@@ -136,7 +136,7 @@ func (pocket *PocketCards) isBadugiTwo() *Hand {
 	if hasPaired {
 		cards := sets[0]
 
-		diff := DiffCards(pocket.Cards(), &cards)
+		diff := pocket.Cards().Diff(&cards)
 
 		b = &(*diff)[0]
 
@@ -151,7 +151,7 @@ func (pocket *PocketCards) isBadugiTwo() *Hand {
 	} else if hasSuited {
 		cards := suited[0]
 
-		diff := DiffCards(pocket.Cards(), &cards)
+		diff := pocket.Cards().Diff(&cards)
 
 		a = &(*diff)[0]
 
@@ -169,7 +169,7 @@ func (pocket *PocketCards) isBadugiTwo() *Hand {
 
 		a = cards.Min(pocket.Ordering())
 
-		diff := DiffCards(pocket.Cards(), &cards)
+		diff := pocket.Cards().Diff(&cards)
 
 		c := Cards{}
 		for _, card := range *diff {
@@ -185,7 +185,7 @@ func (pocket *PocketCards) isBadugiTwo() *Hand {
 
 		a = &cards[0]
 
-		diff := DiffCards(pocket.Cards(), &cards)
+		diff := pocket.Cards().Diff(&cards)
 
 		c := Cards{}
 		for _, card := range *diff {
