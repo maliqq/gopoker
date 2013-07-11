@@ -236,7 +236,7 @@ func (c Cards) Arrange(ord Ordering) Cards {
 }
 
 func (c Cards) Reverse(ord Ordering) Cards {
-	sort.Sort(Arrange{ByKind{c, ord}})
+	sort.Sort(Reverse{ByKind{c, ord}})
 
 	return c
 }

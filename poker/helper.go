@@ -6,6 +6,7 @@ import (
 
 import (
 	"gopoker/poker/card"
+	"gopoker/poker/hand"
 )
 
 type Ordering int
@@ -20,19 +21,19 @@ const (
 type cardsHelper struct {
 	Cards
 	Ordering
-	Reversed bool
+	Low bool
 }
 
-func (this *cardsHelper) Qualify(q card.Kind) *Cards {
+func (this *cardsHelper) Qualify(q card.Kind) {
 	qualified := Cards{}
 
 	for _, card := range this.Cards {
-		if card.Index(this.Ordering) < kindIndex(q, this.Ordering) {
+		if card.Index(this.Ordering) <= kindIndex(q, this.Ordering) {
 			qualified = append(qualified, card)
 		}
 	}
 
-	return &qualified
+	this.Cards = qualified
 }
 
 func (this *cardsHelper) Gaps() *GroupedCards {
@@ -111,4 +112,48 @@ func (this *cardsHelper) Reverse() *Cards {
 	cards := this.Cards.Reverse(this.Ordering)
 
 	return &cards
+}
+
+func (this *cardsHelper) IsLow() (*Hand, error) {
+	uniq := Cards{}
+	for _, cards := range *this.GroupByKind() {
+		uniq = append(uniq, cards[0])
+	}
+
+	lowCards := uniq.Reverse(this.Ordering)
+
+	if len(lowCards) == 0 {
+		return nil, nil
+	}
+
+	if len(lowCards) >= 5 {
+		lowCards = lowCards[0:5]
+	}
+
+	max := lowCards.Max(this.Ordering)
+	newHand := &Hand{
+		Value: lowCards,
+		High:  Cards{*max},
+	}
+
+	if len(lowCards) == 5 {
+		newHand.Rank = hand.CompleteLow
+	} else {
+		newHand.Rank = hand.IncompleteLow
+	}
+
+	return newHand, nil
+}
+
+func (this *cardsHelper) IsGapLow() (*Hand, error) {
+	high, err := isHigh(&this.Cards)
+	if err != nil {
+		return nil, err
+	}
+
+	if high.Rank == hand.HighCard {
+		return this.IsLow()
+	}
+
+	return high, nil
 }
