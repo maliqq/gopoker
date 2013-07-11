@@ -81,13 +81,27 @@ func (this *Play) receive() {
 		switch msg.Payload.(type) {
 		case protocol.JoinTable:
 			join := msg.Payload.(protocol.JoinTable)
-
 			this.Table.AddPlayer(join.Player, join.Pos, join.Amount)
+
+			//this.Broadcast.Except(join.Player) <- join
 
 		case protocol.LeaveTable:
 			leave := msg.Payload.(protocol.LeaveTable)
-
 			this.Table.RemovePlayer(leave.Player)
+
+			//this.Broadcast.Except(join.Player) <- leave
+
+			// TODO: fold & autoplay
+
+		case protocol.SitOut:
+			sitOut := msg.Payload.(protocol.SitOut)
+			this.Table.Seat(sitOut.Pos).State = seat.Idle
+
+			// TODO: fold
+
+		case protocol.ComeBack:
+			comeBack := msg.Payload.(protocol.ComeBack)
+			this.Table.Seat(comeBack.Pos).State = seat.Ready
 
 		case protocol.AddBet:
 			this.Betting.Receive <- msg

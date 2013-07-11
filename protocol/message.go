@@ -122,6 +122,14 @@ type ChangeSeatState struct {
 	State seat.State
 }
 
+type SitOut struct {
+	Pos int
+}
+
+type ComeBack struct {
+	Pos int
+}
+
 // seat info
 type Seat struct {
 	State string

@@ -217,10 +217,10 @@ func readCards() *poker.Cards {
 	return cards
 }
 
-func parseBet(r *protocol.RequireBet, betString string) *bet.Bet {
+func parseBet(r *protocol.RequireBet, str string) *bet.Bet {
 	var b *bet.Bet
 
-	switch betString {
+	switch str {
 	case "":
 		if r.Call == 0. {
 			b = bet.NewCheck()
@@ -238,7 +238,7 @@ func parseBet(r *protocol.RequireBet, betString string) *bet.Bet {
 		b = bet.NewCall(r.Call)
 
 	default:
-		parts := strings.Split(betString, " ")
+		parts := strings.Split(str, " ")
 
 		var amountString string
 		if len(parts) == 1 {
