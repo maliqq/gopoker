@@ -200,45 +200,17 @@ func (cards *Cards) Group(test groupFunc) *[]Cards {
 
 func (c Cards) Combine(m int) []Cards {
 	n := len(c)
-	size := util.Fact(int64(n)) / util.Fact(int64(n-m)) / util.Fact(int64(m))
-	result := make([]Cards, size)
 
-	index := make([]int, m)
-	for i := range index {
-		index[i] = i
-	}
+	indexes := util.Comb(n, m)
 
-	k := 0
+	result := make([]Cards, len(indexes))
 
-	getCards := func() Cards {
+	for i, index := range indexes {
 		cards := make(Cards, m)
 		for i, j := range index {
 			cards[i] = c[j]
 		}
-		return cards
-	}
-
-	add := func() {
-		result[k] = getCards()
-		k++
-	}
-
-	add()
-	for {
-		i := m - 1
-		for ; i >= 0 && index[i] == i+n-m; i -= 1 {
-		}
-
-		if i < 0 {
-			break
-		}
-
-		index[i] += 1
-		for j := i + 1; j < m; j += 1 {
-			index[j] = index[j-1] + 1
-		}
-
-		add()
+		result[i] = cards
 	}
 
 	return result
