@@ -4,23 +4,52 @@ import (
 	"sort"
 )
 
+import (
+	"gopoker/poker/card"
+)
+
 type Ordering int
 
-type ordCards struct {
-	value *Cards
+const (
+	Ace              = card.Ace
+	AceHigh Ordering = 0
+	AceLow  Ordering = 1
+)
 
-	ord Ordering
+// cards with ordering (ace high/ace low)
+type ordCards struct {
+	*Cards
+	Ordering
 }
 
-func (o *ordCards) Gaps() *[]Cards {
-	sorted := make(Cards, len(*o.value))
+func NewOrderedCards(cards *Cards, ord Ordering) *ordCards {
+	return &ordCards{
+		Cards: cards,
+		Ordering: ord,
+	}
+}
 
-	copy(sorted, *o.value)
+func (this *ordCards) Qualify(q card.Kind) *ordCards {
+	qualified := Cards{}
 
-	sort.Sort(ByKind{sorted, o.ord})
+	for _, card := range *this.Cards {
+		if card.Index(this.Ordering) < kindIndex(q, this.Ordering) {
+			qualified = append(qualified, card)
+		}
+	}
+
+	return NewOrderedCards(&qualified, this.Ordering)
+}
+
+func (this *ordCards) Gaps() *[]Cards {
+	sorted := make(Cards, len(*this.Cards))
+
+	copy(sorted, *this.Cards)
+
+	sort.Sort(ByKind{sorted, this.Ordering})
 
 	cards := Cards{}
-	for _, card := range *o.value {
+	for _, card := range *this.Cards {
 		if Ace == card.kind {
 			cards = append(cards, card)
 		}
@@ -29,7 +58,7 @@ func (o *ordCards) Gaps() *[]Cards {
 	cards = append(cards, sorted...)
 
 	return cards.Group(func(card *Card, prev *Card) int {
-		d := card.Index(o.ord) - prev.Index(o.ord)
+		d := card.Index(this.Ordering) - prev.Index(this.Ordering)
 
 		if d == 0 {
 			return -1
@@ -43,24 +72,24 @@ func (o *ordCards) Gaps() *[]Cards {
 	})
 }
 
-func (o *ordCards) Kickers(cards *Cards) *Cards {
+func (this *ordCards) Kickers(cards *Cards) *Cards {
 	length := 5 - len(*cards)
 
-	diff := o.value.Diff(cards)
+	diff := this.Cards.Diff(cards)
 
-	sort.Sort(Arrange{ByKind{*diff, o.ord}})
+	sort.Sort(Arrange{ByKind{*diff, this.Ordering}})
 
 	result := (*diff)[0:length]
 
 	return &result
 }
 
-func (o *ordCards) GroupedByKind() *[]Cards {
-	cards := make(Cards, len(*o.value))
+func (this *ordCards) GroupByKind() *[]Cards {
+	cards := make(Cards, len(*this.Cards))
 
-	copy(cards, *o.value)
+	copy(cards, *this.Cards)
 
-	sort.Sort(ByKind{cards, o.ord})
+	sort.Sort(ByKind{cards, this.Ordering})
 
 	return cards.Group(func(card *Card, prev *Card) int {
 		if card.kind == prev.kind {
@@ -71,10 +100,10 @@ func (o *ordCards) GroupedByKind() *[]Cards {
 	})
 }
 
-func (o *ordCards) GroupedBySuit() *[]Cards {
-	cards := make(Cards, len(*o.value))
+func (this *ordCards) GroupBySuit() *[]Cards {
+	cards := make(Cards, len(*this.Cards))
 
-	copy(cards, *o.value)
+	copy(cards, *this.Cards)
 
 	sort.Sort(BySuit{cards})
 

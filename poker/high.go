@@ -71,8 +71,8 @@ func (hc *handCards) isStraightFlush() *Hand {
 
 	newPocket := NewHandCards(
 		&ordCards{
-			value: &flushCards,
-			ord:   hc.Ordering(),
+			Cards: &flushCards,
+			Ordering:   hc.Ordering(),
 		},
 	)
 
@@ -229,12 +229,12 @@ func (hc *handCards) isHighCard() *Hand {
 	}
 }
 
-func isHigh(c *Cards) (*Hand, error) {
-	if len(*c) < 5 {
+func isHigh(cards *Cards) (*Hand, error) {
+	if len(*cards) < 5 {
 		return nil, errors.New("5 or more cards required to detect high hand")
 	}
 
-	hc := NewHandCards(&ordCards{c, AceHigh})
+	hc := NewHandCards(NewOrderedCards(cards, AceHigh))
 
 	hand := hc.Detect(HighRanks)
 

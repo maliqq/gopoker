@@ -204,12 +204,12 @@ func (hc *handCards) isBadugiTwo() *Hand {
 	}
 }
 
-func isBadugi(c *Cards) (*Hand, error) {
-	if len(*c) != 4 {
+func isBadugi(cards *Cards) (*Hand, error) {
+	if len(*cards) != 4 {
 		return nil, errors.New("4 cards required to detect badugi hand")
 	}
 
-	hc := NewHandCards(&ordCards{c, AceLow})
+	hc := NewHandCards(NewOrderedCards(cards, AceLow))
 
 	hand := hc.Detect(BadugiRanks)
 

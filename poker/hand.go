@@ -34,8 +34,8 @@ type Hand struct {
 }
 
 func NewHandCards(o *ordCards) *handCards {
-	groupKind := o.GroupedByKind()
-	groupSuit := o.GroupedBySuit()
+	groupKind := o.GroupByKind()
+	groupSuit := o.GroupBySuit()
 
 	return &handCards{
 		ordCards: o,
@@ -51,11 +51,11 @@ func NewHandCards(o *ordCards) *handCards {
 }
 
 func (c *handCards) Cards() *Cards {
-	return c.ordCards.value
+	return c.ordCards.Cards
 }
 
 func (c *handCards) Ordering() Ordering {
-	return c.ordCards.ord
+	return c.ordCards.Ordering
 }
 
 type rankFunc func(*handCards) (hand.Rank, *Hand)

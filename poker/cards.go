@@ -113,11 +113,11 @@ func (c Cards) MarshalJSON() ([]byte, error) {
 	return json.Marshal(c.Binary())
 }
 
-func (c *Cards) Shuffle() *Cards {
+func (this *Cards) Shuffle() *Cards {
 	// seed random
 	rand.Seed(time.Now().UnixNano())
 
-	cards := *c
+	cards := *this
 	for i := range cards {
 		j := rand.Intn(i + 1)
 		cards[i], cards[j] = cards[j], cards[i]
@@ -149,21 +149,21 @@ func (a *Cards) Diff(b *Cards) *Cards {
 
 type groupFunc func(card *Card, prev *Card) int
 
-func (cards *Cards) Group(test groupFunc) *[]Cards {
-	length := len(*cards)
+func (this *Cards) Group(test groupFunc) *[]Cards {
+	length := len(*this)
 	groups := make([]Cards, length)
 	group := make(Cards, length)
 
 	j, k := 0, 0
 	for i := 0; i < length; i++ {
-		card := (*cards)[i]
+		card := (*this)[i]
 
 		if i == 0 {
 			group[j] = card
 			j++
 
 		} else {
-			prev := (*cards)[i-1]
+			prev := (*this)[i-1]
 			result := test(&card, &prev)
 
 			if result == 1 {
@@ -190,8 +190,8 @@ func (cards *Cards) Group(test groupFunc) *[]Cards {
 	return &result
 }
 
-func (c Cards) Combine(m int) []Cards {
-	n := len(c)
+func (this *Cards) Combine(m int) []Cards {
+	n := len(*this)
 
 	indexes := util.Comb(n, m)
 
@@ -200,7 +200,7 @@ func (c Cards) Combine(m int) []Cards {
 	for i, index := range indexes {
 		cards := make(Cards, m)
 		for i, j := range index {
-			cards[i] = c[j]
+			cards[i] = (*this)[j]
 		}
 		result[i] = cards
 	}

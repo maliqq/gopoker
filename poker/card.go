@@ -16,12 +16,6 @@ type Card struct {
 	suit card.Suit
 }
 
-const (
-	Ace              = card.Ace
-	AceHigh Ordering = 0
-	AceLow  Ordering = 1
-)
-
 func (card Card) String() string {
 	return card.kind.String() + card.suit.String()
 }
@@ -82,18 +76,22 @@ func ParseCard(s string) (*Card, error) {
 	return nil, fmt.Errorf("can't parse card %s", s)
 }
 
-func (c Card) Index(ord Ordering) int {
+func kindIndex(kind card.Kind, ord Ordering) int {
 	switch ord {
 	case AceHigh:
-		return int(c.kind) + 1
+		return int(kind) + 1
 	case AceLow:
-		if Ace == c.kind {
+		if Ace == kind {
 			return 0
 		}
-		return int(c.kind) + 1
+		return int(kind) + 1
 	}
 
 	return -1
+}
+
+func (c Card) Index(ord Ordering) int {
+	return kindIndex(c.kind, ord)
 }
 
 func (c Card) Equal(other Card) bool {
