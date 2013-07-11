@@ -23,6 +23,7 @@ type ByKind struct {
 	Cards
 	Ordering
 }
+
 func (c ByKind) Len() int {
 	return len(c.Cards)
 }
