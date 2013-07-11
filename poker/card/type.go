@@ -93,13 +93,14 @@ type Tuple struct {
 	Suit
 }
 
-func all() []Tuple{
+func all() []Tuple {
 	cards := make([]Tuple, CardsNum)
 
 	k := 0
 	for _, kind := range AllKinds() {
 		for _, suit := range AllSuits() {
-			cards[k] = Tuple{kind, suit}; k++
+			cards[k] = Tuple{kind, suit}
+			k++
 		}
 	}
 

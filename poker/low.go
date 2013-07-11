@@ -21,16 +21,16 @@ func isLow(c *ordCards) (*Hand, error) {
 	max := lowCards.Max(c.Ordering)
 	newHand := &Hand{
 		Value: lowCards,
-		High: Cards{*max},
+		High:  Cards{*max},
 	}
 
-    if len(lowCards) == 5 {
-      newHand.Rank = hand.CompleteLow
-    } else {
-      newHand.Rank = hand.IncompleteLow
-    }
+	if len(lowCards) == 5 {
+		newHand.Rank = hand.CompleteLow
+	} else {
+		newHand.Rank = hand.IncompleteLow
+	}
 
-    return newHand, nil
+	return newHand, nil
 }
 
 func isGapLow(c *ordCards) (*Hand, error) {
@@ -38,7 +38,7 @@ func isGapLow(c *ordCards) (*Hand, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	if high.Rank == hand.HighCard {
 		return isLow(c)
 	}

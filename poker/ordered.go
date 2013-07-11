@@ -24,7 +24,7 @@ type ordCards struct {
 
 func NewOrderedCards(cards *Cards, ord Ordering) *ordCards {
 	return &ordCards{
-		Cards: cards,
+		Cards:    cards,
 		Ordering: ord,
 	}
 }

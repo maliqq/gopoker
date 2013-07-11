@@ -71,8 +71,8 @@ func (hc *handCards) isStraightFlush() *Hand {
 
 	newPocket := NewHandCards(
 		&ordCards{
-			Cards: &flushCards,
-			Ordering:   hc.Ordering(),
+			Cards:    &flushCards,
+			Ordering: hc.Ordering(),
 		},
 	)
 
