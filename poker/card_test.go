@@ -1,7 +1,6 @@
 package poker
 
 import (
-	"sort"
 	"testing"
 )
 
@@ -9,7 +8,7 @@ import (
 	"gopoker/poker/card"
 )
 
-func TestAll(t *testing.T) {
+func TestCard(t *testing.T) {
 	kinds := card.AllKinds()
 	suits := card.AllSuits()
 	cards := AllCards()
@@ -64,21 +63,8 @@ func TestParse(t *testing.T) {
 }
 
 func TestGenerate(t *testing.T) {
-	t.Logf("random deck: %s", NewDeck())
-}
-
-func TestSortByKind(t *testing.T) {
-	parsed, _ := ParseCards("7s3s6s4s")
-	sort.Sort(ByKind{*parsed, AceHigh})
-
-	t.Logf("sorted by kind=%s", parsed)
-}
-
-func TestSortBySuit(t *testing.T) {
-	parsed, _ := ParseCards("3d3s4d4c4s")
-	sort.Sort(BySuit{*parsed})
-
-	t.Logf("sorted by suit=%s", parsed)
+	deck := NewDeck()
+	t.Logf("random deck: %s", deck)
 }
 
 func TestDiff(t *testing.T) {
@@ -91,20 +77,12 @@ func TestDiff(t *testing.T) {
 	}
 }
 
-func TestGroupByKind(t *testing.T) {
-
-}
-
-func TestGroupBySuit(t *testing.T) {
-
-}
-
-func TestCountGroups(t *testing.T) {
+func TestGroupedCards(t *testing.T) {
 	c1, _ := ParseCards("AsAhAdAc")
 	c2, _ := ParseCards("KsKhKd")
 	c3, _ := ParseCards("QsQh")
 	c4, _ := ParseCards("Js")
-	groups := []Cards{*c1, *c2, *c3, *c4}
-	result := CountGroups(&groups)
+	groups := GroupedCards{*c1, *c2, *c3, *c4}
+	result := groups.Count()
 	t.Logf("result=%s", *result)
 }

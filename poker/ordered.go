@@ -41,12 +41,8 @@ func (this *ordCards) Qualify(q card.Kind) *ordCards {
 	return NewOrderedCards(&qualified, this.Ordering)
 }
 
-func (this *ordCards) Gaps() *[]Cards {
-	sorted := make(Cards, len(*this.Cards))
-
-	copy(sorted, *this.Cards)
-
-	sort.Sort(ByKind{sorted, this.Ordering})
+func (this *ordCards) Gaps() *GroupedCards {
+	sorted := this.Arrange()
 
 	cards := Cards{}
 	for _, card := range *this.Cards {
@@ -55,7 +51,7 @@ func (this *ordCards) Gaps() *[]Cards {
 		}
 	}
 
-	cards = append(cards, sorted...)
+	cards = append(cards, *sorted...)
 
 	return cards.Group(func(card *Card, prev *Card) int {
 		d := card.Index(this.Ordering) - prev.Index(this.Ordering)
@@ -77,19 +73,18 @@ func (this *ordCards) Kickers(cards *Cards) *Cards {
 
 	diff := this.Cards.Diff(cards)
 
-	sort.Sort(Arrange{ByKind{*diff, this.Ordering}})
-
-	result := (*diff)[0:length]
+	result := diff.Arrange(this.Ordering)
+	result = result[0:length]
 
 	return &result
 }
 
-func (this *ordCards) GroupByKind() *[]Cards {
+func (this *ordCards) GroupByKind() *GroupedCards {
 	cards := make(Cards, len(*this.Cards))
 
 	copy(cards, *this.Cards)
 
-	sort.Sort(ByKind{cards, this.Ordering})
+	sort.Sort(BySuit{cards})
 
 	return cards.Group(func(card *Card, prev *Card) int {
 		if card.kind == prev.kind {
@@ -100,14 +95,10 @@ func (this *ordCards) GroupByKind() *[]Cards {
 	})
 }
 
-func (this *ordCards) GroupBySuit() *[]Cards {
-	cards := make(Cards, len(*this.Cards))
+func (this *ordCards) GroupBySuit() *GroupedCards {
+	sorted := this.Arrange() // FIXME
 
-	copy(cards, *this.Cards)
-
-	sort.Sort(BySuit{cards})
-
-	return cards.Group(func(card *Card, prev *Card) int {
+	return sorted.Group(func(card *Card, prev *Card) int {
 		if card.suit == prev.suit {
 			return 1
 		}
@@ -117,10 +108,13 @@ func (this *ordCards) GroupBySuit() *[]Cards {
 }
 
 func (this *ordCards) Arrange() *Cards {
-	cards := make(Cards, len(*this.Cards))
+	cards := this.Cards.Arrange(this.Ordering)
 
-	copy(cards, *this.Cards)
-	sort.Sort(Arrange{ByKind{cards, this.Ordering}})
+	return &cards
+}
+
+func (this *ordCards) Reverse() *Cards {
+	cards := this.Cards.Reverse(this.Ordering)
 
 	return &cards
 }

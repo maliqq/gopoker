@@ -11,7 +11,7 @@ func isLow(c *ordCards) (*Hand, error) {
 		uniq = append(uniq, cards[0])
 	}
 
-	lowCards := *ArrangeCards(&uniq, c.Ordering)
+	lowCards := uniq.Reverse(c.Ordering)
 	lowCards = lowCards[0:5]
 
 	if len(lowCards) == 0 {

@@ -50,7 +50,7 @@ func (hc *handCards) isBadugiOne() *Hand {
 
 func (hc *handCards) isBadugiFour() *Hand {
 	if len(hc.groupKind) == 4 && len(hc.groupSuit) == 4 {
-		cards := ArrangeCards(hc.Cards(), hc.Ordering())
+		cards := hc.ordCards.Arrange()
 
 		return &Hand{
 			Value: *cards,
@@ -120,10 +120,10 @@ func (hc *handCards) isBadugiThree() *Hand {
 		return nil
 	}
 
-	cards := ArrangeCards(&Cards{*a, *b, *c}, hc.Ordering())
+	cards := NewOrderedCards(&Cards{*a, *b, *c}, hc.Ordering())
 
 	return &Hand{
-		Value: *cards,
+		Value: *cards.Arrange(),
 	}
 }
 
@@ -197,10 +197,10 @@ func (hc *handCards) isBadugiTwo() *Hand {
 		b = c.Min(hc.Ordering())
 	}
 
-	cards := ArrangeCards(&Cards{*a, *b}, hc.Ordering())
+	cards := NewOrderedCards(&Cards{*a, *b}, hc.Ordering())
 
 	return &Hand{
-		Value: *cards,
+		Value: *cards.Arrange(),
 	}
 }
 

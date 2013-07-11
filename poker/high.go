@@ -118,7 +118,7 @@ func (hc *handCards) isFullHouse() *Hand {
 	var minor, major Cards
 
 	if len(sets) > 1 {
-		sorted := ArrangeGroupsByFirst(&sets, hc.Ordering())
+		sorted := sets.ArrangeByFirst(hc.Ordering())
 
 		major = (*sorted)[0]
 		minor = (*sorted)[1]
@@ -129,7 +129,7 @@ func (hc *handCards) isFullHouse() *Hand {
 			return nil
 		}
 
-		sortedPairs := ArrangeGroupsByFirst(&pairs, hc.Ordering())
+		sortedPairs := pairs.ArrangeByFirst(hc.Ordering())
 
 		major = sets[0]
 		minor = (*sortedPairs)[0]
@@ -144,7 +144,7 @@ func (hc *handCards) isFullHouse() *Hand {
 func (hc *handCards) isFlush() *Hand {
 	for count, group := range *hc.suited {
 		if count >= 5 {
-			cards := *ArrangeCards(&group[0], hc.Ordering())
+			cards := group[0].Arrange(hc.Ordering())
 
 			return &Hand{
 				High:  Cards{cards[0]},
@@ -159,7 +159,7 @@ func (hc *handCards) isFlush() *Hand {
 func (hc *handCards) isStraight() *Hand {
 	for _, group := range hc.gaps {
 		if len(group) >= 5 {
-			cards := *ArrangeCards(&group, hc.Ordering())
+			cards := group.Arrange(hc.Ordering())
 
 			// FIXME: wheel straight
 			return &Hand{
@@ -191,7 +191,7 @@ func (hc *handCards) isTwoPair() *Hand {
 		return nil
 	}
 
-	cards := ArrangeGroupsByMax(&pairs, hc.Ordering())
+	cards := pairs.ArrangeByMax(hc.Ordering())
 	major, minor := (*cards)[0], (*cards)[1]
 
 	return &Hand{
@@ -217,7 +217,7 @@ func (hc *handCards) isOnePair() *Hand {
 }
 
 func (hc *handCards) isHighCard() *Hand {
-	cards := ArrangeCards(hc.Cards(), hc.Ordering())
+	cards := hc.ordCards.Arrange()
 
 	return &Hand{
 		Value:  (*cards)[0:1],

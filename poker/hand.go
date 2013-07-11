@@ -11,13 +11,13 @@ import (
 type handCards struct {
 	*ordCards
 
-	gaps []Cards
+	gaps GroupedCards
 
-	groupKind []Cards
-	groupSuit []Cards
+	groupKind GroupedCards
+	groupSuit GroupedCards
 
-	paired *map[int][]Cards
-	suited *map[int][]Cards
+	paired *map[int]GroupedCards
+	suited *map[int]GroupedCards
 }
 
 type Hand struct {
@@ -43,10 +43,10 @@ func NewHandCards(o *ordCards) *handCards {
 		gaps: *o.Gaps(),
 
 		groupKind: *groupKind,
-		paired:    CountGroups(groupKind),
+		paired:    groupKind.Count(),
 
 		groupSuit: *groupSuit,
-		suited:    CountGroups(groupSuit),
+		suited:    groupSuit.Count(),
 	}
 }
 

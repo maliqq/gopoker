@@ -2,9 +2,9 @@ package poker
 
 import (
 	"encoding/json"
-	_ "fmt"
 	"math/rand"
 	"regexp"
+	"sort"
 	"time"
 )
 
@@ -145,9 +145,9 @@ func (a *Cards) Diff(b *Cards) *Cards {
 
 type groupFunc func(card *Card, prev *Card) int
 
-func (this *Cards) Group(test groupFunc) *[]Cards {
+func (this *Cards) Group(test groupFunc) *GroupedCards {
 	length := len(*this)
-	groups := make([]Cards, length)
+	groups := make(GroupedCards, length)
 	group := make(Cards, length)
 
 	j, k := 0, 0
@@ -186,12 +186,12 @@ func (this *Cards) Group(test groupFunc) *[]Cards {
 	return &result
 }
 
-func (this *Cards) Combine(m int) []Cards {
+func (this *Cards) Combine(m int) GroupedCards {
 	n := len(*this)
 
 	indexes := util.Comb(n, m)
 
-	result := make([]Cards, len(indexes))
+	result := make(GroupedCards, len(indexes))
 
 	for i, index := range indexes {
 		cards := make(Cards, m)
@@ -204,17 +204,69 @@ func (this *Cards) Combine(m int) []Cards {
 	return result
 }
 
-func CountGroups(groups *[]Cards) *map[int][]Cards {
-	count := map[int][]Cards{}
+func (a Cards) Compare(b Cards, ord Ordering) int {
+	if len(a) == len(b) {
+		for i, left := range a {
+			right := b[i]
 
-	for _, group := range *groups {
-		length := len(group)
-		if _, present := count[length]; !present {
-			count[length] = []Cards{}
+			result := left.Compare(right, ord)
+			if result != 0 {
+				return result
+			}
 		}
 
-		count[length] = append(count[length], group)
+		return 0
+	} else {
+		min := len(a)
+
+		if len(b) < min {
+			min = len(b)
+		}
+
+		return a[0:min].Compare(b[0:min], ord)
 	}
 
-	return &count
+	return 1
+}
+
+func (c Cards) Arrange(ord Ordering) Cards {
+	sort.Sort(Arrange{ordCards{&c, ord}})
+
+	return c
+}
+
+func (c Cards) Reverse(ord Ordering) Cards {
+	sort.Sort(Arrange{ordCards{&c, ord}})
+
+	return c
+}
+
+type maxFunc func(d int) bool
+
+func (c Cards) MaxBy(ord Ordering, f maxFunc) *Card {
+	result := &c[0]
+
+	max := result.Index(ord)
+
+	for _, card := range c {
+		i := card.Index(ord)
+		if f(i - max) {
+			max = i
+			result = &card
+		}
+	}
+
+	return result
+}
+
+func (c Cards) Min(ord Ordering) *Card {
+	return c.MaxBy(ord, func(d int) bool {
+		return d < 0
+	})
+}
+
+func (c Cards) Max(ord Ordering) *Card {
+	return c.MaxBy(ord, func(d int) bool {
+		return d > 0
+	})
 }

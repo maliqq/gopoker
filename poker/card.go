@@ -97,3 +97,16 @@ func (c Card) Index(ord Ordering) int {
 func (c Card) Equal(other Card) bool {
 	return (c.kind == other.kind) && (c.suit == other.suit)
 }
+
+func (card1 Card) Compare(card2 Card, ord Ordering) int {
+	a, b := card1.Index(ord), card2.Index(ord)
+
+	if a < b {
+		return -1
+	}
+	if a == b {
+		return 0
+	}
+
+	return 1
+}
