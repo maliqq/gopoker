@@ -8,8 +8,8 @@ import (
 	"gopoker/poker/hand"
 )
 
-type PocketCards struct {
-	cards *OrderedCards
+type handCards struct {
+	*ordCards
 
 	gaps []Cards
 
@@ -21,7 +21,7 @@ type PocketCards struct {
 }
 
 type Hand struct {
-	pocket *PocketCards
+	*handCards
 
 	Rank   hand.Rank
 	Value  Cards
@@ -33,13 +33,12 @@ type Hand struct {
 	kicker bool
 }
 
-// Pocket
-func NewPocket(o *OrderedCards) *PocketCards {
+func NewHandCards(o *ordCards) *handCards {
 	groupKind := o.GroupedByKind()
 	groupSuit := o.GroupedBySuit()
 
-	return &PocketCards{
-		cards: o,
+	return &handCards{
+		ordCards: o,
 
 		gaps: *o.Gaps(),
 
@@ -51,21 +50,21 @@ func NewPocket(o *OrderedCards) *PocketCards {
 	}
 }
 
-func (p *PocketCards) Cards() *Cards {
-	return p.cards.value
+func (c *handCards) Cards() *Cards {
+	return c.ordCards.value
 }
 
-func (p *PocketCards) Ordering() Ordering {
-	return p.cards.ord
+func (c *handCards) Ordering() Ordering {
+	return c.ordCards.ord
 }
 
-type rankFunc func(*PocketCards) (hand.Rank, *Hand)
+type rankFunc func(*handCards) (hand.Rank, *Hand)
 
-func (pocket *PocketCards) Detect(ranks []rankFunc) *Hand {
+func (c *handCards) Detect(ranks []rankFunc) *Hand {
 	var result *Hand
 
 	for _, r := range ranks {
-		rank, hand := r(pocket)
+		rank, hand := r(c)
 
 		if hand != nil {
 			if !hand.rank {
@@ -75,10 +74,10 @@ func (pocket *PocketCards) Detect(ranks []rankFunc) *Hand {
 				hand.High = Cards{hand.Value[0]}
 			}
 			if hand.kicker {
-				hand.Kicker = *pocket.cards.Kickers(&hand.Value)
+				hand.Kicker = *c.ordCards.Kickers(&hand.Value)
 			}
 
-			hand.pocket = pocket
+			hand.handCards = c
 
 			result = hand
 
@@ -92,7 +91,7 @@ func (pocket *PocketCards) Detect(ranks []rankFunc) *Hand {
 func (h *Hand) String() string {
 	return fmt.Sprintf("rank=%s high=%s value=%s kicker=%s",
 		h.Rank,
-		//h.pocket.Cards(),
+		//h.hc.Cards(),
 		h.High,
 		h.Value,
 		h.Kicker,
@@ -102,7 +101,7 @@ func (h *Hand) String() string {
 func (h *Hand) ConsoleString() string {
 	return fmt.Sprintf("rank=%s high=%s value=%s kicker=%s",
 		h.Rank,
-		//h.pocket.Cards().ConsoleString(),
+		//h.hc.Cards().ConsoleString(),
 		h.High.ConsoleString(),
 		h.Value.ConsoleString(),
 		h.Kicker.ConsoleString(),
@@ -132,7 +131,7 @@ var compareWith = func(ord Ordering) []compareFunc {
 }
 
 func (a *Hand) Compare(b *Hand) int {
-	ord := a.pocket.Ordering()
+	ord := a.handCards.Ordering()
 
 	for _, compare := range compareWith(ord) {
 		result := compare(a, b)

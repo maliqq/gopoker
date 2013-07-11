@@ -10,56 +10,56 @@ import (
 
 var (
 	HighRanks = []rankFunc{
-		func(pocket *PocketCards) (hand.Rank, *Hand) {
-			return hand.StraightFlush, pocket.isStraightFlush()
+		func(hc *handCards) (hand.Rank, *Hand) {
+			return hand.StraightFlush, hc.isStraightFlush()
 		},
 
-		func(pocket *PocketCards) (hand.Rank, *Hand) {
-			return hand.ThreeKind, pocket.isThreeKind()
+		func(hc *handCards) (hand.Rank, *Hand) {
+			return hand.ThreeKind, hc.isThreeKind()
 		},
 
-		func(pocket *PocketCards) (hand.Rank, *Hand) {
-			return hand.TwoPair, pocket.isTwoPair()
+		func(hc *handCards) (hand.Rank, *Hand) {
+			return hand.TwoPair, hc.isTwoPair()
 		},
 
-		func(pocket *PocketCards) (hand.Rank, *Hand) {
-			return hand.OnePair, pocket.isOnePair()
+		func(hc *handCards) (hand.Rank, *Hand) {
+			return hand.OnePair, hc.isOnePair()
 		},
 
-		func(pocket *PocketCards) (hand.Rank, *Hand) {
-			return hand.HighCard, pocket.isHighCard()
+		func(hc *handCards) (hand.Rank, *Hand) {
+			return hand.HighCard, hc.isHighCard()
 		},
 	}
 
 	NoFlushRanks = []rankFunc{
-		func(pocket *PocketCards) (hand.Rank, *Hand) {
-			return hand.FourKind, pocket.isFourKind()
+		func(hc *handCards) (hand.Rank, *Hand) {
+			return hand.FourKind, hc.isFourKind()
 		},
 
-		func(pocket *PocketCards) (hand.Rank, *Hand) {
-			return hand.FullHouse, pocket.isFullHouse()
+		func(hc *handCards) (hand.Rank, *Hand) {
+			return hand.FullHouse, hc.isFullHouse()
 		},
 
-		func(pocket *PocketCards) (hand.Rank, *Hand) {
-			return hand.Straight, pocket.isStraight()
+		func(hc *handCards) (hand.Rank, *Hand) {
+			return hand.Straight, hc.isStraight()
 		},
 	}
 
 	NoStraightRanks = []rankFunc{
-		func(pocket *PocketCards) (hand.Rank, *Hand) {
-			return hand.FourKind, pocket.isFourKind()
+		func(hc *handCards) (hand.Rank, *Hand) {
+			return hand.FourKind, hc.isFourKind()
 		},
 
-		func(pocket *PocketCards) (hand.Rank, *Hand) {
-			return hand.FullHouse, pocket.isFullHouse()
+		func(hc *handCards) (hand.Rank, *Hand) {
+			return hand.FullHouse, hc.isFullHouse()
 		},
 	}
 )
 
-func (pocket *PocketCards) isStraightFlush() *Hand {
-	maybeFlush := pocket.isFlush()
+func (hc *handCards) isStraightFlush() *Hand {
+	maybeFlush := hc.isFlush()
 	if maybeFlush == nil {
-		hand := pocket.Detect(NoFlushRanks)
+		hand := hc.Detect(NoFlushRanks)
 
 		if hand != nil {
 			hand.rank = true
@@ -69,10 +69,10 @@ func (pocket *PocketCards) isStraightFlush() *Hand {
 
 	flushCards := maybeFlush.Value
 
-	newPocket := NewPocket(
-		&OrderedCards{
+	newPocket := NewHandCards(
+		&ordCards{
 			value: &flushCards,
-			ord:   pocket.Ordering(),
+			ord:   hc.Ordering(),
 		},
 	)
 
@@ -80,7 +80,7 @@ func (pocket *PocketCards) isStraightFlush() *Hand {
 		return maybeStraight
 	}
 
-	maybeHigher := pocket.Detect(NoStraightRanks)
+	maybeHigher := hc.Detect(NoStraightRanks)
 
 	if maybeHigher != nil {
 		maybeHigher.rank = true
@@ -95,8 +95,8 @@ func (pocket *PocketCards) isStraightFlush() *Hand {
 	return &justFlush
 }
 
-func (pocket *PocketCards) isFourKind() *Hand {
-	quads, contains := (*pocket.paired)[4]
+func (hc *handCards) isFourKind() *Hand {
+	quads, contains := (*hc.paired)[4]
 	if contains == false {
 		return nil
 	}
@@ -112,8 +112,8 @@ func (pocket *PocketCards) isFourKind() *Hand {
 	return &hand
 }
 
-func (pocket *PocketCards) isFullHouse() *Hand {
-	sets, containSets := (*pocket.paired)[3]
+func (hc *handCards) isFullHouse() *Hand {
+	sets, containSets := (*hc.paired)[3]
 	if !containSets {
 		return nil
 	}
@@ -121,18 +121,18 @@ func (pocket *PocketCards) isFullHouse() *Hand {
 	var minor, major Cards
 
 	if len(sets) > 1 {
-		sorted := ArrangeGroupsByFirst(&sets, pocket.Ordering())
+		sorted := ArrangeGroupsByFirst(&sets, hc.Ordering())
 
 		major = (*sorted)[0]
 		minor = (*sorted)[1]
 
 	} else {
-		pairs, containPairs := (*pocket.paired)[2]
+		pairs, containPairs := (*hc.paired)[2]
 		if !containPairs {
 			return nil
 		}
 
-		sortedPairs := ArrangeGroupsByFirst(&pairs, pocket.Ordering())
+		sortedPairs := ArrangeGroupsByFirst(&pairs, hc.Ordering())
 
 		major = sets[0]
 		minor = (*sortedPairs)[0]
@@ -144,10 +144,10 @@ func (pocket *PocketCards) isFullHouse() *Hand {
 	}
 }
 
-func (pocket *PocketCards) isFlush() *Hand {
-	for count, group := range *pocket.suited {
+func (hc *handCards) isFlush() *Hand {
+	for count, group := range *hc.suited {
 		if count >= 5 {
-			cards := *ArrangeCards(&group[0], pocket.Ordering())
+			cards := *ArrangeCards(&group[0], hc.Ordering())
 
 			return &Hand{
 				High:  Cards{cards[0]},
@@ -159,10 +159,10 @@ func (pocket *PocketCards) isFlush() *Hand {
 	return nil
 }
 
-func (pocket *PocketCards) isStraight() *Hand {
-	for _, group := range pocket.gaps {
+func (hc *handCards) isStraight() *Hand {
+	for _, group := range hc.gaps {
 		if len(group) >= 5 {
-			cards := *ArrangeCards(&group, pocket.Ordering())
+			cards := *ArrangeCards(&group, hc.Ordering())
 
 			// FIXME: wheel straight
 			return &Hand{
@@ -175,8 +175,8 @@ func (pocket *PocketCards) isStraight() *Hand {
 	return nil
 }
 
-func (pocket *PocketCards) isThreeKind() *Hand {
-	sets, containSets := (*pocket.paired)[3]
+func (hc *handCards) isThreeKind() *Hand {
+	sets, containSets := (*hc.paired)[3]
 	if !containSets || len(sets) != 1 {
 		return nil
 	}
@@ -188,13 +188,13 @@ func (pocket *PocketCards) isThreeKind() *Hand {
 	}
 }
 
-func (pocket *PocketCards) isTwoPair() *Hand {
-	pairs, containsPairs := (*pocket.paired)[2]
+func (hc *handCards) isTwoPair() *Hand {
+	pairs, containsPairs := (*hc.paired)[2]
 	if !containsPairs || len(pairs) < 2 {
 		return nil
 	}
 
-	cards := ArrangeGroupsByMax(&pairs, pocket.Ordering())
+	cards := ArrangeGroupsByMax(&pairs, hc.Ordering())
 	major, minor := (*cards)[0], (*cards)[1]
 
 	return &Hand{
@@ -204,8 +204,8 @@ func (pocket *PocketCards) isTwoPair() *Hand {
 	}
 }
 
-func (pocket *PocketCards) isOnePair() *Hand {
-	pairs, containsPairs := (*pocket.paired)[2]
+func (hc *handCards) isOnePair() *Hand {
+	pairs, containsPairs := (*hc.paired)[2]
 	if !containsPairs || len(pairs) != 1 {
 		return nil
 	}
@@ -219,8 +219,8 @@ func (pocket *PocketCards) isOnePair() *Hand {
 	}
 }
 
-func (pocket *PocketCards) isHighCard() *Hand {
-	cards := ArrangeCards(pocket.Cards(), pocket.Ordering())
+func (hc *handCards) isHighCard() *Hand {
+	cards := ArrangeCards(hc.Cards(), hc.Ordering())
 
 	return &Hand{
 		Value:  (*cards)[0:1],
@@ -234,9 +234,9 @@ func isHigh(c *Cards) (*Hand, error) {
 		return nil, errors.New("5 or more cards required to detect high hand")
 	}
 
-	pocket := NewPocket(&OrderedCards{c, AceHigh})
+	hc := NewHandCards(&ordCards{c, AceHigh})
 
-	hand := pocket.Detect(HighRanks)
+	hand := hc.Detect(HighRanks)
 
 	return hand, nil
 }

@@ -6,13 +6,13 @@ import (
 
 type Ordering int
 
-type OrderedCards struct {
+type ordCards struct {
 	value *Cards
 
 	ord Ordering
 }
 
-func (o *OrderedCards) Gaps() *[]Cards {
+func (o *ordCards) Gaps() *[]Cards {
 	sorted := make(Cards, len(*o.value))
 
 	copy(sorted, *o.value)
@@ -43,7 +43,7 @@ func (o *OrderedCards) Gaps() *[]Cards {
 	})
 }
 
-func (o *OrderedCards) Kickers(cards *Cards) *Cards {
+func (o *ordCards) Kickers(cards *Cards) *Cards {
 	length := 5 - len(*cards)
 
 	diff := o.value.Diff(cards)
@@ -55,7 +55,7 @@ func (o *OrderedCards) Kickers(cards *Cards) *Cards {
 	return &result
 }
 
-func (o *OrderedCards) GroupedByKind() *[]Cards {
+func (o *ordCards) GroupedByKind() *[]Cards {
 	cards := make(Cards, len(*o.value))
 
 	copy(cards, *o.value)
@@ -71,7 +71,7 @@ func (o *OrderedCards) GroupedByKind() *[]Cards {
 	})
 }
 
-func (o *OrderedCards) GroupedBySuit() *[]Cards {
+func (o *ordCards) GroupedBySuit() *[]Cards {
 	cards := make(Cards, len(*o.value))
 
 	copy(cards, *o.value)

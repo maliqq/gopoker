@@ -10,35 +10,35 @@ import (
 
 var (
 	BadugiRanks = []rankFunc{
-		func(pocket *PocketCards) (hand.Rank, *Hand) {
-			return hand.BadugiOne, pocket.isBadugiOne()
+		func(hc *handCards) (hand.Rank, *Hand) {
+			return hand.BadugiOne, hc.isBadugiOne()
 		},
 
-		func(pocket *PocketCards) (hand.Rank, *Hand) {
-			return hand.BadugiFour, pocket.isBadugiFour()
+		func(hc *handCards) (hand.Rank, *Hand) {
+			return hand.BadugiFour, hc.isBadugiFour()
 		},
 
-		func(pocket *PocketCards) (hand.Rank, *Hand) {
-			return hand.BadugiThree, pocket.isBadugiThree()
+		func(hc *handCards) (hand.Rank, *Hand) {
+			return hand.BadugiThree, hc.isBadugiThree()
 		},
 
-		func(pocket *PocketCards) (hand.Rank, *Hand) {
-			return hand.BadugiTwo, pocket.isBadugiTwo()
+		func(hc *handCards) (hand.Rank, *Hand) {
+			return hand.BadugiTwo, hc.isBadugiTwo()
 		},
 	}
 )
 
-func (pocket *PocketCards) isBadugiOne() *Hand {
-	if len(pocket.groupKind) == 1 {
-		cards := *pocket.Cards()
+func (hc *handCards) isBadugiOne() *Hand {
+	if len(hc.groupKind) == 1 {
+		cards := *hc.Cards()
 
 		return &Hand{
 			Value: cards[0:1],
 		}
 	}
 
-	if len(pocket.groupSuit) == 1 {
-		card := pocket.groupSuit[0].Min(pocket.Ordering())
+	if len(hc.groupSuit) == 1 {
+		card := hc.groupSuit[0].Min(hc.Ordering())
 
 		return &Hand{
 			Value: Cards{*card},
@@ -48,9 +48,9 @@ func (pocket *PocketCards) isBadugiOne() *Hand {
 	return nil
 }
 
-func (pocket *PocketCards) isBadugiFour() *Hand {
-	if len(pocket.groupKind) == 4 && len(pocket.groupSuit) == 4 {
-		cards := ArrangeCards(pocket.Cards(), pocket.Ordering())
+func (hc *handCards) isBadugiFour() *Hand {
+	if len(hc.groupKind) == 4 && len(hc.groupSuit) == 4 {
+		cards := ArrangeCards(hc.Cards(), hc.Ordering())
 
 		return &Hand{
 			Value: *cards,
@@ -60,9 +60,9 @@ func (pocket *PocketCards) isBadugiFour() *Hand {
 	return nil
 }
 
-func (pocket *PocketCards) isBadugiThree() *Hand {
-	paired, hasPaired := (*pocket.paired)[2]
-	suited, hasSuited := (*pocket.suited)[2]
+func (hc *handCards) isBadugiThree() *Hand {
+	paired, hasPaired := (*hc.paired)[2]
+	suited, hasSuited := (*hc.suited)[2]
 
 	if !hasPaired && !hasSuited {
 		return nil
@@ -75,7 +75,7 @@ func (pocket *PocketCards) isBadugiThree() *Hand {
 
 		a = &cards[0]
 
-		diff := pocket.Cards().Diff(&cards)
+		diff := hc.Cards().Diff(&cards)
 
 		for _, card := range *diff {
 			if a.kind != card.kind {
@@ -97,9 +97,9 @@ func (pocket *PocketCards) isBadugiThree() *Hand {
 		}
 
 	} else if !hasPaired && len(suited) == 1 {
-		a = suited[0].Min(pocket.Ordering())
+		a = suited[0].Min(hc.Ordering())
 
-		diff := pocket.Cards().Diff(&suited[0])
+		diff := hc.Cards().Diff(&suited[0])
 
 		for _, card := range *diff {
 			if a.suit != card.suit {
@@ -120,23 +120,23 @@ func (pocket *PocketCards) isBadugiThree() *Hand {
 		return nil
 	}
 
-	cards := ArrangeCards(&Cards{*a, *b, *c}, pocket.Ordering())
+	cards := ArrangeCards(&Cards{*a, *b, *c}, hc.Ordering())
 
 	return &Hand{
 		Value: *cards,
 	}
 }
 
-func (pocket *PocketCards) isBadugiTwo() *Hand {
+func (hc *handCards) isBadugiTwo() *Hand {
 	var a, b *Card
 
-	sets, hasPaired := (*pocket.paired)[3]
-	suited, hasSuited := (*pocket.suited)[3]
+	sets, hasPaired := (*hc.paired)[3]
+	suited, hasSuited := (*hc.suited)[3]
 
 	if hasPaired {
 		cards := sets[0]
 
-		diff := pocket.Cards().Diff(&cards)
+		diff := hc.Cards().Diff(&cards)
 
 		b = &(*diff)[0]
 
@@ -151,7 +151,7 @@ func (pocket *PocketCards) isBadugiTwo() *Hand {
 	} else if hasSuited {
 		cards := suited[0]
 
-		diff := pocket.Cards().Diff(&cards)
+		diff := hc.Cards().Diff(&cards)
 
 		a = &(*diff)[0]
 
@@ -162,14 +162,14 @@ func (pocket *PocketCards) isBadugiTwo() *Hand {
 			}
 		}
 
-		b = c.Min(pocket.Ordering())
+		b = c.Min(hc.Ordering())
 
-	} else if len(pocket.groupSuit) > 0 {
-		cards := pocket.groupSuit[0]
+	} else if len(hc.groupSuit) > 0 {
+		cards := hc.groupSuit[0]
 
-		a = cards.Min(pocket.Ordering())
+		a = cards.Min(hc.Ordering())
 
-		diff := pocket.Cards().Diff(&cards)
+		diff := hc.Cards().Diff(&cards)
 
 		c := Cards{}
 		for _, card := range *diff {
@@ -178,14 +178,14 @@ func (pocket *PocketCards) isBadugiTwo() *Hand {
 			}
 		}
 
-		b = c.Min(pocket.Ordering())
+		b = c.Min(hc.Ordering())
 
 	} else {
-		cards := pocket.groupKind[0]
+		cards := hc.groupKind[0]
 
 		a = &cards[0]
 
-		diff := pocket.Cards().Diff(&cards)
+		diff := hc.Cards().Diff(&cards)
 
 		c := Cards{}
 		for _, card := range *diff {
@@ -194,10 +194,10 @@ func (pocket *PocketCards) isBadugiTwo() *Hand {
 			}
 		}
 
-		b = c.Min(pocket.Ordering())
+		b = c.Min(hc.Ordering())
 	}
 
-	cards := ArrangeCards(&Cards{*a, *b}, pocket.Ordering())
+	cards := ArrangeCards(&Cards{*a, *b}, hc.Ordering())
 
 	return &Hand{
 		Value: *cards,
@@ -209,9 +209,9 @@ func isBadugi(c *Cards) (*Hand, error) {
 		return nil, errors.New("4 cards required to detect badugi hand")
 	}
 
-	pocket := NewPocket(&OrderedCards{c, AceLow})
+	hc := NewHandCards(&ordCards{c, AceLow})
 
-	hand := pocket.Detect(BadugiRanks)
+	hand := hc.Detect(BadugiRanks)
 
 	return hand, nil
 }
