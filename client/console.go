@@ -66,7 +66,7 @@ Loop:
 				fmt.Printf("%s\n", r)
 
 				var newBet *bet.Bet
-ReadBetLoop:
+			ReadBetLoop:
 				for newBet == nil {
 					var cmd string
 					newBet, cmd = readBet(&r)
