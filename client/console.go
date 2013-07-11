@@ -51,6 +51,7 @@ func main() {
 
 	fmt.Printf("%s\n", play)
 
+Loop:
 	for {
 		select {
 		case msg := <-me:
@@ -65,8 +66,19 @@ func main() {
 				fmt.Printf("%s\n", r)
 
 				var newBet *bet.Bet
+ReadBetLoop:
 				for newBet == nil {
-					newBet, _ = readBet(&r)
+					var cmd string
+					newBet, cmd = readBet(&r)
+					switch cmd {
+					case "exit":
+						play.Control <- command.Exit
+						break Loop
+
+					case "sitout":
+						play.Receive <- protocol.NewMessage(protocol.SitOut{Pos: r.Pos})
+						break ReadBetLoop
+					}
 
 					err := play.Betting.ValidateBet(play.Table.Seat(r.Pos), newBet)
 					if err != nil {
@@ -75,7 +87,9 @@ func main() {
 					}
 				}
 
-				play.Receive <- protocol.NewAddBet(r.Pos, newBet)
+				if newBet != nil {
+					play.Receive <- protocol.NewAddBet(r.Pos, newBet)
+				}
 
 			case protocol.RequireDiscard:
 
@@ -194,8 +208,8 @@ func readBet(r *protocol.RequireBet) (*bet.Bet, string) {
 	for b == nil {
 		str = readLine()
 
-		if str == "exit" {
-			return nil, "exit"
+		if str == "exit" || str == "sitout" {
+			return nil, str
 		}
 
 		b = parseBet(r, str)
