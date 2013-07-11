@@ -15,20 +15,12 @@ import (
 
 type Cards []Card
 
-// FIXME move to card/
 func AllCards() *Cards {
-	kinds := card.AllKinds()
-	suits := card.AllSuits()
-	cards := make(Cards, CardsNum)
-
-	k := 0
-	for _, kind := range kinds {
-		for _, suit := range suits {
-			cards[k] = Card{kind, suit}
-			k++
-		}
+	all := card.All
+	cards := make(Cards, len(all))
+	for i, tuple := range all {
+		cards[i] = Card{tuple.Kind, tuple.Suit}
 	}
-
 	return &cards
 }
 

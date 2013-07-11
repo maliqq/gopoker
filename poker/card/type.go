@@ -40,6 +40,7 @@ const (
 
 	KindsNum = len(Kinds)
 	SuitsNum = len(Suits)
+	CardsNum = KindsNum * SuitsNum
 )
 
 var (
@@ -86,6 +87,26 @@ func AllSuits() []Suit {
 
 	return suits
 }
+
+type Tuple struct {
+	Kind
+	Suit
+}
+
+func all() []Tuple{
+	cards := make([]Tuple, CardsNum)
+
+	k := 0
+	for _, kind := range AllKinds() {
+		for _, suit := range AllSuits() {
+			cards[k] = Tuple{kind, suit}; k++
+		}
+	}
+
+	return cards
+}
+
+var All = all()
 
 func MakeKind(kind int) (Kind, error) {
 	if kind < 0 || kind >= len(Kinds) {

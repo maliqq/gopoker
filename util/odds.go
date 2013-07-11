@@ -7,6 +7,7 @@ func Fact(n int64) int64 {
 	return n * Fact(n-1)
 }
 
+// abc(2) = ab, ac, bc
 func Comb(n int, m int) [][]int {
 	if n < m {
 		return [][]int{}

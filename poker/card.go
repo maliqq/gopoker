@@ -22,10 +22,6 @@ const (
 	AceLow  Ordering = 1
 )
 
-const (
-	CardsNum = card.KindsNum * card.SuitsNum
-)
-
 func (card Card) String() string {
 	return card.kind.String() + card.suit.String()
 }
@@ -47,7 +43,7 @@ func (c Card) ConsoleString() string {
 }
 
 func NewCard(i byte) (*Card, error) {
-	if i < 0 || int(i) >= CardsNum {
+	if i < 0 || int(i) >= card.CardsNum {
 		return nil, errors.New("invalid card")
 	}
 
