@@ -48,7 +48,7 @@ var (
 )
 
 var (
-	Colors = map[Suit][]byte{
+	Colors = map[Suit]string{
 		Spade:   console.YELLOW,
 		Heart:   console.RED,
 		Diamond: console.CYAN,

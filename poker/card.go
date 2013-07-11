@@ -33,7 +33,7 @@ func (c Card) Byte() byte {
 }
 
 func (c Card) ConsoleString() string {
-	return fmt.Sprintf("%s%s%s", card.Colors[c.suit], c.UnicodeString(), console.RESET)
+	return console.Color(card.Colors[c.suit], c.UnicodeString())
 }
 
 func NewCard(i byte) (*Card, error) {

@@ -46,11 +46,10 @@ func main() {
 
 	me := make(protocol.MessageChannel)
 	play := createPlay(me)
-
-	fmt.Printf("%s\n", play)
-
 	go runner.Run(play)
 	play.Control <- command.NextDeal
+
+	fmt.Printf("%s\n", play)
 
 	for {
 		select {
@@ -173,7 +172,7 @@ func createPlay(me protocol.MessageChannel) *context.Play {
 		players[i] = player
 
 		if i < size {
-			table.AddPlayer(player, i, stack)
+			play.Receive <- protocol.NewJoinTable(player, i, stack)
 			play.Broadcast.Bind(player, me)
 		}
 	}

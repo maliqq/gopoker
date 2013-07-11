@@ -102,15 +102,11 @@ func (c Cards) ConsoleString() string {
 	return s
 }
 
-func (c Cards) BinaryString() string {
-	return string(c.Binary())
-}
-
 func (c Cards) MarshalJSON() ([]byte, error) {
 	//if len(c) == 0 {
 	//  return []byte("null"), nil
 	//}
-	return json.Marshal(c.UnicodeString())
+	return json.Marshal(c.Binary())
 }
 
 func (this *Cards) Shuffle() *Cards {
