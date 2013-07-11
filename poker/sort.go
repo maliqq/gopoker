@@ -19,17 +19,21 @@ func (c BySuit) Less(i, j int) bool {
 }
 
 // sort by kind
-func (c ordCards) Len() int {
-	return len(*c.Cards)
+type ByKind struct {
+	Cards
+	Ordering
+}
+func (c ByKind) Len() int {
+	return len(c.Cards)
 }
 
-func (c ordCards) Swap(i, j int) {
+func (c ByKind) Swap(i, j int) {
 	c.Cards.Swap(i, j)
 }
 
-func (c ordCards) Less(i, j int) bool {
-	card1 := (*c.Cards)[i]
-	card2 := (*c.Cards)[j]
+func (c ByKind) Less(i, j int) bool {
+	card1 := c.Cards[i]
+	card2 := c.Cards[j]
 
 	return card1.Compare(card2, c.Ordering) == -1
 }
@@ -100,16 +104,16 @@ func (h ByHand) Less(i, j int) bool {
 
 // arranging cards - reverse order
 type Reverse struct {
-	ordCards
+	ByKind
 }
 
 func (c Reverse) Less(i, j int) bool {
-	return c.ordCards.Less(i, j)
+	return c.ByKind.Less(i, j)
 }
 
 // arranging cards - direct order
-type Arrange struct{ ordCards }
+type Arrange struct{ ByKind }
 
 func (c Arrange) Less(i, j int) bool {
-	return c.ordCards.Less(j, i)
+	return c.ByKind.Less(j, i)
 }

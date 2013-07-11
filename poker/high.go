@@ -69,9 +69,7 @@ func (hc *handCards) isStraightFlush() *Hand {
 
 	flushCards := maybeFlush.Value
 
-	newPocket := NewHandCards(
-		NewOrderedCards(&flushCards, hc.Ordering()),
-	)
+	newPocket := NewHandCards(&flushCards, hc.Ordering, false)
 
 	if maybeStraight := newPocket.isStraight(); maybeStraight != nil {
 		return maybeStraight
@@ -118,7 +116,7 @@ func (hc *handCards) isFullHouse() *Hand {
 	var minor, major Cards
 
 	if len(sets) > 1 {
-		sorted := sets.ArrangeByFirst(hc.Ordering())
+		sorted := sets.ArrangeByFirst(hc.Ordering)
 
 		major = (*sorted)[0]
 		minor = (*sorted)[1]
@@ -129,7 +127,7 @@ func (hc *handCards) isFullHouse() *Hand {
 			return nil
 		}
 
-		sortedPairs := pairs.ArrangeByFirst(hc.Ordering())
+		sortedPairs := pairs.ArrangeByFirst(hc.Ordering)
 
 		major = sets[0]
 		minor = (*sortedPairs)[0]
@@ -144,7 +142,7 @@ func (hc *handCards) isFullHouse() *Hand {
 func (hc *handCards) isFlush() *Hand {
 	for count, group := range *hc.suited {
 		if count >= 5 {
-			cards := group[0].Arrange(hc.Ordering())
+			cards := group[0].Arrange(hc.Ordering)
 
 			return &Hand{
 				High:  Cards{cards[0]},
@@ -159,7 +157,7 @@ func (hc *handCards) isFlush() *Hand {
 func (hc *handCards) isStraight() *Hand {
 	for _, group := range hc.gaps {
 		if len(group) >= 5 {
-			cards := group.Arrange(hc.Ordering())
+			cards := group.Arrange(hc.Ordering)
 
 			// FIXME: wheel straight
 			return &Hand{
@@ -191,7 +189,7 @@ func (hc *handCards) isTwoPair() *Hand {
 		return nil
 	}
 
-	cards := pairs.ArrangeByMax(hc.Ordering())
+	cards := pairs.ArrangeByMax(hc.Ordering)
 	major, minor := (*cards)[0], (*cards)[1]
 
 	return &Hand{
@@ -217,7 +215,7 @@ func (hc *handCards) isOnePair() *Hand {
 }
 
 func (hc *handCards) isHighCard() *Hand {
-	cards := hc.ordCards.Arrange()
+	cards := hc.Arrange()
 
 	return &Hand{
 		Value:  (*cards)[0:1],
@@ -231,7 +229,7 @@ func isHigh(cards *Cards) (*Hand, error) {
 		return nil, errors.New("5 or more cards required to detect high hand")
 	}
 
-	hc := NewHandCards(NewOrderedCards(cards, AceHigh))
+	hc := NewHandCards(cards, AceHigh, false)
 
 	hand := hc.Detect(HighRanks)
 

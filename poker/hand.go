@@ -9,7 +9,7 @@ import (
 )
 
 type handCards struct {
-	*ordCards
+	cardsHelper
 
 	gaps GroupedCards
 
@@ -33,14 +33,16 @@ type Hand struct {
 	kicker bool
 }
 
-func NewHandCards(o *ordCards) *handCards {
-	groupKind := o.GroupByKind()
-	groupSuit := o.GroupBySuit()
+func NewHandCards(cards *Cards, ord Ordering, reversed bool) *handCards {
+	helper := cardsHelper{*cards, ord, reversed}
 
-	return &handCards{
-		ordCards: o,
+	groupKind := helper.GroupByKind()
+	groupSuit := helper.GroupBySuit()
 
-		gaps: *o.Gaps(),
+	hc := handCards{
+		cardsHelper: helper,
+
+		gaps: *helper.Gaps(),
 
 		groupKind: *groupKind,
 		paired:    groupKind.Count(),
@@ -48,14 +50,8 @@ func NewHandCards(o *ordCards) *handCards {
 		groupSuit: *groupSuit,
 		suited:    groupSuit.Count(),
 	}
-}
 
-func (c *handCards) Cards() *Cards {
-	return c.ordCards.Cards
-}
-
-func (c *handCards) Ordering() Ordering {
-	return c.ordCards.Ordering
+	return &hc
 }
 
 type rankFunc func(*handCards) (hand.Rank, *Hand)
@@ -74,7 +70,7 @@ func (c *handCards) Detect(ranks []rankFunc) *Hand {
 				hand.High = Cards{hand.Value[0]}
 			}
 			if hand.kicker {
-				hand.Kicker = *c.ordCards.Kickers(&hand.Value)
+				hand.Kicker = *c.cardsHelper.Kickers(&hand.Value)
 			}
 
 			hand.handCards = c
@@ -131,7 +127,7 @@ var compareWith = func(ord Ordering) []compareFunc {
 }
 
 func (a *Hand) Compare(b *Hand) int {
-	ord := a.handCards.Ordering()
+	ord := a.handCards.Ordering
 
 	for _, compare := range compareWith(ord) {
 		result := compare(a, b)

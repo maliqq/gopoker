@@ -17,35 +17,29 @@ const (
 )
 
 // cards with ordering (ace high/ace low)
-type ordCards struct {
-	*Cards
+type cardsHelper struct {
+	Cards
 	Ordering
+	Reversed bool
 }
 
-func NewOrderedCards(cards *Cards, ord Ordering) *ordCards {
-	return &ordCards{
-		Cards:    cards,
-		Ordering: ord,
-	}
-}
-
-func (this *ordCards) Qualify(q card.Kind) *ordCards {
+func (this *cardsHelper) Qualify(q card.Kind) *Cards {
 	qualified := Cards{}
 
-	for _, card := range *this.Cards {
+	for _, card := range this.Cards {
 		if card.Index(this.Ordering) < kindIndex(q, this.Ordering) {
 			qualified = append(qualified, card)
 		}
 	}
 
-	return NewOrderedCards(&qualified, this.Ordering)
+	return &qualified
 }
 
-func (this *ordCards) Gaps() *GroupedCards {
+func (this *cardsHelper) Gaps() *GroupedCards {
 	sorted := this.Arrange()
 
 	cards := Cards{}
-	for _, card := range *this.Cards {
+	for _, card := range this.Cards {
 		if Ace == card.kind {
 			cards = append(cards, card)
 		}
@@ -68,7 +62,7 @@ func (this *ordCards) Gaps() *GroupedCards {
 	})
 }
 
-func (this *ordCards) Kickers(cards *Cards) *Cards {
+func (this *cardsHelper) Kickers(cards *Cards) *Cards {
 	length := 5 - len(*cards)
 
 	diff := this.Cards.Diff(cards)
@@ -79,14 +73,10 @@ func (this *ordCards) Kickers(cards *Cards) *Cards {
 	return &result
 }
 
-func (this *ordCards) GroupByKind() *GroupedCards {
-	cards := make(Cards, len(*this.Cards))
+func (this *cardsHelper) GroupByKind() *GroupedCards {
+	sorted := this.Cards.Arrange(this.Ordering)
 
-	copy(cards, *this.Cards)
-
-	sort.Sort(BySuit{cards})
-
-	return cards.Group(func(card *Card, prev *Card) int {
+	return sorted.Group(func(card *Card, prev *Card) int {
 		if card.kind == prev.kind {
 			return 1
 		}
@@ -95,10 +85,14 @@ func (this *ordCards) GroupByKind() *GroupedCards {
 	})
 }
 
-func (this *ordCards) GroupBySuit() *GroupedCards {
-	sorted := this.Arrange() // FIXME
+func (this *cardsHelper) GroupBySuit() *GroupedCards {
+	cards := make(Cards, len(this.Cards))
 
-	return sorted.Group(func(card *Card, prev *Card) int {
+	copy(cards, this.Cards)
+
+	sort.Sort(BySuit{cards})
+
+	return cards.Group(func(card *Card, prev *Card) int {
 		if card.suit == prev.suit {
 			return 1
 		}
@@ -107,13 +101,13 @@ func (this *ordCards) GroupBySuit() *GroupedCards {
 	})
 }
 
-func (this *ordCards) Arrange() *Cards {
+func (this *cardsHelper) Arrange() *Cards {
 	cards := this.Cards.Arrange(this.Ordering)
 
 	return &cards
 }
 
-func (this *ordCards) Reverse() *Cards {
+func (this *cardsHelper) Reverse() *Cards {
 	cards := this.Cards.Reverse(this.Ordering)
 
 	return &cards

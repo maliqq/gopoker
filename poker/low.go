@@ -5,20 +5,22 @@ import (
 	"gopoker/poker/hand"
 )
 
-func isLow(c *ordCards) (*Hand, error) {
+func isLow(c *Cards, ord Ordering) (*Hand, error) {
+	helper := cardsHelper{*c, ord, false}
+
 	uniq := Cards{}
-	for _, cards := range *c.GroupByKind() {
+	for _, cards := range *helper.GroupByKind() {
 		uniq = append(uniq, cards[0])
 	}
 
-	lowCards := uniq.Reverse(c.Ordering)
+	lowCards := uniq.Reverse(helper.Ordering)
 	lowCards = lowCards[0:5]
 
 	if len(lowCards) == 0 {
 		return nil, nil
 	}
 
-	max := lowCards.Max(c.Ordering)
+	max := lowCards.Max(helper.Ordering)
 	newHand := &Hand{
 		Value: lowCards,
 		High:  Cards{*max},
@@ -33,39 +35,32 @@ func isLow(c *ordCards) (*Hand, error) {
 	return newHand, nil
 }
 
-func isGapLow(c *ordCards) (*Hand, error) {
-	high, err := isHigh(c.Cards)
+func isGapLow(c *Cards, ord Ordering) (*Hand, error) {
+	high, err := isHigh(c)
 	if err != nil {
 		return nil, err
 	}
 
 	if high.Rank == hand.HighCard {
-		return isLow(c)
+		return isLow(c, ord)
 	}
 
 	return high, nil
 }
 
 func isAceFive(c *Cards) (*Hand, error) {
-	return isLow(
-		NewOrderedCards(c, AceLow),
-	)
+	return isLow(c, AceLow)
 }
 
 func isAceFive8(c *Cards) (*Hand, error) {
-	return isLow(
-		NewOrderedCards(c, AceLow).Qualify(card.Eight),
-	)
+	helper := cardsHelper{*c, AceLow, false}
+	return isLow(helper.Qualify(card.Eight), AceLow)
 }
 
 func isAceSix(c *Cards) (*Hand, error) {
-	return isGapLow(
-		NewOrderedCards(c, AceLow),
-	)
+	return isGapLow(c, AceLow)
 }
 
 func isDeuceSeven(c *Cards) (*Hand, error) {
-	return isGapLow(
-		NewOrderedCards(c, AceHigh),
-	)
+	return isGapLow(c, AceHigh)
 }

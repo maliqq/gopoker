@@ -230,13 +230,13 @@ func (a Cards) Compare(b Cards, ord Ordering) int {
 }
 
 func (c Cards) Arrange(ord Ordering) Cards {
-	sort.Sort(Arrange{ordCards{&c, ord}})
+	sort.Sort(Arrange{ByKind{c, ord}})
 
 	return c
 }
 
 func (c Cards) Reverse(ord Ordering) Cards {
-	sort.Sort(Arrange{ordCards{&c, ord}})
+	sort.Sort(Arrange{ByKind{c, ord}})
 
 	return c
 }

@@ -30,7 +30,7 @@ var (
 
 func (hc *handCards) isBadugiOne() *Hand {
 	if len(hc.groupKind) == 1 {
-		cards := *hc.Cards()
+		cards := hc.Cards
 
 		return &Hand{
 			Value: cards[0:1],
@@ -38,7 +38,7 @@ func (hc *handCards) isBadugiOne() *Hand {
 	}
 
 	if len(hc.groupSuit) == 1 {
-		card := hc.groupSuit[0].Min(hc.Ordering())
+		card := hc.groupSuit[0].Min(hc.Ordering)
 
 		return &Hand{
 			Value: Cards{*card},
@@ -50,7 +50,7 @@ func (hc *handCards) isBadugiOne() *Hand {
 
 func (hc *handCards) isBadugiFour() *Hand {
 	if len(hc.groupKind) == 4 && len(hc.groupSuit) == 4 {
-		cards := hc.ordCards.Arrange()
+		cards := hc.cardsHelper.Arrange()
 
 		return &Hand{
 			Value: *cards,
@@ -75,7 +75,7 @@ func (hc *handCards) isBadugiThree() *Hand {
 
 		a = &cards[0]
 
-		diff := hc.Cards().Diff(&cards)
+		diff := hc.Cards.Diff(&cards)
 
 		for _, card := range *diff {
 			if a.kind != card.kind {
@@ -97,9 +97,9 @@ func (hc *handCards) isBadugiThree() *Hand {
 		}
 
 	} else if !hasPaired && len(suited) == 1 {
-		a = suited[0].Min(hc.Ordering())
+		a = suited[0].Min(hc.Ordering)
 
-		diff := hc.Cards().Diff(&suited[0])
+		diff := hc.Cards.Diff(&suited[0])
 
 		for _, card := range *diff {
 			if a.suit != card.suit {
@@ -120,10 +120,10 @@ func (hc *handCards) isBadugiThree() *Hand {
 		return nil
 	}
 
-	cards := NewOrderedCards(&Cards{*a, *b, *c}, hc.Ordering())
+	cards := Cards{*a, *b, *c}.Arrange(hc.Ordering)
 
 	return &Hand{
-		Value: *cards.Arrange(),
+		Value: cards,
 	}
 }
 
@@ -136,7 +136,7 @@ func (hc *handCards) isBadugiTwo() *Hand {
 	if hasPaired {
 		cards := sets[0]
 
-		diff := hc.Cards().Diff(&cards)
+		diff := hc.Cards.Diff(&cards)
 
 		b = &(*diff)[0]
 
@@ -151,7 +151,7 @@ func (hc *handCards) isBadugiTwo() *Hand {
 	} else if hasSuited {
 		cards := suited[0]
 
-		diff := hc.Cards().Diff(&cards)
+		diff := hc.Cards.Diff(&cards)
 
 		a = &(*diff)[0]
 
@@ -162,14 +162,14 @@ func (hc *handCards) isBadugiTwo() *Hand {
 			}
 		}
 
-		b = c.Min(hc.Ordering())
+		b = c.Min(hc.Ordering)
 
 	} else if len(hc.groupSuit) > 0 {
 		cards := hc.groupSuit[0]
 
-		a = cards.Min(hc.Ordering())
+		a = cards.Min(hc.Ordering)
 
-		diff := hc.Cards().Diff(&cards)
+		diff := hc.Cards.Diff(&cards)
 
 		c := Cards{}
 		for _, card := range *diff {
@@ -178,14 +178,14 @@ func (hc *handCards) isBadugiTwo() *Hand {
 			}
 		}
 
-		b = c.Min(hc.Ordering())
+		b = c.Min(hc.Ordering)
 
 	} else {
 		cards := hc.groupKind[0]
 
 		a = &cards[0]
 
-		diff := hc.Cards().Diff(&cards)
+		diff := hc.Cards.Diff(&cards)
 
 		c := Cards{}
 		for _, card := range *diff {
@@ -194,13 +194,13 @@ func (hc *handCards) isBadugiTwo() *Hand {
 			}
 		}
 
-		b = c.Min(hc.Ordering())
+		b = c.Min(hc.Ordering)
 	}
 
-	cards := NewOrderedCards(&Cards{*a, *b}, hc.Ordering())
+	cards := Cards{*a, *b}.Arrange(hc.Ordering)
 
 	return &Hand{
-		Value: *cards.Arrange(),
+		Value: cards,
 	}
 }
 
@@ -209,7 +209,7 @@ func isBadugi(cards *Cards) (*Hand, error) {
 		return nil, errors.New("4 cards required to detect badugi hand")
 	}
 
-	hc := NewHandCards(NewOrderedCards(cards, AceLow))
+	hc := NewHandCards(cards, AceLow, false)
 
 	hand := hc.Detect(BadugiRanks)
 
