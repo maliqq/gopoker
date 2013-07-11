@@ -1,7 +1,7 @@
 package model
 
 import (
-	"fmt"
+	_ "fmt"
 )
 
 import (
@@ -52,7 +52,6 @@ func (this *Deal) DealPocket(player *Player, cardsNum int) *poker.Cards {
 }
 
 func (this *Deal) Discard(player *Player, cards *poker.Cards) *poker.Cards {
-	fmt.Printf("deal=%#v", this)
 	pocket := this.Pocket(player)
 	newCards := this.dealer.Discard(cards)
 
@@ -62,23 +61,28 @@ func (this *Deal) Discard(player *Player, cards *poker.Cards) *poker.Cards {
 	return newCards
 }
 
-func (this *Deal) Rank(cards *poker.Cards, ranking ranking.Type, hasBoard bool) *poker.Hand {
-	if !hasBoard {
-		hand, _ := poker.Detect[ranking](cards)
+func (this *Deal) Rank(player *Player, ranking ranking.Type, hasBoard bool) (*poker.Cards, *poker.Hand) {
+	pocket := this.Pocket(player)
 
-		return hand
+	if !hasBoard {
+		hand, _ := poker.Detect[ranking](pocket)
+
+		return pocket, hand
 	}
 
 	var bestHand *poker.Hand
-	for _, pair := range cards.CombinePairs() {
-		handCards := append(pair, this.Board...)
 
-		hand, _ := poker.Detect[ranking](&handCards)
+	for _, pair := range pocket.Combine(2) {
+		for _, board := range this.Board.Combine(3) {
+			handCards := append(pair, board...)
 
-		if bestHand == nil || hand.Compare(bestHand) > 0 {
-			bestHand = hand
+			hand, _ := poker.Detect[ranking](&handCards)
+
+			if bestHand == nil || hand.Compare(bestHand) > 0 {
+				bestHand = hand
+			}
 		}
 	}
 
-	return bestHand
+	return pocket, bestHand
 }

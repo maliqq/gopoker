@@ -354,10 +354,7 @@ func (this *Play) ShowHands(ranking ranking.Type, withBoard bool) *ShowdownHands
 
 	for _, pos := range this.Table.SeatsInPot() {
 		player := this.Table.Player(pos)
-
-		pocket := d.Pocket(player)
-
-		if hand := d.Rank(pocket, ranking, withBoard); hand != nil {
+		if pocket, hand := d.Rank(player, ranking, withBoard); hand != nil {
 			hands[player.Id] = hand
 
 			this.Broadcast.All <- protocol.NewShowHand(pos, pocket, hand)

@@ -2,6 +2,7 @@ package poker
 
 import (
 	"encoding/json"
+	_ "fmt"
 	"math/rand"
 	"regexp"
 	"time"
@@ -9,6 +10,7 @@ import (
 
 import (
 	"gopoker/poker/card"
+	"gopoker/util"
 )
 
 type Cards []Card
@@ -195,16 +197,44 @@ func (cards *Cards) GroupCards(test groupFunc) *[]Cards {
 	return &result
 }
 
-func (c Cards) CombinePairs() []Cards {
-	result := make([]Cards, len(c)/2)
+func (c Cards) Combine(m int) []Cards {
+	n := len(c)
+	size := util.Fact(int64(n)) / util.Fact(int64(n-m)) / util.Fact(int64(m))
+	result := make([]Cards, size)
+
+	index := make([]int, m)
+	for i := range index {
+		index[i] = i
+	}
 
 	k := 0
-	for i, first := range c {
-		for j := i + 1; j < len(c); j++ {
-			second := c[j]
-			result[k] = Cards{first, second}
-			k++
+	cards := make(Cards, m)
+	for i, j := range index[:m] {
+		cards[i] = c[j]
+	}
+	result[k] = cards
+	k++
+
+	for {
+		i := m - 1
+		for ; i >= 0 && index[i] == i+n-m; i -= 1 {
 		}
+
+		if i < 0 {
+			break
+		}
+
+		index[i] += 1
+		for j := i + 1; j < m; j += 1 {
+			index[j] = index[j-1] + 1
+		}
+
+		cards := make(Cards, m)
+		for i, j := range index {
+			cards[i] = c[j]
+		}
+		result[k] = cards
+		k++
 	}
 
 	return result
