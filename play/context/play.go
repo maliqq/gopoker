@@ -24,6 +24,7 @@ import (
 type Play struct {
 	Deal *model.Deal
 	Table *model.Table
+	Stake *model.Stake
 	Game *model.Game
 	Mix *model.Mix
 
@@ -52,9 +53,10 @@ func (this *Play) RotateGame() {
 	}
 }
 
-func NewPlay(variation model.Variation, table *model.Table) *Play {
+func NewPlay(variation model.Variation, stake *model.Stake, table *model.Table) *Play {
 	play := &Play{
 		Table:     table,
+		Stake:     stake,
 		Broadcast: protocol.NewBroadcast(),
 		Receive:   make(chan *protocol.Message),
 		Control:   make(chan command.Type),
@@ -160,12 +162,10 @@ func (this *Play) ResetSeats() {
 * Antes
 *********************************/
 func (this *Play) PostAntes() {
-	stake := this.Game.Stake
-
 	for _, pos := range this.Table.SeatsInPlay() {
 		seat := this.Table.Seat(pos)
 
-		newBet := this.Betting.ForceBet(pos, bet.Ante, stake)
+		newBet := this.Betting.ForceBet(pos, bet.Ante, this.Stake)
 
 		this.Betting.AddBet(seat, newBet)
 
@@ -177,10 +177,8 @@ func (this *Play) PostAntes() {
 * Blinds
 *********************************/
 func (this *Play) postSmallBlind(pos int) {
-	stake := this.Game.Stake
-
 	t := this.Table
-	newBet := this.Betting.ForceBet(pos, bet.SmallBlind, stake)
+	newBet := this.Betting.ForceBet(pos, bet.SmallBlind, this.Stake)
 
 	err := this.Betting.AddBet(t.Seat(pos), newBet)
 	if err != nil {
@@ -191,10 +189,8 @@ func (this *Play) postSmallBlind(pos int) {
 }
 
 func (this *Play) postBigBlind(pos int) {
-	stake := this.Game.Stake
-
 	t := this.Table
-	newBet := this.Betting.ForceBet(pos, bet.BigBlind, stake)
+	newBet := this.Betting.ForceBet(pos, bet.BigBlind, this.Stake)
 
 	err := this.Betting.AddBet(t.Seat(pos), newBet)
 	if err != nil {
@@ -266,7 +262,7 @@ func (this *Play) BringIn() {
 
 	seat := this.Table.Seat(minPos)
 
-	this.Broadcast.One(seat.Player) <- this.Betting.RequireBet(minPos, seat, this.Game)
+	this.Broadcast.One(seat.Player) <- this.Betting.RequireBet(minPos, seat, this.Game, this.Stake)
 }
 
 /*********************************
@@ -311,7 +307,7 @@ func (this *Play) StartBettingRound() {
 	for _, pos := range this.Table.Seats.From(betting.Current()).InPlay() {
 		seat := this.Table.Seat(pos)
 
-		this.Broadcast.One(seat.Player) <- betting.RequireBet(pos, seat, this.Game)
+		this.Broadcast.One(seat.Player) <- betting.RequireBet(pos, seat, this.Game, this.Stake)
 
 		select {
 		case msg := <-betting.Receive:

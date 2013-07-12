@@ -1,12 +1,7 @@
 package model
 
-import (
-	"net"
-)
-
 type Player struct {
 	Id   Id
-	conn *net.Conn
 }
 
 func NewPlayer(id Id) *Player {

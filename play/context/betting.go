@@ -50,7 +50,7 @@ func (this *Betting) Reset() {
 	this.Required.Call, this.Required.Min, this.Required.Max, this.raiseCount = 0., 0., 0., 0
 }
 
-func (this *Betting) ForceBet(pos int, betType bet.Type, stake *game.Stake) *bet.Bet {
+func (this *Betting) ForceBet(pos int, betType bet.Type, stake *model.Stake) *bet.Bet {
 	amount := stake.Amount(betType)
 
 	this.Required.Pos = pos
@@ -62,9 +62,30 @@ func (this *Betting) ForceBet(pos int, betType bet.Type, stake *game.Stake) *bet
 	}
 }
 
-func (this *Betting) RequireBet(pos int, seat *model.Seat, game *model.Game) *protocol.Message {
+func (this *Betting) RaiseRange(seat *model.Seat, g *model.Game, stake *model.Stake) (float64, float64) {
+	_, bb := stake.Blinds()
+
+	switch g.Limit {
+	case game.NoLimit:
+		return bb, seat.Stack
+
+	case game.PotLimit:
+		return bb, this.Pot.Total()
+
+	case game.FixedLimit:
+		if this.BigBets {
+			return bb * 2, bb * 2
+		}
+		return bb, bb
+	}
+
+	return 0., 0.
+}
+
+
+func (this *Betting) RequireBet(pos int, seat *model.Seat, game *model.Game, stake *model.Stake) *protocol.Message {
 	this.Required.Pos = pos
-	this.Required.Min, this.Required.Max = game.Limit.RaiseRange(game.Stake, seat.Stack+seat.Bet, this.Pot.Total(), this.BigBets)
+	this.Required.Min, this.Required.Max = this.RaiseRange(seat, game, stake)
 
 	return protocol.NewRequireBet(seat, this.Required)
 }

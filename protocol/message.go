@@ -272,7 +272,6 @@ type ChangeDealState struct {
 type ChangeGame struct {
 	Type game.LimitedGame
 	game.Limit
-	game.Stake
 }
 
 func NewChangeGame(g *model.Game) *Message {
@@ -280,14 +279,6 @@ func NewChangeGame(g *model.Game) *Message {
 		ChangeGame{
 			Type:  g.Type,
 			Limit: g.Limit,
-		},
-	)
-}
-
-func NewChangeStake(g *model.Game) *Message {
-	return NewMessage(
-		ChangeGame{
-			Stake: *g.Stake,
 		},
 	)
 }

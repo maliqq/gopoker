@@ -11,10 +11,10 @@ import (
 )
 
 func TestPlayMarshalJSON(t *testing.T) {
-	stake := game.NewStake(10.)
+	stake := model.NewStake(10.)
 	table := model.NewTable(9)
 
-	play := NewPlay(model.NewGame(game.Texas, game.NoLimit, stake), table)
+	play := NewPlay(model.NewGame(game.Texas, game.NoLimit), stake, table)
 
 	result, err := json.Marshal(play)
 
@@ -23,5 +23,4 @@ func TestPlayMarshalJSON(t *testing.T) {
 	}
 
 	t.Logf("%s", result)
-	t.FailNow()
 }

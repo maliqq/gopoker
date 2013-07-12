@@ -22,10 +22,7 @@ func Init(play *context.Play) {
 }
 
 func PostAntes(play *context.Play) {
-	gameOptions := play.Game.Options
-	stake := play.Game.Stake
-
-	if gameOptions.HasAnte || stake.HasAnte() {
+	if play.Game.HasAnte || play.Stake.HasAnte() {
 		log.Println("[play] post antes")
 
 		play.PostAntes()

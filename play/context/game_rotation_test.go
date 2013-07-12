@@ -10,8 +10,7 @@ import (
 )
 
 func TestGameRotation(t *testing.T) {
-	stake := game.NewStake(10.)
-	mix := model.NewMix(game.Horse, stake)
+	mix := model.NewMix(game.Horse)
 	t.Logf("mix=%s games=%s", mix, mix.Games)
 
 	rotation := NewGameRotation(mix, 0)

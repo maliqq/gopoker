@@ -163,18 +163,18 @@ Loop:
 
 func createPlay(me protocol.MessageChannel) *context.Play {
 	size := 3
-	stake := game.NewStake(*betsize)
+	table := model.NewTable(size)
+	stake := model.NewStake(*betsize)
 	//stake.WithAnte = true
 
 	var variation model.Variation
 	if *mixedGame != "" {
-		variation = model.NewMix(game.MixedGame(*mixedGame), stake)
+		variation = model.NewMix(game.MixedGame(*mixedGame))
 	} else {
-		variation = model.NewGame(game.LimitedGame(*limitedGame), game.FixedLimit, stake)
+		variation = model.NewGame(game.LimitedGame(*limitedGame), game.FixedLimit)
 	}
 
-	table := model.NewTable(size)
-	play := context.NewPlay(variation, table)
+	play := context.NewPlay(variation, stake, table)
 
 	ids := []model.Id{"A", "B", "C", "D", "E", "F", "G", "H", "I"}
 	stack := 1500.

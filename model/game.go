@@ -38,13 +38,11 @@ type MixOptions struct {
 type Game struct {
 	Type game.LimitedGame
 	game.Limit
-	Stake   *game.Stake
 	*GameOptions `json:"-"`
 }
 
 type Mix struct {
 	Type game.MixedGame
-	Stake *game.Stake
 	Games []*Game `json:"-"`
 }
 
@@ -198,7 +196,7 @@ var Mixes = map[game.MixedGame][]MixOptions{
 	},
 }
 
-func NewGame(g game.Type, limit game.Limit, stake *game.Stake) *Game {
+func NewGame(g game.Type, limit game.Limit) *Game {
 	limitedGame, success := g.(game.LimitedGame)
 
 	if !success {
@@ -211,7 +209,6 @@ func NewGame(g game.Type, limit game.Limit, stake *game.Stake) *Game {
 	return &Game{
 		Type:    limitedGame,
 		Limit:   limit,
-		Stake:   stake,
 		GameOptions: options,
 	}
 }
@@ -221,10 +218,10 @@ func (game *Game) IsMixed() bool {
 }
 
 func (game *Game) String() string {
-	return fmt.Sprintf("%s %s %s", game.Type, game.Limit, game.Stake)
+	return fmt.Sprintf("%s %s %s", game.Type, game.Limit)
 }
 
-func NewMix(g game.Type, stake *game.Stake) *Mix {
+func NewMix(g game.Type) *Mix {
 	mixedGame, success := g.(game.MixedGame)
 
 	if !success {
@@ -237,18 +234,17 @@ func NewMix(g game.Type, stake *game.Stake) *Mix {
 
 	games := make([]*Game, len(options))
 	for i, mixOptions := range options {
-		games[i] = NewGame(mixOptions.Type, mixOptions.Limit, stake)
+		games[i] = NewGame(mixOptions.Type, mixOptions.Limit)
 	}
 
 	return &Mix{
 		Type:  mixedGame,
-		Stake: stake,
 		Games: games,
 	}
 }
 
 func (mix *Mix) String() string {
-	return fmt.Sprintf("%s %s", mix.Type, mix.Stake)
+	return fmt.Sprintf("%s %s", mix.Type)
 }
 
 func (mix *Mix) IsMixed() bool {

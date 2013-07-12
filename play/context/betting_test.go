@@ -14,13 +14,13 @@ func TestBetting(t *testing.T) {
 		Player: player,
 		Stack:  200.,
 	}
-	stake := game.NewStake(10.)
+	stake := model.NewStake(10.)
 	t.Logf("Stake: %s", stake)
 
 	// no limit
-	g := model.NewGame(game.Texas, game.NoLimit, stake)
+	g := model.NewGame(game.Texas, game.NoLimit)
 
-	b.RequireBet(0, seat, g)
+	b.RequireBet(0, seat, g, stake)
 	req := b.Required
 
 	t.Logf("Required: %s", req)
@@ -38,9 +38,9 @@ func TestBetting(t *testing.T) {
 	}
 
 	// fixed limit
-	g = model.NewGame(game.Texas, game.FixedLimit, stake)
+	g = model.NewGame(game.Texas, game.FixedLimit)
 
-	b.RequireBet(0, seat, g)
+	b.RequireBet(0, seat, g, stake)
 	req = b.Required
 
 	t.Logf("Required: %s", req)
@@ -58,9 +58,9 @@ func TestBetting(t *testing.T) {
 	}
 
 	// pot limit
-	g = model.NewGame(game.Omaha, game.PotLimit, stake)
+	g = model.NewGame(game.Omaha, game.PotLimit)
 
-	b.RequireBet(0, seat, g)
+	b.RequireBet(0, seat, g, stake)
 	req = b.Required
 
 	t.Logf("Required: %s", req)

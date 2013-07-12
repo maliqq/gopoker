@@ -1,7 +1,8 @@
-package game
+package model
 
 import (
 	"fmt"
+	"encoding/json"
 )
 
 import (
@@ -114,4 +115,18 @@ func (stake *Stake) String() string {
 	}
 
 	return s
+}
+
+func (stake *Stake) MarshalJSON() ([]byte, error) {
+	data := map[string]float64{
+		"SmallBlind": stake.SmallBlindAmount(),
+		"BigBlind": stake.BigBlindAmount(),
+	}
+	if stake.HasAnte() {
+		data["Ante"] = stake.AnteAmount()
+	}
+	if stake.HasBringIn() {
+		data["BringIn"] = stake.BringInAmount()
+	}
+	return json.Marshal(data)
 }
