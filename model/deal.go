@@ -11,7 +11,7 @@ import (
 
 type Deal struct {
 	dealer  *Dealer
-	Pockets map[Id]*poker.Cards
+	Pockets map[Id]*poker.Cards `json:"-"`
 	Board   poker.Cards
 }
 

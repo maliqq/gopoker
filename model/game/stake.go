@@ -11,8 +11,8 @@ import (
 type Stake struct {
 	Size float64
 
-	WithAnte    bool
-	WithBringIn bool
+	WithAnte    bool `json:"-"`
+	WithBringIn bool `json:"-"`
 
 	BringIn float64
 	Ante    float64
