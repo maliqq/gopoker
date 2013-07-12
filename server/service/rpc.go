@@ -12,6 +12,7 @@ type CallResult struct {
 type CreateRoom struct {
 	Id   model.Id
 	Size int
+	BetSize float64
 	Game *model.Game
 	Mix *model.Mix
 }

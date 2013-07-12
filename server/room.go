@@ -12,8 +12,9 @@ type Room struct {
 }
 
 func NewRoom(createRoom *service.CreateRoom) *Room {
-	newTable := model.NewTable(createRoom.Size)
-	newPlay := context.NewPlay(createRoom.Variation(), newTable)
+	table := model.NewTable(createRoom.Size)
+	stake := model.NewStake(createRoom.BetSize)
+	newPlay := context.NewPlay(createRoom.Variation(), stake, table)
 
 	return &Room{
 		Id: createRoom.Id,

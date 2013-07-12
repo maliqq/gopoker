@@ -14,7 +14,7 @@ import (
 )
 
 var (
-	stackSize   = flag.Float64("stacksize", 20., "Stack size")
+	betSize   = flag.Float64("betsize", 20., "Bet size")
 	limit       = flag.String("limit", "fixed-limit", "Limit to play")
 	limitedGame = flag.String("game", "texas", "Game to play")
 	mixedGame   = flag.String("mix", "", "Mix to play")
@@ -28,17 +28,16 @@ func main() {
 		log.Fatal("dialing error: ", err)
 	}
 
-	stake := game.NewStake(*stackSize)
-
 	args := &service.CreateRoom{
 		Id: model.Id(util.RandomUuid()),
 		Size: 9,
+		BetSize: *betSize,
 	}
 
 	if *mixedGame != "" {
-		args.Mix = model.NewMix(game.MixedGame(*mixedGame), stake)
+		args.Mix = model.NewMix(game.MixedGame(*mixedGame))
 	} else {
-		args.Game = model.NewGame(game.LimitedGame(*limitedGame), game.Limit(*limit), stake)
+		args.Game = model.NewGame(game.LimitedGame(*limitedGame), game.Limit(*limit))
 	}
 
 	var result service.CallResult
