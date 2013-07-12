@@ -12,6 +12,7 @@ import (
 )
 
 type Table struct {
+	Size int
 	Button int
 
 	State table.State
@@ -25,13 +26,10 @@ type Table struct {
 
 func NewTable(size int) *Table {
 	return &Table{
+		Size: size,
 		Seats:   NewSeats(size),
 		seating: map[Id]int{},
 	}
-}
-
-func (t *Table) Size() int {
-	return len(t.Seats)
 }
 
 func (t *Table) MoveButton() {
@@ -39,7 +37,7 @@ func (t *Table) MoveButton() {
 }
 
 func (t *Table) SetButton(pos int) {
-	t.Button = position.Cycle(pos, t.Size())
+	t.Button = position.Cycle(pos, t.Size)
 }
 
 func (t *Table) Register(player *Player, pos int) {
@@ -145,7 +143,7 @@ func (t *Table) RemovePlayer(player *Player) (*Seat, error) {
 func (t *Table) String() string {
 	str := ""
 
-	str += fmt.Sprintf("size: %d button: %d\n", t.Size(), t.Button)
+	str += fmt.Sprintf("size: %d button: %d\n", t.Size, t.Button)
 
 	for i, tableSeat := range t.Seats {
 		str += fmt.Sprintf("seat %d: ", i+1)
