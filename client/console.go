@@ -170,8 +170,7 @@ func createPlay(me protocol.MessageChannel) *context.Play {
 	if *mixedGame != "" {
 		variation = model.NewMix(game.MixedGame(*mixedGame), stake)
 	} else {
-		limit := game.FixedLimit
-		variation = model.NewGame(game.LimitedGame(*limitedGame), limit, stake)
+		variation = model.NewGame(game.LimitedGame(*limitedGame), game.FixedLimit, stake)
 	}
 
 	table := model.NewTable(size)

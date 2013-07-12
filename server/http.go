@@ -3,6 +3,7 @@ package server
 import (
 	"encoding/json"
 	"net/http"
+	"log"
 )
 
 import (
@@ -11,8 +12,45 @@ import (
 	"gopoker/poker/ranking"
 )
 
+type Rooms struct {
+	Rooms map[model.Id]*Room
+}
+
+func (service *HttpService) Rooms(resp http.ResponseWriter, req *http.Request) {
+	rooms := service.Node.Rooms
+	
+	service.RespondJSON(resp, rooms)
+}
+
+func (service *HttpService) Room(resp http.ResponseWriter, req *http.Request) {
+	q := req.URL.Query()
+	id := q.Get("room")
+	room := service.Node.Room(model.Id(id))
+
+	service.RespondJSON(resp, room)
+}
+
 type HttpService struct {
-	node *Node
+	Node *Node
+}
+
+func (service *HttpService) Log(req *http.Request) {
+	// nginx default format:
+	//$remote_addr - $remote_user [$time_local]  "$request" $status $bytes_sent "$http_referer" "$http_user_agent" "$gzip_ratio"
+	log.Printf("%s - [%s %s %s] %s\n", req.RemoteAddr, req.Method, req.RequestURI, req.Proto, req.UserAgent())
+}
+
+func (service *HttpService) RespondJSON(resp http.ResponseWriter, result interface{}) {
+	data, err := json.Marshal(result)
+	if err != nil {
+		log.Fatalf("Can't marshal object: %+v", result)
+		return
+	}
+
+	resp.Header().Set("Content-Type", "application/json; charset=utf-8")
+
+	resp.Write(data)
+	resp.Write([]byte{0xA})
 }
 
 type CompareResult struct {
@@ -41,7 +79,7 @@ type dealHand struct {
 	Pockets []pocketHand
 }
 
-func (service HttpService) DetectHand(resp http.ResponseWriter, req *http.Request) {
+func (service *HttpService) DetectHand(resp http.ResponseWriter, req *http.Request) {
 	q := req.URL.Query()
 
 	r := q.Get("ranking")
@@ -71,7 +109,7 @@ func (service HttpService) DetectHand(resp http.ResponseWriter, req *http.Reques
 	}
 }
 
-func (service HttpService) CompareHands(resp http.ResponseWriter, req *http.Request) {
+func (service *HttpService) CompareHands(resp http.ResponseWriter, req *http.Request) {
 	q := req.URL.Query()
 
 	a, _ := poker.ParseCards(q.Get("a"))
@@ -96,7 +134,7 @@ func (service HttpService) CompareHands(resp http.ResponseWriter, req *http.Requ
 	resp.Write([]byte(s))
 }
 
-func (service HttpService) CalculateOdds(resp http.ResponseWriter, req *http.Request) {
+func (service *HttpService) CalculateOdds(resp http.ResponseWriter, req *http.Request) {
 	q := req.URL.Query()
 
 	a, _ := poker.ParseCards(q.Get("a"))
@@ -137,7 +175,7 @@ func (service HttpService) CalculateOdds(resp http.ResponseWriter, req *http.Req
 	resp.Write([]byte(s))
 }
 
-func (service HttpService) RandomHand(resp http.ResponseWriter, req *http.Request) {
+func (service *HttpService) RandomHand(resp http.ResponseWriter, req *http.Request) {
 	dealer := model.NewDealer()
 	board := dealer.Share(5)
 
@@ -162,71 +200,67 @@ func (service HttpService) RandomHand(resp http.ResponseWriter, req *http.Reques
 	resp.Write([]byte(s))
 }
 
-func (service HttpService) GenerateDeck(resp http.ResponseWriter, req *http.Request) {
+func (service *HttpService) GenerateDeck(resp http.ResponseWriter, req *http.Request) {
 	s, _ := json.Marshal(model.NewDealer())
 	resp.Write([]byte(s))
 }
 
-func (service HttpService) Deal(resp http.ResponseWriter, req *http.Request) {
+func (service *HttpService) Deal(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
-func (service HttpService) Bet(resp http.ResponseWriter, req *http.Request) {
+func (service *HttpService) Bet(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
-func (service HttpService) Discard(resp http.ResponseWriter, req *http.Request) {
+func (service *HttpService) Discard(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
-func (service HttpService) Muck(resp http.ResponseWriter, req *http.Request) {
+func (service *HttpService) Muck(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
-func (service HttpService) Pot(resp http.ResponseWriter, req *http.Request) {
+func (service *HttpService) Pot(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
-func (service HttpService) Stage(resp http.ResponseWriter, req *http.Request) {
+func (service *HttpService) Stage(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
-func (service HttpService) Results(resp http.ResponseWriter, req *http.Request) {
+func (service *HttpService) Results(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
-func (service HttpService) KnownHands(resp http.ResponseWriter, req *http.Request) {
+func (service *HttpService) KnownHands(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
-func (service HttpService) Table(resp http.ResponseWriter, req *http.Request) {
+func (service *HttpService) Join(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
-func (service HttpService) JoinTable(resp http.ResponseWriter, req *http.Request) {
+func (service *HttpService) Leave(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
-func (service HttpService) LeaveTable(resp http.ResponseWriter, req *http.Request) {
+func (service *HttpService) Rebuy(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
-func (service HttpService) Rebuy(resp http.ResponseWriter, req *http.Request) {
+func (service *HttpService) AddOn(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
-func (service HttpService) AddOn(resp http.ResponseWriter, req *http.Request) {
+func (service *HttpService) Seating(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
-func (service HttpService) TableSeating(resp http.ResponseWriter, req *http.Request) {
+func (service *HttpService) Wait(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
-func (service HttpService) Wait(resp http.ResponseWriter, req *http.Request) {
-	resp.Write([]byte("Hello, world!"))
-}
-
-func (service HttpService) TableStats(resp http.ResponseWriter, req *http.Request) {
+func (service *HttpService) Stats(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }

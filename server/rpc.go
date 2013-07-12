@@ -1,63 +1,83 @@
 package server
 
 import (
+	"net"
 	"net/http"
+	"net/rpc"
+	"log"
 )
 
 import (
-	"gopoker/model"
+	"gopoker/server/service"
 )
 
-type CallResult struct {
-	Success bool
+type NodeRPC struct {
+	Node *Node
 }
 
-type RoomParams struct {
-	Id   string
-	Size int
-	Game *model.Game
+func (n *Node) StartRPC() {
+	nodeRPC := &NodeRPC{n}
+
+	serv := rpc.NewServer()
+	serv.Register(nodeRPC)
+	
+	mux := http.NewServeMux()
+	mux.Handle(rpc.DefaultRPCPath, serv)
+
+	log.Printf("starting rpc service at %s", n.RpcAddr)
+	l, err := net.Listen("tcp", n.RpcAddr)
+	if err != nil {
+		log.Fatal("listen error:", err)
+	}
+
+	http := &http.Server{Handler: mux}
+	go http.Serve(l)
 }
 
-type RoomId struct {
-	Id string
-}
-
-func (n *Node) CreateRoom(req *http.Request, params *RoomParams, r *CallResult) error {
-	room := new(Room)
-	room.Id = params.Id
-	room.Table = model.NewTable(params.Size)
-
-	n.Rooms[params.Id] = room
-	defer func() { go room.Start() }()
+func (n *NodeRPC) CreateRoom(createRoom *service.CreateRoom, r *service.CallResult) error {
+	room := NewRoom(createRoom)
+	
+	n.Node.AddRoom(room)
 
 	return nil
 }
 
-func (n *Node) CloseRoom(req *http.Request, params *RoomId, r *CallResult) error {
-	room := n.Rooms[params.Id]
-
-	defer room.Close()
-
-	return nil
-}
-
-func (n *Node) PauseRoom(req *http.Request, params *RoomId, r *CallResult) error {
-	room := n.Rooms[params.Id]
-
-	defer room.Pause()
+func (n *NodeRPC) DeleteRoom(requestRoom *service.RequestRoom, r *service.CallResult) error {
+	room := n.Node.Room(requestRoom.Id)
+	
+	n.Node.RemoveRoom(room)
 
 	return nil
 }
 
-func (n *Node) StartRoom(req *http.Request, params *RoomId, r *CallResult) error {
-	room := n.Rooms[params.Id]
-
-	defer func() { go room.Start() }()
+func (n *NodeRPC) StartRoom(requestRoom *service.RequestRoom, r *service.CallResult) error {
+	room := n.Node.Room(requestRoom.Id)
+	
+	room.Start()
 
 	return nil
 }
 
-func (n *Node) DestroyRoom(req *http.Request, params *RoomId, r *CallResult) error {
-	delete(n.Rooms, params.Id)
+func (n *NodeRPC) PausePlay(requestRoom *service.RequestRoom, r *service.CallResult) error {
+	room := n.Node.Room(requestRoom.Id)
+	
+	room.Pause()
+
+	return nil
+}
+
+func (n *NodeRPC) ResumePlay(requestRoom *service.RequestRoom, r *service.CallResult) error {
+	room := n.Node.Room(requestRoom.Id)
+
+	room.Resume()
+
+	return nil
+}
+
+func (n *NodeRPC) CloseRoom(requestRoom *service.RequestRoom, r *service.CallResult) error {
+	room := n.Node.Room(requestRoom.Id)
+
+	room.Close()
+
 	return nil
 }

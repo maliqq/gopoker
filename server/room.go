@@ -1,48 +1,22 @@
 package server
 
 import (
-	"fmt"
-	"log"
-)
-
-import (
 	"gopoker/model"
+	"gopoker/play/context"
+	"gopoker/server/service"
 )
 
 type Room struct {
-	Id string
-
-	Game  *model.Game
-	Table *model.Table
-
-	recv chan string
-	send chan string
+	Id model.Id
+	*context.Play
 }
 
-func (room Room) String() string {
-	return fmt.Sprintf("id=%s", room.Id)
-}
+func NewRoom(createRoom *service.CreateRoom) *Room {
+	newTable := model.NewTable(createRoom.Size)
+	newPlay := context.NewPlay(createRoom.Variation(), newTable)
 
-func (room Room) Pause() {
-
-}
-
-func (room Room) Close() {
-
-}
-
-func (room Room) Destroy() {
-
-}
-
-func (room Room) Start() {
-	log.Printf("starting room %s", room)
-	for {
-		select {
-		case m := <-room.recv:
-			reply := m
-			log.Printf("got: %s", m)
-			room.send <- reply
-		}
+	return &Room{
+		Id: createRoom.Id,
+		Play: newPlay,
 	}
 }
