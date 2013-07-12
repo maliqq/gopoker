@@ -39,13 +39,13 @@ type Game struct {
 	Type game.LimitedGame
 	game.Limit
 	Stake   *game.Stake
-	Options *GameOptions
+	*GameOptions `json:"-"`
 }
 
 type Mix struct {
 	Type game.MixedGame
-	*game.Stake
-	Games []*Game
+	Stake *game.Stake
+	Games []*Game `json:"-"`
 }
 
 type Variation interface {
@@ -212,7 +212,7 @@ func NewGame(g game.Type, limit game.Limit, stake *game.Stake) *Game {
 		Type:    limitedGame,
 		Limit:   limit,
 		Stake:   stake,
-		Options: options,
+		GameOptions: options,
 	}
 }
 
