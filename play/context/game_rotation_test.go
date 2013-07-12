@@ -12,13 +12,14 @@ import (
 func TestGameRotation(t *testing.T) {
 	stake := game.NewStake(10.)
 	mix := model.NewMix(game.Horse, stake)
-	t.Logf("mix=%s", mix)
+	t.Logf("mix=%s games=%s", mix, mix.Games)
 
 	rotation := NewGameRotation(mix, 0)
 
 	var g *model.Game
 	for i := 0; i < RotateEvery; i++ {
-		g = rotation.Next()
+		rotation.Next()
+		g = rotation.Current()
 		t.Logf("game=%s", g)
 	}
 	if g.Type != mix.Games[0].Type {

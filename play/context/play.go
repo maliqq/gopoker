@@ -22,18 +22,19 @@ import (
 * Context
 *********************************/
 type Play struct {
-	*model.Deal
-	*model.Table
-	*model.Game
-	*model.Mix
+	Deal *model.Deal
+	Table *model.Table
+	Game *model.Game
+	Mix *model.Mix
 
-	*protocol.Broadcast
-	Receive chan *protocol.Message
-	Control chan command.Type
+	*protocol.Broadcast `json:"-"`
+	Receive chan *protocol.Message `json:"-"`
+	Control chan command.Type `json:"-"`
 
-	*GameRotation
-	*Betting
-	*Discarding
+	// FIXME json?
+	*GameRotation `json:"-"`
+	*Betting `json:"-"`
+	*Discarding `json:"-"`
 }
 
 func (this *Play) String() string {
@@ -112,13 +113,29 @@ func (this *Play) receive() {
 	}
 }
 
+func (this *Play) Start() {
+
+}
+
+func (this *Play) Pause() {
+
+}
+
+func (this *Play) Resume() {
+
+}
+
+func (this *Play) Close() {
+
+}
+
 /*********************************
 * Deals
 *********************************/
 func (this *Play) StartNewDeal() {
 	this.Deal = model.NewDeal()
 	this.Betting = NewBetting()
-	if this.Game.Options.Discards {
+	if this.Game.Discards {
 		this.Discarding = NewDiscarding(this.Deal)
 	}
 }
