@@ -20,6 +20,10 @@ func (card Card) String() string {
 	return card.kind.String() + card.suit.String()
 }
 
+func (c Card) KindName() string {
+	return card.KindNames[c.kind]
+}
+
 func (card Card) UnicodeString() string {
 	return card.kind.String() + card.suit.UnicodeString()
 }
