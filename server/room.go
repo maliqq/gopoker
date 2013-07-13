@@ -12,9 +12,22 @@ type Room struct {
 }
 
 func NewRoom(createRoom *service.CreateRoom) *Room {
-	table := model.NewTable(createRoom.Size)
+	variation := createRoom.Variation()
+	tableSize := createRoom.TableSize
+
+	var maxTableSize int
+	if variation.IsMixed() {
+		maxTableSize = model.MixedGameMaxTableSize
+	} else {
+		maxTableSize = variation.(*model.Game).MaxTableSize
+	}
+	if tableSize == 0 || tableSize > maxTableSize {
+		tableSize = maxTableSize
+	}
+
+	table := model.NewTable(tableSize)
 	stake := model.NewStake(createRoom.BetSize)
-	newPlay := context.NewPlay(createRoom.Variation(), stake, table)
+	newPlay := context.NewPlay(variation, stake, table)
 
 	return &Room{
 		Id:   createRoom.Id,

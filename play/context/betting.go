@@ -89,46 +89,6 @@ func (this *Betting) RequireBet(pos int, seat *model.Seat, game *model.Game, sta
 	return protocol.NewRequireBet(seat, this.Required)
 }
 
-func (this *Betting) ValidateBet(seat *model.Seat, newBet *bet.Bet) error {
-	require := this.Required
-
-	switch newBet.Type {
-	case bet.Check:
-		if require.Call != 0. {
-			return fmt.Errorf("Can't check, need to call: %.2f", require.Call)
-		}
-
-	case bet.Call, bet.Raise:
-		amount := newBet.Amount
-
-		if amount > seat.Stack {
-			return fmt.Errorf("Bet amount is greater than available stack: amount=%.2f stack=%.2f", amount, seat.Stack)
-		}
-
-		if newBet.Type == bet.Call && amount != require.Call-seat.Bet {
-			return fmt.Errorf("Call mismatch: got amount=%.2f need to call=%.2f", amount, require.Call)
-		}
-
-		if newBet.Type == bet.Raise {
-			if require.Max == 0. {
-				return fmt.Errorf("Raise not allowed in current betting: got amount=%.2f", amount)
-			}
-
-			raiseAmount := require.Call - amount
-
-			if raiseAmount > require.Max {
-				return fmt.Errorf("Raise invalid: got amount=%.2f required max=%.2f", amount, require.Max)
-			}
-
-			if raiseAmount < require.Min && amount != seat.Stack {
-				return fmt.Errorf("Raise invalid: got amount=%.2f required min=%.2f", amount, require.Min)
-			}
-		}
-	}
-
-	return nil
-}
-
 func (this *Betting) Call(amount float64) {
 	this.Required.Call = amount
 }
@@ -145,7 +105,7 @@ func (this *Betting) AddBet(seat *model.Seat, newBet *bet.Bet) error {
 		return nil
 	}
 
-	err := this.ValidateBet(seat, newBet)
+	err := newBet.Validate(seat, this.Required)
 
 	if err != nil {
 		seat.Fold() // force fold

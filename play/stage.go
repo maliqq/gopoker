@@ -61,7 +61,7 @@ type dealing struct {
 func (d dealing) Stage(play *context.Play) {
 	n := d.n
 	if d.n == 0 && d.Type == deal.Hole {
-		n = play.Game.Pocket
+		n = play.Game.PocketSize
 	}
 	log.Printf("[play] dealing %s %d cards\n", d.Type, n)
 

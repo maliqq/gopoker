@@ -10,11 +10,11 @@ type CallResult struct {
 }
 
 type CreateRoom struct {
-	Id      model.Id
-	Size    int
-	BetSize float64
-	Game    *model.Game
-	Mix     *model.Mix
+	Id        model.Id
+	TableSize int
+	BetSize   float64
+	Game      *model.Game
+	Mix       *model.Mix
 }
 
 func (c CreateRoom) Variation() model.Variation {

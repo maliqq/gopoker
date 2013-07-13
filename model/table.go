@@ -8,14 +8,11 @@ import (
 import (
 	"gopoker/model/position"
 	"gopoker/model/seat"
-	"gopoker/model/table"
 )
 
 type Table struct {
-	Size   int
+	Size   int // number of seats
 	Button int
-
-	State table.State
 
 	Seats   Seats
 	seating map[Id]int

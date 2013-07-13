@@ -10,9 +10,11 @@ import (
 )
 
 type Deal struct {
-	dealer  *Dealer
+	dealer *Dealer
+	// pocket cards
 	Pockets map[Id]*poker.Cards `json:"-"`
-	Board   poker.Cards
+	// shared cards
+	Board poker.Cards
 }
 
 func NewDeal() *Deal {

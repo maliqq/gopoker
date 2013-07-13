@@ -10,7 +10,6 @@ import (
 
 import (
 	"gopoker/model"
-	"gopoker/model/bet"
 	"gopoker/model/deal"
 	"gopoker/model/game"
 	"gopoker/model/seat"
@@ -214,10 +213,8 @@ func NewDiscardCards(pos int, cards *poker.Cards) *Message {
 }
 
 type RequireBet struct {
-	Pos  int
-	Call float64
-	Min  float64
-	Max  float64
+	Pos int
+	model.RequireBet
 }
 
 func NewRequireBet(seat *model.Seat, req *RequireBet) *Message {
@@ -233,10 +230,10 @@ func (r RequireBet) String() string {
 
 type AddBet struct {
 	Pos int
-	Bet bet.Bet
+	Bet model.Bet
 }
 
-func NewAddBet(pos int, bet *bet.Bet) *Message {
+func NewAddBet(pos int, bet *model.Bet) *Message {
 	return NewMessage(
 		AddBet{
 			Pos: pos,

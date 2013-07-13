@@ -9,6 +9,10 @@ import (
 	"gopoker/poker/ranking"
 )
 
+const (
+	MixedGameMaxTableSize = 8
+)
+
 type GameOptions struct {
 	Group game.Group
 
@@ -20,9 +24,10 @@ type GameOptions struct {
 
 	Discards  bool
 	Reshuffle bool
-	Max       int
-	Pocket    int
-	Streets   int
+
+	MaxTableSize int
+	PocketSize   int
+	Streets      int // number of streets till showdown
 
 	Hi ranking.Type
 	Lo ranking.Type
@@ -55,9 +60,9 @@ var Games = map[game.LimitedGame]*GameOptions{
 		Group:        game.Holdem,
 		HasBoard:     true,
 		HasBlinds:    true,
-		Max:          10,
+		MaxTableSize: 10,
 		Hi:           ranking.High,
-		Pocket:       2,
+		PocketSize:   2,
 		DefaultLimit: game.NoLimit,
 	},
 
@@ -65,8 +70,8 @@ var Games = map[game.LimitedGame]*GameOptions{
 		Group:        game.Holdem,
 		HasBoard:     true,
 		HasBlinds:    true,
-		Max:          10,
-		Pocket:       4,
+		MaxTableSize: 10,
+		PocketSize:   4,
 		Hi:           ranking.High,
 		DefaultLimit: game.PotLimit,
 	},
@@ -75,8 +80,8 @@ var Games = map[game.LimitedGame]*GameOptions{
 		Group:        game.Holdem,
 		HasBoard:     true,
 		HasBlinds:    true,
-		Max:          10,
-		Pocket:       4,
+		MaxTableSize: 10,
+		PocketSize:   4,
 		Hi:           ranking.High,
 		Lo:           ranking.AceFive8,
 		DefaultLimit: game.PotLimit,
@@ -87,8 +92,8 @@ var Games = map[game.LimitedGame]*GameOptions{
 		HasAnte:      true,
 		HasBringIn:   true,
 		HasVela:      true,
-		Max:          8,
-		Pocket:       7,
+		MaxTableSize: 8,
+		PocketSize:   7,
 		Hi:           ranking.High,
 		DefaultLimit: game.FixedLimit,
 	},
@@ -98,8 +103,8 @@ var Games = map[game.LimitedGame]*GameOptions{
 		HasAnte:      true,
 		HasBringIn:   true,
 		HasVela:      true,
-		Max:          8,
-		Pocket:       7,
+		MaxTableSize: 8,
+		PocketSize:   7,
 		Hi:           ranking.High,
 		Lo:           ranking.AceFive8,
 		DefaultLimit: game.FixedLimit,
@@ -110,8 +115,8 @@ var Games = map[game.LimitedGame]*GameOptions{
 		HasAnte:      true,
 		HasBringIn:   true,
 		HasVela:      true,
-		Max:          8,
-		Pocket:       7,
+		MaxTableSize: 8,
+		PocketSize:   7,
 		Hi:           ranking.AceFive,
 		DefaultLimit: game.FixedLimit,
 	},
@@ -121,8 +126,8 @@ var Games = map[game.LimitedGame]*GameOptions{
 		HasAnte:      true,
 		HasBringIn:   true,
 		HasVela:      true,
-		Max:          8,
-		Pocket:       7,
+		MaxTableSize: 8,
+		PocketSize:   7,
 		Hi:           ranking.AceSix,
 		DefaultLimit: game.FixedLimit,
 	},
@@ -132,8 +137,8 @@ var Games = map[game.LimitedGame]*GameOptions{
 		HasBlinds:    true,
 		Discards:     true,
 		Reshuffle:    true,
-		Max:          6,
-		Pocket:       5,
+		MaxTableSize: 6,
+		PocketSize:   5,
 		Streets:      1,
 		Hi:           ranking.High,
 		DefaultLimit: game.FixedLimit,
@@ -144,8 +149,8 @@ var Games = map[game.LimitedGame]*GameOptions{
 		HasBlinds:    true,
 		Discards:     true,
 		Reshuffle:    true,
-		Max:          6,
-		Pocket:       5,
+		MaxTableSize: 6,
+		PocketSize:   5,
 		Streets:      1,
 		Hi:           ranking.DeuceSeven,
 		DefaultLimit: game.FixedLimit,
@@ -156,8 +161,8 @@ var Games = map[game.LimitedGame]*GameOptions{
 		HasBlinds:    true,
 		Discards:     true,
 		Reshuffle:    true,
-		Max:          6,
-		Pocket:       5,
+		MaxTableSize: 6,
+		PocketSize:   5,
 		Streets:      3,
 		Hi:           ranking.DeuceSeven,
 		DefaultLimit: game.FixedLimit,
@@ -168,8 +173,8 @@ var Games = map[game.LimitedGame]*GameOptions{
 		HasBlinds:    true,
 		Discards:     true,
 		Reshuffle:    true,
-		Max:          6,
-		Pocket:       4,
+		MaxTableSize: 6,
+		PocketSize:   4,
 		Hi:           ranking.Badugi,
 		DefaultLimit: game.FixedLimit,
 	},
@@ -205,6 +210,10 @@ func NewGame(g game.Type, limit game.Limit) *Game {
 	}
 
 	options := Games[limitedGame]
+
+	if limit == "" {
+		limit = options.DefaultLimit
+	}
 
 	return &Game{
 		Type:        limitedGame,
