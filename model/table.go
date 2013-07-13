@@ -12,7 +12,7 @@ import (
 )
 
 type Table struct {
-	Size int
+	Size   int
 	Button int
 
 	State table.State
@@ -26,7 +26,7 @@ type Table struct {
 
 func NewTable(size int) *Table {
 	return &Table{
-		Size: size,
+		Size:    size,
 		Seats:   NewSeats(size),
 		seating: map[Id]int{},
 	}

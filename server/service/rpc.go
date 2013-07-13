@@ -5,23 +5,23 @@ import (
 )
 
 type CallResult struct {
-	Status string
+	Status  string
 	Message string
 }
 
 type CreateRoom struct {
-	Id   model.Id
-	Size int
+	Id      model.Id
+	Size    int
 	BetSize float64
-	Game *model.Game
-	Mix *model.Mix
+	Game    *model.Game
+	Mix     *model.Mix
 }
 
 func (c CreateRoom) Variation() model.Variation {
 	if c.Game != nil {
 		return c.Game
 	}
-	
+
 	if c.Mix != nil {
 		return c.Mix
 	}

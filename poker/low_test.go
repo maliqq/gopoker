@@ -5,8 +5,8 @@ import (
 )
 
 import (
+	"gopoker/poker/hand"
 	"gopoker/poker/ranking"
-  "gopoker/poker/hand"
 )
 
 func TestLow(t *testing.T) {
@@ -14,31 +14,31 @@ func TestLow(t *testing.T) {
 	h, _ := Detect[ranking.AceFive](cards)
 
 	t.Logf("AceFive=%s", h)
-  if h.Rank != hand.CompleteLow {
-  	t.FailNow()
-  }
+	if h.Rank != hand.CompleteLow {
+		t.FailNow()
+	}
 
-  cards, _ = ParseCards("2c3c4sAd8d")
-  h, _ = Detect[ranking.AceFive8](cards)
+	cards, _ = ParseCards("2c3c4sAd8d")
+	h, _ = Detect[ranking.AceFive8](cards)
 
-  t.Logf("AceFive8=%s", h)
-  if h.Rank != hand.CompleteLow {
-    t.FailNow()
-  }
+	t.Logf("AceFive8=%s", h)
+	if h.Rank != hand.CompleteLow {
+		t.FailNow()
+	}
 
-  cards, _ = ParseCards("Ad2c3c4s6h8d")
-  h, _ = Detect[ranking.AceSix](cards)
+	cards, _ = ParseCards("Ad2c3c4s6h8d")
+	h, _ = Detect[ranking.AceSix](cards)
 
-  t.Logf("AceSix=%s", h)
-  if h.Rank != hand.CompleteLow {
-    t.FailNow()
-  }
+	t.Logf("AceSix=%s", h)
+	if h.Rank != hand.CompleteLow {
+		t.FailNow()
+	}
 
-  cards, _ = ParseCards("2c3c4s5sAd7c")
-  h, _ = Detect[ranking.DeuceSeven](cards)
+	cards, _ = ParseCards("2c3c4s5sAd7c")
+	h, _ = Detect[ranking.DeuceSeven](cards)
 
-  t.Logf("DeuceSeven=%s", h)
-  if h.Rank != hand.CompleteLow {
-    t.FailNow()
-  }
+	t.Logf("DeuceSeven=%s", h)
+	if h.Rank != hand.CompleteLow {
+		t.FailNow()
+	}
 }

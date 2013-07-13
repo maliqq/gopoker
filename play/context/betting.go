@@ -82,7 +82,6 @@ func (this *Betting) RaiseRange(seat *model.Seat, g *model.Game, stake *model.St
 	return 0., 0.
 }
 
-
 func (this *Betting) RequireBet(pos int, seat *model.Seat, game *model.Game, stake *model.Stake) *protocol.Message {
 	this.Required.Pos = pos
 	this.Required.Min, this.Required.Max = this.RaiseRange(seat, game, stake)
@@ -106,7 +105,7 @@ func (this *Betting) ValidateBet(seat *model.Seat, newBet *bet.Bet) error {
 			return fmt.Errorf("Bet amount is greater than available stack: amount=%.2f stack=%.2f", amount, seat.Stack)
 		}
 
-		if newBet.Type == bet.Call && amount != require.Call - seat.Bet {
+		if newBet.Type == bet.Call && amount != require.Call-seat.Bet {
 			return fmt.Errorf("Call mismatch: got amount=%.2f need to call=%.2f", amount, require.Call)
 		}
 

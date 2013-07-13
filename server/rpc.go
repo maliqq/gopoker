@@ -1,10 +1,10 @@
 package server
 
 import (
+	"log"
 	"net"
 	"net/http"
 	"net/rpc"
-	"log"
 )
 
 import (
@@ -20,7 +20,7 @@ func (n *Node) StartRPC() {
 
 	serv := rpc.NewServer()
 	serv.Register(nodeRPC)
-	
+
 	mux := http.NewServeMux()
 	mux.Handle(rpc.DefaultRPCPath, serv)
 
@@ -36,7 +36,7 @@ func (n *Node) StartRPC() {
 
 func (n *NodeRPC) CreateRoom(createRoom *service.CreateRoom, r *service.CallResult) error {
 	room := NewRoom(createRoom)
-	
+
 	n.Node.AddRoom(room)
 
 	return nil
@@ -44,7 +44,7 @@ func (n *NodeRPC) CreateRoom(createRoom *service.CreateRoom, r *service.CallResu
 
 func (n *NodeRPC) DeleteRoom(requestRoom *service.RequestRoom, r *service.CallResult) error {
 	room := n.Node.Room(requestRoom.Id)
-	
+
 	n.Node.RemoveRoom(room)
 
 	return nil
@@ -52,7 +52,7 @@ func (n *NodeRPC) DeleteRoom(requestRoom *service.RequestRoom, r *service.CallRe
 
 func (n *NodeRPC) StartRoom(requestRoom *service.RequestRoom, r *service.CallResult) error {
 	room := n.Node.Room(requestRoom.Id)
-	
+
 	room.Start()
 
 	return nil
@@ -60,7 +60,7 @@ func (n *NodeRPC) StartRoom(requestRoom *service.RequestRoom, r *service.CallRes
 
 func (n *NodeRPC) PausePlay(requestRoom *service.RequestRoom, r *service.CallResult) error {
 	room := n.Node.Room(requestRoom.Id)
-	
+
 	room.Pause()
 
 	return nil

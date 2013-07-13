@@ -22,20 +22,20 @@ import (
 * Context
 *********************************/
 type Play struct {
-	Deal *model.Deal
+	Deal  *model.Deal
 	Table *model.Table
 	Stake *model.Stake
-	Game *model.Game
-	Mix *model.Mix
+	Game  *model.Game
+	Mix   *model.Mix
 
 	*protocol.Broadcast `json:"-"`
-	Receive chan *protocol.Message `json:"-"`
-	Control chan command.Type `json:"-"`
+	Receive             chan *protocol.Message `json:"-"`
+	Control             chan command.Type      `json:"-"`
 
 	// FIXME json?
 	*GameRotation `json:"-"`
-	*Betting `json:"-"`
-	*Discarding `json:"-"`
+	*Betting      `json:"-"`
+	*Discarding   `json:"-"`
 }
 
 func (this *Play) String() string {

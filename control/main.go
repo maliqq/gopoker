@@ -1,20 +1,20 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"net/rpc"
-	"flag"
 )
 
 import (
-	"gopoker/util"
 	"gopoker/model"
 	"gopoker/model/game"
 	"gopoker/server/service"
+	"gopoker/util"
 )
 
 var (
-	betSize   = flag.Float64("betsize", 20., "Bet size")
+	betSize     = flag.Float64("betsize", 20., "Bet size")
 	limit       = flag.String("limit", "fixed-limit", "Limit to play")
 	limitedGame = flag.String("game", "texas", "Game to play")
 	mixedGame   = flag.String("mix", "", "Mix to play")
@@ -29,8 +29,8 @@ func main() {
 	}
 
 	args := &service.CreateRoom{
-		Id: model.Id(util.RandomUuid()),
-		Size: 9,
+		Id:      model.Id(util.RandomUuid()),
+		Size:    9,
 		BetSize: *betSize,
 	}
 

@@ -42,7 +42,7 @@ type Game struct {
 }
 
 type Mix struct {
-	Type game.MixedGame
+	Type  game.MixedGame
 	Games []*Game `json:"-"`
 }
 
@@ -207,8 +207,8 @@ func NewGame(g game.Type, limit game.Limit) *Game {
 	options := Games[limitedGame]
 
 	return &Game{
-		Type:    limitedGame,
-		Limit:   limit,
+		Type:        limitedGame,
+		Limit:       limit,
 		GameOptions: options,
 	}
 }

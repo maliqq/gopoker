@@ -1,3 +1,3 @@
 package ai
 
-type Bot struct {}
+type Bot struct{}

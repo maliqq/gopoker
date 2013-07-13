@@ -1,7 +1,7 @@
 package model
 
 type Player struct {
-	Id   Id
+	Id Id
 }
 
 func NewPlayer(id Id) *Player {

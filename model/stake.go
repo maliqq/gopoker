@@ -1,8 +1,8 @@
 package model
 
 import (
-	"fmt"
 	"encoding/json"
+	"fmt"
 )
 
 import (
@@ -120,7 +120,7 @@ func (stake *Stake) String() string {
 func (stake *Stake) MarshalJSON() ([]byte, error) {
 	data := map[string]float64{
 		"SmallBlind": stake.SmallBlindAmount(),
-		"BigBlind": stake.BigBlindAmount(),
+		"BigBlind":   stake.BigBlindAmount(),
 	}
 	if stake.HasAnte() {
 		data["Ante"] = stake.AnteAmount()

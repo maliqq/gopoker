@@ -109,19 +109,19 @@ func (h *Hand) HumanString() string {
 	switch h.Rank {
 	case hand.HighCard:
 		return fmt.Sprintf("high card %s", h.High[0].KindName())
-	
+
 	case hand.OnePair:
 		return fmt.Sprintf("pair of %s", h.High[0].KindName())
-	
+
 	case hand.TwoPair:
 		return fmt.Sprintf("two pairs, %s and %s", h.High[0].KindName(), h.High[1].KindName())
-	
+
 	case hand.ThreeKind:
 		return fmt.Sprintf("three of a kind, %s", h.High[0].KindName())
-	
+
 	case hand.Straight:
 		return fmt.Sprintf("straight, %s to %s", h.Value.Min(AceHigh).KindName(), h.Value.Max(AceHigh).KindName())
-	
+
 	case hand.Flush:
 		return fmt.Sprintf("flush, %s high", h.High[0].KindName())
 
@@ -130,7 +130,7 @@ func (h *Hand) HumanString() string {
 
 	case hand.FourKind:
 		return fmt.Sprintf("four of a kind, %s", h.High[0].KindName())
-	
+
 	case hand.StraightFlush:
 		return fmt.Sprintf("straight flush, %s to %s", h.Value.Min(AceHigh).KindName(), h.Value.Max(AceHigh).KindName())
 	}

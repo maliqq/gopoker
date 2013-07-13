@@ -2,8 +2,8 @@ package server
 
 import (
 	"encoding/json"
-	"net/http"
 	"log"
+	"net/http"
 )
 
 import (
@@ -18,7 +18,7 @@ type Rooms struct {
 
 func (service *HttpService) Rooms(resp http.ResponseWriter, req *http.Request) {
 	rooms := service.Node.Rooms
-	
+
 	service.RespondJSON(resp, rooms)
 }
 

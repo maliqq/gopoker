@@ -17,7 +17,7 @@ func NewRoom(createRoom *service.CreateRoom) *Room {
 	newPlay := context.NewPlay(createRoom.Variation(), stake, table)
 
 	return &Room{
-		Id: createRoom.Id,
+		Id:   createRoom.Id,
 		Play: newPlay,
 	}
 }
