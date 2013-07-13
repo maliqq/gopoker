@@ -24,6 +24,10 @@ func (c Card) KindName() string {
 	return card.KindNames[c.kind]
 }
 
+func (c Card) KindTitle() string {
+	return strings.Title(c.KindName())
+}
+
 func (card Card) UnicodeString() string {
 	return card.kind.String() + card.suit.UnicodeString()
 }

@@ -2,6 +2,7 @@ package poker
 
 import (
 	"fmt"
+	"strings"
 )
 
 import (
@@ -82,6 +83,14 @@ func (c *handCards) Detect(ranks []rankFunc) *Hand {
 	}
 
 	return result
+}
+
+func (h *Hand) RankName() string {
+	return h.Rank.String()
+}
+
+func (h *Hand) RankTitle() string {
+	return strings.Title(h.RankName())
 }
 
 func (h *Hand) String() string {
