@@ -41,7 +41,7 @@ type Play struct {
 	*Discarding `json:"-"`
 
 	// broadcast protocol messages
-	*protocol.Broadcast `json:"-"`
+	Broadcast *protocol.Broadcast `json:"-"`
 
 	// receive protocol messages
 	Receive chan *protocol.Message `json:"-"`
@@ -165,7 +165,7 @@ func (this *Play) ResetSeats() {
 	for _, s := range this.Table.Seats {
 		switch s.State {
 		case seat.Ready, seat.Play:
-			s.SetPlaying()
+			s.Play()
 		}
 	}
 }
@@ -177,9 +177,9 @@ func (this *Play) PostAntes() {
 	for _, pos := range this.Table.SeatsInPlay() {
 		seat := this.Table.Seat(pos)
 
-		newBet := this.Betting.ForceBet(pos, bet.Ante, this.Stake)
+		newBet := this.ForceBet(pos, bet.Ante, this.Stake)
 
-		this.Betting.AddBet(seat, newBet)
+		this.AddBet(seat, newBet)
 
 		this.Broadcast.All <- protocol.NewAddBet(pos, newBet)
 	}
@@ -190,9 +190,9 @@ func (this *Play) PostAntes() {
 *********************************/
 func (this *Play) postSmallBlind(pos int) {
 	t := this.Table
-	newBet := this.Betting.ForceBet(pos, bet.SmallBlind, this.Stake)
+	newBet := this.ForceBet(pos, bet.SmallBlind, this.Stake)
 
-	err := this.Betting.AddBet(t.Seat(pos), newBet)
+	err := this.AddBet(t.Seat(pos), newBet)
 	if err != nil {
 		log.Fatalf("Error adding small blind for %d: %s", pos, err)
 	}
@@ -202,9 +202,9 @@ func (this *Play) postSmallBlind(pos int) {
 
 func (this *Play) postBigBlind(pos int) {
 	t := this.Table
-	newBet := this.Betting.ForceBet(pos, bet.BigBlind, this.Stake)
+	newBet := this.ForceBet(pos, bet.BigBlind, this.Stake)
 
-	err := this.Betting.AddBet(t.Seat(pos), newBet)
+	err := this.AddBet(t.Seat(pos), newBet)
 	if err != nil {
 		log.Fatalf("Error adding big blind for %d: %s", pos, err)
 	}
@@ -332,17 +332,14 @@ func (this *Play) StartBettingRound() {
 }
 
 func (this *Play) ResetBetting() {
-	betting := this.Betting
-
-	betting.Reset()
+	this.Betting.Clear()
 
 	for _, pos := range this.Table.SeatsInPlay() {
 		seat := this.Table.Seat(pos)
-
-		seat.SetPlaying()
+		seat.Play()
 	}
 
-	this.Broadcast.All <- protocol.NewPotSummary(betting.Pot)
+	this.Broadcast.All <- protocol.NewPotSummary(this.Pot)
 }
 
 /*********************************

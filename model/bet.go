@@ -64,12 +64,13 @@ func NewCall(amount float64) *Bet {
 	return &Bet{Type: bet.Call, Amount: amount}
 }
 
-func (newBet *Bet) Validate(seat *Seat, required *RequireBet) error {
+func (newBet *Bet) Validate(seat *Seat, required RequireBet) error {
 	switch newBet.Type {
 	case bet.Check:
 		if required.Call != 0. {
 			return fmt.Errorf("Can't check, need to call: %.2f", required.Call)
 		}
+		return nil
 
 	case bet.Call, bet.Raise:
 		amount := newBet.Amount

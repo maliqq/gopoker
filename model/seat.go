@@ -37,23 +37,22 @@ func (this *Seat) Clear() {
 	this.Bet = 0.
 }
 
-func (this *Seat) SetPlaying() {
-	this.State = seat.Play
-
+func (this *Seat) Play() {
 	this.Bet = 0.
+	this.State = seat.Play
 }
 
 func (this *Seat) Fold() {
-	this.State = seat.Fold
-
 	this.Bet = 0.
+	this.State = seat.Fold
 }
 
 func (this *Seat) SetBet(amount float64) {
-	this.Bet += this.AdvanceStack(-amount)
+	this.AdvanceStack(-amount)
+	this.Bet += amount
 }
 
-func (this *Seat) PutBet(amount float64) {
+func (this *Seat) AddBet(amount float64) {
 	this.SetBet(amount)
 
 	this.State = seat.Bet
@@ -78,8 +77,6 @@ func (this *Seat) SetStack(amount float64) {
 	}
 }
 
-func (this *Seat) AdvanceStack(amount float64) float64 {
+func (this *Seat) AdvanceStack(amount float64) {
 	this.Stack += amount
-
-	return -amount
 }

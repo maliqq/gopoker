@@ -12,7 +12,6 @@ import (
 
 import (
 	"gopoker/model"
-	"gopoker/model/bet"
 	"gopoker/model/deal"
 	"gopoker/model/game"
 	runner "gopoker/play"
@@ -65,7 +64,7 @@ Loop:
 
 				fmt.Printf("%s\n", r)
 
-				var newBet *bet.Bet
+				var newBet *model.Bet
 			ReadBetLoop:
 				for newBet == nil {
 					var cmd string
@@ -80,7 +79,7 @@ Loop:
 						break ReadBetLoop
 					}
 
-					err := play.Betting.ValidateBet(play.Table.Seat(r.Pos), newBet)
+					err := newBet.Validate(play.Table.Seat(r.Pos), play.Betting.Required.RequireBet)
 					if err != nil {
 						fmt.Println(err.Error())
 						newBet = nil
@@ -200,8 +199,8 @@ func readLine() string {
 	return str
 }
 
-func readBet(r *protocol.RequireBet) (*bet.Bet, string) {
-	var b *bet.Bet
+func readBet(r *protocol.RequireBet) (*model.Bet, string) {
+	var b *model.Bet
 	var str string
 
 	for b == nil {
@@ -230,25 +229,25 @@ func readCards() *poker.Cards {
 	return cards
 }
 
-func parseBet(r *protocol.RequireBet, str string) *bet.Bet {
-	var b *bet.Bet
+func parseBet(r *protocol.RequireBet, str string) *model.Bet {
+	var b *model.Bet
 
 	switch str {
 	case "":
 		if r.Call == 0. {
-			b = bet.NewCheck()
+			b = model.NewCheck()
 		} else {
-			b = bet.NewCall(r.Call)
+			b = model.NewCall(r.Call)
 		}
 
 	case "fold":
-		b = bet.NewFold()
+		b = model.NewFold()
 
 	case "check":
-		b = bet.NewCheck()
+		b = model.NewCheck()
 
 	case "call":
-		b = bet.NewCall(r.Call)
+		b = model.NewCall(r.Call)
 
 	default:
 		parts := strings.Split(str, " ")
@@ -264,7 +263,7 @@ func parseBet(r *protocol.RequireBet, str string) *bet.Bet {
 			amount, err := strconv.ParseFloat(amountString, 64)
 
 			if err == nil {
-				b = bet.NewRaise(amount)
+				b = model.NewRaise(amount)
 			} else {
 				fmt.Printf("error: %s\n", err.Error())
 			}
