@@ -7,40 +7,99 @@ import (
 )
 
 import (
+	"code.google.com/p/go.net/websocket"
+	"github.com/gorilla/mux"
+)
+
+import (
 	"gopoker/model"
 	"gopoker/poker"
 	"gopoker/poker/ranking"
 )
 
+const (
+	WebSocketPath = "/_ws"
+	HttpApiPath   = "/_api"
+)
+
+type NodeHTTP struct {
+	*Node
+}
+
 type Rooms struct {
 	Rooms map[model.Id]*Room
 }
 
-func (service *HttpService) Rooms(resp http.ResponseWriter, req *http.Request) {
-	rooms := service.Node.Rooms
+func (n *Node) StartHTTP() {
+	nodeHTTP := &NodeHTTP{n}
 
-	service.RespondJSON(resp, rooms)
+	router := mux.NewRouter()
+
+	api := router.PathPrefix(HttpApiPath).Subrouter()
+
+	// Room
+	api.HandleFunc("/rooms", nodeHTTP.Rooms).Methods("GET")
+	api.HandleFunc("/room/{room}", nodeHTTP.Room).Methods("POST")
+
+	api.HandleFunc("/room/{room}/join", nodeHTTP.Join).Methods("POST")
+	api.HandleFunc("/room/{room}/leave", nodeHTTP.Leave).Methods("DELETE")
+	api.HandleFunc("/room/{room}/rebuy", nodeHTTP.Rebuy).Methods("POST")
+	api.HandleFunc("/room/{room}/addon", nodeHTTP.AddOn).Methods("POST")
+
+	api.HandleFunc("/room/{room}/seating", nodeHTTP.Seating).Methods("GET")
+	api.HandleFunc("/room/{room}/wait", nodeHTTP.Wait).Methods("PUT")
+	api.HandleFunc("/room/{room}/stats", nodeHTTP.Stats).Methods("GET")
+
+	// misc
+	api.HandleFunc("/hand/detect", nodeHTTP.DetectHand).Methods("GET", "POST")
+	api.HandleFunc("/hand/random", nodeHTTP.RandomHand).Methods("GET")
+	api.HandleFunc("/hand/compare", nodeHTTP.CompareHands).Methods("GET", "POST")
+	api.HandleFunc("/hand/odds", nodeHTTP.CalculateOdds).Methods("GET", "POST")
+
+	api.HandleFunc("/deck/generate", nodeHTTP.GenerateDeck).Methods("GET")
+
+	// Deal
+	api.HandleFunc("/deal/{deal}", nodeHTTP.Deal).Methods("GET")
+
+	api.HandleFunc("/deal/{deal}/bet", nodeHTTP.Bet).Methods("PUT")
+	api.HandleFunc("/deal/{deal}/discard", nodeHTTP.Discard).Methods("PUT")
+	api.HandleFunc("/deal/{deal}/muck", nodeHTTP.Muck).Methods("PUT")
+
+	api.HandleFunc("/deal/{deal}/pot", nodeHTTP.Pot).Methods("GET")
+	api.HandleFunc("/deal/{deal}/stage", nodeHTTP.Stage).Methods("GET")
+	api.HandleFunc("/deal/{deal}/results", nodeHTTP.Results).Methods("GET")
+	api.HandleFunc("/deal/{deal}/known_hands", nodeHTTP.KnownHands).Methods("GET")
+
+	// WebSocket
+	router.Handle(WebSocketPath, websocket.Handler(nodeHTTP.WebSocketHandler))
+
+	log.Printf("starting HTTP service at %s", n.ApiAddr)
+	if err := http.ListenAndServe(n.ApiAddr, router); err != nil {
+		log.Fatalf("can't start at %s", n.ApiAddr)
+	}
 }
 
-func (service *HttpService) Room(resp http.ResponseWriter, req *http.Request) {
+func (nodeHTTP *NodeHTTP) Rooms(resp http.ResponseWriter, req *http.Request) {
+	rooms := nodeHTTP.Node.Rooms
+
+	nodeHTTP.RespondJSON(resp, rooms)
+}
+
+func (nodeHTTP *NodeHTTP) Room(resp http.ResponseWriter, req *http.Request) {
 	q := req.URL.Query()
 	id := q.Get("room")
-	room := service.Node.Room(model.Id(id))
+	room := nodeHTTP.Node.Room(model.Id(id))
 
-	service.RespondJSON(resp, room)
+	nodeHTTP.RespondJSON(resp, room)
 }
 
-type HttpService struct {
-	Node *Node
-}
-
-func (service *HttpService) Log(req *http.Request) {
+func (nodeHTTP *NodeHTTP) Log(req *http.Request) {
 	// nginx default format:
 	//$remote_addr - $remote_user [$time_local]  "$request" $status $bytes_sent "$http_referer" "$http_user_agent" "$gzip_ratio"
 	log.Printf("%s - [%s %s %s] %s\n", req.RemoteAddr, req.Method, req.RequestURI, req.Proto, req.UserAgent())
 }
 
-func (service *HttpService) RespondJSON(resp http.ResponseWriter, result interface{}) {
+func (nodeHTTP *NodeHTTP) RespondJSON(resp http.ResponseWriter, result interface{}) {
 	data, err := json.Marshal(result)
 	if err != nil {
 		log.Fatalf("Can't marshal object: %+v", result)
@@ -79,7 +138,7 @@ type dealHand struct {
 	Pockets []pocketHand
 }
 
-func (service *HttpService) DetectHand(resp http.ResponseWriter, req *http.Request) {
+func (nodeHTTP *NodeHTTP) DetectHand(resp http.ResponseWriter, req *http.Request) {
 	q := req.URL.Query()
 
 	r := q.Get("ranking")
@@ -101,15 +160,13 @@ func (service *HttpService) DetectHand(resp http.ResponseWriter, req *http.Reque
 			return
 		}
 
-		s, _ := json.Marshal(hand)
-
-		resp.Write([]byte(s))
+		nodeHTTP.RespondJSON(resp, hand)
 	} else {
 		resp.Write([]byte("no cards specified"))
 	}
 }
 
-func (service *HttpService) CompareHands(resp http.ResponseWriter, req *http.Request) {
+func (nodeHTTP *NodeHTTP) CompareHands(resp http.ResponseWriter, req *http.Request) {
 	q := req.URL.Query()
 
 	a, _ := poker.ParseCards(q.Get("a"))
@@ -134,7 +191,7 @@ func (service *HttpService) CompareHands(resp http.ResponseWriter, req *http.Req
 	resp.Write([]byte(s))
 }
 
-func (service *HttpService) CalculateOdds(resp http.ResponseWriter, req *http.Request) {
+func (nodeHTTP *NodeHTTP) CalculateOdds(resp http.ResponseWriter, req *http.Request) {
 	q := req.URL.Query()
 
 	a, _ := poker.ParseCards(q.Get("a"))
@@ -163,19 +220,20 @@ func (service *HttpService) CalculateOdds(resp http.ResponseWriter, req *http.Re
 			ties++
 		}
 	}
-	s, _ := json.Marshal(&OddsResult{
+
+	result := &OddsResult{
 		A:     a,
 		B:     b,
 		Total: total,
 		Wins:  float64(wins) / float64(total),
 		Ties:  float64(ties) / float64(total),
 		Loses: float64(loses) / float64(total),
-	})
+	}
 
-	resp.Write([]byte(s))
+	nodeHTTP.RespondJSON(resp, result)
 }
 
-func (service *HttpService) RandomHand(resp http.ResponseWriter, req *http.Request) {
+func (nodeHTTP *NodeHTTP) RandomHand(resp http.ResponseWriter, req *http.Request) {
 	dealer := model.NewDealer()
 	board := dealer.Share(5)
 
@@ -195,72 +253,70 @@ func (service *HttpService) RandomHand(resp http.ResponseWriter, req *http.Reque
 		Pockets: h,
 	}
 
-	s, _ := json.Marshal(deal)
-
-	resp.Write([]byte(s))
+	nodeHTTP.RespondJSON(resp, deal)
 }
 
-func (service *HttpService) GenerateDeck(resp http.ResponseWriter, req *http.Request) {
+func (nodeHTTP *NodeHTTP) GenerateDeck(resp http.ResponseWriter, req *http.Request) {
 	s, _ := json.Marshal(model.NewDealer())
 	resp.Write([]byte(s))
 }
 
-func (service *HttpService) Deal(resp http.ResponseWriter, req *http.Request) {
+func (nodeHTTP *NodeHTTP) Deal(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
-func (service *HttpService) Bet(resp http.ResponseWriter, req *http.Request) {
+func (nodeHTTP *NodeHTTP) Bet(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
-func (service *HttpService) Discard(resp http.ResponseWriter, req *http.Request) {
+func (nodeHTTP *NodeHTTP) Discard(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
-func (service *HttpService) Muck(resp http.ResponseWriter, req *http.Request) {
+func (nodeHTTP *NodeHTTP) Muck(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
-func (service *HttpService) Pot(resp http.ResponseWriter, req *http.Request) {
+func (nodeHTTP *NodeHTTP) Pot(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
-func (service *HttpService) Stage(resp http.ResponseWriter, req *http.Request) {
+func (nodeHTTP *NodeHTTP) Stage(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
-func (service *HttpService) Results(resp http.ResponseWriter, req *http.Request) {
+func (nodeHTTP *NodeHTTP) Results(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
-func (service *HttpService) KnownHands(resp http.ResponseWriter, req *http.Request) {
+func (nodeHTTP *NodeHTTP) KnownHands(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
-func (service *HttpService) Join(resp http.ResponseWriter, req *http.Request) {
+func (nodeHTTP *NodeHTTP) Join(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
-func (service *HttpService) Leave(resp http.ResponseWriter, req *http.Request) {
+func (nodeHTTP *NodeHTTP) Leave(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
-func (service *HttpService) Rebuy(resp http.ResponseWriter, req *http.Request) {
+func (nodeHTTP *NodeHTTP) Rebuy(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
-func (service *HttpService) AddOn(resp http.ResponseWriter, req *http.Request) {
+func (nodeHTTP *NodeHTTP) AddOn(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
-func (service *HttpService) Seating(resp http.ResponseWriter, req *http.Request) {
+func (nodeHTTP *NodeHTTP) Seating(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
-func (service *HttpService) Wait(resp http.ResponseWriter, req *http.Request) {
+func (nodeHTTP *NodeHTTP) Wait(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
-func (service *HttpService) Stats(resp http.ResponseWriter, req *http.Request) {
+func (nodeHTTP *NodeHTTP) Stats(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }

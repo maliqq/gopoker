@@ -3,9 +3,9 @@ package protocol
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"reflect"
 	"time"
-	"log"
 )
 
 import (

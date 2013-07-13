@@ -24,7 +24,7 @@ func (n *Node) StartRPC() {
 	mux := http.NewServeMux()
 	mux.Handle(rpc.DefaultRPCPath, serv)
 
-	log.Printf("starting rpc service at %s", n.RpcAddr)
+	log.Printf("starting RPC service at %s", n.RpcAddr)
 	l, err := net.Listen("tcp", n.RpcAddr)
 	if err != nil {
 		log.Fatal("listen error:", err)

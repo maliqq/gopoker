@@ -56,7 +56,7 @@ Loop:
 		select {
 		case msg := <-me:
 
-			log.Printf("%sreceived %s%s\n", console.GREEN, msg.String(), console.RESET)
+			log.Println(console.Color(console.GREEN, fmt.Sprintf("[receive] %s", msg)))
 
 			switch msg.Payload.(type) {
 			case protocol.RequireBet:
@@ -142,7 +142,7 @@ Loop:
 
 				player := play.Table.Player(payload.Pos)
 
-				fmt.Printf("Player %s has %s (%s)\n", player, payload.Cards.ConsoleString(), payload.Hand.ConsoleString())
+				fmt.Printf("Player %s has %s (%s)\n", player, payload.Cards.ConsoleString(), payload.Hand.HumanString())
 
 			case protocol.Winner:
 

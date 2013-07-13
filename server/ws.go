@@ -4,5 +4,22 @@ import (
 	"code.google.com/p/go.net/websocket"
 )
 
-func WebSocketHandler(socket *websocket.Conn) {
+import (
+	"gopoker/client/ws"
+	"gopoker/model"
+	"gopoker/util"
+)
+
+func (nodeHTTP *NodeHTTP) WebSocketHandler(connection *websocket.Conn) {
+	id := model.Id(util.RandomUuid())
+	session := ws.NewSession(connection)
+
+	nodeHTTP.Node.Sessions[id] = ws.NewSession(connection)
+
+	defer func() {
+		delete(nodeHTTP.Node.Sessions, id)
+		close(session.Receive)
+	}()
+
+	session.Start()
 }

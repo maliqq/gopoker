@@ -1,34 +1,36 @@
-package websocket
+package ws
 
 import (
 	"code.google.com/p/go.net/websocket"
 )
 
+import (
+	"gopoker/protocol"
+)
+
 type Session struct {
 	Connection *websocket.Conn
-	Receive    chan string
-	Send       *chan string
+	Receive    chan *protocol.Message
+	Send       *chan *protocol.Message
 }
 
 func NewSession(connection *websocket.Conn) *Session {
 	return &Session{
 		Connection: connection,
-		Receive:    make(chan string),
+		Receive:    make(chan *protocol.Message),
 	}
 }
 
-func Handler(connection *websocket.Conn) {
-	session := NewSession(connection)
-
+func (session *Session) Start() {
 	go session.receive()
 	session.send()
 }
 
 func (session *Session) receive() {
 	for {
-		var message string
+		var message *protocol.Message
 
-		err := websocket.Message.Receive(session.Connection, &message)
+		err := websocket.JSON.Receive(session.Connection, message)
 		if err != nil {
 			break
 		}
@@ -41,7 +43,7 @@ func (session *Session) receive() {
 
 func (session *Session) send() {
 	for message := range session.Receive {
-		err := websocket.Message.Send(session.Connection, message)
+		err := websocket.JSON.Send(session.Connection, message)
 		if err != nil {
 			break
 		}
