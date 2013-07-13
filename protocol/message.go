@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"reflect"
 	"time"
+	"log"
 )
 
 import (
@@ -41,11 +42,11 @@ func NewMessage(payload Payload) *Message {
 }
 
 func (msg *Message) String() string {
-	s, err := json.Marshal(msg)
+	s, err := json.MarshalIndent(msg, "", "\t")
 
 	if err != nil {
-		fmt.Printf("Message: %#v\n", msg)
-		fmt.Printf("Error: %s\n", err)
+		log.Printf("Message: %#v\n", msg)
+		log.Printf("Error: %s\n", err)
 
 		panic("error marshaling message")
 	}

@@ -66,18 +66,18 @@ func (n *Notify) RouteType() string {
 }
 
 func (n *Notify) String() string {
-	s := fmt.Sprintf("[notify.%s]", n.RouteType())
+	s := fmt.Sprintf("[notify] %s", n.RouteType())
 
 	if n.One != "" {
-		s += fmt.Sprintf(" @ %v", n.One)
+		s += fmt.Sprintf(": %v", n.One)
 	}
 
 	if len(n.Except) != 0 {
-		s += fmt.Sprintf(" @ %v", n.Except)
+		s += fmt.Sprintf(": %v", n.Except)
 	}
 
 	if len(n.Only) != 0 {
-		s += fmt.Sprintf(" @ %v", n.Only)
+		s += fmt.Sprintf(": %v", n.Only)
 	}
 
 	return s
@@ -88,7 +88,7 @@ func (broker *Broker) send(key string, msg *Message) {
 }
 
 func (broker *Broker) Dispatch(n *Notify, msg *Message) {
-	log.Printf("%s%s | %s%s\n", console.CYAN, n, msg, console.RESET)
+	log.Println(console.Color(console.CYAN, fmt.Sprintf("%s %s", n, msg)))
 
 	if n.None {
 		return

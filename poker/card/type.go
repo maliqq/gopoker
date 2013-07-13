@@ -10,6 +10,10 @@ import (
 
 type Kind byte
 type Suit byte
+type Tuple struct {
+	Kind
+	Suit
+}
 
 const (
 	Spade Suit = iota
@@ -102,11 +106,6 @@ func AllSuits() []Suit {
 	}
 
 	return suits
-}
-
-type Tuple struct {
-	Kind
-	Suit
 }
 
 func all() []Tuple {
