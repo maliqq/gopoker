@@ -1,5 +1,16 @@
 package gameplay
 
+import (
+  "gopoker/poker"
+  "gopoker/protocol"
+)
+
+func (this *GamePlay) SetButton(pos int) {
+  this.Table.SetButton(pos)
+
+  this.Broadcast.All <- protocol.NewMoveButton(pos)
+}
+
 func (this *GamePlay) BringIn() {
   minPos := 0
   var card poker.Card

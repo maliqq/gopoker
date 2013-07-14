@@ -1,8 +1,19 @@
 package gameplay
 
 import (
-  "gopoker/protocol"
+  "log"
 )
+
+import (
+  "gopoker/protocol"
+  "gopoker/model/bet"
+)
+
+func (this *GamePlay) MoveButton() {
+  this.Table.MoveButton()
+
+  this.Broadcast.All <- protocol.NewMoveButton(this.Table.Button)
+}
 
 func (this *GamePlay) postSmallBlind(pos int) {
   t := this.Table

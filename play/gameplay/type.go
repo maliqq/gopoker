@@ -3,6 +3,7 @@ package gameplay
 import (
   "gopoker/model"
   "gopoker/protocol"
+  "gopoker/play/context"
 )
 
 type GamePlay struct {
@@ -21,8 +22,7 @@ type GamePlay struct {
 
   // broadcast protocol messages
   Broadcast *protocol.Broadcast `json:"-"`
-}
-
-func (gp *GamePlay) TestF() bool {
-  return true
+  *context.GameRotation `json:"-"`
+  *context.Betting    `json:"-"`
+  *context.Discarding `json:"-"`
 }

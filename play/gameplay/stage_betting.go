@@ -22,7 +22,7 @@ func (this *GamePlay) StartBettingRound() {
     this.Broadcast.One(seat.Player) <- betting.RequireBet(pos, seat, this.Game, this.Stake)
 
     select {
-    case msg := <-betting.Receive:
+    case msg := <-this.Betting.Receive:
       betting.Add(seat, msg)
 
     case <-time.After(time.Duration(DefaultTimer) * time.Second):

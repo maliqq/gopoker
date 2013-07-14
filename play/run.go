@@ -2,7 +2,6 @@ package play
 
 import (
 	"gopoker/play/command"
-	"gopoker/play/context"
 )
 
 /*
@@ -17,7 +16,7 @@ Run in different modes:
 	Redirect to other table on new deal.
 
 */
-func Run(play *context.Play) {
+func Run(play *Play) {
 Loop:
 	for {
 		select {

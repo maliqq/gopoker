@@ -6,22 +6,22 @@ import (
 
 import (
 	"gopoker/model/deal"
-	"gopoker/play/context"
 	"gopoker/play/street"
+	"gopoker/play/gameplay"
 )
 
 /*
 Strategy invoking
 */
-type Stage func(*context.Play)
+type Stage func(*Play)
 
-func Init(play *context.Play) {
+func Init(play *Play) {
 	play.StartNewDeal()
 	play.ResetSeats()
 	play.RotateGame()
 }
 
-func PostAntes(play *context.Play) {
+func PostAntes(play *Play) {
 	if play.Game.HasAnte || play.Stake.HasAnte() {
 		log.Println("[play] post antes")
 
@@ -30,7 +30,7 @@ func PostAntes(play *context.Play) {
 	}
 }
 
-func PostBlinds(play *context.Play) {
+func PostBlinds(play *Play) {
 	if play.Game.HasBlinds {
 		log.Println("[play] post blinds")
 
@@ -39,7 +39,7 @@ func PostBlinds(play *context.Play) {
 	}
 }
 
-func StartStreets(play *context.Play) {
+func StartStreets(play *Play) {
 	for _, street := range street.Get(play.Game.Group) {
 		log.Printf("[play] %s\n", street)
 
@@ -47,7 +47,7 @@ func StartStreets(play *context.Play) {
 	}
 }
 
-func BringIn(play *context.Play) {
+func BringIn(play *Play) {
 	log.Println("[play] bring in")
 
 	play.BringIn()
@@ -58,7 +58,7 @@ type dealing struct {
 	n int
 }
 
-func (d dealing) Stage(play *context.Play) {
+func (d dealing) Stage(play *Play) {
 	n := d.n
 	if d.n == 0 && d.Type == deal.Hole {
 		n = play.Game.PocketSize
@@ -81,29 +81,29 @@ func Dealing(t deal.Type, n int) Stage {
 	return dealing{t, n}.Stage
 }
 
-func Betting(play *context.Play) {
+func Betting(play *Play) {
 	log.Println("[play] betting")
 
 	play.StartBettingRound()
 	play.ResetBetting()
 }
 
-func Discarding(play *context.Play) {
+func Discarding(play *Play) {
 	log.Println("[play] discarding")
 
 	play.StartDiscardingRound()
 }
 
-func BigBets(play *context.Play) {
+func BigBets(play *Play) {
 	log.Println("[play] big bets")
 
 	play.Betting.BigBets = true
 }
 
-func Showdown(play *context.Play) {
+func Showdown(play *Play) {
 	log.Println("[play] showdown")
 
-	var highHands, lowHands *context.ShowdownHands
+	var highHands, lowHands *gameplay.ShowdownHands
 
 	if play.Game.Lo != "" {
 		lowHands = play.ShowHands(play.Game.Lo, play.Game.HasBoard)

@@ -2,6 +2,7 @@ package gameplay
 
 import (
   "gopoker/protocol"
+  "gopoker/model/bet"
 )
 
 func (this *GamePlay) PostAntes() {

@@ -1,33 +1,23 @@
-package context
+package play
 
 import (
 	"fmt"
 	"log"
-	"time"
 )
 
 import (
 	"gopoker/model"
-	"gopoker/model/bet"
-	"gopoker/model/deal"
 	"gopoker/model/seat"
 	"gopoker/play/command"
+	"gopoker/play/context"
 	g "gopoker/play/gameplay"
-	"gopoker/poker"
-	"gopoker/poker/ranking"
 	"gopoker/protocol"
 	"gopoker/util/console"
 )
 
-/*********************************
-* Context
-*********************************/
 type Play struct {
 	// players action context
 	*g.GamePlay
-  *GameRotation `json:"-"`
-	*Betting    `json:"-"`
-	*Discarding `json:"-"`
 
 	// receive protocol messages
 	Receive chan *protocol.Message `json:"-"`
@@ -65,7 +55,7 @@ func NewPlay(variation model.Variation, stake *model.Stake, table *model.Table) 
 	if variation.IsMixed() {
 		mix := variation.(*model.Mix)
 		play.Mix = mix
-		play.GameRotation = NewGameRotation(mix, 1)
+		play.GameRotation = context.NewGameRotation(mix, 1)
 		play.Game = play.GameRotation.Current()
 	} else {
 		play.Game = variation.(*model.Game)
@@ -129,4 +119,25 @@ func (this *Play) Resume() {
 
 func (this *Play) Close() {
 
+}
+
+func (this *Play) ResetSeats() {
+  for _, s := range this.Table.Seats {
+    switch s.State {
+    case seat.Ready, seat.Play:
+      s.Play()
+    }
+  }
+}
+
+func (this *Play) StartNewDeal() {
+  this.Deal = model.NewDeal()
+  this.Betting = context.NewBetting()
+  if this.Game.Discards {
+    this.Discarding = context.NewDiscarding(this.Deal)
+  }
+}
+
+func (this *Play) ScheduleNextDeal() {
+  this.Control <- command.NextDeal
 }

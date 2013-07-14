@@ -2,13 +2,12 @@ package play
 
 import (
 	"gopoker/model/deal"
-	"gopoker/play/context"
 	"gopoker/play/street"
 )
 
 type Strategy []Stage
 
-func (strategy Strategy) Proceed(play *context.Play) {
+func (strategy Strategy) Proceed(play *Play) {
 	for _, context := range strategy {
 		context(play)
 	}

@@ -2,6 +2,7 @@ package gameplay
 
 import (
   "gopoker/protocol"
+  "gopoker/model/deal"
 )
 
 func (this *GamePlay) DealHole(cardsNum int) {
