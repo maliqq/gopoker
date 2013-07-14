@@ -16,32 +16,8 @@ func TestHandHumanString(t *testing.T) {
 		Value: *value,
 	}
 
-	h.Rank = hand.StraightFlush
-	t.Logf(h.HumanString())
-
-	h.Rank = hand.FourKind
-	t.Logf(h.HumanString())
-
-	h.Rank = hand.FullHouse
-	t.Logf(h.HumanString())
-
-	h.Rank = hand.Flush
-	t.Logf(h.HumanString())
-
-	h.Rank = hand.Straight
-	t.Logf(h.HumanString())
-
-	h.Rank = hand.ThreeKind
-	t.Logf(h.HumanString())
-
-	h.Rank = hand.TwoPair
-	t.Logf(h.HumanString())
-
-	h.Rank = hand.OnePair
-	t.Logf(h.HumanString())
-
-	h.Rank = hand.HighCard
-	t.Logf(h.HumanString())
-
-	t.FailNow()
+	for rank := hand.StraightFlush; rank <= hand.HighCard; rank++ {
+		h.Rank = rank
+		t.Logf(h.HumanString())
+	}
 }

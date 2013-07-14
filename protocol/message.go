@@ -40,8 +40,18 @@ func NewMessage(payload Payload) *Message {
 	}
 }
 
+const (
+	UseIndent = false
+)
+
 func (msg *Message) String() string {
-	s, err := json.MarshalIndent(msg, "", "\t")
+	var err error
+	var s []byte
+	if UseIndent {
+		s, err = json.MarshalIndent(msg, "", "\t")
+	} else {
+		s, err = json.Marshal(msg)
+	}
 
 	if err != nil {
 		log.Printf("Message: %#v\n", msg)
