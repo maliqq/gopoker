@@ -13,6 +13,7 @@ type GamePlay struct {
   // mixed or limited game
   Game          *model.Game
   Mix           *model.Mix
+  *context.GameRotation `json:"-"`
 
   // betting price
   Stake *model.Stake
@@ -22,7 +23,7 @@ type GamePlay struct {
 
   // broadcast protocol messages
   Broadcast *protocol.Broadcast `json:"-"`
-  *context.GameRotation `json:"-"`
+  
   *context.Betting    `json:"-"`
   *context.Discarding `json:"-"`
 }

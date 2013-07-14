@@ -11,15 +11,16 @@ import (
 )
 
 import (
-	"gopoker/model"
-	"gopoker/model/deal"
-	"gopoker/model/game"
-	runner "gopoker/play"
-	"gopoker/play/command"
-	"gopoker/play/context"
 	"gopoker/poker"
 	"gopoker/protocol"
 	"gopoker/util/console"
+
+	"gopoker/model"
+	"gopoker/model/deal"
+	"gopoker/model/game"
+	
+	"gopoker/play"
+	"gopoker/play/command"
 )
 
 var (
@@ -45,7 +46,7 @@ func main() {
 
 	me := make(protocol.MessageChannel)
 	play := createPlay(me)
-	go runner.Run(play)
+	go play.Run()
 	play.Control <- command.NextDeal
 
 	fmt.Printf("%s\n", play)
@@ -160,7 +161,7 @@ Loop:
 	fmt.Println("bye")
 }
 
-func createPlay(me protocol.MessageChannel) *context.Play {
+func createPlay(me protocol.MessageChannel) *play.Play {
 	size := 3
 	table := model.NewTable(size)
 	stake := model.NewStake(*betsize)
@@ -173,7 +174,7 @@ func createPlay(me protocol.MessageChannel) *context.Play {
 		variation = model.NewGame(game.LimitedGame(*limitedGame), game.FixedLimit)
 	}
 
-	play := context.NewPlay(variation, stake, table)
+	play := play.NewPlay(variation, stake, table)
 
 	ids := []model.Id{"A", "B", "C", "D", "E", "F", "G", "H", "I"}
 	stack := 1500.

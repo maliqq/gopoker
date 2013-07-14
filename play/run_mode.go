@@ -16,7 +16,7 @@ Run in different modes:
 	Redirect to other table on new deal.
 
 */
-func Run(play *Play) {
+func (play *Play) Run() {
 Loop:
 	for {
 		select {
