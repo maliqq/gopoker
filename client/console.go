@@ -16,7 +16,6 @@ import (
 	"gopoker/util/console"
 
 	"gopoker/model"
-	"gopoker/model/deal"
 	"gopoker/model/game"
 	
 	"gopoker/play"
@@ -110,7 +109,7 @@ Loop:
 
 				payload := msg.Payload.(protocol.DealCards)
 
-				if payload.Type == deal.Board {
+				if payload.Type.IsBoard() {
 					fmt.Printf("Dealt %s %s\n", payload.Type, payload.Cards.ConsoleString())
 				} else {
 					fmt.Printf("Dealt %s %s to %d\n", payload.Type, payload.Cards.ConsoleString(), payload.Pos)
