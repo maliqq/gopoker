@@ -122,7 +122,7 @@ func (this *Cards) Shuffle() *Cards {
 	return &cards
 }
 
-func (a *Cards) Diff(b *Cards) *Cards {
+func (a *Cards) Diff(b *Cards) Cards {
 	result := make(Cards, len(*a))
 	present := make(map[int]bool, len(*b))
 
@@ -138,14 +138,12 @@ func (a *Cards) Diff(b *Cards) *Cards {
 		}
 	}
 
-	slice := result[0:i]
-
-	return &slice
+	return result[0:i]
 }
 
 type groupFunc func(card *Card, prev *Card) int
 
-func (this *Cards) Group(test groupFunc) *GroupedCards {
+func (this *Cards) Group(test groupFunc) GroupedCards {
 	length := len(*this)
 	groups := make(GroupedCards, length)
 	group := make(Cards, length)
@@ -181,9 +179,7 @@ func (this *Cards) Group(test groupFunc) *GroupedCards {
 		k++
 	}
 
-	result := groups[0:k]
-
-	return &result
+	return groups[0:k]
 }
 
 func (this *Cards) Combine(m int) GroupedCards {

@@ -33,7 +33,7 @@ func (dealer *Dealer) give(n int) (*poker.Cards, error) {
 
 	cards := dealer.Deck[0:n]
 
-	dealer.Deck = *dealer.Deck.Diff(&cards)
+	dealer.Deck = dealer.Deck.Diff(&cards)
 
 	return &cards, nil
 }
@@ -45,7 +45,7 @@ func (dealer *Dealer) burn(n int) {
 }
 
 func (dealer *Dealer) Burn(cards *poker.Cards) {
-	dealer.Deck = *dealer.Deck.Diff(cards)
+	dealer.Deck = dealer.Deck.Diff(cards)
 	dealer.burned = append(dealer.burned, *cards...)
 }
 
@@ -59,9 +59,7 @@ func (dealer *Dealer) Discard(cards *poker.Cards) *poker.Cards {
 
 	dealer.burned = append(dealer.burned, *cards...)
 
-	diff := *dealer.dealt.Diff(cards)
-
-	dealer.dealt = append(diff, *dealt...)
+	dealer.dealt = append(dealer.dealt.Diff(cards), *dealt...)
 
 	return dealt
 }

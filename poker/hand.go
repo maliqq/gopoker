@@ -43,12 +43,12 @@ func NewHandCards(cards *Cards, ord Ordering, reversed bool) *handCards {
 	hc := handCards{
 		cardsHelper: helper,
 
-		gaps: *helper.Gaps(),
+		gaps: helper.Gaps(),
 
-		groupKind: *groupKind,
+		groupKind: groupKind,
 		paired:    groupKind.Count(),
 
-		groupSuit: *groupSuit,
+		groupSuit: groupSuit,
 		suited:    groupSuit.Count(),
 	}
 

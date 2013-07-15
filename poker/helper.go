@@ -36,7 +36,7 @@ func (this *cardsHelper) Qualify(q card.Kind) {
 	this.Cards = qualified
 }
 
-func (this *cardsHelper) Gaps() *GroupedCards {
+func (this *cardsHelper) Gaps() GroupedCards {
 	sorted := this.Arrange()
 
 	cards := Cards{}
@@ -74,7 +74,7 @@ func (this *cardsHelper) Kickers(cards *Cards) *Cards {
 	return &result
 }
 
-func (this *cardsHelper) GroupByKind() *GroupedCards {
+func (this *cardsHelper) GroupByKind() GroupedCards {
 	sorted := this.Cards.Arrange(this.Ordering)
 
 	return sorted.Group(func(card *Card, prev *Card) int {
@@ -86,7 +86,7 @@ func (this *cardsHelper) GroupByKind() *GroupedCards {
 	})
 }
 
-func (this *cardsHelper) GroupBySuit() *GroupedCards {
+func (this *cardsHelper) GroupBySuit() GroupedCards {
 	cards := make(Cards, len(this.Cards))
 
 	copy(cards, this.Cards)
@@ -116,7 +116,7 @@ func (this *cardsHelper) Reverse() *Cards {
 
 func (this *cardsHelper) IsLow() (*Hand, error) {
 	uniq := Cards{}
-	for _, cards := range *this.GroupByKind() {
+	for _, cards := range this.GroupByKind() {
 		uniq = append(uniq, cards[0])
 	}
 

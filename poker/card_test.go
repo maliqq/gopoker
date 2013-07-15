@@ -72,7 +72,7 @@ func TestDiff(t *testing.T) {
 	c2, _ := ParseCards("6s2d3d8c")
 	result := c1.Diff(c2)
 	t.Logf("result=%s", result)
-	if (*result).String() != "Ah7c" {
+	if result.String() != "Ah7c" {
 		t.FailNow()
 	}
 }
