@@ -107,6 +107,7 @@ func (nodeHTTP *NodeHTTP) RespondJSON(resp http.ResponseWriter, result interface
 	}
 
 	resp.Header().Set("Content-Type", "application/json; charset=utf-8")
+	resp.Header().Set("Access-Control-Allow-Origin", "*")
 
 	resp.Write(data)
 	resp.Write([]byte{0xA})
