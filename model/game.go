@@ -209,17 +209,22 @@ func NewGame(g game.Type, limit game.Limit) *Game {
 		panic("can't create game")
 	}
 
-	options := Games[limitedGame]
-
-	if limit == "" {
-		limit = options.DefaultLimit
-	}
-
-	return &Game{
+	game := &Game{
 		Type:        limitedGame,
 		Limit:       limit,
-		GameOptions: options,
 	}
+
+	return game.WithDefaults()
+}
+
+func (game *Game) WithDefaults() *Game {
+	game.GameOptions = Games[game.Type]
+
+	if game.Limit == "" {
+		game.Limit = game.GameOptions.DefaultLimit
+	}
+
+	return game
 }
 
 func (game *Game) IsMixed() bool {
@@ -239,17 +244,23 @@ func NewMix(g game.Type) *Mix {
 		panic("can't create mix")
 	}
 
-	options, _ := Mixes[mixedGame]
+	mix := &Mix{
+		Type:  mixedGame,
+	}
+
+	return mix.WithDefaults()
+}
+
+func (mix *Mix) WithDefaults() *Mix {
+	options, _ := Mixes[mix.Type]
 
 	games := make([]*Game, len(options))
 	for i, mixOptions := range options {
 		games[i] = NewGame(mixOptions.Type, mixOptions.Limit)
 	}
+	mix.Games = games
 
-	return &Mix{
-		Type:  mixedGame,
-		Games: games,
-	}
+	return mix
 }
 
 func (mix *Mix) String() string {

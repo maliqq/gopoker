@@ -19,11 +19,11 @@ type CreateRoom struct {
 
 func (c CreateRoom) Variation() model.Variation {
 	if c.Game != nil {
-		return c.Game
+		return c.Game.WithDefaults()
 	}
 
 	if c.Mix != nil {
-		return c.Mix
+		return c.Mix.WithDefaults()
 	}
 
 	return nil
