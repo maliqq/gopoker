@@ -21,9 +21,6 @@ type Play struct {
 
 	// receive protocol messages
 	Receive chan *protocol.Message `json:"-"`
-
-	// manage play
-	Control chan command.Command `json:"-"`
 }
 
 func (this *Play) String() string {
@@ -47,9 +44,9 @@ func NewPlay(variation model.Variation, stake *model.Stake, table *model.Table) 
 			Table:     table,
 			Stake:     stake,
 			Broadcast: protocol.NewBroadcast(),
+			Control:   make(chan command.Command),
 		},
 		Receive:   make(chan *protocol.Message),
-		Control:   make(chan command.Command),
 	}
 
 	if variation.IsMixed() {
@@ -97,10 +94,10 @@ func (this *Play) receive() {
 			this.Table.Seat(comeBack.Pos).State = seat.Ready
 
 		case protocol.AddBet:
-			this.Betting.Receive <- msg
+			this.Betting.Bet <- msg
 
 		case protocol.DiscardCards:
-			this.Discarding.Receive <- msg
+			this.Discarding.Discard <- msg
 		}
 	}
 }
@@ -139,5 +136,5 @@ func (this *Play) StartNewDeal() {
 }
 
 func (this *Play) ScheduleNextDeal() {
-  this.Control <- command.NextDeal
+  this.GamePlay.Control <- command.NextDeal
 }

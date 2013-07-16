@@ -1,34 +1,51 @@
 package gameplay
 
 import (
-  "time"
+  _"time"
   "fmt"
 )
 
 import (
   "gopoker/protocol"
+  "gopoker/play/command"
 )
 
 const (
   DefaultTimer = 30
 )
 
-func (this *GamePlay) StartBettingRound() {
-  betting := this.Betting
+func (this *GamePlay) NextTurn(current int) {
+  fmt.Printf("current pos=%d\n", current)
 
-  for _, pos := range this.Table.Seats.From(betting.Current()).InPlay() {
+  active := this.Table.Seats.From(current).InPlay()
+  inPot := this.Table.Seats.From(current).InPot()
+
+  if len(inPot) < 2 {
+    fmt.Println("goto showdown")
+    this.Control <- command.Showdown
+    this.Betting.Stop()
+  } else if len(active) == 0 {
+    fmt.Println("reset betting")
+    this.Betting.Stop()
+  } else {
+    fmt.Printf("seats active=%#v\n\n", active)
+    pos := active[0]
     seat := this.Table.Seat(pos)
-
-    this.Broadcast.One(seat.Player) <- betting.RequireBet(pos, seat, this.Game, this.Stake)
-
-    select {
-    case msg := <-this.Betting.Receive:
-      betting.Add(seat, msg)
-
-    case <-time.After(time.Duration(DefaultTimer) * time.Second):
-      fmt.Println("timeout!")
-    }
+    this.Broadcast.One(seat.Player) <- this.Betting.RequireBet(pos, seat, this.Game, this.Stake)
   }
+}
+
+func (this *GamePlay) StartBettingRound() {
+  pos := make(chan int)
+  defer close(pos)
+
+  go this.Betting.Start(&pos)
+
+  for current := range pos {
+    this.NextTurn(current)
+  }
+
+  this.ResetBetting()
 }
 
 func (this *GamePlay) ResetBetting() {

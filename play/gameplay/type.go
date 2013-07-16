@@ -4,6 +4,7 @@ import (
   "gopoker/model"
   "gopoker/protocol"
   "gopoker/play/context"
+  "gopoker/play/command"
 )
 
 type GamePlay struct {
@@ -26,4 +27,6 @@ type GamePlay struct {
   
   *context.Betting    `json:"-"`
   *context.Discarding `json:"-"`
+  // manage play
+  Control chan command.Command `json:"-"`
 }

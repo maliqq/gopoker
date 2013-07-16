@@ -9,6 +9,7 @@ import (
 	"gopoker/model"
 	"gopoker/model/bet"
 	"gopoker/model/game"
+	"gopoker/model/seat"
 	"gopoker/protocol"
 )
 
@@ -16,15 +17,20 @@ const (
 	MaxRaises = 8 // TODO into game options
 )
 
+// betting context
 type Betting struct {
 	raiseCount int
 	BigBets    bool
 
 	Pot *model.Pot
 
+	Seat *model.Seat
 	Required *protocol.RequireBet
-
-	Receive chan *protocol.Message `json:"-"`
+	
+	Bet chan *protocol.Message `json:"-"`
+	
+	Next chan int `json:"-"`
+	stop chan int `json:"-"`
 }
 
 func NewBetting() *Betting {
@@ -33,12 +39,18 @@ func NewBetting() *Betting {
 
 		Required: &protocol.RequireBet{},
 
-		Receive: make(chan *protocol.Message),
+		Bet: make(chan *protocol.Message),
+
+		stop: make(chan int),
 	}
 }
 
+func (this *Betting) Clear() {
+	this.Required.Call, this.Required.Min, this.Required.Max, this.raiseCount = 0., 0., 0., 0
+}
+
 func (this *Betting) String() string {
-	return fmt.Sprintf("Require %s %s raiseCount: %d bigBets: %t pot total: %.2f",
+	return fmt.Sprintf("Required %s raiseCount: %d bigBets: %t pot total: %.2f",
 		this.Required,
 		this.raiseCount,
 		this.BigBets,
@@ -46,12 +58,37 @@ func (this *Betting) String() string {
 	)
 }
 
-func (this *Betting) Clear() {
-	this.Required.Call, this.Required.Min, this.Required.Max, this.raiseCount = 0., 0., 0., 0
+func (this *Betting) Start(pos *chan int) {
+	log.Println("[betting] start")
+
+	*pos <- this.Required.Pos
+
+	for {
+		select {
+		case <-this.stop:
+			log.Println("[betting] stop")
+			break
+
+		case msg := <-this.Bet:
+			newBet := msg.Payload.(protocol.AddBet).Bet
+
+			seat := this.Seat
+
+			log.Printf("[betting] Player %s %s\n", seat.Player, newBet.String())
+
+			err := this.AddBet(seat, &newBet)
+
+			if err != nil {
+				log.Printf("[betting] %s", err)
+			}
+
+			*pos <- this.Required.Pos
+		}
+	}
 }
 
-func (this *Betting) Current() int {
-	return this.Required.Pos
+func (this *Betting) Stop() {
+	this.stop <- 1
 }
 
 func (this *Betting) RaiseRange(seat *model.Seat, g *model.Game, stake *model.Stake) (float64, float64) {
@@ -84,6 +121,7 @@ func (this *Betting) ForceBet(pos int, betType bet.Type, stake *model.Stake) *mo
 }
 
 func (this *Betting) RequireBet(pos int, seat *model.Seat, game *model.Game, stake *model.Stake) *protocol.Message {
+	this.Seat = seat
 	this.Required.Pos = pos
 
 	if this.raiseCount >= MaxRaises {
@@ -95,59 +133,34 @@ func (this *Betting) RequireBet(pos int, seat *model.Seat, game *model.Game, sta
 	return protocol.NewRequireBet(seat, this.Required)
 }
 
-func (this *Betting) called(amount float64) {
-	this.Required.Call = amount
-	fmt.Printf("this.Required.Call=%.2f\n", amount)
-}
-
-func (this *Betting) raised(amount float64) {
-	this.raiseCount++
-	this.Required.Call += amount
-	fmt.Printf("this.Required.Call=%.2f\n", amount)
-}
-
-func (this *Betting) AddBet(seat *model.Seat, newBet *model.Bet) error {
+func (this *Betting) AddBet(s *model.Seat, newBet *model.Bet) error {
 	if newBet.Type == bet.Fold {
-		seat.Fold()
+		s.Fold()
 
 		return nil
 	}
 
-	err := newBet.Validate(seat, this.Required.RequireBet)
+	err := newBet.Validate(s, this.Required.RequireBet)
 
 	if err != nil {
-		seat.Fold() // force fold
-
+		s.Fold() // force fold
 	} else {
 		amount := newBet.Amount
-
-		this.Pot.Add(seat.Player.Id, amount, amount == seat.Stack)
+		s.SetBet(amount)
 
 		if newBet.IsForced() {
-			// ante, blinds
-			this.called(amount)
-			seat.SetBet(amount)
+			this.Required.Call = amount
+		} else {
+			this.Required.Call += amount
+		}
 
-		} else if newBet.IsActive() {
-			// raise, call
-			if newBet.Type == bet.Raise {
-				this.raised(amount)
-			}
-			seat.AddBet(amount)
+		this.Pot.Add(s.Player.Id, amount, amount == s.Stack)
+
+		if newBet.Type == bet.Raise {
+			this.raiseCount++
+			s.State = seat.Bet
 		}
 	}
 
 	return err
-}
-
-func (this *Betting) Add(seat *model.Seat, msg *protocol.Message) {
-	newBet := msg.Payload.(protocol.AddBet).Bet
-
-	log.Printf("[betting] Player %s %s\n", seat.Player, newBet.String())
-
-	err := this.AddBet(seat, &newBet)
-
-	if err != nil {
-		log.Printf("[betting] %s", err)
-	}
 }

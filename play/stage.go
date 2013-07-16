@@ -85,7 +85,6 @@ func Betting(play *Play) {
 	log.Println("[play] betting")
 
 	play.StartBettingRound()
-	play.ResetBetting()
 }
 
 func Discarding(play *Play) {

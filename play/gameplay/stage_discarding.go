@@ -1,11 +1,6 @@
 package gameplay
 
 import (
-  "time"
-  "fmt"
-)
-
-import (
   "gopoker/poker"
   "gopoker/model"
   "gopoker/model/deal"
@@ -18,16 +13,7 @@ func (this *GamePlay) StartDiscardingRound() {
   for _, pos := range this.Table.SeatsFromButton().InPlay() {
     seat := this.Table.Seat(pos)
 
-    this.Broadcast.One(seat.Player) <- discarding.RequireDiscard(pos)
-
-    select {
-    case msg := <-discarding.Receive:
-      player, cards := discarding.Add(seat, msg)
-      this.discard(player, cards)
-
-    case <-time.After(time.Duration(DefaultTimer) * time.Second):
-      fmt.Println("timeout!")
-    }
+    this.Broadcast.One(seat.Player) <- discarding.RequireDiscard(pos, seat)
   }
 }
 

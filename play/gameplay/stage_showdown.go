@@ -43,13 +43,12 @@ func best(sidePot *model.SidePot, hands *ShowdownHands) (model.Id, *poker.Hand) 
 }
 
 func (this *GamePlay) Winners(highHands *ShowdownHands, lowHands *ShowdownHands) {
-  pot := this.Betting.Pot
-
   hi := highHands != nil
   lo := lowHands != nil
+
   split := hi && lo
 
-  for _, sidePot := range pot.SidePots() {
+  for _, sidePot := range this.Betting.Pot.SidePots() {
     total := sidePot.Total()
 
     var winnerLow, winnerHigh model.Id
@@ -63,19 +62,21 @@ func (this *GamePlay) Winners(highHands *ShowdownHands, lowHands *ShowdownHands)
       winnerHigh, _ = best(sidePot, highHands)
     }
 
+    winners := map[model.Id]float64{}
+
     if split && bestLow != nil {
-      this.Broadcast.All <- protocol.NewWinner(winnerLow, total/2.)
-      this.Broadcast.All <- protocol.NewWinner(winnerHigh, total/2.)
+      winners[winnerLow] = total/2.
+      winners[winnerHigh] = total/2.
     } else {
-      var exclusiveWinner model.Id
-
       if hi {
-        exclusiveWinner = winnerHigh
+        winners[winnerHigh] = total
       } else {
-        exclusiveWinner = winnerLow
+        winners[winnerLow] = total
       }
+    }
 
-      this.Broadcast.All <- protocol.NewWinner(exclusiveWinner, total)
+    for winner, amount := range winners {
+      this.Broadcast.All <- protocol.NewWinner(winner, amount)
     }
   }
 }
