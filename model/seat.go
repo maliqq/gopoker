@@ -48,14 +48,8 @@ func (this *Seat) Fold() {
 }
 
 func (this *Seat) SetBet(amount float64) {
-	this.AdvanceStack(-amount)
+	this.Stack -= amount
 	this.Bet += amount
-}
-
-func (this *Seat) AddBet(amount float64) {
-	this.SetBet(amount)
-
-	this.State = seat.Bet
 }
 
 func (this *Seat) SetPlayer(player *Player) error {
@@ -75,8 +69,4 @@ func (this *Seat) SetStack(amount float64) {
 	if this.State == seat.Taken {
 		this.State = seat.Ready
 	}
-}
-
-func (this *Seat) AdvanceStack(amount float64) {
-	this.Stack += amount
 }
