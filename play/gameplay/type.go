@@ -1,32 +1,32 @@
 package gameplay
 
 import (
-  "gopoker/model"
-  "gopoker/protocol"
-  "gopoker/play/context"
-  "gopoker/play/command"
+	"gopoker/model"
+	"gopoker/play/command"
+	"gopoker/play/context"
+	"gopoker/protocol"
 )
 
 type GamePlay struct {
-  // dealt cards context
-  Deal *model.Deal
+	// dealt cards context
+	Deal *model.Deal
 
-  // mixed or limited game
-  Game          *model.Game
-  Mix           *model.Mix
-  *context.GameRotation `json:"-"`
+	// mixed or limited game
+	Game                  *model.Game
+	Mix                   *model.Mix
+	*context.GameRotation `json:"-"`
 
-  // betting price
-  Stake *model.Stake
+	// betting price
+	Stake *model.Stake
 
-  // players seating context
-  Table *model.Table
+	// players seating context
+	Table *model.Table
 
-  // broadcast protocol messages
-  Broadcast *protocol.Broadcast `json:"-"`
-  
-  *context.Betting    `json:"-"`
-  *context.Discarding `json:"-"`
-  // manage play
-  Control chan command.Command `json:"-"`
+	// broadcast protocol messages
+	Broadcast *protocol.Broadcast `json:"-"`
+
+	*context.Betting    `json:"-"`
+	*context.Discarding `json:"-"`
+	// manage play
+	Control chan command.Command `json:"-"`
 }

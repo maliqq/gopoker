@@ -46,7 +46,7 @@ func NewPlay(variation model.Variation, stake *model.Stake, table *model.Table) 
 			Broadcast: protocol.NewBroadcast(),
 			Control:   make(chan command.Command),
 		},
-		Receive:   make(chan *protocol.Message),
+		Receive: make(chan *protocol.Message),
 	}
 
 	if variation.IsMixed() {
@@ -119,22 +119,22 @@ func (this *Play) Close() {
 }
 
 func (this *Play) ResetSeats() {
-  for _, s := range this.Table.Seats {
-    switch s.State {
-    case seat.Ready, seat.Play:
-      s.Play()
-    }
-  }
+	for _, s := range this.Table.Seats {
+		switch s.State {
+		case seat.Ready, seat.Play:
+			s.Play()
+		}
+	}
 }
 
 func (this *Play) StartNewDeal() {
-  this.Deal = model.NewDeal()
-  this.Betting = context.NewBetting()
-  if this.Game.Discards {
-    this.Discarding = context.NewDiscarding(this.Deal)
-  }
+	this.Deal = model.NewDeal()
+	this.Betting = context.NewBetting()
+	if this.Game.Discards {
+		this.Discarding = context.NewDiscarding(this.Deal)
+	}
 }
 
 func (this *Play) ScheduleNextDeal() {
-  this.GamePlay.Control <- command.NextDeal
+	this.GamePlay.Control <- command.NextDeal
 }

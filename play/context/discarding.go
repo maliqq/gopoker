@@ -11,7 +11,7 @@ import (
 
 type Discarding struct {
 	*model.Deal
-	Seat *model.Seat
+	Seat     *model.Seat
 	Required *protocol.RequireDiscard
 
 	Discard chan *protocol.Message
@@ -32,7 +32,7 @@ func (this *Discarding) RequireDiscard(pos int, seat *model.Seat) *protocol.Mess
 func (this *Discarding) Start() {
 	for {
 		select {
-		case msg := <- this.Discard:
+		case msg := <-this.Discard:
 			payload := msg.Payload.(protocol.DiscardCards)
 			seat := this.Seat
 			cards := payload.Cards

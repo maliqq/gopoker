@@ -29,9 +29,9 @@ func main() {
 	}
 
 	args := &service.CreateRoom{
-		Id:      model.Id(util.RandomUuid()),
-		TableSize:    9,
-		BetSize: *betSize,
+		Id:        model.Id(util.RandomUuid()),
+		TableSize: 9,
+		BetSize:   *betSize,
 	}
 
 	if *mixedGame != "" {

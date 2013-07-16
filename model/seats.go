@@ -32,7 +32,7 @@ func (slice seatSlice) len() int {
 
 func (slice seatSlice) All() []int {
 	index := []int{}
-	for i := slice.from+1; i < slice.len(); i++ {
+	for i := slice.from + 1; i < slice.len(); i++ {
 		index = append(index, i)
 	}
 	for i := 0; i <= slice.from; i++ {

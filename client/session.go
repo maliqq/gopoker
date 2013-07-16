@@ -29,7 +29,7 @@ func NewSession(connection Connection) *Session {
 
 func (session *Session) Start() {
 	log.Printf("starting session with connection: %#v", session.Connection)
-	
+
 	go session.receive()
 
 	session.send()

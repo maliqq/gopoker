@@ -210,8 +210,8 @@ func NewGame(g game.Type, limit game.Limit) *Game {
 	}
 
 	game := &Game{
-		Type:        limitedGame,
-		Limit:       limit,
+		Type:  limitedGame,
+		Limit: limit,
 	}
 
 	return game.WithDefaults()
@@ -245,7 +245,7 @@ func NewMix(g game.Type) *Mix {
 	}
 
 	mix := &Mix{
-		Type:  mixedGame,
+		Type: mixedGame,
 	}
 
 	return mix.WithDefaults()

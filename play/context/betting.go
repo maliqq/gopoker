@@ -24,11 +24,11 @@ type Betting struct {
 
 	Pot *model.Pot
 
-	Seat *model.Seat
+	Seat     *model.Seat
 	Required *protocol.RequireBet
-	
+
 	Bet chan *protocol.Message `json:"-"`
-	
+
 	Next chan int `json:"-"`
 	stop chan int `json:"-"`
 }

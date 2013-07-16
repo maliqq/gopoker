@@ -6,8 +6,8 @@ import (
 
 import (
 	"gopoker/model/deal"
-	"gopoker/play/street"
 	"gopoker/play/gameplay"
+	"gopoker/play/street"
 )
 
 /*
