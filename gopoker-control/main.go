@@ -30,7 +30,7 @@ func main() {
 
 	args := &service.CreateRoom{
 		Id:      model.Id(util.RandomUuid()),
-		Size:    9,
+		TableSize:    9,
 		BetSize: *betSize,
 	}
 

@@ -1,20 +1,26 @@
-package ws
+package client
 
 import (
-	"code.google.com/p/go.net/websocket"
+	"log"
 )
 
 import (
 	"gopoker/protocol"
 )
 
+type Connection interface {
+	Close() error
+	Receive(interface{}) error
+	Send(interface{}) error
+}
+
 type Session struct {
-	Connection *websocket.Conn
+	Connection Connection
 	Receive    chan *protocol.Message
 	Send       *chan *protocol.Message
 }
 
-func NewSession(connection *websocket.Conn) *Session {
+func NewSession(connection Connection) *Session {
 	return &Session{
 		Connection: connection,
 		Receive:    make(chan *protocol.Message),
@@ -22,7 +28,10 @@ func NewSession(connection *websocket.Conn) *Session {
 }
 
 func (session *Session) Start() {
+	log.Printf("starting session with connection: %#v", session.Connection)
+	
 	go session.receive()
+
 	session.send()
 }
 
@@ -30,7 +39,7 @@ func (session *Session) receive() {
 	for {
 		var message *protocol.Message
 
-		err := websocket.JSON.Receive(session.Connection, message)
+		err := session.Connection.Receive(message)
 		if err != nil {
 			break
 		}
@@ -38,12 +47,14 @@ func (session *Session) receive() {
 		*session.Send <- message
 	}
 
-	session.Connection.Close()
+	if err := session.Connection.Close(); err != nil {
+		log.Fatalf("Error closing session connection: %s", err)
+	}
 }
 
 func (session *Session) send() {
 	for message := range session.Receive {
-		err := websocket.JSON.Send(session.Connection, message)
+		err := session.Connection.Send(message)
 		if err != nil {
 			break
 		}

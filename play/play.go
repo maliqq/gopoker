@@ -23,7 +23,7 @@ type Play struct {
 	Receive chan *protocol.Message `json:"-"`
 
 	// manage play
-	Control chan command.Type `json:"-"`
+	Control chan command.Command `json:"-"`
 }
 
 func (this *Play) String() string {
@@ -49,7 +49,7 @@ func NewPlay(variation model.Variation, stake *model.Stake, table *model.Table) 
 			Broadcast: protocol.NewBroadcast(),
 		},
 		Receive:   make(chan *protocol.Message),
-		Control:   make(chan command.Type),
+		Control:   make(chan command.Command),
 	}
 
 	if variation.IsMixed() {

@@ -62,7 +62,7 @@ func (this *Deal) Discard(player *Player, cards *poker.Cards) *poker.Cards {
 	return newCards
 }
 
-func (this *Deal) Rank(player *Player, ranking ranking.Type, hasBoard bool) (*poker.Cards, *poker.Hand) {
+func (this *Deal) Rank(player *Player, ranking ranking.Ranking, hasBoard bool) (*poker.Cards, *poker.Hand) {
 	pocket := this.Pocket(player)
 
 	if !hasBoard {

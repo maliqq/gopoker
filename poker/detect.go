@@ -6,7 +6,7 @@ import (
 
 type detectFunc func(*Cards) (*Hand, error)
 
-var Detect = map[ranking.Type]detectFunc{
+var Detect = map[ranking.Ranking]detectFunc{
 	ranking.High:       isHigh,
 	ranking.Badugi:     isBadugi,
 	ranking.AceFive:    isAceFive,

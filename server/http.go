@@ -146,7 +146,7 @@ func (nodeHTTP *NodeHTTP) DetectHand(resp http.ResponseWriter, req *http.Request
 	if r == "" {
 		r = "high"
 	}
-	ranking := ranking.Type(r)
+	ranking := ranking.Ranking(r)
 
 	if c := q.Get("cards"); c != "" {
 		cards, err := poker.ParseCards(c)

@@ -1,7 +1,7 @@
 package server
 
 import (
-	"gopoker/client/ws"
+	"gopoker/client"
 	"gopoker/model"
 )
 
@@ -17,7 +17,7 @@ type Node struct {
 	RpcAddr string
 	//rpcService
 	Rooms    map[model.Id]*Room
-	Sessions map[model.Id]*ws.Session
+	Sessions map[model.Id]*client.Session
 }
 
 func CreateNode(name string, apiAddr string, rpcAddr string) *Node {

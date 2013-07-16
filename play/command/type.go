@@ -1,8 +1,8 @@
 package command
 
-type Type string
+type Command string
 
 const (
-	NextDeal Type = "next-deal"
-	Exit     Type = "exit"
+	NextDeal Command = "next-deal"
+	Exit     Command = "exit"
 )

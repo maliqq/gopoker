@@ -9,7 +9,7 @@ import (
 
 type ShowdownHands map[model.Id]*poker.Hand
 
-func (this *GamePlay) ShowHands(ranking ranking.Type, withBoard bool) *ShowdownHands {
+func (this *GamePlay) ShowHands(ranking ranking.Ranking, withBoard bool) *ShowdownHands {
   d := this.Deal
 
   hands := ShowdownHands{}

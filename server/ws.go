@@ -5,14 +5,16 @@ import (
 )
 
 import (
+	"gopoker/client"
 	"gopoker/client/ws"
 	"gopoker/model"
 	"gopoker/util"
 )
 
-func (nodeHTTP *NodeHTTP) WebSocketHandler(connection *websocket.Conn) {
+func (nodeHTTP *NodeHTTP) WebSocketHandler(conn *websocket.Conn) {
 	id := model.Id(util.RandomUuid())
-	session := ws.NewSession(connection)
+	connection := &ws.Connection{conn}
+	session := client.NewSession(connection)
 
 	nodeHTTP.Node.Sessions[id] = session
 

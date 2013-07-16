@@ -29,8 +29,8 @@ type GameOptions struct {
 	PocketSize   int
 	Streets      int // number of streets till showdown
 
-	Hi ranking.Type
-	Lo ranking.Type
+	Hi ranking.Ranking
+	Lo ranking.Ranking
 
 	DefaultLimit game.Limit
 }
