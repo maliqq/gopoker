@@ -26,16 +26,32 @@ func (seats Seats) From(from int) seatSlice {
 	return seatSlice{from, &seats}
 }
 
-func (slice seatSlice) Where(filter seatFilter) []int {
-	seats := []int{}
+func (slice seatSlice) len() int {
+	return len(*slice.seats)
+}
 
-	for pos, seat := range *slice.seats {
+func (slice seatSlice) All() []int {
+	index := []int{}
+	for i := slice.from+1; i < slice.len(); i++ {
+		index = append(index, i)
+	}
+	for i := 0; i <= slice.from; i++ {
+		index = append(index, i)
+	}
+	return index
+}
+
+func (slice seatSlice) Where(filter seatFilter) []int {
+	result := []int{}
+
+	for _, pos := range slice.All() {
+		seat := (*slice.seats)[pos]
 		if filter(seat) {
-			seats = append(seats, pos)
+			result = append(result, pos)
 		}
 	}
 
-	return seats
+	return result
 }
 
 func (slice seatSlice) Active() []int {
