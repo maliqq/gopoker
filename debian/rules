@@ -1,0 +1,27 @@
+#!/usr/bin/make -f
+#export DH_VERBOSE=1
+
+# GOPKG is the upstream path which you would normally “go get”.
+# Using it allows us to build applications without patching locations.
+GOPKG := gopoker
+
+# Temporary working directory to which the source will be copied, then
+# compiled.
+TMPGOPATH = $(CURDIR)/debian/goenv/usr/lib/gocode
+
+override_dh_auto_install:
+  mkdir -p ${TMPGOPATH}/src/${GOPKG}
+  # Copy all .go files to /usr/lib/gocode (we compile and ship).
+  find . -path ./debian -prune -o -path ./deps -prune -o -type f -name "*.go" -exec tar cf - {} + | (cd "${TMPGOPATH}/src/${GOPKG}" && tar xvf -)
+  # Copy deps
+  cd deps && find . -type f -name "*.go" -exec tar cf - {} + | (cd "${TMPGOPATH}/src" && tar xvf -)
+  # Ensure that GOPATH is clean: It should only contain the temporary
+  # /usr/lib/gocode containing the package we want to install and the
+  # /usr/lib/gocode of the system we are building on. It should
+  # specifically NOT contain the user’s local ~/gocode.
+  GOPATH=${TMPGOPATH}:/usr/lib/gocode go install -v ${GOPKG}/client
+  GOPATH=${TMPGOPATH}:/usr/lib/gocode go install -v ${GOPKG}/control
+  GOPATH=${TMPGOPATH}:/usr/lib/gocode go install -v ${GOPKG}/main
+
+%:
+  dh $@ --parallel

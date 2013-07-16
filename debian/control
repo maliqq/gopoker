@@ -1,0 +1,25 @@
+Source: gopoker
+Section: games
+Priority: extra
+Maintainer: Malik Baktiyarov <malik@baktiyarov.com>
+Build-Depends: debhelper (>= 8.0.0), golang-go
+Standards-Version: 3.9.4
+Homepage: http://pokerno.de
+
+Package: main
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Poker server
+ Poker HTTP and RPC server
+
+Package: control
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Poker console control
+ Poker command line control
+
+Package: client
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Poker console client
+ Poker command line client
