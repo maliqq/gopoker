@@ -14,24 +14,20 @@ const (
 	DefaultTimer = 30
 )
 
-func (this *GamePlay) NextTurn(current int) {
-	fmt.Printf("current pos=%d\n", current)
-
-	active := this.Table.Seats.From(current).InPlay()
+func (this *GamePlay) NextTurn(current int) bool {
+	active := this.Table.Seats.From(current).Playing()
 	inPot := this.Table.Seats.From(current).InPot()
 
 	if len(inPot) < 2 {
-		fmt.Println("goto showdown")
 		this.Control <- command.Showdown
-		this.Betting.Stop()
+		return false
 	} else if len(active) == 0 {
-		fmt.Println("reset betting")
-		this.Betting.Stop()
+		return false
 	} else {
-		fmt.Printf("seats active=%#v\n\n", active)
 		pos := active[0]
 		seat := this.Table.Seat(pos)
 		this.Broadcast.One(seat.Player) <- this.Betting.RequireBet(pos, seat, this.Game, this.Stake)
+		return true
 	}
 }
 
@@ -42,7 +38,12 @@ func (this *GamePlay) StartBettingRound() {
 	go this.Betting.Start(&pos)
 
 	for current := range pos {
-		this.NextTurn(current)
+		if this.NextTurn(current) {
+			fmt.Printf("===\n%s\n", this.Table.Seats)
+		} else {
+			this.Betting.Stop()
+			break
+		}
 	}
 
 	this.ResetBetting()
@@ -51,7 +52,7 @@ func (this *GamePlay) StartBettingRound() {
 func (this *GamePlay) ResetBetting() {
 	this.Betting.Clear()
 
-	for _, pos := range this.Table.SeatsInPlay() {
+	for _, pos := range this.Table.AllSeats().InPlay() {
 		seat := this.Table.Seat(pos)
 		seat.Play()
 	}

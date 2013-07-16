@@ -15,7 +15,7 @@ func (this *GamePlay) BringIn() {
 	minPos := 0
 	var card poker.Card
 
-	for _, pos := range this.Table.SeatsInPlay() {
+	for _, pos := range this.Table.AllSeats().Active() {
 		s := this.Table.Seat(pos)
 
 		pocketCards := *this.Deal.Pocket(s.Player)

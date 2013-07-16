@@ -6,7 +6,7 @@ import (
 )
 
 func (this *GamePlay) DealHole(cardsNum int) {
-	for _, pos := range this.Table.SeatsInPlay() {
+	for _, pos := range this.Table.AllSeats().InPlay() {
 		player := this.Table.Player(pos)
 
 		cards := this.Deal.DealPocket(player, cardsNum)
@@ -16,7 +16,7 @@ func (this *GamePlay) DealHole(cardsNum int) {
 }
 
 func (this *GamePlay) DealDoor(cardsNum int) {
-	for _, pos := range this.Table.SeatsInPlay() {
+	for _, pos := range this.Table.AllSeats().InPlay() {
 		player := this.Table.Player(pos)
 
 		cards := this.Deal.DealPocket(player, cardsNum)

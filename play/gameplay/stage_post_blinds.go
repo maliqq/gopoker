@@ -17,9 +17,9 @@ func (this *GamePlay) MoveButton() {
 
 func (this *GamePlay) postSmallBlind(pos int) {
 	t := this.Table
-	newBet := this.ForceBet(pos, bet.SmallBlind, this.Stake)
+	newBet := this.ForceBet(pos, t.Seat(pos), bet.SmallBlind, this.Stake)
 
-	err := this.AddBet(t.Seat(pos), newBet)
+	err := this.AddBet(newBet)
 	if err != nil {
 		log.Fatalf("Error adding small blind for %d: %s", pos, err)
 	}
@@ -29,9 +29,9 @@ func (this *GamePlay) postSmallBlind(pos int) {
 
 func (this *GamePlay) postBigBlind(pos int) {
 	t := this.Table
-	newBet := this.ForceBet(pos, bet.BigBlind, this.Stake)
+	newBet := this.ForceBet(pos, t.Seat(pos), bet.BigBlind, this.Stake)
 
-	err := this.AddBet(t.Seat(pos), newBet)
+	err := this.AddBet(newBet)
 	if err != nil {
 		log.Fatalf("Error adding big blind for %d: %s", pos, err)
 	}
@@ -42,8 +42,8 @@ func (this *GamePlay) postBigBlind(pos int) {
 func (this *GamePlay) PostBlinds() {
 	t := this.Table
 
-	active := t.Seats.From(t.Button).Active()
-	waiting := t.Seats.From(t.Button).Waiting()
+	active := t.AllSeats().Active()
+	waiting := t.AllSeats().Waiting()
 
 	if len(active)+len(waiting) < 2 {
 		log.Println("[this.stage.blinds] none waiting")

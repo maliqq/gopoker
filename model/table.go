@@ -7,7 +7,6 @@ import (
 
 import (
 	"gopoker/model/position"
-	"gopoker/model/seat"
 )
 
 type Table struct {
@@ -85,16 +84,8 @@ func (t *Table) Seat(pos int) *Seat {
 	return t.Seats[pos]
 }
 
-func (t *Table) SeatsFromButton() seatSlice {
+func (t *Table) AllSeats() seatSlice {
 	return t.Seats.From(t.Button)
-}
-
-func (t *Table) SeatsInPlay() []int {
-	return t.Seats.From(t.Button).InPlay()
-}
-
-func (t *Table) SeatsInPot() []int {
-	return t.Seats.From(t.Button).InPot()
 }
 
 func (t *Table) Player(pos int) *Player {
@@ -138,18 +129,5 @@ func (t *Table) RemovePlayer(player *Player) (*Seat, error) {
 }
 
 func (t *Table) String() string {
-	str := ""
-
-	str += fmt.Sprintf("size: %d button: %d\n", t.Size, t.Button)
-
-	for i, tableSeat := range t.Seats {
-		str += fmt.Sprintf("seat %d: ", i+1)
-		if tableSeat.State == seat.Empty {
-			str += "empty\n"
-		} else {
-			str += fmt.Sprintf("%s (%.2f) %s\n", tableSeat.Player, tableSeat.Stack, tableSeat.State)
-		}
-	}
-
-	return str
+	return fmt.Sprintf("size: %d button: %d\n%s", t.Size, t.Button, t.Seats)
 }

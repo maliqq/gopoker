@@ -50,7 +50,6 @@ func main() {
 
 	fmt.Printf("%s\n", play)
 
-Loop:
 	for {
 		select {
 		case msg := <-me:
@@ -65,21 +64,11 @@ Loop:
 				fmt.Printf("%s\n", r)
 
 				var newBet *model.Bet
-			ReadBetLoop:
+
 				for newBet == nil {
-					var cmd string
-					newBet, cmd = readBet(&r)
-					switch cmd {
-					case "exit":
-						play.Control <- command.Exit
-						break Loop
+					newBet = readBet(&r)
 
-					case "sitout":
-						play.Receive <- protocol.NewMessage(protocol.SitOut{Pos: r.Pos})
-						break ReadBetLoop
-					}
-
-					err := newBet.Validate(play.Table.Seat(r.Pos), play.Betting.Required.RequireBet)
+					err := newBet.Validate(play.Table.Seat(r.Pos), r.BetRange)
 					if err != nil {
 						fmt.Println(err.Error())
 						newBet = nil
@@ -157,7 +146,6 @@ Loop:
 			}
 		}
 	}
-	fmt.Println("bye")
 }
 
 func createPlay(me protocol.MessageChannel) *play.Play {
@@ -199,21 +187,14 @@ func readLine() string {
 	return str
 }
 
-func readBet(r *protocol.RequireBet) (*model.Bet, string) {
+func readBet(r *protocol.RequireBet) *model.Bet {
 	var b *model.Bet
-	var str string
 
 	for b == nil {
-		str = readLine()
-
-		if str == "exit" || str == "sitout" {
-			return nil, str
-		}
-
-		b = parseBet(r, str)
+		b = parseBet(r, readLine())
 	}
 
-	return b, str
+	return b
 }
 
 func readCards() *poker.Cards {

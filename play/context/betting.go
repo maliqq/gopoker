@@ -63,20 +63,17 @@ func (this *Betting) Start(pos *chan int) {
 
 	*pos <- this.Required.Pos
 
+Loop:
 	for {
 		select {
 		case <-this.stop:
 			log.Println("[betting] stop")
-			break
+			break Loop
 
 		case msg := <-this.Bet:
 			newBet := msg.Payload.(protocol.AddBet).Bet
 
-			seat := this.Seat
-
-			log.Printf("[betting] Player %s %s\n", seat.Player, newBet.String())
-
-			err := this.AddBet(seat, &newBet)
+			err := this.AddBet(&newBet)
 
 			if err != nil {
 				log.Printf("[betting] %s", err)
@@ -111,9 +108,10 @@ func (this *Betting) RaiseRange(seat *model.Seat, g *model.Game, stake *model.St
 	return 0., 0.
 }
 
-func (this *Betting) ForceBet(pos int, betType bet.Type, stake *model.Stake) *model.Bet {
+func (this *Betting) ForceBet(pos int, seat *model.Seat, betType bet.Type, stake *model.Stake) *model.Bet {
 	amount := stake.Amount(betType)
 
+	this.Seat = seat
 	this.Required.Pos = pos
 	this.Required.Call = amount
 
@@ -127,39 +125,35 @@ func (this *Betting) RequireBet(pos int, seat *model.Seat, game *model.Game, sta
 	if this.raiseCount >= MaxRaises {
 		this.Required.Min, this.Required.Max = 0., 0.
 	} else {
-		this.Required.Min, this.Required.Max = this.RaiseRange(seat, game, stake)
+		min, max := this.RaiseRange(seat, game, stake)
+		call := this.Required.Call
+		this.Required.Min, this.Required.Max = call+min, call+max
 	}
 
-	return protocol.NewRequireBet(seat, this.Required)
+	return protocol.NewMessage(*this.Required)
 }
 
-func (this *Betting) AddBet(s *model.Seat, newBet *model.Bet) error {
-	if newBet.Type == bet.Fold {
-		s.Fold()
+func (this *Betting) AddBet(newBet *model.Bet) error {
+	err := newBet.Validate(this.Seat, this.Required.BetRange)
 
-		return nil
-	}
-
-	err := newBet.Validate(s, this.Required.RequireBet)
-
-	if err != nil {
-		s.Fold() // force fold
+	if newBet.Type == bet.Fold || err != nil {
+		this.Seat.Fold()
+	} else if newBet.Type == bet.Check {
 	} else {
 		amount := newBet.Amount
-		s.SetBet(amount)
 
 		if newBet.IsForced() {
 			this.Required.Call = amount
+			this.Seat.SetBet(amount)
 		} else {
-			this.Required.Call += amount
+			if newBet.Type == bet.Raise {
+				this.raiseCount++
+				this.Required.Call += amount
+			}
+			this.Seat.PutBet(amount)
 		}
 
-		this.Pot.Add(s.Player.Id, amount, amount == s.Stack)
-
-		if newBet.Type == bet.Raise {
-			this.raiseCount++
-			s.State = seat.Bet
-		}
+		this.Pot.Add(this.Seat.Player.Id, amount, this.Seat.State == seat.AllIn)
 	}
 
 	return err

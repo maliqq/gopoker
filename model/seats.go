@@ -1,6 +1,10 @@
 package model
 
 import (
+	"fmt"
+)
+
+import (
 	"gopoker/model/seat"
 )
 
@@ -24,6 +28,21 @@ type seatFilter func(s *Seat) bool
 
 func (seats Seats) From(from int) seatSlice {
 	return seatSlice{from, &seats}
+}
+
+func (seats Seats) String() string {
+	str := ""
+
+	for i, tableSeat := range seats {
+		str += fmt.Sprintf("seat %d: ", i+1)
+		if tableSeat.State == seat.Empty {
+			str += "empty\n"
+		} else {
+			str += fmt.Sprintf("%s (%.2f/%.2f) %s\n", tableSeat.Player, tableSeat.Stack, tableSeat.Bet, tableSeat.State)
+		}
+	}
+
+	return str
 }
 
 func (slice seatSlice) len() int {
@@ -63,6 +82,12 @@ func (slice seatSlice) Active() []int {
 func (slice seatSlice) Waiting() []int {
 	return slice.Where(func(s *Seat) bool {
 		return s.State == seat.WaitBB
+	})
+}
+
+func (slice seatSlice) Playing() []int {
+	return slice.Where(func(s *Seat) bool {
+		return s.State == seat.Play
 	})
 }
 

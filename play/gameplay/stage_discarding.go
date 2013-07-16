@@ -10,7 +10,7 @@ import (
 func (this *GamePlay) StartDiscardingRound() {
 	discarding := this.Discarding
 
-	for _, pos := range this.Table.SeatsFromButton().InPlay() {
+	for _, pos := range this.Table.AllSeats().InPlay() {
 		seat := this.Table.Seat(pos)
 
 		this.Broadcast.One(seat.Player) <- discarding.RequireDiscard(pos, seat)

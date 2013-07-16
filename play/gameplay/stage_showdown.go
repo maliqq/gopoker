@@ -14,7 +14,7 @@ func (this *GamePlay) ShowHands(ranking ranking.Ranking, withBoard bool) *Showdo
 
 	hands := ShowdownHands{}
 
-	for _, pos := range this.Table.SeatsInPot() {
+	for _, pos := range this.Table.AllSeats().InPot() {
 		player := this.Table.Player(pos)
 		if pocket, hand := d.Rank(player, ranking, withBoard); hand != nil {
 			hands[player.Id] = hand

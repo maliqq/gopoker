@@ -224,14 +224,7 @@ func NewDiscardCards(pos int, cards *poker.Cards) *Message {
 
 type RequireBet struct {
 	Pos int
-	model.RequireBet
-}
-
-func NewRequireBet(seat *model.Seat, req *RequireBet) *Message {
-	newReq := *req
-	newReq.Call -= seat.Bet
-
-	return NewMessage(newReq)
+	model.BetRange
 }
 
 func (r RequireBet) String() string {
