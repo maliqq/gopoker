@@ -6,6 +6,7 @@ import (
 
 import (
 	"gopoker/model/seat"
+	"gopoker/model/bet"
 )
 
 type Seat struct {
@@ -42,6 +43,10 @@ func (this *Seat) Play() {
 	this.State = seat.Play
 }
 
+func (this *Seat) Check() {
+	this.State = seat.Bet
+}
+
 func (this *Seat) Fold() {
 	this.Bet = 0.
 	this.State = seat.Fold
@@ -50,10 +55,6 @@ func (this *Seat) Fold() {
 func (this *Seat) SetBet(amount float64) {
 	this.Stack -= (amount - this.Bet)
 	this.Bet = amount
-}
-
-func (this *Seat) PutBet(amount float64) {
-	this.SetBet(amount)
 
 	if this.Stack == 0. {
 		this.State = seat.AllIn
@@ -61,6 +62,44 @@ func (this *Seat) PutBet(amount float64) {
 		this.State = seat.Bet
 	}
 }
+
+func (this *Seat) ForceBet(amount float64) {
+	this.Stack -= amount
+	this.Bet = amount
+
+	if this.Stack == 0. {
+		this.State = seat.AllIn
+	} else {
+		this.State = seat.Play
+	}
+}
+
+func (this *Seat) AddBet(b *Bet) (float64, bool) {
+	var put float64
+
+	switch b.Type {
+	case bet.Fold:
+		put = 0
+		this.Fold()
+
+	case bet.Check:
+		put = 0
+		this.Check()
+
+	case bet.Call, bet.Raise:
+		put = b.Amount - this.Bet
+		this.SetBet(b.Amount)
+
+	default:
+		put = b.Amount - this.Bet
+		if b.IsForced() {
+			this.ForceBet(b.Amount)
+		}
+	}
+
+	return put, this.State == seat.AllIn
+}
+
 
 func (this *Seat) SetPlayer(player *Player) error {
 	if this.State != seat.Empty {

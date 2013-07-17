@@ -65,10 +65,12 @@ func main() {
 
 				var newBet *model.Bet
 
-				for newBet == nil {
-					newBet = readBet(&r)
+				seat := play.Table.Seat(r.Pos)
 
-					err := newBet.Validate(play.Table.Seat(r.Pos), r.BetRange)
+				for newBet == nil {
+					newBet = readBet(r.Call, r.Call - seat.Bet)
+
+					err := newBet.Validate(seat, r.BetRange)
 					if err != nil {
 						fmt.Println(err.Error())
 						newBet = nil
@@ -187,11 +189,11 @@ func readLine() string {
 	return str
 }
 
-func readBet(r *protocol.RequireBet) *model.Bet {
+func readBet(call float64, toCall float64) *model.Bet {
 	var b *model.Bet
 
 	for b == nil {
-		b = parseBet(r, readLine())
+		b = parseBet(call, toCall, readLine())
 	}
 
 	return b
@@ -210,15 +212,15 @@ func readCards() *poker.Cards {
 	return cards
 }
 
-func parseBet(r *protocol.RequireBet, str string) *model.Bet {
+func parseBet(call float64, toCall float64, str string) *model.Bet {
 	var b *model.Bet
 
 	switch str {
 	case "":
-		if r.Call == 0. {
+		if toCall == 0. { // nothing to call
 			b = model.NewCheck()
 		} else {
-			b = model.NewCall(r.Call)
+			b = model.NewCall(call)
 		}
 
 	case "fold":
@@ -228,7 +230,7 @@ func parseBet(r *protocol.RequireBet, str string) *model.Bet {
 		b = model.NewCheck()
 
 	case "call":
-		b = model.NewCall(r.Call)
+		b = model.NewCall(call)
 
 	default:
 		parts := strings.Split(str, " ")

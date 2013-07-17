@@ -9,7 +9,6 @@ import (
 	"gopoker/model"
 	"gopoker/model/bet"
 	"gopoker/model/game"
-	"gopoker/model/seat"
 	"gopoker/protocol"
 )
 
@@ -134,26 +133,26 @@ func (this *Betting) RequireBet(pos int, seat *model.Seat, game *model.Game, sta
 }
 
 func (this *Betting) AddBet(newBet *model.Bet) error {
+	log.Printf("[betting] Player %s %s\n", this.Seat.Player, newBet.String())
+
 	err := newBet.Validate(this.Seat, this.Required.BetRange)
 
-	if newBet.Type == bet.Fold || err != nil {
+	if err != nil {
 		this.Seat.Fold()
-	} else if newBet.Type == bet.Check {
 	} else {
+		put, isAllIn := this.Seat.AddBet(newBet)
+
 		amount := newBet.Amount
-
-		if newBet.IsForced() {
-			this.Required.Call = amount
-			this.Seat.SetBet(amount)
-		} else {
-			if newBet.Type == bet.Raise {
+		if amount > 0 {
+			if newBet.IsForced() {
+				this.Required.Call = amount
+			} else if newBet.Type == bet.Raise {
 				this.raiseCount++
-				this.Required.Call += amount
+				this.Required.Call += put
 			}
-			this.Seat.PutBet(amount)
-		}
 
-		this.Pot.Add(this.Seat.Player.Id, amount, this.Seat.State == seat.AllIn)
+			this.Pot.Add(this.Seat.Player.Id, put, isAllIn)
+		}
 	}
 
 	return err
