@@ -1,4 +1,4 @@
-package ws
+package websocket_client
 
 import (
 	"code.google.com/p/go.net/websocket"

@@ -6,6 +6,7 @@ import (
 
 import (
 	"gopoker/util"
+	_"gopoker/client/rpc_client"
 )
 
 type Bot struct {
