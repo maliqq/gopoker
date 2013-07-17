@@ -1,11 +1,6 @@
 package gameplay
 
 import (
-	"fmt"
-	_ "time"
-)
-
-import (
 	"gopoker/play/command"
 	"gopoker/protocol"
 )
@@ -20,15 +15,15 @@ func (this *GamePlay) NextTurn(current int) bool {
 
 	if len(inPot) < 2 {
 		this.Control <- command.Showdown
-		return false
-	} else if len(active) == 0 {
-		return false
-	} else {
+	
+	} else if len(active) > 0 {
 		pos := active[0]
 		seat := this.Table.Seat(pos)
 		this.Broadcast.One(seat.Player) <- this.Betting.RequireBet(pos, seat, this.Game, this.Stake)
 		return true
 	}
+
+	return false
 }
 
 func (this *GamePlay) StartBettingRound() {
@@ -39,7 +34,7 @@ func (this *GamePlay) StartBettingRound() {
 
 	for current := range pos {
 		if this.NextTurn(current) {
-			fmt.Printf("===\n%s\n", this.Table.Seats)
+			// ...
 		} else {
 			this.Betting.Stop()
 			break
