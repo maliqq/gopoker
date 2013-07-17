@@ -140,18 +140,19 @@ func (this *Betting) AddBet(newBet *model.Bet) error {
 	if err != nil {
 		this.Seat.Fold()
 	} else {
-		put, isAllIn := this.Seat.AddBet(newBet)
+		putAmount, isAllIn := this.Seat.AddBet(newBet)
 
 		amount := newBet.Amount
 		if amount > 0 {
-			if newBet.IsForced() {
+			if newBet.Type != bet.Call {
 				this.Required.Call = amount
-			} else if newBet.Type == bet.Raise {
+			}
+			
+			if newBet.Type == bet.Raise {
 				this.raiseCount++
-				this.Required.Call += put
 			}
 
-			this.Pot.Add(this.Seat.Player.Id, put, isAllIn)
+			this.Pot.Add(this.Seat.Player.Id, putAmount, isAllIn)
 		}
 	}
 

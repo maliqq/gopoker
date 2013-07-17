@@ -124,7 +124,7 @@ func main() {
 
 				payload := msg.Payload.(protocol.PotSummary)
 
-				fmt.Printf("Pot size: %.2f\n", payload.Amount)
+				fmt.Printf("Pot size: %.2f\nBoard: %s\n", payload.Amount, play.Deal.Board.ConsoleString())
 
 			case protocol.ShowHand:
 
