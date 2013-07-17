@@ -34,7 +34,15 @@ func (n *Node) StartHTTP() {
 	nodeHTTP := &NodeHTTP{n}
 
 	router := mux.NewRouter()
+	nodeHTTP.drawRoutes(router)
 
+	log.Printf("starting HTTP service at %s", n.ApiAddr)
+	if err := http.ListenAndServe(n.ApiAddr, router); err != nil {
+		log.Fatalf("can't start at %s", n.ApiAddr)
+	}
+}
+
+func (nodeHTTP *NodeHTTP) drawRoutes(router *mux.Router) {
 	api := router.PathPrefix(HttpApiPath).Subrouter()
 
 	// Room
@@ -72,11 +80,6 @@ func (n *Node) StartHTTP() {
 
 	// WebSocket
 	router.Handle(WebSocketPath, websocket.Handler(nodeHTTP.WebSocketHandler))
-
-	log.Printf("starting HTTP service at %s", n.ApiAddr)
-	if err := http.ListenAndServe(n.ApiAddr, router); err != nil {
-		log.Fatalf("can't start at %s", n.ApiAddr)
-	}
 }
 
 func (nodeHTTP *NodeHTTP) Rooms(resp http.ResponseWriter, req *http.Request) {
