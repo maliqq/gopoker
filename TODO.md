@@ -8,3 +8,5 @@ features
 
 refactoring:
 * embed structs
+* game rotation
+* limited/fixed game interface

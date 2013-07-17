@@ -16,6 +16,6 @@ func main() {
 
 	flag.Parse()
 
-	node := server.CreateNode("localhost", *apiAddr, *rpcAddr)
+	node := server.NewNode("localhost", *apiAddr, *rpcAddr)
 	node.Start()
 }

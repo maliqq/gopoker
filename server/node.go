@@ -20,7 +20,7 @@ type Node struct {
 	Sessions map[model.Id]*client.Session
 }
 
-func CreateNode(name string, apiAddr string, rpcAddr string) *Node {
+func NewNode(name string, apiAddr string, rpcAddr string) *Node {
 	return &Node{
 		Name:    name,
 		ApiAddr: apiAddr,
@@ -29,9 +29,6 @@ func CreateNode(name string, apiAddr string, rpcAddr string) *Node {
 	}
 }
 
-/*********************************************
-********* Rooms
-**********************************************/
 func (n *Node) Room(id model.Id) *Room {
 	room, _ := n.Rooms[id]
 
