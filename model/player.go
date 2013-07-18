@@ -1,19 +1,19 @@
 package model
 
 type Place struct {
-  Name string
-  Country string
-  CountryCode string
-  City string
-  Region string
+	Name        string
+	Country     string
+	CountryCode string
+	City        string
+	Region      string
 }
 
 type Player struct {
-	Id Id
-  Name string
-  NickName string
-  Place *Place
-  Avatar string
+	Id       Id
+	Name     string
+	NickName string
+	Place    *Place
+	Avatar   string
 }
 
 func NewPlayer(id Id) *Player {

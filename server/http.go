@@ -44,8 +44,8 @@ func (nodeHTTP *NodeHTTP) drawRoutes(router *mux.Router) {
 	api := router.PathPrefix(HttpApiPath).Subrouter()
 
 	// Room
-	api.HandleFunc("/rooms", nodeHTTP.Rooms).Methods("GET")
-	api.HandleFunc("/room/{room}", nodeHTTP.Room).Methods("POST")
+	api.HandleFunc("/rooms", nodeHTTP.Rooms).Methods("GET", "OPTIONS")
+	api.HandleFunc("/room/{room}", nodeHTTP.Room).Methods("GET", "OPTIONS")
 
 	api.HandleFunc("/room/{room}/join", nodeHTTP.Join).Methods("POST")
 	api.HandleFunc("/room/{room}/leave", nodeHTTP.Leave).Methods("DELETE")
@@ -94,7 +94,9 @@ func (nodeHTTP *NodeHTTP) RespondJSON(resp http.ResponseWriter, result interface
 	}
 
 	resp.Header().Set("Content-Type", "application/json; charset=utf-8")
+	// CORS headers
 	resp.Header().Set("Access-Control-Allow-Origin", "*")
+	resp.Header().Set("Access-Control-Allow-Headers", "X-Requested-With")
 
 	resp.Write(data)
 	resp.Write([]byte{0xA})

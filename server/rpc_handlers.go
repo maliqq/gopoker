@@ -20,6 +20,16 @@ func (n *NodeRPC) DeleteRoom(requestRoom *service.RequestRoom, r *service.CallRe
 	return nil
 }
 
+// send protocol message to room subscribers
+func (n *NodeRPC) NotifyRoom(notifyRoom *service.NotifyRoom, r *service.CallResult) error {
+	room := n.Node.Room(notifyRoom.Id)
+	msg := notifyRoom.Message
+
+	room.Receive <- msg
+
+	return nil
+}
+
 func (n *NodeRPC) StartRoom(requestRoom *service.RequestRoom, r *service.CallResult) error {
 	room := n.Node.Room(requestRoom.Id)
 

@@ -21,19 +21,44 @@ type Message struct {
 }
 
 func NewMessage(payload Payload) *Message {
-	name := reflect.TypeOf(payload).Name()
+	typeName := reflect.TypeOf(payload).Name()
 
-	if name == "" {
+	if typeName == "" {
 		fmt.Printf("payload: %#v", payload)
 
 		panic("unknown message type")
 	}
 
 	return &Message{
-		Type:      name,
+		Type:      typeName,
 		Timestamp: time.Now().Unix(),
 		Payload:   payload,
 	}
+}
+
+func (msg *Message) UnmarshalJSON(data []byte) error {
+	var raw map[string]*json.RawMessage
+	err := json.Unmarshal(data, &raw)
+
+	// Type
+	var typeName string
+	err = json.Unmarshal(*raw["Type"], &typeName)
+	msg.Type = typeName
+
+	// Timestamp
+	var timestamp int64
+	err = json.Unmarshal(*raw["Timestamp"], &timestamp)
+	msg.Timestamp = timestamp
+
+	// Payload
+	switch msg.Type {
+	case "JoinTable":
+		var join JoinTable
+		err = json.Unmarshal(*raw["Payload"], &join)
+		msg.Payload = join
+	}
+
+	return err
 }
 
 func (msg *Message) String() string {

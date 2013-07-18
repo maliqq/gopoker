@@ -6,6 +6,10 @@ import (
 )
 
 import (
+	"github.com/gorilla/mux"
+)
+
+import (
 	"gopoker/model"
 	"gopoker/poker"
 	"gopoker/poker/ranking"
@@ -18,8 +22,8 @@ func (nodeHTTP *NodeHTTP) Rooms(resp http.ResponseWriter, req *http.Request) {
 }
 
 func (nodeHTTP *NodeHTTP) Room(resp http.ResponseWriter, req *http.Request) {
-	q := req.URL.Query()
-	id := q.Get("room")
+	vars := mux.Vars(req)
+	id := vars["room"]
 	room := nodeHTTP.Node.Room(model.Id(id))
 
 	nodeHTTP.RespondJSON(resp, room)

@@ -71,8 +71,10 @@ func (this *Play) receive() {
 		switch msg.Payload.(type) {
 		case protocol.JoinTable:
 			join := msg.Payload.(protocol.JoinTable)
-			this.Table.AddPlayer(join.Player, join.Pos, join.Amount)
-
+			_, err := this.Table.AddPlayer(join.Player, join.Pos, join.Amount)
+			if err != nil {
+				log.Printf("[protocol] error: %s", err)
+			}
 			//this.Broadcast.Except(join.Player) <- join
 
 		case protocol.LeaveTable:

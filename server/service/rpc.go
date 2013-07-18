@@ -2,6 +2,7 @@ package service
 
 import (
 	"gopoker/model"
+	"gopoker/protocol"
 )
 
 type CallResult struct {
@@ -31,4 +32,9 @@ func (c CreateRoom) Variation() model.Variation {
 
 type RequestRoom struct {
 	Id model.Id
+}
+
+type NotifyRoom struct {
+	Id      model.Id
+	Message *protocol.Message
 }

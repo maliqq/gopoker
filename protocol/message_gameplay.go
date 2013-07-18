@@ -56,7 +56,3 @@ func NewChangeGame(g *model.Game) *Message {
 		},
 	)
 }
-
-// new street
-type Street struct {
-}
