@@ -3,8 +3,9 @@ package server
 import (
 	"log"
 	"net"
-	"net/http"
+	_ "net/http"
 	"net/rpc"
+	"net/rpc/jsonrpc"
 )
 
 type NodeRPC struct {
@@ -17,15 +18,29 @@ func (n *Node) StartRPC() {
 	serv := rpc.NewServer()
 	serv.Register(nodeRPC)
 
-	mux := http.NewServeMux()
-	mux.Handle(rpc.DefaultRPCPath, serv)
-
-	log.Printf("starting RPC service at %s", n.RpcAddr)
+	log.Printf("[rpc] starting at %s", n.RpcAddr)
 	l, err := net.Listen("tcp", n.RpcAddr)
 	if err != nil {
-		log.Fatal("listen error:", err)
+		log.Fatal("[rpc] listen error:", err)
 	}
 
-	http := &http.Server{Handler: mux}
-	go http.Serve(l)
+	/*
+		mux := http.NewServeMux()
+		mux.Handle(rpc.DefaultRPCPath, serv)
+
+		http := &http.Server{Handler: mux}
+		go http.Serve(l)
+	*/
+
+	for {
+		c, err := l.Accept()
+
+		if err != nil {
+			log.Printf("[rpc] accept error: %s", c)
+			continue
+		}
+
+		log.Printf("[rpc] connection started: %v", c.RemoteAddr())
+		go serv.ServeCodec(jsonrpc.NewServerCodec(c))
+	}
 }

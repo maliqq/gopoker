@@ -1,6 +1,10 @@
 package server
 
 import (
+	"fmt"
+)
+
+import (
 	"code.google.com/p/go.net/websocket"
 )
 
@@ -13,9 +17,17 @@ import (
 )
 
 func (nodeHTTP *NodeHTTP) WebSocketHandler(conn *websocket.Conn) {
+	node := nodeHTTP.Node
+	q := conn.Request().URL.Query()
+	roomId := model.Id(q.Get("room_id"))
+	room := node.Rooms[roomId]
+	fmt.Printf("vars=%s\n", roomId)
+
 	id := model.Id(util.RandomUuid())
 	connection := &websocket_client.Connection{conn}
 	session := client.NewSession(connection)
+	session.Connection.Send(room)
+
 	me := make(protocol.MessageChannel)
 
 	nodeHTTP.Node.Sessions[id] = session

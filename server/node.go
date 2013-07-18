@@ -47,6 +47,6 @@ func (n *Node) RemoveRoom(room *Room) bool {
 }
 
 func (n *Node) Start() {
-	n.StartRPC()
+	go n.StartRPC()
 	n.StartHTTP()
 }

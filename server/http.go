@@ -34,9 +34,9 @@ func (n *Node) StartHTTP() {
 	router := mux.NewRouter()
 	nodeHTTP.drawRoutes(router)
 
-	log.Printf("starting HTTP service at %s", n.ApiAddr)
+	log.Printf("[http] starting service at %s", n.ApiAddr)
 	if err := http.ListenAndServe(n.ApiAddr, router); err != nil {
-		log.Fatalf("can't start at %s", n.ApiAddr)
+		log.Fatalf("[http] can't start at %s", n.ApiAddr)
 	}
 }
 
