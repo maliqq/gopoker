@@ -1,0 +1,25 @@
+---
+- City: Moscow
+  Country: Russia
+  CountryCode: ru
+- City: New York
+  Country: United States
+  CountryCode: us
+- City: London
+  Country: United Kingdom
+  CountryCode: gb
+- City: Kiev
+  Country: Ukraine
+  CountryCode: ua
+- City: Stockholm
+  Country: Sweden
+  CountryCode: se
+- City: Minsk
+  Country: Belarus
+  CountryCode: by
+- City: Astana
+  Country: Kazakhstan
+  CountryCode: kz
+- City: Bishkek
+  Country: Kyrgyzstan
+  CountryCode: kg
