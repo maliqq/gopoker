@@ -5,12 +5,12 @@ import (
 )
 
 import (
+	_ "gopoker/client/rpc_client"
 	"gopoker/util"
-	_"gopoker/client/rpc_client"
 )
 
 type Bot struct {
-	Id string
+	Id        string
 	rpcClient *rpc.Client
 }
 
@@ -19,7 +19,7 @@ func NewBot(rpcAddr string) *Bot {
 	client, _ := rpc.DialHTTP("tcp", rpcAddr)
 
 	return &Bot{
-		Id: id,
+		Id:        id,
 		rpcClient: client,
 	}
 }

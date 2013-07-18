@@ -22,10 +22,11 @@ type Node struct {
 
 func NewNode(name string, apiAddr string, rpcAddr string) *Node {
 	return &Node{
-		Name:    name,
-		ApiAddr: apiAddr,
-		RpcAddr: rpcAddr,
-		Rooms:   map[model.Id]*Room{},
+		Name:     name,
+		ApiAddr:  apiAddr,
+		RpcAddr:  rpcAddr,
+		Rooms:    map[model.Id]*Room{},
+		Sessions: map[model.Id]*client.Session{},
 	}
 }
 

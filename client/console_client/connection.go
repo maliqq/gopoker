@@ -20,26 +20,14 @@ import (
 )
 
 type Connection struct {
-	Play *play.Play
-}
-
-func (c *Connection) Close() error {
-	return nil
-}
-
-func (c *Connection) Receive(data interface{}) error {
-	return nil
-}
-
-func (c *Connection) Send(data interface{}) error {
-	return nil
+	Server *play.Play
 }
 
 func (c *Connection) Reply(msg *protocol.Message) {
-	
+	c.Server.Receive <- msg
 }
 
-func (c *Connection) Process(msg *protocol.Message) {
+func (c *Connection) Handle(msg *protocol.Message) {
 	log.Println(console.Color(console.GREEN, fmt.Sprintf("[receive] %s", msg)))
 
 	switch msg.Payload.(type) {
@@ -51,10 +39,10 @@ func (c *Connection) Process(msg *protocol.Message) {
 
 		var newBet *model.Bet
 
-		seat := c.Play.Table.Seat(r.Pos)
+		seat := c.Server.Table.Seat(r.Pos)
 
 		for newBet == nil {
-			newBet = readBet(r.Call, r.Call - seat.Bet)
+			newBet = readBet(r.Call, r.Call-seat.Bet)
 
 			err := newBet.Validate(seat, r.BetRange)
 			if err != nil {
@@ -71,9 +59,9 @@ func (c *Connection) Process(msg *protocol.Message) {
 
 		r := msg.Payload.(protocol.RequireDiscard)
 
-		seat := c.Play.Table.Seat(r.Pos)
+		seat := c.Server.Table.Seat(r.Pos)
 
-		fmt.Printf("Your cards: [%s]\n", c.Play.Deal.Pocket(seat.Player))
+		fmt.Printf("Your cards: [%s]\n", c.Server.Deal.Pocket(seat.Player))
 
 		var cards *poker.Cards
 		for cards == nil {
@@ -102,7 +90,7 @@ func (c *Connection) Process(msg *protocol.Message) {
 
 		payload := msg.Payload.(protocol.AddBet)
 
-		player := c.Play.Table.Player(payload.Pos)
+		player := c.Server.Table.Player(payload.Pos)
 
 		fmt.Printf("Player %s: %s\n", player, payload.Bet)
 
@@ -110,13 +98,13 @@ func (c *Connection) Process(msg *protocol.Message) {
 
 		payload := msg.Payload.(protocol.PotSummary)
 
-		fmt.Printf("Pot size: %.2f\nBoard: %s\n", payload.Amount, c.Play.Deal.Board.ConsoleString())
+		fmt.Printf("Pot size: %.2f\nBoard: %s\n", payload.Amount, c.Server.Deal.Board.ConsoleString())
 
 	case protocol.ShowHand:
 
 		payload := msg.Payload.(protocol.ShowHand)
 
-		player := c.Play.Table.Player(payload.Pos)
+		player := c.Server.Table.Player(payload.Pos)
 
 		fmt.Printf("Player %s has %s (%s)\n", player, payload.Cards.ConsoleString(), payload.Hand.HumanString())
 

@@ -1,16 +1,16 @@
 package ai
 
 import (
-	"testing"
 	"net/rpc"
+	"testing"
 )
 
 import (
 	"gopoker/model"
 	"gopoker/model/game"
 	"gopoker/server"
-	"gopoker/util"
 	"gopoker/server/service"
+	"gopoker/util"
 )
 
 func TestBot(t *testing.T) {

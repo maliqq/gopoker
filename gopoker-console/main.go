@@ -9,14 +9,14 @@ import (
 
 import (
 	"gopoker/protocol"
-	
+
 	"gopoker/model"
 	"gopoker/model/game"
 
 	"gopoker/play"
 	"gopoker/play/command"
 
-	"gopoker/client"
+	_ "gopoker/client"
 	"gopoker/client/console_client"
 )
 
@@ -49,10 +49,12 @@ func main() {
 	play.Control <- command.NextDeal
 
 	conn := &console_client.Connection{
-		Play: play,
+		Server: play,
 	}
-	session := client.NewSession(conn)
-	session.Start()
+
+	for msg := range me {
+		conn.Handle(msg)
+	}
 }
 
 func createPlay(me protocol.MessageChannel) *play.Play {

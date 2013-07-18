@@ -16,8 +16,7 @@ type Connection interface {
 
 type Session struct {
 	Connection Connection
-	Receive    chan *protocol.Message
-	Send       *chan *protocol.Message
+	Receive    protocol.MessageChannel
 }
 
 func NewSession(connection Connection) *Session {
@@ -27,15 +26,15 @@ func NewSession(connection Connection) *Session {
 	}
 }
 
-func (session *Session) Start() {
+func (session *Session) Start(send *protocol.MessageChannel) {
 	log.Printf("starting session with connection: %#v", session.Connection)
 
-	go session.receive()
+	go session.receive(send)
 
 	session.send()
 }
 
-func (session *Session) receive() {
+func (session *Session) receive(send *protocol.MessageChannel) {
 	for {
 		var message *protocol.Message
 
@@ -44,12 +43,10 @@ func (session *Session) receive() {
 			break
 		}
 
-		*session.Send <- message
+		*send <- message
 	}
 
-	if err := session.Connection.Close(); err != nil {
-		log.Fatalf("Error closing session connection: %s", err)
-	}
+	session.close()
 }
 
 func (session *Session) send() {
@@ -59,6 +56,11 @@ func (session *Session) send() {
 			break
 		}
 	}
+	session.close()
+}
 
-	session.Connection.Close()
+func (session *Session) close() {
+	if err := session.Connection.Close(); err != nil {
+		log.Fatalf("Error closing session connection: %s", err)
+	}
 }

@@ -15,7 +15,7 @@ func (this *GamePlay) NextTurn(current int) bool {
 
 	if len(inPot) < 2 {
 		this.Control <- command.Showdown
-	
+
 	} else if len(active) > 0 {
 		pos := active[0]
 		seat := this.Table.Seat(pos)

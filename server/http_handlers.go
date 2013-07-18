@@ -25,7 +25,6 @@ func (nodeHTTP *NodeHTTP) Room(resp http.ResponseWriter, req *http.Request) {
 	nodeHTTP.RespondJSON(resp, room)
 }
 
-
 type CompareResult struct {
 	A      *poker.Hand
 	B      *poker.Hand

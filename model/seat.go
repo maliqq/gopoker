@@ -5,8 +5,8 @@ import (
 )
 
 import (
-	"gopoker/model/seat"
 	"gopoker/model/bet"
+	"gopoker/model/seat"
 )
 
 type Seat struct {
@@ -99,7 +99,6 @@ func (this *Seat) AddBet(b *Bet) (float64, bool) {
 
 	return put, this.State == seat.AllIn
 }
-
 
 func (this *Seat) SetPlayer(player *Player) error {
 	if this.State != seat.Empty {

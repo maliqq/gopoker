@@ -8,6 +8,7 @@ import (
 	"gopoker/client"
 	"gopoker/client/websocket_client"
 	"gopoker/model"
+	"gopoker/protocol"
 	"gopoker/util"
 )
 
@@ -15,13 +16,14 @@ func (nodeHTTP *NodeHTTP) WebSocketHandler(conn *websocket.Conn) {
 	id := model.Id(util.RandomUuid())
 	connection := &websocket_client.Connection{conn}
 	session := client.NewSession(connection)
+	me := make(protocol.MessageChannel)
 
 	nodeHTTP.Node.Sessions[id] = session
 
 	defer func() {
 		delete(nodeHTTP.Node.Sessions, id)
-		close(session.Receive)
+		close(me)
 	}()
 
-	session.Start()
+	session.Start(&me)
 }

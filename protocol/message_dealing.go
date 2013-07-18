@@ -29,4 +29,3 @@ func NewDealShared(cards *poker.Cards, dealingType deal.Type) *Message {
 		},
 	)
 }
-

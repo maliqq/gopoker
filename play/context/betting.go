@@ -147,7 +147,7 @@ func (this *Betting) AddBet(newBet *model.Bet) error {
 			if newBet.Type != bet.Call {
 				this.Required.Call = amount
 			}
-			
+
 			if newBet.Type == bet.Raise {
 				this.raiseCount++
 			}
