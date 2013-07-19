@@ -29,16 +29,18 @@ size.times { |i|
     Message: {
       Type: "JoinTable",
       Timestamp: Time.now.to_i,
-      Payload: {
-        Pos: i,
-        Player: {
-          Id: "player-#{i}",
-          Name: "Player #{i}",
-          NickName: "player_#{i}",
-          Place: places[rand(places.size)],
-          Avatar: avatars[rand(avatars.size)]
-        },
-        Amount: (rand() * 80 + 20).round(2)
+      Envelope: {
+        JoinTable: {
+          Pos: i,
+          Player: {
+            Id: "player-#{i}",
+            Name: "Player #{i}",
+            NickName: "player_#{i}",
+            Place: places[rand(places.size)],
+            Avatar: avatars[rand(avatars.size)]
+          },
+          Amount: (rand() * 80 + 20).round(2)
+        }
       }
     }
   }

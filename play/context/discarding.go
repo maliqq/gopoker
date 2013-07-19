@@ -33,7 +33,7 @@ func (this *Discarding) Start() {
 	for {
 		select {
 		case msg := <-this.Discard:
-			payload := msg.Payload.(protocol.DiscardCards)
+			payload := msg.Envelope.DiscardCards
 			seat := this.Seat
 			cards := payload.Cards
 

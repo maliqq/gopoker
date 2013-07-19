@@ -14,14 +14,40 @@ const (
 
 type Payload interface{}
 
+type Envelope struct {
+	JoinTable *JoinTable
+	LeaveTable *LeaveTable
+	SitOut *SitOut
+	ComeBack *ComeBack
+
+	MoveButton *MoveButton
+
+	RequireBet *RequireBet
+	AddBet *AddBet
+
+	DealCards *DealCards
+
+	Discarded *Discarded
+	DiscardCards *DiscardCards
+
+	PotSummary *PotSummary
+	ChangeGame *ChangeGame
+
+	ShowHand *ShowHand
+	ShowCards *ShowCards
+
+	Winner *Winner
+}
+
 type Message struct {
 	Type      string
 	Timestamp int64
-	Payload   Payload
+	Envelope  Envelope
 }
 
 func NewMessage(payload Payload) *Message {
-	typeName := reflect.TypeOf(payload).Name()
+	payloadType := reflect.TypeOf(payload)
+	typeName := payloadType.Name()
 
 	if typeName == "" {
 		fmt.Printf("payload: %#v", payload)
@@ -29,36 +55,83 @@ func NewMessage(payload Payload) *Message {
 		panic("unknown message type")
 	}
 
+	envelope := Envelope{}
+/*
+	value := reflect.ValueOf(envelope)
+	field := value.FieldByName(typeName)
+	field.SetPointer(&payload)
+*/
+	switch v := payload.(type) {
+	case JoinTable:
+		envelope.JoinTable = &v
+	
+	case LeaveTable:
+		envelope.LeaveTable = &v
+	
+	case SitOut:
+		envelope.SitOut = &v
+	
+	case ComeBack:
+		envelope.ComeBack = &v
+	
+	case MoveButton:
+		envelope.MoveButton = &v
+	
+	case RequireBet:
+		envelope.RequireBet = &v
+	
+	case AddBet:
+		envelope.AddBet = &v
+	
+	case DealCards:
+		envelope.DealCards = &v
+	
+	case Discarded:
+		envelope.Discarded = &v
+	
+	case DiscardCards:
+		envelope.DiscardCards = &v
+	
+	case PotSummary:
+		envelope.PotSummary = &v
+	
+	case ChangeGame:
+		envelope.ChangeGame = &v
+	
+	case ShowHand:
+		envelope.ShowHand = &v
+	
+	case ShowCards:
+		envelope.ShowCards = &v
+
+	case Winner:
+		envelope.Winner = &v
+	}
+
 	return &Message{
 		Type:      typeName,
 		Timestamp: time.Now().Unix(),
-		Payload:   payload,
+		Envelope:  envelope,
 	}
 }
 
-func (msg *Message) UnmarshalJSON(data []byte) error {
-	var raw map[string]*json.RawMessage
-	err := json.Unmarshal(data, &raw)
-
-	// Type
-	var typeName string
-	err = json.Unmarshal(*raw["Type"], &typeName)
-	msg.Type = typeName
-
-	// Timestamp
-	var timestamp int64
-	err = json.Unmarshal(*raw["Timestamp"], &timestamp)
-	msg.Timestamp = timestamp
-
-	// Payload
-	switch msg.Type {
-	case "JoinTable":
-		var join JoinTable
-		err = json.Unmarshal(*raw["Payload"], &join)
-		msg.Payload = join
+func (msg *Message) MarshalJSON() ([]byte, error) {
+	data := map[string]interface{}{}
+	data["Type"] = msg.Type
+	data["Timestamp"] = msg.Timestamp
+	// cleanup fields
+	value := reflect.ValueOf(msg.Envelope)
+	field := value.FieldByName(msg.Type)
+	data["Envelope"] = map[string]interface{}{
+		msg.Type: field.Interface(),
 	}
+	return json.Marshal(data)
+}
 
-	return err
+func (msg *Message) Payload() Payload {
+	value := reflect.ValueOf(msg.Envelope)
+	field := value.FieldByName(msg.Type)
+	return reflect.Indirect(field).Interface()
 }
 
 func (msg *Message) String() string {

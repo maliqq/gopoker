@@ -70,7 +70,7 @@ Loop:
 			break Loop
 
 		case msg := <-this.Bet:
-			newBet := msg.Payload.(protocol.AddBet).Bet
+			newBet := msg.Envelope.AddBet.Bet
 
 			err := this.AddBet(&newBet)
 
