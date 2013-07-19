@@ -27,6 +27,7 @@ type Envelope struct {
 
 	DealCards *DealCards
 
+	RequireDiscard *RequireDiscard
 	Discarded *Discarded
 	DiscardCards *DiscardCards
 
@@ -86,6 +87,9 @@ func NewMessage(payload Payload) *Message {
 	case DealCards:
 		envelope.DealCards = &v
 	
+	case RequireDiscard:
+		envelope.RequireDiscard = &v
+
 	case Discarded:
 		envelope.Discarded = &v
 	

@@ -6,7 +6,7 @@ import (
 
 type SidePot struct {
 	Barrier float64
-	Members map[Id]float64
+	Members map[Player]float64
 }
 
 type Pot struct {
@@ -17,7 +17,7 @@ type Pot struct {
 func NewSidePot(amount float64) *SidePot {
 	return &SidePot{
 		Barrier: amount,
-		Members: map[Id]float64{},
+		Members: map[Player]float64{},
 	}
 }
 
@@ -50,7 +50,7 @@ func (pot *SidePot) IsActive() bool {
 	return len(pot.Members) > 0 && pot.Total() > 0.
 }
 
-func (pot *SidePot) Add(member Id, amount float64) float64 {
+func (pot *SidePot) Add(member Player, amount float64) float64 {
 	if amount > 0. {
 		value, exists := pot.Members[member]
 		if !exists {
@@ -107,7 +107,7 @@ func (pot *Pot) SidePots() []*SidePot {
 	return pots
 }
 
-func (pot *SidePot) Split(member Id, remain float64) (*SidePot, *SidePot) {
+func (pot *SidePot) Split(member Player, remain float64) (*SidePot, *SidePot) {
 	pot.Members[member] += remain
 
 	bet := pot.Members[member]
@@ -129,13 +129,13 @@ func (pot *SidePot) Split(member Id, remain float64) (*SidePot, *SidePot) {
 	return main, side
 }
 
-func (pot *Pot) Split(member Id, amount float64) {
+func (pot *Pot) Split(member Player, amount float64) {
 	main, side := pot.Main.Split(member, amount)
 	pot.Side = append(pot.Side, side)
 	pot.Main = main
 }
 
-func (pot *Pot) Add(member Id, amount float64, allin bool) {
+func (pot *Pot) Add(member Player, amount float64, allin bool) {
 	remain := amount
 	for _, side := range pot.Side {
 		remain = side.Add(member, remain)

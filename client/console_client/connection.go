@@ -30,10 +30,10 @@ func (c *Connection) Reply(msg *protocol.Message) {
 func (c *Connection) Handle(msg *protocol.Message) {
 	log.Println(console.Color(console.GREEN, fmt.Sprintf("[receive] %s", msg)))
 
-	switch msg.Payload.(type) {
+	switch msg.Payload().(type) {
 	case protocol.RequireBet:
 
-		r := msg.Payload.(protocol.RequireBet)
+		r := msg.Envelope.RequireBet
 
 		fmt.Printf("%s\n", r)
 
@@ -57,7 +57,7 @@ func (c *Connection) Handle(msg *protocol.Message) {
 
 	case protocol.RequireDiscard:
 
-		r := msg.Payload.(protocol.RequireDiscard)
+		r := msg.Envelope.RequireDiscard
 
 		seat := c.Server.Table.Seat(r.Pos)
 
@@ -72,7 +72,7 @@ func (c *Connection) Handle(msg *protocol.Message) {
 
 	case protocol.DealCards:
 
-		payload := msg.Payload.(protocol.DealCards)
+		payload := msg.Envelope.DealCards
 
 		if payload.Type.IsBoard() {
 			fmt.Printf("Dealt %s %s\n", payload.Type, payload.Cards.ConsoleString())
@@ -82,13 +82,13 @@ func (c *Connection) Handle(msg *protocol.Message) {
 
 	case protocol.MoveButton:
 
-		payload := msg.Payload.(protocol.MoveButton)
+		payload := msg.Envelope.MoveButton
 
 		fmt.Printf("Button is %d\n", payload.Pos+1)
 
 	case protocol.AddBet:
 
-		payload := msg.Payload.(protocol.AddBet)
+		payload := msg.Envelope.AddBet
 
 		player := c.Server.Table.Player(payload.Pos)
 
@@ -96,13 +96,13 @@ func (c *Connection) Handle(msg *protocol.Message) {
 
 	case protocol.PotSummary:
 
-		payload := msg.Payload.(protocol.PotSummary)
+		payload := msg.Envelope.PotSummary
 
 		fmt.Printf("Pot size: %.2f\nBoard: %s\n", payload.Amount, c.Server.Deal.Board.ConsoleString())
 
 	case protocol.ShowHand:
 
-		payload := msg.Payload.(protocol.ShowHand)
+		payload := msg.Envelope.ShowHand
 
 		player := c.Server.Table.Player(payload.Pos)
 
@@ -110,13 +110,13 @@ func (c *Connection) Handle(msg *protocol.Message) {
 
 	case protocol.Winner:
 
-		payload := msg.Payload.(protocol.Winner)
+		payload := msg.Envelope.Winner
 
 		fmt.Printf("Player %s won %.2f\n", payload.Player, payload.Amount)
 
 	case protocol.ChangeGame:
 
-		payload := msg.Payload.(protocol.ChangeGame)
+		payload := msg.Envelope.ChangeGame
 
 		fmt.Printf("Game changed to %s %s\n", payload.Type, payload.Limit)
 	}

@@ -21,12 +21,11 @@ func (nodeHTTP *NodeHTTP) WebSocketHandler(conn *websocket.Conn) {
 	q := conn.Request().URL.Query()
 	roomId := model.Id(q.Get("room_id"))
 	room := node.Rooms[roomId]
-	fmt.Printf("vars=%s\n", roomId)
 
 	id := model.Id(util.RandomUuid())
 	connection := &websocket_client.Connection{conn}
 	session := client.NewSession(connection)
-	session.Connection.Send(room)
+	//session.Connection.Send(room)
 
 	me := make(protocol.MessageChannel)
 

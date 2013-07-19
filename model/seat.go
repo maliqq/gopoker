@@ -10,7 +10,7 @@ import (
 )
 
 type Seat struct {
-	Player *Player
+	Player Player
 
 	State seat.State
 	Stack float64
@@ -33,7 +33,7 @@ func (this *Seat) String() string {
 
 func (this *Seat) Clear() {
 	this.State = seat.Empty
-	this.Player = nil
+	this.Player = ""
 	this.Stack = 0.
 	this.Bet = 0.
 }
@@ -100,7 +100,7 @@ func (this *Seat) AddBet(b *Bet) (float64, bool) {
 	return put, this.State == seat.AllIn
 }
 
-func (this *Seat) SetPlayer(player *Player) error {
+func (this *Seat) SetPlayer(player Player) error {
 	if this.State != seat.Empty {
 		return fmt.Errorf("Seat is not empty.")
 	}

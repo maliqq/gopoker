@@ -68,7 +68,7 @@ func (this *Play) receive() {
 		msg := <-this.Receive
 		log.Printf(console.Color(console.YELLOW, msg.String()))
 
-		switch v := msg.Payload().(type) {
+		switch msg.Payload().(type) {
 		case protocol.JoinTable:
 			join := msg.Envelope.JoinTable
 			_, err := this.Table.AddPlayer(join.Player, join.Pos, join.Amount)

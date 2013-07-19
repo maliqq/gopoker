@@ -72,14 +72,10 @@ func createPlay(me protocol.MessageChannel) *play.Play {
 
 	play := play.NewPlay(variation, stake, table)
 
-	ids := []model.Id{"A", "B", "C", "D", "E", "F", "G", "H", "I"}
+	players := []model.Player{"A", "B", "C", "D", "E", "F", "G", "H", "I"}
 	stack := 1500.
-	players := make([]*model.Player, 9)
-
-	for i, id := range ids {
-		player := model.NewPlayer(id)
-		players[i] = player
-
+	
+	for i, player := range players {
 		if i < size {
 			play.Receive <- protocol.NewJoinTable(player, i, stack)
 			play.Broadcast.Bind(player, me)

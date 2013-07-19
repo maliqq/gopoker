@@ -12,13 +12,13 @@ type MoveButton struct {
 }
 
 type JoinTable struct {
-	Player *model.Player
+	Player model.Player
 	Pos    int
 	Amount float64
 }
 
 type LeaveTable struct {
-	Player *model.Player
+	Player model.Player
 }
 
 func NewMoveButton(pos int) *Message {
@@ -29,7 +29,7 @@ func NewMoveButton(pos int) *Message {
 	)
 }
 
-func NewJoinTable(player *model.Player, pos int, amount float64) *Message {
+func NewJoinTable(player model.Player, pos int, amount float64) *Message {
 	return NewMessage(
 		JoinTable{
 			Player: player,
@@ -39,7 +39,7 @@ func NewJoinTable(player *model.Player, pos int, amount float64) *Message {
 	)
 }
 
-func NewLeaveTable(player *model.Player) *Message {
+func NewLeaveTable(player model.Player) *Message {
 	return NewMessage(
 		LeaveTable{
 			Player: player,

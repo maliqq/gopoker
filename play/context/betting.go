@@ -152,7 +152,7 @@ func (this *Betting) AddBet(newBet *model.Bet) error {
 				this.raiseCount++
 			}
 
-			this.Pot.Add(this.Seat.Player.Id, putAmount, isAllIn)
+			this.Pot.Add(this.Seat.Player, putAmount, isAllIn)
 		}
 	}
 
