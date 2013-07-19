@@ -1,0 +1,10 @@
+# cards, ranking, rank, value, high, kicker
+# four kind
+AhAdAcAs7d;high;four-kind;AhAdAcAs;Ah;7d
+8s8h8d8cKd;high;four-kind;8s8h8d8c;8s;Kd
+7s7h7d7cTsQs;high;four-kind;7s7h7d7c;7s;Qs
+# straight flush
+AhKhQhJhTh;high;straight-flush;AhKhQhJhTh;Ah;""
+7s6s5s4s3s;high;straight-flush;7s6s5s4s3s;7d;""
+3d4d5d6d7d;high;straight-flush;3d4d5d6d7d;7d;""
+3h4hAh5h2h;high;straight-flush;3h4hAh5h2h;5h;""

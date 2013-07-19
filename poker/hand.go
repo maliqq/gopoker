@@ -86,7 +86,7 @@ func (c *handCards) Detect(ranks []rankFunc) *Hand {
 }
 
 func (h *Hand) RankName() string {
-	return h.Rank.String()
+	return string(h.Rank)
 }
 
 func (h *Hand) RankTitle() string {

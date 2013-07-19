@@ -200,6 +200,20 @@ func (this *Cards) Combine(m int) GroupedCards {
 	return result
 }
 
+func (a Cards) Equal(b Cards) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	
+	for i, card := range a {
+		if !card.Equal(a[i]) {
+			return false
+		}
+	}
+
+	return true
+}
+
 func (a Cards) Compare(b Cards, ord Ordering) int {
 	if len(a) == len(b) {
 		for i, left := range a {
