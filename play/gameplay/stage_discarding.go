@@ -17,10 +17,10 @@ func (this *GamePlay) StartDiscardingRound() {
 	}
 }
 
-func (this *GamePlay) discard(p *model.Player, cards *poker.Cards) {
+func (this *GamePlay) discard(p model.Player, cards poker.Cards) {
 	pos, _ := this.Table.Pos(p)
 
-	cardsNum := len(*cards)
+	cardsNum := len(cards)
 
 	this.Broadcast.All <- protocol.NewDiscarded(pos, cardsNum)
 

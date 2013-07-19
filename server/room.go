@@ -3,16 +3,24 @@ package server
 import (
 	"gopoker/model"
 	"gopoker/play"
-	"gopoker/server/service"
+	"gopoker/server/rpc_service"
 )
 
 type Room struct {
-	Id model.Id
+	Id string
 	*play.Play
 }
 
-func NewRoom(createRoom *service.CreateRoom) *Room {
-	variation := createRoom.Variation()
+func NewRoom(createRoom *rpc_service.CreateRoom) *Room {
+	var variation model.Variation
+	if createRoom.Game != nil {
+		variation = createRoom.Game.WithDefaults()
+	}
+
+	if createRoom.Mix != nil {
+		variation = createRoom.Mix.WithDefaults()
+	}
+
 	tableSize := createRoom.TableSize
 
 	var maxTableSize int

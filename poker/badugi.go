@@ -50,10 +50,8 @@ func (hc *handCards) isBadugiOne() *Hand {
 
 func (hc *handCards) isBadugiFour() *Hand {
 	if len(hc.groupKind) == 4 && len(hc.groupSuit) == 4 {
-		cards := hc.cardsHelper.Arrange()
-
 		return &Hand{
-			Value: *cards,
+			Value: hc.Arrange(),
 		}
 	}
 
@@ -61,8 +59,8 @@ func (hc *handCards) isBadugiFour() *Hand {
 }
 
 func (hc *handCards) isBadugiThree() *Hand {
-	paired, hasPaired := (*hc.paired)[2]
-	suited, hasSuited := (*hc.suited)[2]
+	paired, hasPaired := hc.paired[2]
+	suited, hasSuited := hc.suited[2]
 
 	if !hasPaired && !hasSuited {
 		return nil
@@ -75,7 +73,7 @@ func (hc *handCards) isBadugiThree() *Hand {
 
 		a = &cards[0]
 
-		diff := hc.Cards.Diff(&cards)
+		diff := hc.Cards.Diff(cards)
 
 		for _, card := range diff {
 			if a.kind != card.kind {
@@ -99,7 +97,7 @@ func (hc *handCards) isBadugiThree() *Hand {
 	} else if !hasPaired && len(suited) == 1 {
 		a = suited[0].Min(hc.Ordering)
 
-		for _, card := range hc.Cards.Diff(&suited[0]) {
+		for _, card := range hc.Cards.Diff(suited[0]) {
 			if a.suit != card.suit {
 				n := card
 				if b == nil {
@@ -128,13 +126,13 @@ func (hc *handCards) isBadugiThree() *Hand {
 func (hc *handCards) isBadugiTwo() *Hand {
 	var a, b *Card
 
-	sets, hasPaired := (*hc.paired)[3]
-	suited, hasSuited := (*hc.suited)[3]
+	sets, hasPaired := hc.paired[3]
+	suited, hasSuited := hc.suited[3]
 
 	if hasPaired {
 		cards := sets[0]
 
-		diff := hc.Cards.Diff(&cards)
+		diff := hc.Cards.Diff(cards)
 
 		b = &diff[0]
 
@@ -149,7 +147,7 @@ func (hc *handCards) isBadugiTwo() *Hand {
 	} else if hasSuited {
 		cards := suited[0]
 
-		diff := hc.Cards.Diff(&cards)
+		diff := hc.Cards.Diff(cards)
 
 		a = &diff[0]
 
@@ -168,7 +166,7 @@ func (hc *handCards) isBadugiTwo() *Hand {
 		a = cards.Min(hc.Ordering)
 
 		c := Cards{}
-		for _, card := range hc.Cards.Diff(&cards) {
+		for _, card := range hc.Cards.Diff(cards) {
 			if a.suit != card.suit && a.kind != card.kind {
 				c = append(c, card)
 			}
@@ -182,7 +180,7 @@ func (hc *handCards) isBadugiTwo() *Hand {
 		a = &cards[0]
 
 		c := Cards{}
-		for _, card := range hc.Cards.Diff(&cards) {
+		for _, card := range hc.Cards.Diff(cards) {
 			if a.kind != card.kind {
 				c = append(c, card)
 			}

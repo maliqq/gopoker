@@ -24,6 +24,7 @@ func TestGameRotation(t *testing.T) {
 	if g.Type != mix.Games[0].Type {
 		t.Fatalf("should be still first game")
 	}
+
 	g = rotation.Next()
 	t.Logf("game after N=%d: %s", RotateEvery, g)
 	if g.Type != mix.Games[1].Type {

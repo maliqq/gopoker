@@ -11,20 +11,20 @@ type DealCards struct {
 	Type  deal.Type
 }
 
-func NewDealPocket(pos int, cards *poker.Cards, dealingType deal.Type) *Message {
+func NewDealPocket(pos int, cards poker.Cards, dealingType deal.Type) *Message {
 	return NewMessage(
 		DealCards{
 			Pos:   pos,
-			Cards: *cards,
+			Cards: cards,
 			Type:  dealingType,
 		},
 	)
 }
 
-func NewDealShared(cards *poker.Cards, dealingType deal.Type) *Message {
+func NewDealShared(cards poker.Cards, dealingType deal.Type) *Message {
 	return NewMessage(
 		DealCards{
-			Cards: *cards,
+			Cards: cards,
 			Type:  dealingType,
 		},
 	)

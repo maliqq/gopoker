@@ -7,7 +7,7 @@ import (
 	"gopoker/protocol"
 )
 
-type ShowdownHands map[model.Id]*poker.Hand
+type ShowdownHands map[model.Player]*poker.Hand
 
 func (this *GamePlay) ShowHands(ranking ranking.Ranking, withBoard bool) *ShowdownHands {
 	d := this.Deal
@@ -17,7 +17,7 @@ func (this *GamePlay) ShowHands(ranking ranking.Ranking, withBoard bool) *Showdo
 	for _, pos := range this.Table.AllSeats().InPot() {
 		player := this.Table.Player(pos)
 		if pocket, hand := d.Rank(player, ranking, withBoard); hand != nil {
-			hands[player.Id] = hand
+			hands[player] = hand
 
 			this.Broadcast.All <- protocol.NewShowHand(pos, pocket, hand)
 		}
@@ -26,8 +26,8 @@ func (this *GamePlay) ShowHands(ranking ranking.Ranking, withBoard bool) *Showdo
 	return &hands
 }
 
-func best(sidePot *model.SidePot, hands *ShowdownHands) (model.Id, *poker.Hand) {
-	var winner model.Id
+func best(sidePot *model.SidePot, hands *ShowdownHands) (model.Player, *poker.Hand) {
+	var winner model.Player
 	var best *poker.Hand
 
 	for member, _ := range sidePot.Members {
@@ -51,7 +51,7 @@ func (this *GamePlay) Winners(highHands *ShowdownHands, lowHands *ShowdownHands)
 	for _, sidePot := range this.Betting.Pot.SidePots() {
 		total := sidePot.Total()
 
-		var winnerLow, winnerHigh model.Id
+		var winnerLow, winnerHigh model.Player
 		var bestLow *poker.Hand
 
 		if lo {
@@ -62,7 +62,7 @@ func (this *GamePlay) Winners(highHands *ShowdownHands, lowHands *ShowdownHands)
 			winnerHigh, _ = best(sidePot, highHands)
 		}
 
-		winners := map[model.Id]float64{}
+		winners := map[model.Player]float64{}
 
 		if split && bestLow != nil {
 			winners[winnerLow] = total / 2.

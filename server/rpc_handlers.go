@@ -1,10 +1,10 @@
 package server
 
 import (
-	"gopoker/server/service"
+	"gopoker/server/rpc_service"
 )
 
-func (n *NodeRPC) CreateRoom(createRoom *service.CreateRoom, r *service.CallResult) error {
+func (n *NodeRPC) CreateRoom(createRoom *rpc_service.CreateRoom, r *rpc_service.CallResult) error {
 	room := NewRoom(createRoom)
 
 	n.Node.AddRoom(room)
@@ -12,7 +12,7 @@ func (n *NodeRPC) CreateRoom(createRoom *service.CreateRoom, r *service.CallResu
 	return nil
 }
 
-func (n *NodeRPC) DeleteRoom(requestRoom *service.RequestRoom, r *service.CallResult) error {
+func (n *NodeRPC) DeleteRoom(requestRoom *rpc_service.RequestRoom, r *rpc_service.CallResult) error {
 	room := n.Node.Room(requestRoom.Id)
 
 	n.Node.RemoveRoom(room)
@@ -21,7 +21,7 @@ func (n *NodeRPC) DeleteRoom(requestRoom *service.RequestRoom, r *service.CallRe
 }
 
 // send protocol message to room subscribers
-func (n *NodeRPC) NotifyRoom(notifyRoom *service.NotifyRoom, r *service.CallResult) error {
+func (n *NodeRPC) NotifyRoom(notifyRoom *rpc_service.NotifyRoom, r *rpc_service.CallResult) error {
 	room := n.Node.Room(notifyRoom.Id)
 	msg := notifyRoom.Message
 
@@ -30,7 +30,7 @@ func (n *NodeRPC) NotifyRoom(notifyRoom *service.NotifyRoom, r *service.CallResu
 	return nil
 }
 
-func (n *NodeRPC) StartRoom(requestRoom *service.RequestRoom, r *service.CallResult) error {
+func (n *NodeRPC) StartRoom(requestRoom *rpc_service.RequestRoom, r *rpc_service.CallResult) error {
 	room := n.Node.Room(requestRoom.Id)
 
 	room.Start()
@@ -38,7 +38,7 @@ func (n *NodeRPC) StartRoom(requestRoom *service.RequestRoom, r *service.CallRes
 	return nil
 }
 
-func (n *NodeRPC) PausePlay(requestRoom *service.RequestRoom, r *service.CallResult) error {
+func (n *NodeRPC) PausePlay(requestRoom *rpc_service.RequestRoom, r *rpc_service.CallResult) error {
 	room := n.Node.Room(requestRoom.Id)
 
 	room.Pause()
@@ -46,7 +46,7 @@ func (n *NodeRPC) PausePlay(requestRoom *service.RequestRoom, r *service.CallRes
 	return nil
 }
 
-func (n *NodeRPC) ResumePlay(requestRoom *service.RequestRoom, r *service.CallResult) error {
+func (n *NodeRPC) ResumePlay(requestRoom *rpc_service.RequestRoom, r *rpc_service.CallResult) error {
 	room := n.Node.Room(requestRoom.Id)
 
 	room.Resume()
@@ -54,7 +54,7 @@ func (n *NodeRPC) ResumePlay(requestRoom *service.RequestRoom, r *service.CallRe
 	return nil
 }
 
-func (n *NodeRPC) CloseRoom(requestRoom *service.RequestRoom, r *service.CallResult) error {
+func (n *NodeRPC) CloseRoom(requestRoom *rpc_service.RequestRoom, r *rpc_service.CallResult) error {
 	room := n.Node.Room(requestRoom.Id)
 
 	room.Close()

@@ -17,8 +17,9 @@ type handCards struct {
 	groupKind GroupedCards
 	groupSuit GroupedCards
 
-	paired *map[int]GroupedCards
-	suited *map[int]GroupedCards
+	// fixme pointers
+	paired map[int]GroupedCards
+	suited map[int]GroupedCards
 }
 
 type Hand struct {
@@ -55,6 +56,10 @@ func NewHandCards(cards *Cards, ord Ordering, reversed bool) *handCards {
 	return &hc
 }
 
+func (hc *handCards) String() string {
+	return fmt.Sprintf("gaps=%s paired=%s suited=%s", hc.gaps, hc.paired, hc.suited)
+}
+
 type rankFunc func(*handCards) (hand.Rank, *Hand)
 
 func (c *handCards) Detect(ranks []rankFunc) *Hand {
@@ -71,7 +76,7 @@ func (c *handCards) Detect(ranks []rankFunc) *Hand {
 				hand.High = Cards{hand.Value[0]}
 			}
 			if hand.kicker {
-				hand.Kicker = *c.cardsHelper.Kickers(&hand.Value)
+				hand.Kicker = c.cardsHelper.Kickers(hand.Value)
 			}
 
 			hand.handCards = c
@@ -86,7 +91,7 @@ func (c *handCards) Detect(ranks []rankFunc) *Hand {
 }
 
 func (h *Hand) RankName() string {
-	return h.Rank.String()
+	return string(h.Rank)
 }
 
 func (h *Hand) RankTitle() string {

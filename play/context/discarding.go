@@ -23,6 +23,7 @@ func NewDiscarding(d *model.Deal) *Discarding {
 		Discard:  make(chan *protocol.Message),
 	}
 }
+
 func (this *Discarding) RequireDiscard(pos int, seat *model.Seat) *protocol.Message {
 	this.Seat = seat
 	this.Required.Pos = pos
@@ -33,7 +34,7 @@ func (this *Discarding) Start() {
 	for {
 		select {
 		case msg := <-this.Discard:
-			payload := msg.Payload.(protocol.DiscardCards)
+			payload := msg.Envelope.DiscardCards
 			seat := this.Seat
 			cards := payload.Cards
 

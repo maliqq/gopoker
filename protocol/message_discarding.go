@@ -31,11 +31,11 @@ func NewDiscarded(pos int, cardsNum int) *Message {
 	)
 }
 
-func NewDiscardCards(pos int, cards *poker.Cards) *Message {
+func NewDiscardCards(pos int, cards poker.Cards) *Message {
 	return NewMessage(
 		DiscardCards{
 			Pos:   pos,
-			Cards: *cards,
+			Cards: cards,
 		},
 	)
 }

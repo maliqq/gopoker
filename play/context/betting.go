@@ -70,7 +70,7 @@ Loop:
 			break Loop
 
 		case msg := <-this.Bet:
-			newBet := msg.Payload.(protocol.AddBet).Bet
+			newBet := msg.Envelope.AddBet.Bet
 
 			err := this.AddBet(&newBet)
 
@@ -152,7 +152,7 @@ func (this *Betting) AddBet(newBet *model.Bet) error {
 				this.raiseCount++
 			}
 
-			this.Pot.Add(this.Seat.Player.Id, putAmount, isAllIn)
+			this.Pot.Add(this.Seat.Player, putAmount, isAllIn)
 		}
 	}
 

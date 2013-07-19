@@ -68,9 +68,9 @@ func (this *Play) receive() {
 		msg := <-this.Receive
 		log.Printf(console.Color(console.YELLOW, msg.String()))
 
-		switch msg.Payload.(type) {
+		switch msg.Payload().(type) {
 		case protocol.JoinTable:
-			join := msg.Payload.(protocol.JoinTable)
+			join := msg.Envelope.JoinTable
 			_, err := this.Table.AddPlayer(join.Player, join.Pos, join.Amount)
 			if err != nil {
 				log.Printf("[protocol] error: %s", err)
@@ -78,7 +78,7 @@ func (this *Play) receive() {
 			//this.Broadcast.Except(join.Player) <- join
 
 		case protocol.LeaveTable:
-			leave := msg.Payload.(protocol.LeaveTable)
+			leave := msg.Envelope.LeaveTable
 			this.Table.RemovePlayer(leave.Player)
 
 			//this.Broadcast.Except(join.Player) <- leave
@@ -86,13 +86,13 @@ func (this *Play) receive() {
 			// TODO: fold & autoplay
 
 		case protocol.SitOut:
-			sitOut := msg.Payload.(protocol.SitOut)
+			sitOut := msg.Envelope.SitOut
 			this.Table.Seat(sitOut.Pos).State = seat.Idle
 
 			// TODO: fold
 
 		case protocol.ComeBack:
-			comeBack := msg.Payload.(protocol.ComeBack)
+			comeBack := msg.Envelope.ComeBack
 			this.Table.Seat(comeBack.Pos).State = seat.Ready
 
 		case protocol.AddBet:

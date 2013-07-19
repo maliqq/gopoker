@@ -13,6 +13,7 @@ import (
 	"gopoker/model"
 	"gopoker/poker"
 	"gopoker/poker/ranking"
+	"gopoker/server/http_service"
 )
 
 func (nodeHTTP *NodeHTTP) Rooms(resp http.ResponseWriter, req *http.Request) {
@@ -24,35 +25,9 @@ func (nodeHTTP *NodeHTTP) Rooms(resp http.ResponseWriter, req *http.Request) {
 func (nodeHTTP *NodeHTTP) Room(resp http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
 	id := vars["room"]
-	room := nodeHTTP.Node.Room(model.Id(id))
+	room := nodeHTTP.Node.Room(id)
 
 	nodeHTTP.RespondJSON(resp, room)
-}
-
-type CompareResult struct {
-	A      *poker.Hand
-	B      *poker.Hand
-	Board  *poker.Cards
-	Result int
-}
-
-type OddsResult struct {
-	A     *poker.Cards
-	B     *poker.Cards
-	Total int
-	Wins  float64
-	Ties  float64
-	Loses float64
-}
-
-type pocketHand struct {
-	Pocket poker.Cards
-	Hand   *poker.Hand
-}
-
-type dealHand struct {
-	Board   poker.Cards
-	Pockets []pocketHand
 }
 
 func (nodeHTTP *NodeHTTP) DetectHand(resp http.ResponseWriter, req *http.Request) {
@@ -71,7 +46,7 @@ func (nodeHTTP *NodeHTTP) DetectHand(resp http.ResponseWriter, req *http.Request
 			return
 		}
 
-		hand, err := poker.Detect[ranking](cards)
+		hand, err := poker.Detect[ranking](&cards)
 		if err != nil {
 			resp.Write([]byte(err.Error()))
 			return
@@ -93,12 +68,12 @@ func (nodeHTTP *NodeHTTP) CompareHands(resp http.ResponseWriter, req *http.Reque
 	dealer.Burn(a)
 	dealer.Burn(b)
 	board := dealer.Share(5)
-	c1 := append(*a, *board...)
-	c2 := append(*b, *board...)
+	c1 := append(a, board...)
+	c2 := append(b, board...)
 	h1, _ := poker.Detect[ranking.High](&c1)
 	h2, _ := poker.Detect[ranking.High](&c2)
 
-	s, _ := json.Marshal(&CompareResult{
+	s, _ := json.Marshal(&http_service.CompareResult{
 		A:      h1,
 		B:      h2,
 		Board:  board,
@@ -121,8 +96,8 @@ func (nodeHTTP *NodeHTTP) CalculateOdds(resp http.ResponseWriter, req *http.Requ
 		dealer.Burn(a)
 		dealer.Burn(b)
 		board := dealer.Share(5)
-		c1 := append(*a, *board...)
-		c2 := append(*b, *board...)
+		c1 := append(a, board...)
+		c2 := append(b, board...)
 		h1, _ := poker.Detect[ranking.High](&c1)
 		h2, _ := poker.Detect[ranking.High](&c2)
 
@@ -138,7 +113,7 @@ func (nodeHTTP *NodeHTTP) CalculateOdds(resp http.ResponseWriter, req *http.Requ
 		}
 	}
 
-	result := &OddsResult{
+	result := &http_service.OddsResult{
 		A:     a,
 		B:     b,
 		Total: total,
@@ -154,19 +129,19 @@ func (nodeHTTP *NodeHTTP) RandomHand(resp http.ResponseWriter, req *http.Request
 	dealer := model.NewDealer()
 	board := dealer.Share(5)
 
-	h := make([]pocketHand, 9)
+	h := make([]http_service.PocketHand, 9)
 	i := 0
 	for i < 9 {
 		pocket := dealer.Deal(2)
-		cards := append(*pocket, *board...)
+		cards := append(pocket, board...)
 		//log.Printf("dealer=%s", dealer.String())
 		hand, _ := poker.Detect[ranking.High](&cards)
-		h[i].Pocket = *pocket
+		h[i].Pocket = pocket
 		h[i].Hand = hand
 		i++
 	}
-	deal := dealHand{
-		Board:   *board,
+	deal := http_service.DealHand{
+		Board:   board,
 		Pockets: h,
 	}
 

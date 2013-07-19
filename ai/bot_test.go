@@ -27,7 +27,7 @@ func TestBot(t *testing.T) {
 	}
 
 	args := &service.CreateRoom{
-		Id:        model.Id(roomId),
+		Id:        roomId,
 		TableSize: tableSize,
 		BetSize:   10.,
 		Game:      model.NewGame(game.Texas, game.FixedLimit),
