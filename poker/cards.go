@@ -122,16 +122,16 @@ func (this Cards) Shuffle() Cards {
 	return cards
 }
 
-func (a *Cards) Diff(b *Cards) Cards {
-	result := make(Cards, len(*a))
-	present := make(map[int]bool, len(*b))
+func (a Cards) Diff(b Cards) Cards {
+	result := make(Cards, len(a))
+	present := make(map[int]bool, len(b))
 
-	for _, card := range *b {
+	for _, card := range b {
 		present[card.Int()] = true
 	}
 
 	i := 0
-	for _, card := range *a {
+	for _, card := range a {
 		if _, err := present[card.Int()]; err == false {
 			result[i] = card
 			i++
@@ -143,21 +143,21 @@ func (a *Cards) Diff(b *Cards) Cards {
 
 type groupFunc func(card *Card, prev *Card) int
 
-func (this *Cards) Group(test groupFunc) GroupedCards {
-	length := len(*this)
+func (this Cards) Group(test groupFunc) GroupedCards {
+	length := len(this)
 	groups := make(GroupedCards, length)
 	group := make(Cards, length)
 
 	j, k := 0, 0
 	for i := 0; i < length; i++ {
-		card := (*this)[i]
+		card := this[i]
 
 		if i == 0 {
 			group[j] = card
 			j++
 
 		} else {
-			prev := (*this)[i-1]
+			prev := this[i-1]
 			result := test(&card, &prev)
 
 			if result == 1 {
@@ -182,8 +182,8 @@ func (this *Cards) Group(test groupFunc) GroupedCards {
 	return groups[0:k]
 }
 
-func (this *Cards) Combine(m int) GroupedCards {
-	n := len(*this)
+func (this Cards) Combine(m int) GroupedCards {
+	n := len(this)
 
 	indexes := util.Comb(n, m)
 
@@ -192,7 +192,7 @@ func (this *Cards) Combine(m int) GroupedCards {
 	for i, index := range indexes {
 		cards := make(Cards, m)
 		for i, j := range index {
-			cards[i] = (*this)[j]
+			cards[i] = this[j]
 		}
 		result[i] = cards
 	}

@@ -76,7 +76,7 @@ func (c *handCards) Detect(ranks []rankFunc) *Hand {
 				hand.High = Cards{hand.Value[0]}
 			}
 			if hand.kicker {
-				hand.Kicker = *c.cardsHelper.Kickers(&hand.Value)
+				hand.Kicker = c.cardsHelper.Kickers(hand.Value)
 			}
 
 			hand.handCards = c

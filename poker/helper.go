@@ -63,15 +63,15 @@ func (this *cardsHelper) Gaps() GroupedCards {
 	})
 }
 
-func (this *cardsHelper) Kickers(cards *Cards) *Cards {
-	length := 5 - len(*cards)
+func (this *cardsHelper) Kickers(cards Cards) Cards {
+	length := 5 - len(cards)
 
 	diff := this.Cards.Diff(cards)
 
 	result := diff.Arrange(this.Ordering)
 	result = result[0:length]
 
-	return &result
+	return result
 }
 
 func (this *cardsHelper) GroupByKind() GroupedCards {
