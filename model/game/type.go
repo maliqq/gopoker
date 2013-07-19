@@ -40,3 +40,43 @@ const (
 	SingleDraw Group = "single-draw"
 	TripleDraw Group = "triple-draw"
 )
+
+var (
+	limitedGameNames = map[LimitedGame]string {
+		Texas: "Texas",
+		Omaha: "Omaha",
+		Omaha8: "Omaha Hi/Lo",
+		Stud: "Stud",
+		Stud8: "Stud Hi/Lo",
+		Razz: "Razz",
+		London: "London",
+		FiveCard: "5-card",
+		Single27: "Single 2-7",
+		Triple27: "Triple 2-7",
+		Badugi: "Badugi",
+	}
+
+	mixedGameNames = map[MixedGame]string {
+		Horse: "HORSE",
+		Eight: "8-game",
+	}
+
+	groupNames = map[Group]string {
+		Holdem: "Holdem",
+		SevenCard: "Seven Card",
+		SingleDraw: "Single Draw",
+		TripleDraw: "Triple Draw",
+	}
+)
+
+func (l LimitedGame) HumanString() string {
+	return limitedGameNames[l]
+}
+
+func (m MixedGame) HumanString() string {
+	return mixedGameNames[m]
+}
+
+func (g Group) HumanString() string {
+	return groupNames[g]
+}

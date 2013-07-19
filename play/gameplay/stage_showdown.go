@@ -9,7 +9,7 @@ import (
 
 type ShowdownHands map[model.Player]*poker.Hand
 
-func (this *GamePlay) ShowHands(ranking ranking.Ranking, withBoard bool) *ShowdownHands {
+func (this *GamePlay) ShowHands(ranking ranking.Ranking, withBoard bool) ShowdownHands {
 	d := this.Deal
 
 	hands := ShowdownHands{}
@@ -23,15 +23,15 @@ func (this *GamePlay) ShowHands(ranking ranking.Ranking, withBoard bool) *Showdo
 		}
 	}
 
-	return &hands
+	return hands
 }
 
-func best(sidePot *model.SidePot, hands *ShowdownHands) (model.Player, *poker.Hand) {
+func best(sidePot *model.SidePot, hands ShowdownHands) (model.Player, *poker.Hand) {
 	var winner model.Player
 	var best *poker.Hand
 
 	for member, _ := range sidePot.Members {
-		hand, hasHand := (*hands)[member]
+		hand, hasHand := hands[member]
 
 		if hasHand && (best == nil || hand.Compare(best) > 0) {
 			winner = member
@@ -42,7 +42,7 @@ func best(sidePot *model.SidePot, hands *ShowdownHands) (model.Player, *poker.Ha
 	return winner, best
 }
 
-func (this *GamePlay) Winners(highHands *ShowdownHands, lowHands *ShowdownHands) {
+func (this *GamePlay) Winners(highHands ShowdownHands, lowHands ShowdownHands) {
 	hi := highHands != nil
 	lo := lowHands != nil
 

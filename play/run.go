@@ -1,6 +1,10 @@
 package play
 
 import (
+	"log"
+)
+
+import (
 	"gopoker/play/command"
 	"gopoker/play/mode"
 )
@@ -39,9 +43,11 @@ Loop:
 }
 
 func (play *Play) RunMode() {
+	log.Printf("[run] mode %s\n", play.Mode)
 	ByMode[play.Mode].Proceed(play)
 }
 
 func (play *Play) RunStreet() {
+	log.Printf("[run] street %s\n", play.Street)
 	ByStreet[play.Street].Proceed(play)
 }

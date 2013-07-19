@@ -41,7 +41,6 @@ func PostBlinds(play *Play) {
 
 func StartStreets(play *Play) {
 	for _, street := range street.Get(play.Game.Group) {
-		log.Printf("[play] %s\n", street)
 		play.Street = street
 		play.RunStreet()
 	}
@@ -102,7 +101,7 @@ func BigBets(play *Play) {
 func Showdown(play *Play) {
 	log.Println("[play] showdown")
 
-	var highHands, lowHands *gameplay.ShowdownHands
+	var highHands, lowHands gameplay.ShowdownHands
 
 	if play.Game.Lo != "" {
 		lowHands = play.ShowHands(play.Game.Lo, play.Game.HasBoard)
