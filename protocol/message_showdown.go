@@ -1,8 +1,8 @@
 package protocol
 
 import (
-	"gopoker/poker"
 	"gopoker/model"
+	"gopoker/poker"
 )
 
 // hand info

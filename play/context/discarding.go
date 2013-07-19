@@ -23,6 +23,7 @@ func NewDiscarding(d *model.Deal) *Discarding {
 		Discard:  make(chan *protocol.Message),
 	}
 }
+
 func (this *Discarding) RequireDiscard(pos int, seat *model.Seat) *protocol.Message {
 	this.Seat = seat
 	this.Required.Pos = pos

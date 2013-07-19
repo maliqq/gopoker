@@ -12,7 +12,15 @@ type Room struct {
 }
 
 func NewRoom(createRoom *service.CreateRoom) *Room {
-	variation := createRoom.Variation()
+	var variation model.Variation
+	if createRoom.Game != nil {
+		variation = createRoom.Game.WithDefaults()
+	}
+
+	if createRoom.Mix != nil {
+		variation = createRoom.Mix.WithDefaults()
+	}
+
 	tableSize := createRoom.TableSize
 
 	var maxTableSize int

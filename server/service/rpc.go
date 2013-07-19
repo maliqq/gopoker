@@ -18,18 +18,6 @@ type CreateRoom struct {
 	Mix       *model.Mix
 }
 
-func (c CreateRoom) Variation() model.Variation {
-	if c.Game != nil {
-		return c.Game.WithDefaults()
-	}
-
-	if c.Mix != nil {
-		return c.Mix.WithDefaults()
-	}
-
-	return nil
-}
-
 type RequestRoom struct {
 	Id string
 }

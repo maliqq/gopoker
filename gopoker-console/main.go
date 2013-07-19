@@ -74,7 +74,7 @@ func createPlay(me protocol.MessageChannel) *play.Play {
 
 	players := []model.Player{"A", "B", "C", "D", "E", "F", "G", "H", "I"}
 	stack := 1500.
-	
+
 	for i, player := range players {
 		if i < size {
 			play.Receive <- protocol.NewJoinTable(player, i, stack)

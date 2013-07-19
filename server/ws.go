@@ -15,9 +15,12 @@ func (nodeHTTP *NodeHTTP) WebSocketHandler(conn *websocket.Conn) {
 	node := nodeHTTP.Node
 	q := conn.Request().URL.Query()
 	roomId := q.Get("room_id")
-	room, found := node.Rooms[roomId]
+	_, found := node.Rooms[roomId]
 
-	
+	if !found {
+		// 404
+	}
+
 	id := util.RandomUuid()
 	connection := &websocket_client.Connection{conn}
 	session := client.NewSession(connection)

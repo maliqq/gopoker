@@ -15,26 +15,26 @@ const (
 type Payload interface{}
 
 type Envelope struct {
-	JoinTable *JoinTable
+	JoinTable  *JoinTable
 	LeaveTable *LeaveTable
-	SitOut *SitOut
-	ComeBack *ComeBack
+	SitOut     *SitOut
+	ComeBack   *ComeBack
 
 	MoveButton *MoveButton
 
 	RequireBet *RequireBet
-	AddBet *AddBet
+	AddBet     *AddBet
 
 	DealCards *DealCards
 
 	RequireDiscard *RequireDiscard
-	Discarded *Discarded
-	DiscardCards *DiscardCards
+	Discarded      *Discarded
+	DiscardCards   *DiscardCards
 
 	PotSummary *PotSummary
 	ChangeGame *ChangeGame
 
-	ShowHand *ShowHand
+	ShowHand  *ShowHand
 	ShowCards *ShowCards
 
 	Winner *Winner
@@ -57,54 +57,54 @@ func NewMessage(payload Payload) *Message {
 	}
 
 	envelope := Envelope{}
-/*
-	value := reflect.ValueOf(envelope)
-	field := value.FieldByName(typeName)
-	field.SetPointer(&payload)
-*/
+	/*
+		value := reflect.ValueOf(envelope)
+		field := value.FieldByName(typeName)
+		field.SetPointer(&payload)
+	*/
 	switch v := payload.(type) {
 	case JoinTable:
 		envelope.JoinTable = &v
-	
+
 	case LeaveTable:
 		envelope.LeaveTable = &v
-	
+
 	case SitOut:
 		envelope.SitOut = &v
-	
+
 	case ComeBack:
 		envelope.ComeBack = &v
-	
+
 	case MoveButton:
 		envelope.MoveButton = &v
-	
+
 	case RequireBet:
 		envelope.RequireBet = &v
-	
+
 	case AddBet:
 		envelope.AddBet = &v
-	
+
 	case DealCards:
 		envelope.DealCards = &v
-	
+
 	case RequireDiscard:
 		envelope.RequireDiscard = &v
 
 	case Discarded:
 		envelope.Discarded = &v
-	
+
 	case DiscardCards:
 		envelope.DiscardCards = &v
-	
+
 	case PotSummary:
 		envelope.PotSummary = &v
-	
+
 	case ChangeGame:
 		envelope.ChangeGame = &v
-	
+
 	case ShowHand:
 		envelope.ShowHand = &v
-	
+
 	case ShowCards:
 		envelope.ShowCards = &v
 
