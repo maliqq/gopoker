@@ -61,8 +61,8 @@ func (hc *handCards) isBadugiFour() *Hand {
 }
 
 func (hc *handCards) isBadugiThree() *Hand {
-	paired, hasPaired := (*hc.paired)[2]
-	suited, hasSuited := (*hc.suited)[2]
+	paired, hasPaired := hc.paired[2]
+	suited, hasSuited := hc.suited[2]
 
 	if !hasPaired && !hasSuited {
 		return nil
@@ -128,8 +128,8 @@ func (hc *handCards) isBadugiThree() *Hand {
 func (hc *handCards) isBadugiTwo() *Hand {
 	var a, b *Card
 
-	sets, hasPaired := (*hc.paired)[3]
-	suited, hasSuited := (*hc.suited)[3]
+	sets, hasPaired := hc.paired[3]
+	suited, hasSuited := hc.suited[3]
 
 	if hasPaired {
 		cards := sets[0]

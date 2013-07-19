@@ -92,7 +92,7 @@ func (hc *handCards) isStraightFlush() *Hand {
 }
 
 func (hc *handCards) isFourKind() *Hand {
-	quads, contains := (*hc.paired)[4]
+	quads, contains := hc.paired[4]
 	if contains == false {
 		return nil
 	}
@@ -109,7 +109,7 @@ func (hc *handCards) isFourKind() *Hand {
 }
 
 func (hc *handCards) isFullHouse() *Hand {
-	sets, containSets := (*hc.paired)[3]
+	sets, containSets := hc.paired[3]
 	if !containSets {
 		return nil
 	}
@@ -123,7 +123,7 @@ func (hc *handCards) isFullHouse() *Hand {
 		minor = (*sorted)[1]
 
 	} else {
-		pairs, containPairs := (*hc.paired)[2]
+		pairs, containPairs := hc.paired[2]
 		if !containPairs {
 			return nil
 		}
@@ -141,7 +141,7 @@ func (hc *handCards) isFullHouse() *Hand {
 }
 
 func (hc *handCards) isFlush() *Hand {
-	for count, group := range *hc.suited {
+	for count, group := range hc.suited {
 		if count >= 5 {
 			cards := group[0].Arrange(hc.Ordering)
 
@@ -172,7 +172,7 @@ func (hc *handCards) isStraight() *Hand {
 }
 
 func (hc *handCards) isThreeKind() *Hand {
-	sets, containSets := (*hc.paired)[3]
+	sets, containSets := hc.paired[3]
 	if !containSets || len(sets) != 1 {
 		return nil
 	}
@@ -185,7 +185,7 @@ func (hc *handCards) isThreeKind() *Hand {
 }
 
 func (hc *handCards) isTwoPair() *Hand {
-	pairs, containsPairs := (*hc.paired)[2]
+	pairs, containsPairs := hc.paired[2]
 	if !containsPairs || len(pairs) < 2 {
 		return nil
 	}
@@ -201,7 +201,7 @@ func (hc *handCards) isTwoPair() *Hand {
 }
 
 func (hc *handCards) isOnePair() *Hand {
-	pairs, containsPairs := (*hc.paired)[2]
+	pairs, containsPairs := hc.paired[2]
 	if !containsPairs || len(pairs) != 1 {
 		return nil
 	}

@@ -37,7 +37,7 @@ func (g *GroupedCards) ArrangeByMax(ord Ordering) *GroupedCards {
 	return &groups
 }
 
-func (g *GroupedCards) Count() *map[int]GroupedCards {
+func (g *GroupedCards) Count() map[int]GroupedCards {
 	count := map[int]GroupedCards{}
 
 	for _, group := range *g {
@@ -49,5 +49,5 @@ func (g *GroupedCards) Count() *map[int]GroupedCards {
 		count[length] = append(count[length], group)
 	}
 
-	return &count
+	return count
 }

@@ -84,5 +84,5 @@ func TestGroupedCards(t *testing.T) {
 	c4, _ := ParseCards("Js")
 	groups := GroupedCards{*c1, *c2, *c3, *c4}
 	result := groups.Count()
-	t.Logf("result=%s", *result)
+	t.Logf("result=%s", result)
 }
