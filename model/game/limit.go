@@ -9,13 +9,13 @@ const (
 )
 
 var (
-  limitNames = map[Limit]string {
-    FixedLimit: "Fixed Limit",
-    PotLimit: "Pot Limit",
-    NoLimit: "No Limit",
-  }
+	limitNames = map[Limit]string{
+		FixedLimit: "Fixed Limit",
+		PotLimit:   "Pot Limit",
+		NoLimit:    "No Limit",
+	}
 )
 
 func (l Limit) HumanString() string {
-  return limitNames[l]
+	return limitNames[l]
 }

@@ -1,9 +1,9 @@
 package model
 
 import (
+	_ "container/ring"
 	"fmt"
 	_ "net"
-	_ "container/ring"
 )
 
 import (

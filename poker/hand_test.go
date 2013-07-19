@@ -1,10 +1,10 @@
 package poker
 
 import (
-	"testing"
-	"os"
-	"io"
 	"encoding/csv"
+	"io"
+	"os"
+	"testing"
 )
 
 import (
@@ -62,20 +62,20 @@ func testHand(t *testing.T, record []string) {
 func TestHandData(t *testing.T) {
 	file, err := os.Open("hand_test.csv")
 	if err != nil {
-        t.Fatalf("Error: %s", err)
-    }
-    defer file.Close()
-    reader := csv.NewReader(file)
-    reader.Comma = ';'
-    reader.Comment = '#'
+		t.Fatalf("Error: %s", err)
+	}
+	defer file.Close()
+	reader := csv.NewReader(file)
+	reader.Comma = ';'
+	reader.Comment = '#'
 
-    for {
-        record, err := reader.Read()
-        if err == io.EOF {
-            break
-        } else if err != nil {
-            t.Fatalf("Error: %s", err)
-        }
-        testHand(t, record)
-    }
+	for {
+		record, err := reader.Read()
+		if err == io.EOF {
+			break
+		} else if err != nil {
+			t.Fatalf("Error: %s", err)
+		}
+		testHand(t, record)
+	}
 }

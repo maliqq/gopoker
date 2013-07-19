@@ -26,7 +26,7 @@ func AllCards() Cards {
 
 func GenerateCards(n int) Cards {
 	deck := NewDeck()
-	
+
 	return deck[0:n]
 }
 
@@ -210,7 +210,7 @@ func (a Cards) Equal(b Cards) bool {
 	if len(a) != len(b) {
 		return false
 	}
-	
+
 	for i, card := range a {
 		if !card.Equal(a[i]) {
 			return false

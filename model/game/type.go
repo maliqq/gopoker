@@ -42,28 +42,28 @@ const (
 )
 
 var (
-	limitedGameNames = map[LimitedGame]string {
-		Texas: "Texas",
-		Omaha: "Omaha",
-		Omaha8: "Omaha Hi/Lo",
-		Stud: "Stud",
-		Stud8: "Stud Hi/Lo",
-		Razz: "Razz",
-		London: "London",
+	limitedGameNames = map[LimitedGame]string{
+		Texas:    "Texas",
+		Omaha:    "Omaha",
+		Omaha8:   "Omaha Hi/Lo",
+		Stud:     "Stud",
+		Stud8:    "Stud Hi/Lo",
+		Razz:     "Razz",
+		London:   "London",
 		FiveCard: "5-card",
 		Single27: "Single 2-7",
 		Triple27: "Triple 2-7",
-		Badugi: "Badugi",
+		Badugi:   "Badugi",
 	}
 
-	mixedGameNames = map[MixedGame]string {
+	mixedGameNames = map[MixedGame]string{
 		Horse: "HORSE",
 		Eight: "8-game",
 	}
 
-	groupNames = map[Group]string {
-		Holdem: "Holdem",
-		SevenCard: "Seven Card",
+	groupNames = map[Group]string{
+		Holdem:     "Holdem",
+		SevenCard:  "Seven Card",
 		SingleDraw: "Single Draw",
 		TripleDraw: "Triple Draw",
 	}

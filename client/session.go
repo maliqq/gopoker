@@ -15,7 +15,7 @@ type Connection interface {
 }
 
 type Session struct {
-	Id string
+	Id         string
 	Connection Connection
 	Receive    protocol.MessageChannel
 }

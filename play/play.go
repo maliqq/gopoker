@@ -10,9 +10,9 @@ import (
 	"gopoker/model/seat"
 	"gopoker/play/command"
 	"gopoker/play/context"
-	"gopoker/play/street"
-	"gopoker/play/mode"
 	"gopoker/play/gameplay"
+	"gopoker/play/mode"
+	"gopoker/play/street"
 	"gopoker/protocol"
 	"gopoker/util/console"
 )

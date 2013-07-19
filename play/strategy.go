@@ -2,8 +2,8 @@ package play
 
 import (
 	"gopoker/model/deal"
-	"gopoker/play/street"
 	"gopoker/play/mode"
+	"gopoker/play/street"
 )
 
 type Strategy []Stage
