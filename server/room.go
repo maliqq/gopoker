@@ -3,7 +3,7 @@ package server
 import (
 	"gopoker/model"
 	"gopoker/play"
-	"gopoker/server/service"
+	"gopoker/server/rpc_service"
 )
 
 type Room struct {
@@ -11,7 +11,7 @@ type Room struct {
 	*play.Play
 }
 
-func NewRoom(createRoom *service.CreateRoom) *Room {
+func NewRoom(createRoom *rpc_service.CreateRoom) *Room {
 	var variation model.Variation
 	if createRoom.Game != nil {
 		variation = createRoom.Game.WithDefaults()
