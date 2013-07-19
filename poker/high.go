@@ -119,8 +119,8 @@ func (hc *handCards) isFullHouse() *Hand {
 	if len(sets) > 1 {
 		sorted := sets.ArrangeByFirst(hc.Ordering)
 
-		major = (*sorted)[0]
-		minor = (*sorted)[1]
+		major = sorted[0]
+		minor = sorted[1]
 
 	} else {
 		pairs, containPairs := hc.paired[2]
@@ -131,7 +131,7 @@ func (hc *handCards) isFullHouse() *Hand {
 		sortedPairs := pairs.ArrangeByFirst(hc.Ordering)
 
 		major = sets[0]
-		minor = (*sortedPairs)[0]
+		minor = sortedPairs[0]
 	}
 
 	return &Hand{
@@ -191,7 +191,7 @@ func (hc *handCards) isTwoPair() *Hand {
 	}
 
 	cards := pairs.ArrangeByMax(hc.Ordering)
-	major, minor := (*cards)[0], (*cards)[1]
+	major, minor := cards[0], cards[1]
 
 	return &Hand{
 		Value:  append(major, minor...),

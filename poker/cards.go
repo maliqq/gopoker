@@ -26,7 +26,7 @@ func AllCards() Cards {
 
 func GenerateCards(n int) Cards {
 	deck := NewDeck()
-
+	
 	return deck[0:n]
 }
 
@@ -139,6 +139,12 @@ func (a Cards) Diff(b Cards) Cards {
 	}
 
 	return result[0:i]
+}
+
+func (a Cards) Append(b Cards) Cards {
+	c := make(Cards, len(a))
+	copy(c, a)
+	return append(c, b...)
 }
 
 type groupFunc func(card *Card, prev *Card) int

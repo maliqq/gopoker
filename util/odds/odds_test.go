@@ -9,9 +9,11 @@ import (
 )
 
 func TestEquity(t *testing.T) {
-	for i := 0; i <= 10; i++ {
-		c := poker.GenerateCards(2)
-		t.Logf("equity of %s = %.2f", c, Equity(c))
+	for kind := 0; kind < 13; kind++ {
+		c1, _ := poker.MakeCard(kind, 0)
+		c2, _ := poker.MakeCard(kind, 1)
+		c := poker.Cards{*c1, *c2}
+		t.Logf("equity of %s = %.4f", c, Equity(c))
 	}
 	t.FailNow()
 }

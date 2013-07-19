@@ -7,11 +7,11 @@ import (
 )
 
 const (
-	AttemptsCount = 10000
+	TrialsCount = 1000
 )
 
-func Compare(a *poker.Cards, b *poker.Cards) (float64, float64, float64) {
-	total := AttemptsCount
+func Compare(a poker.Cards, b poker.Cards) (float64, float64, float64) {
+	total := TrialsCount
 	wins, ties, loses := 0, 0, 0
 	for i := 0; i <= total; i++ {
 		dealer := model.NewDealer()
@@ -19,8 +19,8 @@ func Compare(a *poker.Cards, b *poker.Cards) (float64, float64, float64) {
 		dealer.Burn(b)
 		board := dealer.Share(5)
 
-		c1 := append(*a, *board...)
-		c2 := append(*b, *board...)
+		c1 := append(a, board...)
+		c2 := append(b, board...)
 		h1, _ := poker.Detect[ranking.High](&c1)
 		h2, _ := poker.Detect[ranking.High](&c2)
 
@@ -37,8 +37,8 @@ func Compare(a *poker.Cards, b *poker.Cards) (float64, float64, float64) {
 	return float64(wins) / float64(total), float64(ties) / float64(total), float64(loses) / float64(total)
 }
 
-func Equity(cards *poker.Cards) float64 {
-	total := AttemptsCount
+func Equity(cards poker.Cards) float64 {
+	total := TrialsCount
 	wins, ties, loses := 0, 0, 0
 
 	for i := 0; i <= total; i++ {
@@ -47,8 +47,8 @@ func Equity(cards *poker.Cards) float64 {
 		other := dealer.Deal(2)
 		board := dealer.Share(5)
 
-		c1 := append(*cards, *board...)
-		c2 := append(*other, *board...)
+		c1 := cards.Append(board)
+		c2 := other.Append(board)
 		h1, _ := poker.Detect[ranking.High](&c1)
 		h2, _ := poker.Detect[ranking.High](&c2)
 		switch h1.Compare(h2) {

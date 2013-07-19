@@ -19,22 +19,22 @@ func (g GroupedCards) String() string {
 	return s + "]"
 }
 
-func (g *GroupedCards) ArrangeByFirst(ord Ordering) *GroupedCards {
+func (g *GroupedCards) ArrangeByFirst(ord Ordering) GroupedCards {
 	// copy
 	groups := *g
 
 	sort.Sort(ByFirst{groups, ord})
 
-	return &groups
+	return groups
 }
 
-func (g *GroupedCards) ArrangeByMax(ord Ordering) *GroupedCards {
+func (g *GroupedCards) ArrangeByMax(ord Ordering) GroupedCards {
 	// copy
 	groups := *g
 
 	sort.Sort(ByMax{groups, ord})
 
-	return &groups
+	return groups
 }
 
 func (g *GroupedCards) Count() map[int]GroupedCards {
