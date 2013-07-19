@@ -34,9 +34,9 @@ func (n *Node) StartHTTP() {
 	router := mux.NewRouter()
 	nodeHTTP.drawRoutes(router)
 
-	log.Printf("[http] starting service at %s", n.ApiAddr)
+	log.Printf("[http] Starting service at %s", n.ApiAddr)
 	if err := http.ListenAndServe(n.ApiAddr, router); err != nil {
-		log.Fatalf("[http] can't start at %s", n.ApiAddr)
+		log.Fatalf("[http] Can't start at %s", n.ApiAddr)
 	}
 }
 
@@ -89,8 +89,7 @@ func (nodeHTTP *NodeHTTP) Log(req *http.Request) {
 func (nodeHTTP *NodeHTTP) RespondJSON(resp http.ResponseWriter, result interface{}) {
 	data, err := json.Marshal(result)
 	if err != nil {
-		log.Fatalf("Can't marshal object: %+v", result)
-		return
+		log.Fatalf("[http] Can't marshal object: %+v", result)
 	}
 
 	resp.Header().Set("Content-Type", "application/json; charset=utf-8")
