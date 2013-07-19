@@ -112,21 +112,16 @@ func (this *Play) receive() {
 	}
 }
 
-func (this *Play) Start() {
-
+func (this *Play) Start(mode mode.Type) {
+	go this.Run(mode)
+	this.Control <- command.NextDeal
 }
 
-func (this *Play) Pause() {
+func (this *Play) Pause() {}
 
-}
+func (this *Play) Resume() {}
 
-func (this *Play) Resume() {
-
-}
-
-func (this *Play) Close() {
-
-}
+func (this *Play) Close() {}
 
 func (this *Play) ResetSeats() {
 	for _, s := range this.Table.Seats {

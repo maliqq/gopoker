@@ -37,4 +37,9 @@ size.times { |i|
   }
 }
 
+rpc.call "NodeRPC.StartRoom", {
+  Id: id,
+  Mode: "cash"
+}
+
 rpc.close

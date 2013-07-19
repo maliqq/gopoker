@@ -30,10 +30,10 @@ func (n *NodeRPC) NotifyRoom(notifyRoom *rpc_service.NotifyRoom, r *rpc_service.
 	return nil
 }
 
-func (n *NodeRPC) StartRoom(requestRoom *rpc_service.RequestRoom, r *rpc_service.CallResult) error {
-	room := n.Node.Room(requestRoom.Id)
+func (n *NodeRPC) StartRoom(startRoom *rpc_service.StartRoom, r *rpc_service.CallResult) error {
+	room := n.Node.Room(startRoom.Id)
 
-	room.Start()
+	room.Start(startRoom.Mode)
 
 	return nil
 }
