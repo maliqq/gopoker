@@ -17,6 +17,7 @@ type handCards struct {
 	groupKind GroupedCards
 	groupSuit GroupedCards
 
+	// fixme pointers
 	paired *map[int]GroupedCards
 	suited *map[int]GroupedCards
 }
@@ -53,6 +54,10 @@ func NewHandCards(cards *Cards, ord Ordering, reversed bool) *handCards {
 	}
 
 	return &hc
+}
+
+func (hc *handCards) String() string {
+	return fmt.Sprintf("gaps=%s paired=%s suited=%s", hc.gaps, *hc.paired, *hc.suited)
 }
 
 type rankFunc func(*handCards) (hand.Rank, *Hand)

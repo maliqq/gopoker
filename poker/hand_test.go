@@ -28,7 +28,7 @@ func TestHandHumanString(t *testing.T) {
 
 func testHand(t *testing.T, record []string) {
 	t.Logf("record=%#v", record)
-	
+
 	cards, _ := ParseCards(record[0])
 	ranking := ranking.Ranking(record[1])
 	rank := hand.Rank(record[2])
@@ -78,6 +78,4 @@ func TestHandData(t *testing.T) {
         }
         testHand(t, record)
     }
-
-    t.FailNow()
 }

@@ -64,14 +64,15 @@ func (hc *handCards) isStraightFlush() *Hand {
 		if hand != nil {
 			hand.rank = true
 		}
+
 		return hand
 	}
 
 	flushCards := maybeFlush.Value
 
-	newPocket := NewHandCards(&flushCards, hc.Ordering, false)
+	newhc := NewHandCards(&flushCards, hc.Ordering, false)
 
-	if maybeStraight := newPocket.isStraight(); maybeStraight != nil {
+	if maybeStraight := newhc.isStraight(); maybeStraight != nil {
 		return maybeStraight
 	}
 
@@ -156,6 +157,7 @@ func (hc *handCards) isFlush() *Hand {
 
 func (hc *handCards) isStraight() *Hand {
 	for _, group := range hc.gaps {
+
 		if len(group) >= 5 {
 			cards := group.Arrange(hc.Ordering)
 

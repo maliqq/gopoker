@@ -37,7 +37,7 @@ func (this *cardsHelper) Qualify(q card.Kind) {
 }
 
 func (this *cardsHelper) Gaps() GroupedCards {
-	sorted := this.Arrange()
+	sorted := this.Reverse()
 
 	cards := Cards{}
 	for _, card := range this.Cards {
@@ -55,7 +55,7 @@ func (this *cardsHelper) Gaps() GroupedCards {
 			return -1
 		}
 
-		if d == 1 {
+		if d == 1 || d == -12 {
 			return 1
 		}
 

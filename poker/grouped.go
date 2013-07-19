@@ -2,9 +2,22 @@ package poker
 
 import (
 	"sort"
+	"strings"
 )
 
 type GroupedCards []Cards
+
+func (g GroupedCards) String() string {
+	s := "["
+
+	strs := make([]string, len(g))
+	for i, group := range g {
+		strs[i] = "{" + group.String() + "}"
+	}
+	s += strings.Join(strs, ", ")
+
+	return s + "]"
+}
 
 func (g *GroupedCards) ArrangeByFirst(ord Ordering) *GroupedCards {
 	// copy
