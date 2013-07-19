@@ -20,9 +20,9 @@ func TestTableMoveButton(t *testing.T) {
 func TestTableAddPlayer(t *testing.T) {
 	table := NewTable(2)
 
-	a := NewPlayer("A")
-	b := NewPlayer("B")
-	c := NewPlayer("C")
+	a := Player("A")
+	b := Player("B")
+	c := Player("C")
 
 	s, err := table.AddPlayer(a, 0, 10.)
 
