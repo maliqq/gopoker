@@ -1,9 +1,9 @@
 package mode
 
-type Mode string
+type Type string
 
 const (
-	Tournament Mode = "tournament"
-	Cash       Mode = "cash"
-	Random     Mode = "random"
+	Tournament Type = "tournament"
+	Cash       Type = "cash"
+	Random     Type = "random"
 )

@@ -12,7 +12,7 @@ import (
 type Deal struct {
 	dealer *Dealer
 	// pocket cards
-	Pockets map[Player]*poker.Cards `json:"-"`
+	Pockets map[Player]poker.Cards `json:"-"`
 	// shared cards
 	Board poker.Cards
 }
@@ -20,16 +20,16 @@ type Deal struct {
 func NewDeal() *Deal {
 	return &Deal{
 		dealer:  NewDealer(),
-		Pockets: map[Player]*poker.Cards{},
+		Pockets: map[Player]poker.Cards{},
 		Board:   poker.Cards{},
 	}
 }
 
-func (this *Deal) Pocket(player Player) *poker.Cards {
+func (this *Deal) Pocket(player Player) poker.Cards {
 	cards, found := this.Pockets[player]
 
 	if !found {
-		cards = &poker.Cards{}
+		cards = poker.Cards{}
 		this.Pockets[player] = cards
 	}
 
@@ -48,7 +48,7 @@ func (this *Deal) DealPocket(player Player, cardsNum int) poker.Cards {
 	pocket := this.Pocket(player)
 
 	cards := this.dealer.Deal(cardsNum)
-	*pocket = append(*pocket, cards...)
+	this.Pockets[player] = append(pocket, cards...)
 
 	return cards
 }
@@ -57,16 +57,16 @@ func (this *Deal) Discard(player Player, cards poker.Cards) poker.Cards {
 	pocket := this.Pocket(player)
 	newCards := this.dealer.Discard(cards)
 
-	*pocket = append(pocket.Diff(cards), newCards...)
+	pocket = append(pocket.Diff(cards), newCards...)
 
 	return newCards
 }
 
-func (this *Deal) Rank(player Player, ranking ranking.Ranking, hasBoard bool) (*poker.Cards, *poker.Hand) {
+func (this *Deal) Rank(player Player, ranking ranking.Ranking, hasBoard bool) (poker.Cards, *poker.Hand) {
 	pocket := this.Pocket(player)
 
 	if !hasBoard {
-		hand, _ := poker.Detect[ranking](pocket)
+		hand, _ := poker.Detect[ranking](&pocket)
 
 		return pocket, hand
 	}

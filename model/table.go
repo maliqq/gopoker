@@ -3,6 +3,7 @@ package model
 import (
 	"fmt"
 	_ "net"
+	_ "container/ring"
 )
 
 import (

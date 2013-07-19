@@ -2,6 +2,7 @@ package play
 
 import (
 	"gopoker/play/command"
+	"gopoker/play/mode"
 )
 
 /*
@@ -16,18 +17,31 @@ Run in different modes:
 	Redirect to other table on new deal.
 
 */
-func (play *Play) Run() {
+func (play *Play) Run(m mode.Type) {
+	play.Mode = m
+	play.RunLoop()
+}
+
+func (play *Play) RunLoop() {
 Loop:
 	for {
 		select {
 		case cmd := <-play.Control:
 			switch cmd {
 			case command.NextDeal:
-				go DefaultStrategy.Proceed(play)
+				go play.RunMode()
 
 			case command.Exit:
 				break Loop
 			}
 		}
 	}
+}
+
+func (play *Play) RunMode() {
+	ByMode[play.Mode].Proceed(play)
+}
+
+func (play *Play) RunStreet() {
+	ByStreet[play.Street].Proceed(play)
 }

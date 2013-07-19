@@ -15,6 +15,7 @@ import (
 
 	"gopoker/play"
 	"gopoker/play/command"
+	"gopoker/play/mode"
 
 	_ "gopoker/client"
 	"gopoker/client/console_client"
@@ -45,7 +46,7 @@ func main() {
 	play := createPlay(me)
 	fmt.Printf("%s\n", play)
 
-	go play.Run()
+	go play.Run(mode.Cash)
 	play.Control <- command.NextDeal
 
 	conn := &console_client.Connection{

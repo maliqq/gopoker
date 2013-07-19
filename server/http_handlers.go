@@ -14,6 +14,7 @@ import (
 	"gopoker/poker"
 	"gopoker/poker/ranking"
 	"gopoker/server/http_service"
+	"gopoker/util/odds"
 )
 
 func (nodeHTTP *NodeHTTP) Rooms(resp http.ResponseWriter, req *http.Request) {
@@ -90,28 +91,7 @@ func (nodeHTTP *NodeHTTP) CalculateOdds(resp http.ResponseWriter, req *http.Requ
 	b, _ := poker.ParseCards(q.Get("b"))
 
 	total := 10000
-	wins, ties, loses := 0, 0, 0
-	for i := 0; i <= total; i++ {
-		dealer := model.NewDealer()
-		dealer.Burn(a)
-		dealer.Burn(b)
-		board := dealer.Share(5)
-		c1 := append(a, board...)
-		c2 := append(b, board...)
-		h1, _ := poker.Detect[ranking.High](&c1)
-		h2, _ := poker.Detect[ranking.High](&c2)
-
-		switch h1.Compare(h2) {
-		case -1:
-			loses++
-			break
-		case 1:
-			wins++
-			break
-		case 0:
-			ties++
-		}
-	}
+	wins, ties, loses := odds.Compare(a, b, total)
 
 	result := &http_service.OddsResult{
 		A:     a,

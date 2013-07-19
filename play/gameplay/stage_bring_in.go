@@ -18,7 +18,7 @@ func (this *GamePlay) BringIn() {
 	for _, pos := range this.Table.AllSeats().Active() {
 		s := this.Table.Seat(pos)
 
-		pocketCards := *this.Deal.Pocket(s.Player)
+		pocketCards := this.Deal.Pocket(s.Player)
 
 		lastCard := pocketCards[len(pocketCards)-1]
 		if pos == 0 {

@@ -9,7 +9,7 @@ import (
 	"gopoker/model"
 	"gopoker/model/game"
 	"gopoker/server"
-	"gopoker/server/service"
+	"gopoker/server/rpc_service"
 	"gopoker/util"
 )
 
@@ -26,14 +26,14 @@ func TestBot(t *testing.T) {
 		t.Fatalf("dialing error: ", err)
 	}
 
-	args := &service.CreateRoom{
+	args := &rpc_service.CreateRoom{
 		Id:        roomId,
 		TableSize: tableSize,
 		BetSize:   10.,
 		Game:      model.NewGame(game.Texas, game.FixedLimit),
 	}
 
-	var result service.CallResult
+	var result rpc_service.CallResult
 
 	err = client.Call("NodeRPC.CreateRoom", args, &result)
 	if err != nil {

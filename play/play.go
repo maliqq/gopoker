@@ -10,15 +10,21 @@ import (
 	"gopoker/model/seat"
 	"gopoker/play/command"
 	"gopoker/play/context"
-	g "gopoker/play/gameplay"
+	"gopoker/play/street"
+	"gopoker/play/mode"
+	"gopoker/play/gameplay"
 	"gopoker/protocol"
 	"gopoker/util/console"
 )
 
 type Play struct {
 	// players action context
-	*g.GamePlay
+	*gameplay.GamePlay
 
+	// current mode
+	Mode mode.Type
+	// current street
+	Street street.Type
 	// receive protocol messages
 	Receive chan *protocol.Message `json:"-"`
 }
@@ -40,7 +46,7 @@ func (this *Play) RotateGame() {
 
 func NewPlay(variation model.Variation, stake *model.Stake, table *model.Table) *Play {
 	play := &Play{
-		GamePlay: &g.GamePlay{
+		GamePlay: &gameplay.GamePlay{
 			Table:     table,
 			Stake:     stake,
 			Broadcast: protocol.NewBroadcast(),
@@ -72,7 +78,9 @@ func (this *Play) receive() {
 		case protocol.JoinTable:
 			join := msg.Envelope.JoinTable
 			_, err := this.Table.AddPlayer(join.Player, join.Pos, join.Amount)
-			if err != nil {
+			if err == nil {
+				// start next deal
+			} else {
 				log.Printf("[protocol] error: %s", err)
 			}
 			//this.Broadcast.Except(join.Player) <- join

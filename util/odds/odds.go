@@ -1,4 +1,4 @@
-package util
+package odds
 
 import (
 	"gopoker/model"
@@ -10,8 +10,10 @@ const (
 	TrialsCount = 1000
 )
 
-func Compare(a poker.Cards, b poker.Cards) (float64, float64, float64) {
-	total := TrialsCount
+func Compare(a poker.Cards, b poker.Cards, total int) (float64, float64, float64) {
+	if total == 0 {
+		total = TrialsCount
+	}
 	wins, ties, loses := 0, 0, 0
 	for i := 0; i <= total; i++ {
 		dealer := model.NewDealer()

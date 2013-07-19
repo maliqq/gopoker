@@ -25,21 +25,21 @@ type Winner struct {
 	Amount float64
 }
 
-func NewShowHand(pos int, cards *poker.Cards, hand *poker.Hand) *Message {
+func NewShowHand(pos int, cards poker.Cards, hand *poker.Hand) *Message {
 	return NewMessage(
 		ShowHand{
 			Pos:   pos,
-			Cards: *cards,
+			Cards: cards,
 			Hand:  hand,
 		},
 	)
 }
 
-func NewShowCards(pos int, cards *poker.Cards) *Message {
+func NewShowCards(pos int, cards poker.Cards) *Message {
 	return NewMessage(
 		ShowCards{
 			Pos:   pos,
-			Cards: *cards,
+			Cards: cards,
 		},
 	)
 }

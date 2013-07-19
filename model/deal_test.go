@@ -12,7 +12,7 @@ func TestDeal(t *testing.T) {
 
 	cards1 := d.Pocket(a)
 	t.Logf("cards1 = %s", cards1)
-	if len(*cards1) != 2 {
+	if len(cards1) != 2 {
 		t.FailNow()
 	}
 

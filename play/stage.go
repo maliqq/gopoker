@@ -42,8 +42,8 @@ func PostBlinds(play *Play) {
 func StartStreets(play *Play) {
 	for _, street := range street.Get(play.Game.Group) {
 		log.Printf("[play] %s\n", street)
-
-		ByStreet[street].Proceed(play)
+		play.Street = street
+		play.RunStreet()
 	}
 }
 

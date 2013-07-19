@@ -3,6 +3,7 @@ package play
 import (
 	"gopoker/model/deal"
 	"gopoker/play/street"
+	"gopoker/play/mode"
 )
 
 type Strategy []Stage
@@ -85,13 +86,15 @@ var ByStreet = map[street.Type]Strategy{
 	},
 }
 
-var DefaultStrategy = Strategy{
-	//DealStart,
-	Init,
-	//MoveButton,
-	PostAntes,
-	PostBlinds,
-	StartStreets,
-	Showdown,
-	//DealStop,
+var ByMode = map[mode.Type]Strategy{
+	mode.Cash: Strategy{
+		//DealStart,
+		Init,
+		//MoveButton,
+		PostAntes,
+		PostBlinds,
+		StartStreets,
+		Showdown,
+		//DealStop,
+	},
 }
