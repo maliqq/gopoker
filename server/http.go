@@ -11,10 +11,6 @@ import (
 	"github.com/gorilla/mux"
 )
 
-import (
-	"gopoker/model"
-)
-
 const (
 	WebSocketPath = "/_ws"
 	HttpApiPath   = "/_api"
@@ -25,7 +21,7 @@ type NodeHTTP struct {
 }
 
 type Rooms struct {
-	Rooms map[model.Id]*Room
+	Rooms map[string]*Room
 }
 
 func (n *Node) StartHTTP() {

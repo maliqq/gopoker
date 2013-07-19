@@ -2,7 +2,6 @@ package server
 
 import (
 	"gopoker/client"
-	"gopoker/model"
 )
 
 const (
@@ -16,8 +15,8 @@ type Node struct {
 	//apiService
 	RpcAddr string
 	//rpcService
-	Rooms    map[model.Id]*Room
-	Sessions map[model.Id]*client.Session
+	Rooms    map[string]*Room
+	Sessions map[string]*client.Session
 }
 
 func NewNode(name string, apiAddr string, rpcAddr string) *Node {
@@ -25,12 +24,12 @@ func NewNode(name string, apiAddr string, rpcAddr string) *Node {
 		Name:     name,
 		ApiAddr:  apiAddr,
 		RpcAddr:  rpcAddr,
-		Rooms:    map[model.Id]*Room{},
-		Sessions: map[model.Id]*client.Session{},
+		Rooms:    map[string]*Room{},
+		Sessions: map[string]*client.Session{},
 	}
 }
 
-func (n *Node) Room(id model.Id) *Room {
+func (n *Node) Room(id string) *Room {
 	room, _ := n.Rooms[id]
 
 	return room

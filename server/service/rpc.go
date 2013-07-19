@@ -11,7 +11,7 @@ type CallResult struct {
 }
 
 type CreateRoom struct {
-	Id        model.Id
+	Id        string
 	TableSize int
 	BetSize   float64
 	Game      *model.Game
@@ -31,10 +31,10 @@ func (c CreateRoom) Variation() model.Variation {
 }
 
 type RequestRoom struct {
-	Id model.Id
+	Id string
 }
 
 type NotifyRoom struct {
-	Id      model.Id
+	Id      string
 	Message *protocol.Message
 }

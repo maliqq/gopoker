@@ -7,7 +7,7 @@ import (
 )
 
 type Room struct {
-	Id model.Id
+	Id string
 	*play.Play
 }
 

@@ -24,7 +24,7 @@ func (nodeHTTP *NodeHTTP) Rooms(resp http.ResponseWriter, req *http.Request) {
 func (nodeHTTP *NodeHTTP) Room(resp http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
 	id := vars["room"]
-	room := nodeHTTP.Node.Room(model.Id(id))
+	room := nodeHTTP.Node.Room(id)
 
 	nodeHTTP.RespondJSON(resp, room)
 }
