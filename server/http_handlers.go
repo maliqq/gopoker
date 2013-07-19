@@ -46,7 +46,7 @@ func (nodeHTTP *NodeHTTP) DetectHand(resp http.ResponseWriter, req *http.Request
 			return
 		}
 
-		hand, err := poker.Detect[ranking](cards)
+		hand, err := poker.Detect[ranking](&cards)
 		if err != nil {
 			resp.Write([]byte(err.Error()))
 			return
@@ -68,8 +68,8 @@ func (nodeHTTP *NodeHTTP) CompareHands(resp http.ResponseWriter, req *http.Reque
 	dealer.Burn(a)
 	dealer.Burn(b)
 	board := dealer.Share(5)
-	c1 := append(*a, *board...)
-	c2 := append(*b, *board...)
+	c1 := append(a, board...)
+	c2 := append(b, board...)
 	h1, _ := poker.Detect[ranking.High](&c1)
 	h2, _ := poker.Detect[ranking.High](&c2)
 
@@ -96,8 +96,8 @@ func (nodeHTTP *NodeHTTP) CalculateOdds(resp http.ResponseWriter, req *http.Requ
 		dealer.Burn(a)
 		dealer.Burn(b)
 		board := dealer.Share(5)
-		c1 := append(*a, *board...)
-		c2 := append(*b, *board...)
+		c1 := append(a, board...)
+		c2 := append(b, board...)
 		h1, _ := poker.Detect[ranking.High](&c1)
 		h2, _ := poker.Detect[ranking.High](&c2)
 
@@ -133,15 +133,15 @@ func (nodeHTTP *NodeHTTP) RandomHand(resp http.ResponseWriter, req *http.Request
 	i := 0
 	for i < 9 {
 		pocket := dealer.Deal(2)
-		cards := append(*pocket, *board...)
+		cards := append(pocket, board...)
 		//log.Printf("dealer=%s", dealer.String())
 		hand, _ := poker.Detect[ranking.High](&cards)
-		h[i].Pocket = *pocket
+		h[i].Pocket = pocket
 		h[i].Hand = hand
 		i++
 	}
 	deal := http_service.DealHand{
-		Board:   *board,
+		Board:   board,
 		Pockets: h,
 	}
 

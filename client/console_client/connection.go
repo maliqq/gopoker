@@ -63,7 +63,7 @@ func (c *Connection) Handle(msg *protocol.Message) {
 
 		fmt.Printf("Your cards: [%s]\n", c.Server.Deal.Pocket(seat.Player))
 
-		var cards *poker.Cards
+		var cards poker.Cards
 		for cards == nil {
 			cards = readCards()
 		}
@@ -139,8 +139,8 @@ func readBet(call float64, toCall float64) *model.Bet {
 	return b
 }
 
-func readCards() *poker.Cards {
-	var cards *poker.Cards
+func readCards() poker.Cards {
+	var cards poker.Cards
 	for cards == nil {
 		str := readLine()
 		var err error

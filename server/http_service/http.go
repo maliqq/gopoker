@@ -7,13 +7,13 @@ import (
 type CompareResult struct {
 	A      *poker.Hand
 	B      *poker.Hand
-	Board  *poker.Cards
+	Board  poker.Cards
 	Result int
 }
 
 type OddsResult struct {
-	A     *poker.Cards
-	B     *poker.Cards
+	A     poker.Cards
+	B     poker.Cards
 	Total int
 	Wins  float64
 	Ties  float64
