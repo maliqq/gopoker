@@ -16,8 +16,8 @@ func TestHandHumanString(t *testing.T) {
 	high, _ := ParseCards("8dTh")
 	value, _ := ParseCards("2d5s7hJdQd")
 	h := Hand{
-		High:  *high,
-		Value: *value,
+		High:  high,
+		Value: value,
 	}
 
 	for rank, _ := range hand.Ranks {
@@ -36,7 +36,7 @@ func testHand(t *testing.T, record []string) {
 	high, _ := ParseCards(record[4])
 	kicker, _ := ParseCards(record[5])
 
-	hand, err := Detect[ranking](cards)
+	hand, err := Detect[ranking](&cards)
 	if err != nil {
 		t.Fatalf("Detect error: %s", err)
 	}
@@ -46,15 +46,15 @@ func testHand(t *testing.T, record []string) {
 		t.Fatalf("rank mismatch: %s vs %s", hand.Rank, rank)
 	}
 
-	if !hand.Value.Equal(*value) {
+	if !hand.Value.Equal(value) {
 		t.Fatalf("value mismatch: %s vs %s", hand.Value, value)
 	}
 
-	if !hand.High.Equal(*high) {
+	if !hand.High.Equal(high) {
 		t.Fatalf("rank mismatch: %s vs %s", hand.High, high)
 	}
 
-	if !hand.Kicker.Equal(*kicker) {
+	if !hand.Kicker.Equal(kicker) {
 		t.Fatalf("rank mismatch: %s vs %s", hand.Kicker, kicker)
 	}
 }

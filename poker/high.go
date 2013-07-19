@@ -219,7 +219,7 @@ func (hc *handCards) isHighCard() *Hand {
 	cards := hc.Arrange()
 
 	return &Hand{
-		Value:  (*cards)[0:1],
+		Value:  cards[0:1],
 		high:   true,
 		kicker: true,
 	}

@@ -50,10 +50,8 @@ func (hc *handCards) isBadugiOne() *Hand {
 
 func (hc *handCards) isBadugiFour() *Hand {
 	if len(hc.groupKind) == 4 && len(hc.groupSuit) == 4 {
-		cards := hc.cardsHelper.Arrange()
-
 		return &Hand{
-			Value: *cards,
+			Value: hc.Arrange(),
 		}
 	}
 

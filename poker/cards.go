@@ -15,26 +15,26 @@ import (
 
 type Cards []Card
 
-func AllCards() *Cards {
+func AllCards() Cards {
 	all := card.All
 	cards := make(Cards, len(all))
 	for i, tuple := range all {
 		cards[i] = Card{tuple.Kind, tuple.Suit}
 	}
-	return &cards
+	return cards
 }
 
-func GenerateCards(n int) *Cards {
+func GenerateCards(n int) Cards {
 	deck := NewDeck()
-	cards := (*deck)[0:n]
-	return &cards
+
+	return deck[0:n]
 }
 
-func NewDeck() *Cards {
+func NewDeck() Cards {
 	return AllCards().Shuffle()
 }
 
-func ParseCards(s string) (*Cards, error) {
+func ParseCards(s string) (Cards, error) {
 	r, _ := regexp.Compile("(?i)[akqjt2-9]{1}[schd]{1}")
 	match := r.FindAllString(s, len(s)/2+1)
 
@@ -50,10 +50,10 @@ func ParseCards(s string) (*Cards, error) {
 		i++
 	}
 
-	return &cards, nil
+	return cards, nil
 }
 
-func ParseBinary(s []byte) (*Cards, error) {
+func ParseBinary(s []byte) (Cards, error) {
 	cards := make(Cards, len(s))
 	for i, b := range s {
 		card, err := NewCard(b)
@@ -63,7 +63,7 @@ func ParseBinary(s []byte) (*Cards, error) {
 		cards[i] = *card
 	}
 
-	return &cards, nil
+	return cards, nil
 }
 
 func (c Cards) String() string {
@@ -109,17 +109,17 @@ func (c Cards) MarshalJSON() ([]byte, error) {
 	return json.Marshal(c.Binary())
 }
 
-func (this *Cards) Shuffle() *Cards {
+func (this Cards) Shuffle() Cards {
 	// seed random
 	rand.Seed(time.Now().UnixNano())
 
-	cards := *this
+	cards := this
 	for i := range cards {
 		j := rand.Intn(i + 1)
 		cards[i], cards[j] = cards[j], cards[i]
 	}
 
-	return &cards
+	return cards
 }
 
 func (a *Cards) Diff(b *Cards) Cards {

@@ -46,7 +46,7 @@ func (this *cardsHelper) Gaps() GroupedCards {
 		}
 	}
 
-	cards = append(cards, *sorted...)
+	cards = append(cards, sorted...)
 
 	return cards.Group(func(card *Card, prev *Card) int {
 		d := card.Index(this.Ordering) - prev.Index(this.Ordering)
@@ -102,16 +102,12 @@ func (this *cardsHelper) GroupBySuit() GroupedCards {
 	})
 }
 
-func (this *cardsHelper) Arrange() *Cards {
-	cards := this.Cards.Arrange(this.Ordering)
-
-	return &cards
+func (this *cardsHelper) Arrange() Cards {
+	return this.Cards.Arrange(this.Ordering)
 }
 
-func (this *cardsHelper) Reverse() *Cards {
-	cards := this.Cards.Reverse(this.Ordering)
-
-	return &cards
+func (this *cardsHelper) Reverse() Cards {
+	return this.Cards.Reverse(this.Ordering)
 }
 
 func (this *cardsHelper) IsLow() (*Hand, error) {
