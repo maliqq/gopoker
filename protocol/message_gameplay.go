@@ -18,13 +18,13 @@ func NewError(err error) *Message {
 	)
 }
 
-type PotSummary struct {
+type CollectPot struct {
 	Amount float64
 }
 
-func NewPotSummary(pot *model.Pot) *Message {
+func NewCollectPot(pot *model.Pot) *Message {
 	return NewMessage(
-		PotSummary{
+		CollectPot{
 			Amount: pot.Total(),
 		},
 	)

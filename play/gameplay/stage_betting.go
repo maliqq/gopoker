@@ -52,5 +52,5 @@ func (this *GamePlay) ResetBetting() {
 		seat.Play()
 	}
 
-	this.Broadcast.All <- protocol.NewPotSummary(this.Betting.Pot)
+	this.Broadcast.All <- protocol.NewCollectPot(this.Betting.Pot)
 }

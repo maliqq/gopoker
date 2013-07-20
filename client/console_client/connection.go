@@ -94,9 +94,9 @@ func (c *Connection) Handle(msg *protocol.Message) {
 
 		fmt.Printf("Player %s: %s\n", player, payload.Bet)
 
-	case protocol.PotSummary:
+	case protocol.CollectPot:
 
-		payload := msg.Envelope.PotSummary
+		payload := msg.Envelope.CollectPot
 
 		fmt.Printf("Pot size: %.2f\nBoard: %s\n", payload.Amount, c.Server.Deal.Board.ConsoleString())
 

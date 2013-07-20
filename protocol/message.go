@@ -31,7 +31,7 @@ type Envelope struct {
 	Discarded      *Discarded
 	DiscardCards   *DiscardCards
 
-	PotSummary *PotSummary
+	CollectPot *CollectPot
 	ChangeGame *ChangeGame
 
 	ShowHand  *ShowHand
@@ -96,8 +96,8 @@ func NewMessage(payload Payload) *Message {
 	case DiscardCards:
 		envelope.DiscardCards = &v
 
-	case PotSummary:
-		envelope.PotSummary = &v
+	case CollectPot:
+		envelope.CollectPot = &v
 
 	case ChangeGame:
 		envelope.ChangeGame = &v
