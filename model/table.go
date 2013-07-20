@@ -16,9 +16,6 @@ type Table struct {
 
 	Seats   Seats
 	seating map[Player]int
-
-	//Waiting  []Player
-	//Watchers []net.Conn
 }
 
 func NewTable(size int) *Table {
@@ -87,6 +84,14 @@ func (t *Table) Seat(pos int) *Seat {
 
 func (t *Table) AllSeats() seatSlice {
 	return t.Seats.From(t.Button)
+}
+
+func (t *Table) AllPlayers() []Player {
+	players := []Player{}
+	for player, _ := range t.seating {
+		players = append(players, player)
+	}
+	return players
 }
 
 func (t *Table) Player(pos int) Player {

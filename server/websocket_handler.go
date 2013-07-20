@@ -15,7 +15,7 @@ func (nodeHTTP *NodeHTTP) WebSocketHandler(conn *websocket.Conn) {
 	node := nodeHTTP.Node
 	q := conn.Request().URL.Query()
 	roomId := q.Get("room_id")
-	_, found := node.Rooms[roomId]
+	room, found := node.Rooms[roomId]
 
 	if !found {
 		// 404
@@ -23,18 +23,17 @@ func (nodeHTTP *NodeHTTP) WebSocketHandler(conn *websocket.Conn) {
 
 	id := util.RandomUuid()
 	connection := &websocket_client.Connection{conn}
-	session := client.NewSession(connection)
+	session := client.NewSession(id, connection)
 
 	//session.Connection.Send(room)
 
-	me := make(protocol.MessageChannel)
+	session.Receive = make(protocol.MessageChannel)
+	session.Send = &room.Receive
+	defer close(session.Receive)
 
-	nodeHTTP.Node.Sessions[id] = session
+	for _, player := range room.Table.AllPlayers() {
+		room.Broadcast.Bind(player, session.Receive)
+	}
 
-	defer func() {
-		delete(nodeHTTP.Node.Sessions, id)
-		close(me)
-	}()
-
-	session.Start(&me)
+	session.Start()
 }

@@ -18,24 +18,25 @@ type Session struct {
 	Id         string
 	Connection Connection
 	Receive    protocol.MessageChannel
+	Send       *protocol.MessageChannel
 }
 
-func NewSession(connection Connection) *Session {
+func NewSession(id string, connection Connection) *Session {
 	return &Session{
+		Id: id,
 		Connection: connection,
-		Receive:    make(chan *protocol.Message),
 	}
 }
 
-func (session *Session) Start(send *protocol.MessageChannel) {
-	log.Printf("starting session with connection: %#v", session.Connection)
+func (session *Session) Start() {
+	log.Printf("[session] start with connection: %#v", session.Connection)
 
-	go session.receive(send)
+	go session.Read()
 
-	session.send()
+	session.Write()
 }
 
-func (session *Session) receive(send *protocol.MessageChannel) {
+func (session *Session) Read() {
 	for {
 		var message *protocol.Message
 
@@ -44,13 +45,13 @@ func (session *Session) receive(send *protocol.MessageChannel) {
 			break
 		}
 
-		*send <- message
+		*session.Send <- message
 	}
 
 	session.close()
 }
 
-func (session *Session) send() {
+func (session *Session) Write() {
 	for message := range session.Receive {
 		err := session.Connection.Send(message)
 		if err != nil {

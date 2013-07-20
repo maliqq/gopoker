@@ -1,9 +1,5 @@
 package server
 
-import (
-	"gopoker/client"
-)
-
 const (
 	rpcRoot      = "/_rpc"
 	rpcDebugRoot = "/_rpc/debug"
@@ -16,7 +12,6 @@ type Node struct {
 	RpcAddr string
 	//rpcService
 	Rooms    map[string]*Room
-	Sessions map[string]*client.Session
 }
 
 func NewNode(name string, apiAddr string, rpcAddr string) *Node {
@@ -25,7 +20,6 @@ func NewNode(name string, apiAddr string, rpcAddr string) *Node {
 		ApiAddr:  apiAddr,
 		RpcAddr:  rpcAddr,
 		Rooms:    map[string]*Room{},
-		Sessions: map[string]*client.Session{},
 	}
 }
 
