@@ -15,7 +15,7 @@ Strategy invoking
 */
 type Stage func(*Play)
 
-func Init(play *Play) {
+func DealStart(play *Play) {
 	play.StartNewDeal()
 	play.ResetSeats()
 	play.RotateGame()
@@ -112,6 +112,10 @@ func Showdown(play *Play) {
 	}
 
 	play.Winners(highHands, lowHands)
+}
 
+func DealStop(play *Play) {
+	log.Println("[play] deal stop")
+	
 	play.ScheduleNextDeal()
 }

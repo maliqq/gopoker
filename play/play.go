@@ -26,7 +26,7 @@ type Play struct {
 	// current street
 	Street street.Type
 	// receive protocol messages
-	Receive chan *protocol.Message `json:"-"`
+	Receive protocol.MessageChannel `json:"-"`
 }
 
 func (this *Play) String() string {

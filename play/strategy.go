@@ -88,13 +88,11 @@ var ByStreet = map[street.Type]Strategy{
 
 var ByMode = map[mode.Type]Strategy{
 	mode.Cash: Strategy{
-		//DealStart,
-		Init,
-		//MoveButton,
+		DealStart,
 		PostAntes,
 		PostBlinds,
 		StartStreets,
 		Showdown,
-		//DealStop,
+		DealStop,
 	},
 }
