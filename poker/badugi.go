@@ -73,9 +73,7 @@ func (hc *handCards) isBadugiThree() *Hand {
 
 		a = &cards[0]
 
-		diff := hc.Cards.Diff(cards)
-
-		for _, card := range diff {
+		for _, card := range hc.Cards.Diff(cards) {
 			if a.kind != card.kind {
 				n := card
 				if b == nil {

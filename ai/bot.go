@@ -24,10 +24,6 @@ func NewBot(rpcAddr string) *Bot {
 	}
 }
 
-func (b *Bot) CreateSession() {
-
-}
-
 func (b *Bot) Join(roomId string, pos int) {
 
 }
