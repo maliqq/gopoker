@@ -3,8 +3,8 @@ package util
 func Fact(n int) int {
 	fact := 1
 	for i := 1; i <= n; i++ {
-  	fact *= i
-  }
+		fact *= i
+	}
 
 	return fact
 }

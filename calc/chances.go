@@ -9,13 +9,13 @@ import (
 
 const (
 	DefaultSamplesCount = 1000
-	FullBoardLen = 5
+	FullBoardLen        = 5
 )
 
 type Chances struct {
 	Total int
-	Wins int
-	Ties int
+	Wins  int
+	Ties  int
 	Loses int
 }
 
@@ -25,7 +25,7 @@ type ChancesAgainstOne struct {
 
 type ChancesAgainstN struct {
 	OpponentsNum int
-	SamplesNum int
+	SamplesNum   int
 }
 
 func (this *Chances) Compare(c1, c2 poker.Cards) {
@@ -45,7 +45,7 @@ func (this *Chances) Compare(c1, c2 poker.Cards) {
 func (c ChancesAgainstOne) Preflop(hole, other poker.Cards) Chances {
 	samplesNum := c.SamplesNum
 	chances := &Chances{}
-	
+
 	for i := 0; i <= samplesNum; i++ {
 		dealer := model.NewDealer()
 		dealer.Burn(hole)
@@ -81,12 +81,12 @@ func (c ChancesAgainstOne) WithBoard(hole, board poker.Cards) Chances {
 		for _, otherCombination := range util.Combine(len(cardsLeft), holeCardsNum) {
 			for _, k := range otherCombination {
 				for _, b := range boardCombination {
-					if k == b  {
+					if k == b {
 						continue OtherCombinations // exclude
 					}
 				}
 			}
-			
+
 			fullBoard := board
 			for _, b := range boardCombination {
 				fullBoard = append(fullBoard, cardsLeft[b])
@@ -99,7 +99,7 @@ func (c ChancesAgainstOne) WithBoard(hole, board poker.Cards) Chances {
 
 			c1 := hole.Append(fullBoard)
 			c2 := other.Append(fullBoard)
-			
+
 			chances.Compare(c1, c2)
 		}
 	}
@@ -133,7 +133,7 @@ func (c ChancesAgainstN) Preflop(hole poker.Cards) Chances {
 
 		c1 := hole.Append(board)
 		c2 := other.Append(board)
-		
+
 		chances.Compare(c1, c2)
 	}
 
