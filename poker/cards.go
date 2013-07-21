@@ -286,3 +286,15 @@ func (c Cards) Max(ord Ordering) *Card {
 		return d > 0
 	})
 }
+
+func (c Cards) IsPair() bool {
+  return len(c) == 2 && c[0].kind == c[1].kind
+}
+
+func (c Cards) IsSuited() bool {
+  return len(c) == 2 && c[0].suit == c[1].suit
+}
+
+//func (p *Pocket) IsConnector() bool {
+//
+//}
