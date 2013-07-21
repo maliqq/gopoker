@@ -14,7 +14,7 @@ import (
 	"gopoker/poker"
 	"gopoker/poker/ranking"
 	"gopoker/server/http_service"
-	"gopoker/util/odds"
+	"gopoker/calc"
 )
 
 func (nodeHTTP *NodeHTTP) Rooms(resp http.ResponseWriter, req *http.Request) {
@@ -91,15 +91,15 @@ func (nodeHTTP *NodeHTTP) CalculateOdds(resp http.ResponseWriter, req *http.Requ
 	b, _ := poker.ParseCards(q.Get("b"))
 
 	total := 10000
-	wins, ties, loses := odds.Compare(a, b, total)
+	chances := calc.ChancesAgainstOne{total}.Preflop(a, b)
 
 	result := &http_service.OddsResult{
 		A:     a,
 		B:     b,
 		Total: total,
-		Wins:  float64(wins) / float64(total),
-		Ties:  float64(ties) / float64(total),
-		Loses: float64(loses) / float64(total),
+		Wins:  float64(chances.Wins) / float64(total),
+		Ties:  float64(chances.Ties) / float64(total),
+		Loses: float64(chances.Loses) / float64(total),
 	}
 
 	nodeHTTP.RespondJSON(resp, result)

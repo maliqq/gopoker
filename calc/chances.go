@@ -9,215 +9,157 @@ import (
 
 const (
 	DefaultSamplesCount = 1000
+	FullBoardLen = 5
 )
 
-func Compare(a poker.Cards, b poker.Cards, total int) (float64, float64, float64) {
-	if total == 0 {
-		total = DefaultSamplesCount
+type Chances struct {
+	Total int
+	Wins int
+	Ties int
+	Loses int
+}
+
+type ChancesAgainstOne struct {
+	SamplesNum int
+}
+
+type ChancesAgainstN struct {
+	Num int
+	SamplesNum int
+}
+
+func (this *Chances) Compare(c1, c2 poker.Cards) {
+	h1, _ := poker.Detect[ranking.High](&c1)
+	h2, _ := poker.Detect[ranking.High](&c2)
+
+	switch h1.Compare(h2) {
+	case -1:
+		this.Loses++
+	case 1:
+		this.Wins++
+	case 0:
+		this.Ties++
 	}
-	wins, ties, loses := 0, 0, 0
-	for i := 0; i <= total; i++ {
+}
+
+func (c ChancesAgainstOne) Preflop(hole, other poker.Cards) Chances {
+	samplesNum := c.SamplesNum
+	chances := &Chances{}
+	
+	for i := 0; i <= samplesNum; i++ {
 		dealer := model.NewDealer()
-		dealer.Burn(a)
-		dealer.Burn(b)
+		dealer.Burn(hole)
+		dealer.Burn(other)
 		board := dealer.Share(5)
 
-		c1 := append(a, board...)
-		c2 := append(b, board...)
-		h1, _ := poker.Detect[ranking.High](&c1)
-		h2, _ := poker.Detect[ranking.High](&c2)
+		c1 := append(hole, board...)
+		c2 := append(other, board...)
 
-		switch h1.Compare(h2) {
-		case -1:
-			loses++
-		case 1:
-			wins++
-		case 0:
-			ties++
-		}
+		chances.Compare(c1, c2)
 	}
 
-	return float64(wins) / float64(total), float64(ties) / float64(total), float64(loses) / float64(total)
+	return *chances
 }
 
-func ChancesAgainstOnePreflop(cards poker.Cards) (int, int, int) {
-	total := DefaultSamplesCount
-	wins, ties, loses := 0, 0, 0
-
-	for i := 0; i <= total; i++ {
-		dealer := model.NewDealer()
-		dealer.Burn(cards)
-		other := dealer.Deal(2)
-		board := dealer.Share(5)
-
-		c1 := cards.Append(board)
-		c2 := other.Append(board)
-		h1, _ := poker.Detect[ranking.High](&c1)
-		h2, _ := poker.Detect[ranking.High](&c2)
-		switch h1.Compare(h2) {
-		case -1:
-			loses++
-		case 1:
-			wins++
-		case 0:
-			ties++
-		}
-	}
-
-	return wins, ties, loses
-}
-
-func ChancesAgainstOneWithBoard(cards poker.Cards, board poker.Cards) (int, int, int) {
-	switch len(board) {
-	case 3:
-		return ChancesAgainstOneAtFlop(cards, board)
-	case 4:
-		return ChancesAgainstOneAtTurn(cards, board)
-	case 5:
-		return ChancesAgainstOneAtRiver(cards, board)
-	}
-	return 0, 0, 0
-}
-
-func ChancesAgainstOneAtFlop(cards poker.Cards, board poker.Cards) (int, int, int) {
-	if len(board) < 3 {
-		panic("board length for flop should be 3.")
-	}
-	if len(board) > 3 {
-		board = board[0:3]
+func (c ChancesAgainstOne) WithBoard(hole, board poker.Cards) Chances {
+	if len(board) > 5 || len(board) == 0 {
+		panic("invalid board")
 	}
 
 	dealer := model.NewDealer()
-	dealer.Burn(cards)
+	dealer.Burn(hole)
 	dealer.Burn(board)
 
 	cardsLeft := dealer.Deck
+	holeCardsNum := len(hole)
+	cardsNumToCompleteBoard := FullBoardLen - len(board)
 
-	wins, ties, loses := 0, 0, 0
+	chances := &Chances{}
 
-	for turnCard := 0; turnCard < len(cardsLeft)-1; turnCard++ {
-		for riverCard := turnCard + 1; riverCard < len(cardsLeft); riverCard++ {
-			otherCombinations := util.Combine(len(cardsLeft), len(cards))
-		OtherCombinations:
-			for _, otherCombination := range otherCombinations {
-				for _, k := range otherCombination {
-					if k == turnCard || k == riverCard {
-						continue OtherCombinations
+	for _, boardCombination := range util.Combine(len(cardsLeft), cardsNumToCompleteBoard) {
+	OtherCombinations:
+		for _, otherCombination := range util.Combine(len(cardsLeft), holeCardsNum) {
+			for _, k := range otherCombination {
+				for _, b := range boardCombination {
+					if k == b  {
+						continue OtherCombinations // exclude
 					}
 				}
-				fullBoard := append(board, cardsLeft[turnCard], cardsLeft[riverCard])
-				other := poker.Cards{}
-				for _, k := range otherCombination {
-					other = append(other, cardsLeft[k])
-				}
-				c1 := cards.Append(fullBoard)
-				c2 := other.Append(fullBoard)
-				h1, _ := poker.Detect[ranking.High](&c1)
-				h2, _ := poker.Detect[ranking.High](&c2)
-
-				switch h1.Compare(h2) {
-				case -1:
-					loses++
-				case 1:
-					wins++
-				case 0:
-					ties++
-				}
 			}
-		}
-	}
-
-	return wins, ties, loses
-}
-
-func ChancesAgainstOneAtTurn(cards poker.Cards, board poker.Cards) (int, int, int) {
-	if len(board) < 4 {
-		panic("board length for turn should be 4.")
-	}
-
-	if len(board) > 4 {
-		board = board[0:4]
-	}
-
-	dealer := model.NewDealer()
-	dealer.Burn(cards)
-	dealer.Burn(board)
-
-	cardsLeft := dealer.Deck
-
-	wins, ties, loses := 0, 0, 0
-
-	for riverCard := 0; riverCard < len(cardsLeft); riverCard++ {
-		otherCombinations := util.Combine(len(cardsLeft), len(cards))
-	OtherCombinations:
-		for _, otherCombination := range otherCombinations {
-			for _, k := range otherCombination {
-				if k == riverCard {
-					continue OtherCombinations
-				}
+			
+			fullBoard := board
+			for _, b := range boardCombination {
+				fullBoard = append(fullBoard, cardsLeft[b])
 			}
-			fullBoard := append(board, cardsLeft[riverCard])
+
 			other := poker.Cards{}
 			for _, k := range otherCombination {
 				other = append(other, cardsLeft[k])
 			}
-			c1 := cards.Append(fullBoard)
-			c2 := other.Append(fullBoard)
-			h1, _ := poker.Detect[ranking.High](&c1)
-			h2, _ := poker.Detect[ranking.High](&c2)
 
-			switch h1.Compare(h2) {
-			case -1:
-				loses++
-			case 1:
-				wins++
-			case 0:
-				ties++
-			}
+			c1 := hole.Append(fullBoard)
+			c2 := other.Append(fullBoard)
+			
+			chances.Compare(c1, c2)
 		}
 	}
 
-	return wins, ties, loses
+	return *chances
 }
 
-func ChancesAgainstOneAtRiver(cards poker.Cards, board poker.Cards) (int, int, int) {
-	if len(board) < 5 {
-		panic("board length for river should be 5.")
+func (c ChancesAgainstN) Preflop(hole poker.Cards) Chances {
+	samplesNum := c.SamplesNum
+	chances := &Chances{}
+
+	for i := 0; i < samplesNum; i++ {
+		dealer := model.NewDealer()
+		dealer.Burn(hole)
+		other := dealer.Deal(2)
+		board := dealer.Share(5)
+
+		c1 := hole.Append(board)
+		c2 := other.Append(board)
+		
+		chances.Compare(c1, c2)
 	}
 
-	if len(board) > 5 {
-		board = board[0:5]
+	return *chances
+}
+
+func (c ChancesAgainstN) WithBoard(hole, board poker.Cards) Chances {
+	if len(board) > 5 || len(board) == 0 {
+		panic("board invalid")
 	}
+
+	opponentsNum := c.Num
+	samplesNum := c.SamplesNum
+	holeCardsNum := len(hole)
+	cardsNumToCompleteBoard := FullBoardLen - len(board)
 
 	dealer := model.NewDealer()
-	dealer.Burn(cards)
+	dealer.Burn(hole)
 	dealer.Burn(board)
 
 	cardsLeft := dealer.Deck
 
-	wins, ties, loses := 0, 0, 0
+	chances := &Chances{}
 
-	otherCombinations := util.Combine(len(cardsLeft), len(cards))
+	for i := 0; i < samplesNum; i++ {
+		sampleDealer := model.NewDealerWithDeck(cardsLeft.Shuffle())
 
-	for _, otherCombination := range otherCombinations {
-		other := poker.Cards{}
-		for _, k := range otherCombination {
-			other = append(other, cardsLeft[k])
+		fullBoard := board
+		if cardsNumToCompleteBoard == 0 {
+			fullBoard = append(board, sampleDealer.Deal(cardsNumToCompleteBoard)...)
 		}
-		c1 := cards.Append(board)
-		c2 := other.Append(board)
-		h1, _ := poker.Detect[ranking.High](&c1)
-		h2, _ := poker.Detect[ranking.High](&c2)
 
-		switch h1.Compare(h2) {
-		case -1:
-			loses++
-		case 1:
-			wins++
-		case 0:
-			ties++
+		for k := 0; k < opponentsNum; k++ {
+			other := sampleDealer.Deal(holeCardsNum)
+			c1 := hole.Append(fullBoard)
+			c2 := other.Append(fullBoard)
+
+			chances.Compare(c1, c2)
 		}
 	}
 
-	return wins, ties, loses
+	return *chances
 }
