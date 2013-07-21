@@ -18,7 +18,7 @@ const (
 
 // betting context
 type Betting struct {
-	raiseCount int     `json:"-"`
+	raiseCount int `json:"-"`
 	BigBets    bool
 
 	Pot *model.Pot

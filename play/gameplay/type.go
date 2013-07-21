@@ -25,7 +25,7 @@ type GamePlay struct {
 	// broadcast protocol messages
 	Broadcast *protocol.Broadcast `json:"-"`
 
-	Betting *context.Betting
+	Betting             *context.Betting
 	*context.Discarding `json:"-"`
 	// manage play
 	Control chan command.Command `json:"-"`

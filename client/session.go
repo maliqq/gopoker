@@ -23,7 +23,7 @@ type Session struct {
 
 func NewSession(id string, connection Connection) *Session {
 	return &Session{
-		Id: id,
+		Id:         id,
 		Connection: connection,
 	}
 }

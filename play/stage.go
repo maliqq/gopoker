@@ -116,6 +116,6 @@ func Showdown(play *Play) {
 
 func DealStop(play *Play) {
 	log.Println("[play] deal stop")
-	
+
 	play.ScheduleNextDeal()
 }
