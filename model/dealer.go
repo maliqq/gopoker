@@ -16,14 +16,18 @@ type Dealer struct {
 	dealt     poker.Cards
 }
 
-func NewDealer() *Dealer {
+func NewDealerWithDeck(deck poker.Cards) *Dealer {
 	return &Dealer{
-		Deck:      poker.NewDeck(),
+		Deck:      deck,
 		burned:    poker.Cards{},
 		discarded: poker.Cards{},
 		shared:    poker.Cards{},
 		dealt:     poker.Cards{},
 	}
+}
+
+func NewDealer() *Dealer {
+	return NewDealerWithDeck(poker.NewDeck())
 }
 
 func (dealer *Dealer) give(n int) (poker.Cards, error) {
