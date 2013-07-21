@@ -191,7 +191,7 @@ func (this Cards) Group(test groupFunc) GroupedCards {
 func (this Cards) Combine(m int) GroupedCards {
 	n := len(this)
 
-	indexes := util.Comb(n, m)
+	indexes := util.Combine(n, m)
 
 	result := make(GroupedCards, len(indexes))
 

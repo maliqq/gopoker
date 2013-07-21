@@ -69,14 +69,14 @@ var (
 	}
 )
 
-func (l LimitedGame) HumanString() string {
+func (l LimitedGame) PrintString() string {
 	return limitedGameNames[l]
 }
 
-func (m MixedGame) HumanString() string {
+func (m MixedGame) PrintString() string {
 	return mixedGameNames[m]
 }
 
-func (g Group) HumanString() string {
+func (g Group) PrintString() string {
 	return groupNames[g]
 }

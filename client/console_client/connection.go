@@ -106,7 +106,7 @@ func (c *Connection) Handle(msg *protocol.Message) {
 
 		player := c.Server.Table.Player(payload.Pos)
 
-		fmt.Printf("Player %s has %s (%s)\n", player, payload.Cards.ConsoleString(), payload.Hand.HumanString())
+		fmt.Printf("Player %s has %s (%s)\n", player, payload.Cards.ConsoleString(), payload.Hand.PrintString())
 
 	case protocol.Winner:
 

@@ -119,7 +119,7 @@ func (h *Hand) ConsoleString() string {
 }
 
 // human readable string
-func (h *Hand) HumanString() string {
+func (h *Hand) PrintString() string {
 	switch h.Rank {
 	case hand.HighCard:
 		return fmt.Sprintf("high card %s", h.High[0].KindTitle())

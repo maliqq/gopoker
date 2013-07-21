@@ -12,7 +12,7 @@ import (
 	"gopoker/poker/ranking"
 )
 
-func TestHandHumanString(t *testing.T) {
+func TestHandPrintString(t *testing.T) {
 	high, _ := ParseCards("8dTh")
 	value, _ := ParseCards("2d5s7hJdQd")
 	h := Hand{
@@ -22,7 +22,7 @@ func TestHandHumanString(t *testing.T) {
 
 	for rank, _ := range hand.Ranks {
 		h.Rank = rank
-		t.Logf(h.HumanString())
+		t.Logf(h.PrintString())
 	}
 }
 

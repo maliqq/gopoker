@@ -16,6 +16,6 @@ var (
 	}
 )
 
-func (l Limit) HumanString() string {
+func (l Limit) PrintString() string {
 	return limitNames[l]
 }

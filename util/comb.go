@@ -1,19 +1,25 @@
 package util
 
-func Fact(n int64) int64 {
-	if n < 0 || n == 0 {
-		return 1
-	}
-	return n * Fact(n-1)
+func Fact(n int) int {
+	fact := 1
+	for i := 1; i <= n; i++ {
+  	fact *= i
+  }
+
+	return fact
+}
+
+func Combinations(n, m int) int {
+	return Fact(n) / Fact(n-m) / Fact(m)
 }
 
 // abc(2) = ab, ac, bc
-func Comb(n int, m int) [][]int {
+func Combine(n, m int) [][]int {
 	if n < m {
 		return [][]int{}
 	}
 
-	size := Fact(int64(n)) / Fact(int64(n-m)) / Fact(int64(m))
+	size := Combinations(n, m)
 	result := make([][]int, size)
 
 	index := make([]int, m)
