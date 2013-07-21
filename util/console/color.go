@@ -4,6 +4,7 @@ import (
 	"fmt"
 )
 
+// from Scala Console
 var (
 	BLACK      = "\033[30m"
 	BLACK_B    = "\033[40m"

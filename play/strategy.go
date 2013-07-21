@@ -9,8 +9,9 @@ import (
 type Strategy []Stage
 
 func (strategy Strategy) Proceed(play *Play) {
-	for _, context := range strategy {
-		context(play)
+	for _, stage := range strategy {
+		play.Stage = stage.Name
+		stage.Invoke(play)
 	}
 }
 
@@ -91,7 +92,7 @@ var ByMode = map[mode.Type]Strategy{
 		DealStart,
 		PostAntes,
 		PostBlinds,
-		StartStreets,
+		Streets,
 		Showdown,
 		DealStop,
 	},

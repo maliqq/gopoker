@@ -6,7 +6,7 @@ import (
 
 import (
 	"gopoker/play/command"
-	"gopoker/play/mode"
+	_ "gopoker/play/mode"
 )
 
 /*
@@ -21,10 +21,6 @@ Run in different modes:
 	Redirect to other table on new deal.
 
 */
-func (play *Play) Run(m mode.Type) {
-	play.Mode = m
-	play.RunLoop()
-}
 
 func (play *Play) RunLoop() {
 Loop:
@@ -34,6 +30,8 @@ Loop:
 			switch cmd {
 			case command.NextDeal:
 				go play.RunMode()
+
+			case command.Showdown:
 
 			case command.Exit:
 				break Loop

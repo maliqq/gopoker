@@ -13,44 +13,90 @@ import (
 /*
 Strategy invoking
 */
-type Stage func(*Play)
-
-func DealStart(play *Play) {
-	play.StartNewDeal()
-	play.ResetSeats()
-	play.RotateGame()
+type Stage struct {
+	Name   string
+	Invoke func(*Play)
 }
 
-func PostAntes(play *Play) {
-	if play.Game.HasAnte || play.Stake.HasAnte() {
-		log.Println("[play] post antes")
+var (
+	DealStart = Stage{"deal-start", func(play *Play) {
+		play.StartNewDeal()
+		play.RotateGame()
+		play.ResetSeats()
+	}}
 
-		play.PostAntes()
-		play.ResetBetting()
-	}
-}
+	PostAntes = Stage{"post-antes", func(play *Play) {
+		if play.Game.HasAnte || play.Stake.HasAnte() {
+			log.Println("[play] post antes")
 
-func PostBlinds(play *Play) {
-	if play.Game.HasBlinds {
-		log.Println("[play] post blinds")
+			play.GamePlay.PostAntes()
+			play.GamePlay.ResetBetting()
+		}
+	}}
 
-		play.MoveButton()
-		play.PostBlinds()
-	}
-}
+	PostBlinds = Stage{"post-blinds", func(play *Play) {
+		if play.Game.HasBlinds {
+			log.Println("[play] post blinds")
 
-func StartStreets(play *Play) {
-	for _, street := range street.Get(play.Game.Group) {
-		play.Street = street
-		play.RunStreet()
-	}
-}
+			play.GamePlay.MoveButton()
+			play.GamePlay.PostBlinds()
+		}
+	}}
 
-func BringIn(play *Play) {
-	log.Println("[play] bring in")
+	Streets = Stage{"streets", func(play *Play) {
+		for _, street := range street.Get(play.Game.Group) {
+			play.Street = street
+			play.RunStreet()
+		}
+		play.Street = ""
+	}}
 
-	play.BringIn()
-}
+	BringIn = Stage{"bring-in", func(play *Play) {
+		log.Println("[play] bring in")
+
+		play.GamePlay.BringIn()
+	}}
+
+	Betting = Stage{"betting", func(play *Play) {
+		log.Println("[play] betting")
+
+		play.GamePlay.StartBettingRound()
+	}}
+
+	Discarding = Stage{"discarding", func(play *Play) {
+		log.Println("[play] discarding")
+
+		play.GamePlay.StartDiscardingRound()
+	}}
+
+	BigBets = Stage{"big-bets", func(play *Play) {
+		log.Println("[play] big bets")
+
+		play.Betting.BigBets = true
+	}}
+
+	Showdown = Stage{"showdown", func(play *Play) {
+		log.Println("[play] showdown")
+
+		var highHands, lowHands gameplay.ShowdownHands
+
+		if play.Game.Lo != "" {
+			lowHands = play.GamePlay.ShowHands(play.Game.Lo, play.Game.HasBoard)
+		}
+
+		if play.Game.Hi != "" {
+			highHands = play.GamePlay.ShowHands(play.Game.Hi, play.Game.HasBoard)
+		}
+
+		play.GamePlay.Winners(highHands, lowHands)
+	}}
+
+	DealStop = Stage{"deal-stop", func(play *Play) {
+		log.Println("[play] deal stop")
+
+		play.ScheduleNextDeal()
+	}}
+)
 
 type dealing struct {
 	deal.Type
@@ -66,56 +112,16 @@ func (d dealing) Stage(play *Play) {
 
 	switch d.Type {
 	case deal.Hole:
-		play.DealHole(n)
+		play.GamePlay.DealHole(n)
 
 	case deal.Door:
-		play.DealDoor(n)
+		play.GamePlay.DealDoor(n)
 
 	case deal.Board:
-		play.DealBoard(n)
+		play.GamePlay.DealBoard(n)
 	}
 }
 
 func Dealing(t deal.Type, n int) Stage {
-	return dealing{t, n}.Stage
-}
-
-func Betting(play *Play) {
-	log.Println("[play] betting")
-
-	play.StartBettingRound()
-}
-
-func Discarding(play *Play) {
-	log.Println("[play] discarding")
-
-	play.StartDiscardingRound()
-}
-
-func BigBets(play *Play) {
-	log.Println("[play] big bets")
-
-	play.Betting.BigBets = true
-}
-
-func Showdown(play *Play) {
-	log.Println("[play] showdown")
-
-	var highHands, lowHands gameplay.ShowdownHands
-
-	if play.Game.Lo != "" {
-		lowHands = play.ShowHands(play.Game.Lo, play.Game.HasBoard)
-	}
-
-	if play.Game.Hi != "" {
-		highHands = play.ShowHands(play.Game.Hi, play.Game.HasBoard)
-	}
-
-	play.Winners(highHands, lowHands)
-}
-
-func DealStop(play *Play) {
-	log.Println("[play] deal stop")
-
-	play.ScheduleNextDeal()
+	return Stage{"dealing", dealing{t, n}.Stage}
 }
