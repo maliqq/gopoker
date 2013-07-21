@@ -1,0 +1,99 @@
+---
+- - NodeRPC.CreateRoom
+  - :Id: '0'
+    :TableSize: 9
+    :BetSize: 10.0
+    :Mix: 
+    :Game:
+      :Type: texas
+      :Limit: no-limit
+- - NodeRPC.NotifyRoom
+  - :Id: '0'
+    :Message:
+      :Type: JoinTable
+      :Timestamp: 1374361719
+      :Envelope:
+        :JoinTable:
+          :Pos: 0
+          :Player: player-0
+          :Amount: 66.17
+- - NodeRPC.NotifyRoom
+  - :Id: '0'
+    :Message:
+      :Type: JoinTable
+      :Timestamp: 1374361719
+      :Envelope:
+        :JoinTable:
+          :Pos: 1
+          :Player: player-1
+          :Amount: 59.38
+- - NodeRPC.NotifyRoom
+  - :Id: '0'
+    :Message:
+      :Type: JoinTable
+      :Timestamp: 1374361719
+      :Envelope:
+        :JoinTable:
+          :Pos: 2
+          :Player: player-2
+          :Amount: 41.54
+- - NodeRPC.NotifyRoom
+  - :Id: '0'
+    :Message:
+      :Type: JoinTable
+      :Timestamp: 1374361719
+      :Envelope:
+        :JoinTable:
+          :Pos: 3
+          :Player: player-3
+          :Amount: 54.1
+- - NodeRPC.NotifyRoom
+  - :Id: '0'
+    :Message:
+      :Type: JoinTable
+      :Timestamp: 1374361719
+      :Envelope:
+        :JoinTable:
+          :Pos: 4
+          :Player: player-4
+          :Amount: 52.9
+- - NodeRPC.NotifyRoom
+  - :Id: '0'
+    :Message:
+      :Type: JoinTable
+      :Timestamp: 1374361719
+      :Envelope:
+        :JoinTable:
+          :Pos: 5
+          :Player: player-5
+          :Amount: 82.42
+- - NodeRPC.NotifyRoom
+  - :Id: '0'
+    :Message:
+      :Type: JoinTable
+      :Timestamp: 1374361719
+      :Envelope:
+        :JoinTable:
+          :Pos: 6
+          :Player: player-6
+          :Amount: 45.74
+- - NodeRPC.NotifyRoom
+  - :Id: '0'
+    :Message:
+      :Type: JoinTable
+      :Timestamp: 1374361719
+      :Envelope:
+        :JoinTable:
+          :Pos: 7
+          :Player: player-7
+          :Amount: 56.67
+- - NodeRPC.NotifyRoom
+  - :Id: '0'
+    :Message:
+      :Type: JoinTable
+      :Timestamp: 1374361719
+      :Envelope:
+        :JoinTable:
+          :Pos: 8
+          :Player: player-8
+          :Amount: 49.82
