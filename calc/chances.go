@@ -24,7 +24,7 @@ type ChancesAgainstOne struct {
 }
 
 type ChancesAgainstN struct {
-	Num int
+	OpponentsNum int
 	SamplesNum int
 }
 
@@ -107,6 +107,20 @@ func (c ChancesAgainstOne) WithBoard(hole, board poker.Cards) Chances {
 	return *chances
 }
 
+func (c ChancesAgainstN) Equity(hole poker.Cards, board poker.Cards) float64 {
+	var chances Chances
+	if len(board) == 0 {
+		chances = c.Preflop(hole)
+	} else {
+		chances = c.WithBoard(hole, board)
+	}
+
+	e := float64(chances.Wins) / float64(c.SamplesNum)
+	e += float64(chances.Ties) / float64(c.OpponentsNum)
+
+	return e
+}
+
 func (c ChancesAgainstN) Preflop(hole poker.Cards) Chances {
 	samplesNum := c.SamplesNum
 	chances := &Chances{}
@@ -131,7 +145,7 @@ func (c ChancesAgainstN) WithBoard(hole, board poker.Cards) Chances {
 		panic("board invalid")
 	}
 
-	opponentsNum := c.Num
+	opponentsNum := c.OpponentsNum
 	samplesNum := c.SamplesNum
 	holeCardsNum := len(hole)
 	cardsNumToCompleteBoard := FullBoardLen - len(board)
