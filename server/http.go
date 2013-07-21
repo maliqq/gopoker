@@ -8,12 +8,15 @@ import (
 
 import (
 	"code.google.com/p/go.net/websocket"
-	"github.com/gorilla/mux"
+	gorilla_mux "github.com/gorilla/mux"
+	gorilla_rpc "github.com/gorilla/rpc"
+	gorilla_json "github.com/gorilla/rpc/json"
 )
 
 const (
-	WebSocketPath = "/_ws"
 	HttpApiPath   = "/_api"
+	RpcPath       = "/_rpc"
+	WebSocketPath = "/_ws"
 )
 
 type NodeHTTP struct {
@@ -25,10 +28,8 @@ type Rooms struct {
 }
 
 func (n *Node) StartHTTP() {
-	nodeHTTP := &NodeHTTP{n}
-
-	router := mux.NewRouter()
-	nodeHTTP.drawRoutes(router)
+	router := gorilla_mux.NewRouter()
+	n.drawRoutes(router)
 
 	log.Printf("[http] Starting service at %s", n.ApiAddr)
 	if err := http.ListenAndServe(n.ApiAddr, router); err != nil {
@@ -36,7 +37,9 @@ func (n *Node) StartHTTP() {
 	}
 }
 
-func (nodeHTTP *NodeHTTP) drawRoutes(router *mux.Router) {
+func (n *Node) drawRoutes(router *gorilla_mux.Router) {
+	nodeHTTP := &NodeHTTP{n}
+
 	api := router.PathPrefix(HttpApiPath).Subrouter()
 
 	// Room
@@ -71,6 +74,14 @@ func (nodeHTTP *NodeHTTP) drawRoutes(router *mux.Router) {
 	api.HandleFunc("/deal/{deal}/stage", nodeHTTP.Stage).Methods("GET")
 	api.HandleFunc("/deal/{deal}/results", nodeHTTP.Results).Methods("GET")
 	api.HandleFunc("/deal/{deal}/known_hands", nodeHTTP.KnownHands).Methods("GET")
+
+	// RPC over HTTP
+	nodeRPC := NodeRPC{n}
+	rpc := gorilla_rpc.NewServer()
+	rpc.RegisterService(nodeRPC, "")
+	rpc.RegisterCodec(gorilla_json.NewCodec(), "application/json")
+
+	router.Handle(RpcPath, rpc)
 
 	// WebSocket
 	router.Handle(WebSocketPath, websocket.Handler(nodeHTTP.WebSocketHandler))

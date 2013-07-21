@@ -1,25 +1,20 @@
 package server
 
-const (
-	rpcRoot      = "/_rpc"
-	rpcDebugRoot = "/_rpc/debug"
-)
-
 type Node struct {
 	Name    string
 	ApiAddr string
 	//apiService
 	RpcAddr string
 	//rpcService
-	Rooms    map[string]*Room
+	Rooms map[string]*Room
 }
 
 func NewNode(name string, apiAddr string, rpcAddr string) *Node {
 	return &Node{
-		Name:     name,
-		ApiAddr:  apiAddr,
-		RpcAddr:  rpcAddr,
-		Rooms:    map[string]*Room{},
+		Name:    name,
+		ApiAddr: apiAddr,
+		RpcAddr: rpcAddr,
+		Rooms:   map[string]*Room{},
 	}
 }
 

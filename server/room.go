@@ -1,16 +1,16 @@
 package server
 
 import (
+	"gopoker/client"
 	"gopoker/model"
 	"gopoker/play"
-	"gopoker/client"
 	"gopoker/server/rpc_service"
 )
 
 type Room struct {
 	Id string
 	*play.Play
-	Waiting map[string]*client.Session
+	Waiting  map[string]*client.Session
 	Watchers map[string]*client.Session
 }
 
@@ -41,9 +41,9 @@ func NewRoom(createRoom *rpc_service.CreateRoom) *Room {
 	newPlay := play.NewPlay(variation, stake, table)
 
 	return &Room{
-		Id:   createRoom.Id,
-		Play: newPlay,
-		Waiting: map[string]*client.Session{},
+		Id:       createRoom.Id,
+		Play:     newPlay,
+		Waiting:  map[string]*client.Session{},
 		Watchers: map[string]*client.Session{},
 	}
 }

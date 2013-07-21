@@ -2,8 +2,8 @@ package rpc_service
 
 import (
 	"gopoker/model"
-	"gopoker/protocol"
 	"gopoker/play/mode"
+	"gopoker/protocol"
 )
 
 type CallResult struct {
@@ -24,7 +24,7 @@ type RequestRoom struct {
 }
 
 type StartRoom struct {
-	Id string
+	Id   string
 	Mode mode.Type
 }
 
