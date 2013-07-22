@@ -83,20 +83,18 @@ func (this *Play) processMessage(msg *protocol.Message) {
 		} else {
 			log.Printf("[protocol] error: %s", err)
 		}
-		//this.Broadcast.Except(join.Player) <- join
+		// retranslate
+		this.Broadcast.All <- msg
 
 	case protocol.LeaveTable:
 		leave := msg.Envelope.LeaveTable
 		this.Table.RemovePlayer(leave.Player)
-
-		//this.Broadcast.Except(join.Player) <- leave
-
+		this.Broadcast.All <- msg
 		// TODO: fold & autoplay
 
 	case protocol.SitOut:
 		sitOut := msg.Envelope.SitOut
 		this.Table.Seat(sitOut.Pos).State = seat.Idle
-
 		// TODO: fold
 
 	case protocol.ComeBack:
@@ -105,6 +103,7 @@ func (this *Play) processMessage(msg *protocol.Message) {
 
 	case protocol.AddBet:
 		this.Betting.Bet <- msg
+		this.Broadcast.All <- msg
 
 	case protocol.DiscardCards:
 		this.Discarding.Discard <- msg
