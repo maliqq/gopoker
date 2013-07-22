@@ -78,10 +78,10 @@ func (broadcast *Broadcast) Only(actors ...Actor) MessageChannel {
 	return broadcast.route(notify)
 }
 
-func (broadcast *Broadcast) Bind(actor Actor, channel MessageChannel) {
-	broadcast.Broker.Bind(actor.RouteKey(), channel)
+func (broadcast *Broadcast) Bind(actor Actor, ch *MessageChannel) {
+	broadcast.Broker.Bind(actor.RouteKey(), ch)
 }
 
-func (broadcast *Broadcast) For(actor Actor) chan *Message {
+func (broadcast *Broadcast) For(actor Actor) *MessageChannel {
 	return broadcast.Broker.For(actor.RouteKey())
 }

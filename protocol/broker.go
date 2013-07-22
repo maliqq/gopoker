@@ -13,21 +13,25 @@ type MessageChannel chan *Message
 
 // pubsub
 type Broker struct {
-	Send map[string]MessageChannel
+	Send map[string]*MessageChannel
 }
 
 func NewBroker() *Broker {
 	return &Broker{
-		Send: map[string]MessageChannel{},
+		Send: map[string]*MessageChannel{},
 	}
 }
 
-func (broker *Broker) Bind(key string, channel MessageChannel) {
+func (broker *Broker) Bind(key string, channel *MessageChannel) {
 	broker.Send[key] = channel
 }
 
-func (broker *Broker) For(key string) MessageChannel {
-	ch, _ := broker.Send[key]
+func (broker *Broker) For(key string) *MessageChannel {
+	ch, found := broker.Send[key]
+
+	if !found {
+		// ...
+	}
 
 	return ch
 }
@@ -84,7 +88,10 @@ func (n *Notify) String() string {
 }
 
 func (broker *Broker) send(key string, msg *Message) {
-	broker.Send[key] <- msg
+	ch, found := broker.Send[key]
+	if found {
+		*ch <- msg
+	}
 }
 
 func (broker *Broker) Dispatch(n *Notify, msg *Message) {
