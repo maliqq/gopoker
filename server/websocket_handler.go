@@ -32,7 +32,7 @@ func (nodeHTTP *NodeHTTP) WebSocketHandler(conn *websocket.Conn) {
 	defer close(session.Receive)
 
 	for _, player := range room.Table.AllPlayers() {
-		room.Broadcast.Bind(player, session.Receive)
+		room.Broadcast.Bind(player, &session.Receive)
 	}
 
 	session.Start()
