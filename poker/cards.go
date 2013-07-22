@@ -6,6 +6,7 @@ import (
 	"regexp"
 	"sort"
 	"time"
+	"bytes"
 )
 
 import (
@@ -106,7 +107,8 @@ func (c Cards) MarshalJSON() ([]byte, error) {
 	//if len(c) == 0 {
 	//  return []byte("null"), nil
 	//}
-	return json.Marshal(c.Binary())
+	runes := bytes.Runes(c.Binary())
+	return json.Marshal(runes)
 }
 
 func (this Cards) Shuffle() Cards {

@@ -2,6 +2,7 @@ package poker
 
 import (
 	"testing"
+	"encoding/json"
 )
 
 func TestCards(t *testing.T) {
@@ -18,4 +19,13 @@ func TestCards(t *testing.T) {
 	t.Logf("combine(3)=%s", cards.Combine(3))
 
 	//t.FailNow()
+}
+
+func TestBinary(t *testing.T) {
+	c, _ := ParseCards("AhKdJs8h")
+
+	b, _ := json.Marshal(c)
+	t.Logf("raw=%#v json=%s", c.Binary(), b)
+
+	t.FailNow()
 }
