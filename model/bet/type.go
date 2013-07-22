@@ -1,47 +1,24 @@
 package bet
 
-type ForcedBet string
-type ActiveBet string
-type PassiveBet string
-type AnyBet string
-
-type Type interface {
-	Value() AnyBet
-}
+type Type string
 
 const (
-	Ante       ForcedBet = "ante"
-	BringIn    ForcedBet = "bring-in"
-	SmallBlind ForcedBet = "small-blind"
-	BigBlind   ForcedBet = "big-blind"
-	GuestBlind ForcedBet = "guest-blind"
-	Straddle   ForcedBet = "straddle"
+	Ante       Type = "ante"
+	BringIn    Type = "bring-in"
+	SmallBlind Type = "small-blind"
+	BigBlind   Type = "big-blind"
+	GuestBlind Type = "guest-blind"
+	Straddle   Type = "straddle"
 
-	Raise ActiveBet = "raise"
-	Call  ActiveBet = "call"
+	Raise Type = "raise"
+	Call  Type = "call"
 
-	Check PassiveBet = "check"
-	Fold  PassiveBet = "fold"
+	Check Type = "check"
+	Fold  Type = "fold"
 
-	Discard  AnyBet = "discard"
-	StandPat AnyBet = "stand-pat"
+	Discard  Type = "discard"
+	StandPat Type = "stand-pat"
 
-	Show AnyBet = "show"
-	Muck AnyBet = "muck"
+	Show Type = "show"
+	Muck Type = "muck"
 )
-
-func (any AnyBet) Value() AnyBet {
-	return any
-}
-
-func (forced ForcedBet) Value() AnyBet {
-	return AnyBet(string(forced))
-}
-
-func (active ActiveBet) Value() AnyBet {
-	return AnyBet(string(active))
-}
-
-func (passive PassiveBet) Value() AnyBet {
-	return AnyBet(string(passive))
-}

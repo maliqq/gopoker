@@ -21,27 +21,27 @@ type BetRange struct {
 
 func (b Bet) String() string {
 	if b.Amount != 0. {
-		return fmt.Sprintf("%s %.2f", string(b.Type.Value()), b.Amount)
+		return fmt.Sprintf("%s %.2f", string(b.Type), b.Amount)
 	}
-	return string(b.Type.Value())
+	return string(b.Type)
 }
 
 func (b Bet) IsActive() bool {
-	switch b.Type.(type) {
-	case bet.ActiveBet:
+	switch b.Type {
+	case bet.Raise, bet.Call:
 		return true
+	default:
+		return false
 	}
-
-	return false
 }
 
 func (b Bet) IsForced() bool {
-	switch b.Type.(type) {
-	case bet.ForcedBet:
+	switch b.Type {
+	case bet.Ante, bet.BringIn, bet.SmallBlind, bet.BigBlind, bet.GuestBlind, bet.Straddle:
 		return true
+	default:
+		return false
 	}
-
-	return false
 }
 
 func NewBet(t bet.Type, amount float64) *Bet {
