@@ -38,14 +38,16 @@ func (session *Session) Start() {
 
 func (session *Session) Read() {
 	for {
-		var message *protocol.Message
+		var message protocol.Message
 
-		err := session.Connection.Receive(message)
+		err := session.Connection.Receive(&message)
 		if err != nil {
+			log.Printf("[websocket] receive error: %s", err)
+
 			break
 		}
 
-		*session.Send <- message
+		*session.Send <- &message
 	}
 
 	session.close()
@@ -55,9 +57,12 @@ func (session *Session) Write() {
 	for message := range session.Receive {
 		err := session.Connection.Send(message)
 		if err != nil {
+			log.Printf("[websocket] send error: %s", err)
+
 			break
 		}
 	}
+
 	session.close()
 }
 
