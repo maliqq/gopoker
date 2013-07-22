@@ -5,13 +5,7 @@ import (
 	"gopoker/protocol"
 )
 
-func (this *GamePlay) SetButton(pos int) {
-	this.Table.SetButton(pos)
-
-	this.Broadcast.All <- protocol.NewMoveButton(pos)
-}
-
-func (this *GamePlay) BringIn() {
+func (this *GamePlay) BringIn() Transition {
 	minPos := 0
 	var card poker.Card
 
@@ -31,9 +25,11 @@ func (this *GamePlay) BringIn() {
 		}
 	}
 
-	this.SetButton(minPos)
+	this.Table.SetButton(minPos)
+	this.Broadcast.All <- protocol.NewMoveButton(minPos)
 
 	seat := this.Table.Seat(minPos)
-
 	this.Broadcast.One(seat.Player) <- this.Betting.RequireBet(minPos, seat, this.Game, this.Stake)
+
+	return Next
 }

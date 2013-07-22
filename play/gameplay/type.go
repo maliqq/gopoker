@@ -7,6 +7,15 @@ import (
 	"gopoker/protocol"
 )
 
+type Transition string
+
+const (
+	Stop Transition = "stop"
+	Next Transition = "next"
+	Skip Transition = "skip"
+	Redo Transition = "redo"
+)
+
 type GamePlay struct {
 	// dealt cards context
 	Deal *model.Deal

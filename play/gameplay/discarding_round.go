@@ -7,7 +7,7 @@ import (
 	"gopoker/protocol"
 )
 
-func (this *GamePlay) StartDiscardingRound() {
+func (this *GamePlay) StartDiscardingRound() Transition {
 	discarding := this.Discarding
 
 	for _, pos := range this.Table.AllSeats().InPlay() {
@@ -15,6 +15,8 @@ func (this *GamePlay) StartDiscardingRound() {
 
 		this.Broadcast.One(seat.Player) <- discarding.RequireDiscard(pos, seat)
 	}
+
+	return Next
 }
 
 func (this *GamePlay) discard(p model.Player, cards poker.Cards) {

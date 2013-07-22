@@ -2,18 +2,10 @@ package play
 
 import (
 	"gopoker/model/deal"
-	"gopoker/play/mode"
 	"gopoker/play/street"
 )
 
 type Strategy []Stage
-
-func (strategy Strategy) Proceed(play *Play) {
-	for _, stage := range strategy {
-		play.Stage = stage.Name
-		stage.Invoke(play)
-	}
-}
 
 var ByStreet = map[street.Type]Strategy{
 	// holdem poker
@@ -84,16 +76,5 @@ var ByStreet = map[street.Type]Strategy{
 	street.ThirdDraw: Strategy{
 		Betting,
 		Discarding,
-	},
-}
-
-var ByMode = map[mode.Type]Strategy{
-	mode.Cash: Strategy{
-		DealStart,
-		PostAntes,
-		PostBlinds,
-		Streets,
-		Showdown,
-		DealStop,
 	},
 }
