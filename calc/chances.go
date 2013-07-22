@@ -162,7 +162,7 @@ func (c ChancesAgainstN) WithBoard(hole, board poker.Cards) Chances {
 		sampleDealer := model.NewDealerWithDeck(cardsLeft.Shuffle())
 
 		fullBoard := board
-		if cardsNumToCompleteBoard == 0 {
+		if cardsNumToCompleteBoard != 0 {
 			fullBoard = append(board, sampleDealer.Deal(cardsNumToCompleteBoard)...)
 		}
 
