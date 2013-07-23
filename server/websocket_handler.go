@@ -1,6 +1,10 @@
 package server
 
 import (
+	"fmt"
+)
+
+import (
 	"code.google.com/p/go.net/websocket"
 )
 
@@ -18,7 +22,10 @@ func (nodeHTTP *NodeHTTP) WebSocketHandler(conn *websocket.Conn) {
 	room, found := node.Rooms[roomId]
 
 	if !found {
-		// 404
+		errMsg := protocol.NewError(fmt.Errorf("room with id=%s not found", roomId))
+		websocket.JSON.Send(conn, errMsg)
+		conn.Close()
+		return
 	}
 
 	id := util.RandomUuid()

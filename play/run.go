@@ -2,7 +2,7 @@ package play
 
 import (
 	"log"
-	_ "time"
+	"time"
 )
 
 import (
@@ -117,5 +117,6 @@ func (this *Play) run() {
 	// deal stop
 	log.Println("[play] deal stop")
 
+	<-time.After(10 * time.Second)
 	this.GamePlay.Control <- command.NextDeal
 }

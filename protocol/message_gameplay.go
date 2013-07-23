@@ -7,13 +7,13 @@ import (
 
 // error
 type Error struct {
-	Description string
+	Message string
 }
 
 func NewError(err error) *Message {
 	return NewMessage(
 		Error{
-			Description: err.Error(),
+			Message: err.Error(),
 		},
 	)
 }
