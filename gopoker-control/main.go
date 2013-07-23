@@ -1,20 +1,20 @@
 package main
 
 import (
-	"fmt"
 	"flag"
+	"fmt"
 	"log"
+	"math/rand"
 	"net/rpc"
 	"net/rpc/jsonrpc"
-	"math/rand"
 )
 
 import (
 	"gopoker/model"
 	"gopoker/model/game"
-	"gopoker/server/rpc_service"
 	"gopoker/protocol"
-	_"gopoker/util"
+	"gopoker/server/rpc_service"
+	_ "gopoker/util"
 )
 
 var (
@@ -52,7 +52,7 @@ func main() {
 		player := fmt.Sprintf("player-%d", pos)
 		amount := float64(rand.Intn(1000) + 1000)
 		call(client, "NodeRPC.NotifyRoom", &rpc_service.NotifyRoom{
-			Id: roomId,
+			Id:      roomId,
 			Message: protocol.NewJoinTable(model.Player(player), pos, amount),
 		})
 	}

@@ -101,6 +101,9 @@ func (this *Play) processMessage(msg *protocol.Message) {
 		comeBack := msg.Envelope.ComeBack
 		this.Table.Seat(comeBack.Pos).State = seat.Ready
 
+	case protocol.Chat:
+		this.Broadcast.All <- msg
+
 	case protocol.AddBet:
 		this.Betting.Bet <- msg
 		this.Broadcast.All <- msg

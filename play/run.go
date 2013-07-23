@@ -1,5 +1,9 @@
 package play
 
+//
+// game main loop
+//
+
 import (
 	"log"
 	"time"
@@ -32,6 +36,8 @@ Loop:
 }
 
 func (this *Play) run() {
+	this.Broadcast.All <- protocol.NewPlayStart()
+
 	// prepare seats
 	log.Println("[play] prepare seats")
 
@@ -80,6 +86,7 @@ func (this *Play) run() {
 	// run streets
 	for _, street := range street.Get(this.Game.Group) {
 		log.Printf("[play] street %s\n", street)
+		this.Broadcast.All <- protocol.NewStreetStart(string(street), this.Betting.Pot)
 
 		this.Street = street
 

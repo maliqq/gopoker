@@ -1,14 +1,11 @@
 package gameplay
 
-import (
-	"gopoker/protocol"
-)
-
 const (
 	DefaultTimer = 30
 )
 
 func (this *GamePlay) StartBettingRound() Transition {
+	//this.Broadcast.All <- protocol.NewBettingStart(this.Betting)
 	pos := make(chan int)
 	defer close(pos)
 
@@ -49,5 +46,5 @@ func (this *GamePlay) ResetBetting() {
 		seat.Play()
 	}
 
-	this.Broadcast.All <- protocol.NewCollectPot(this.Betting.Pot)
+	//this.Broadcast.All <- protocol.NewBettingStop(this.Betting)
 }
