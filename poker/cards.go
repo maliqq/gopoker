@@ -1,12 +1,12 @@
 package poker
 
 import (
+	"bytes"
 	"encoding/json"
 	"math/rand"
 	"regexp"
 	"sort"
 	"time"
-	"bytes"
 )
 
 import (

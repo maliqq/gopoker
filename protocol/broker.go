@@ -33,7 +33,7 @@ func (s System) RouteKey() string {
 
 const (
 	Private System = "private"
-	Public System = "public"
+	Public  System = "public"
 )
 
 func NewBroker() *Broker {

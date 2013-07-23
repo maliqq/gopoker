@@ -43,7 +43,7 @@ type Envelope struct {
 type Message struct {
 	Type      string
 	Timestamp int64
-	Notify Notify
+	Notify    Notify
 	Envelope  Envelope
 }
 

@@ -1,9 +1,13 @@
 package model
 
+import (
+	"math"
+)
+
 type Currency struct {
-	Name string
-	IsoCode string
-	Precision int
+	Name      string // "US Dollar"
+	IsoCode   string // "USD"
+	Precision int    // 2
 }
 
 type Money struct {
@@ -12,5 +16,5 @@ type Money struct {
 }
 
 func (m Money) Float64() float64 {
-	return float64(m.Value) / float64(m.Precision)
+	return float64(m.Value) / math.Pow10(m.Precision)
 }

@@ -1,8 +1,8 @@
 package poker
 
 import (
-	"testing"
 	"encoding/json"
+	"testing"
 )
 
 func TestCards(t *testing.T) {
