@@ -16,6 +16,26 @@ type Broker struct {
 	Send map[string]*MessageChannel
 }
 
+// route
+type Notify struct {
+	All    bool
+	None   bool
+	One    string
+	Only   []string
+	Except []string
+}
+
+type System string
+
+func (s System) RouteKey() string {
+	return string(s)
+}
+
+const (
+	Private System = "private"
+	Public System = "public"
+)
+
 func NewBroker() *Broker {
 	return &Broker{
 		Send: map[string]*MessageChannel{},
@@ -38,15 +58,6 @@ func (broker *Broker) For(key string) *MessageChannel {
 
 func (broker *Broker) Unbind(key string) {
 	delete(broker.Send, key)
-}
-
-// route
-type Notify struct {
-	All    bool
-	None   bool
-	One    string
-	Only   []string
-	Except []string
 }
 
 func (n *Notify) RouteType() string {
@@ -97,12 +108,15 @@ func (broker *Broker) send(key string, msg *Message) {
 func (broker *Broker) Dispatch(n *Notify, msg *Message) {
 	log.Println(console.Color(console.CYAN, fmt.Sprintf("%s %s", n, msg)))
 
+	msg.Notify = *n // FIXME
+
 	if n.None {
 		return
 	}
 
 	if n.One != "" {
 		broker.send(n.One, msg)
+		broker.send("private", msg)
 
 		return
 	}
@@ -137,5 +151,9 @@ func (broker *Broker) Dispatch(n *Notify, msg *Message) {
 		}
 
 		broker.send(key, msg)
+	}
+
+	if n.All {
+		broker.send("public", msg)
 	}
 }

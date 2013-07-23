@@ -37,7 +37,7 @@ func (this *Play) run() {
 
 	for _, s := range this.Table.Seats {
 		switch s.State {
-		case seat.Ready, seat.Play:
+		case seat.Ready, seat.Play, seat.Fold:
 			s.Play()
 		}
 	}

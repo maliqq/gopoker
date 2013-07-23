@@ -27,36 +27,36 @@ func NewBroadcast() *Broadcast {
 	return broadcast
 }
 
-func (broadcast *Broadcast) receive() {
+func (this *Broadcast) receive() {
 	for {
 		select {
-		case msg := <-broadcast.All:
-			broadcast.Broker.Dispatch(&Notify{All: true}, msg)
+		case msg := <-this.All:
+			this.Broker.Dispatch(&Notify{All: true}, msg)
 
-		case notification := <-broadcast.Route:
-			broadcast.Broker.Dispatch(notification.Notify, notification.Message)
+		case notification := <-this.Route:
+			this.Broker.Dispatch(notification.Notify, notification.Message)
 		}
 	}
 }
 
-func (broadcast *Broadcast) route(notify *Notify) MessageChannel {
+func (this *Broadcast) route(notify *Notify) MessageChannel {
 	channel := make(MessageChannel)
 
 	go func() {
 		msg := <-channel
-		broadcast.Route <- &Notification{msg, notify}
+		this.Route <- &Notification{msg, notify}
 	}()
 
 	return channel
 }
 
-func (broadcast *Broadcast) One(actor Actor) MessageChannel {
+func (this *Broadcast) One(actor Actor) MessageChannel {
 	notify := &Notify{One: actor.RouteKey()}
 
-	return broadcast.route(notify)
+	return this.route(notify)
 }
 
-func (broadcast *Broadcast) Except(actors ...Actor) MessageChannel {
+func (this *Broadcast) Except(actors ...Actor) MessageChannel {
 	keys := make([]string, len(actors))
 	for i, a := range actors {
 		keys[i] = a.RouteKey()
@@ -64,10 +64,10 @@ func (broadcast *Broadcast) Except(actors ...Actor) MessageChannel {
 
 	notify := &Notify{Except: keys}
 
-	return broadcast.route(notify)
+	return this.route(notify)
 }
 
-func (broadcast *Broadcast) Only(actors ...Actor) MessageChannel {
+func (this *Broadcast) Only(actors ...Actor) MessageChannel {
 	keys := make([]string, len(actors))
 	for i, a := range actors {
 		keys[i] = a.RouteKey()
@@ -75,13 +75,13 @@ func (broadcast *Broadcast) Only(actors ...Actor) MessageChannel {
 
 	notify := &Notify{Only: keys}
 
-	return broadcast.route(notify)
+	return this.route(notify)
 }
 
-func (broadcast *Broadcast) Bind(actor Actor, ch *MessageChannel) {
-	broadcast.Broker.Bind(actor.RouteKey(), ch)
+func (this *Broadcast) Bind(actor Actor, ch *MessageChannel) {
+	this.Broker.Bind(actor.RouteKey(), ch)
 }
 
-func (broadcast *Broadcast) For(actor Actor) *MessageChannel {
-	return broadcast.Broker.For(actor.RouteKey())
+func (this *Broadcast) For(actor Actor) *MessageChannel {
+	return this.Broker.For(actor.RouteKey())
 }

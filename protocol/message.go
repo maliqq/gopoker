@@ -43,6 +43,7 @@ type Envelope struct {
 type Message struct {
 	Type      string
 	Timestamp int64
+	Notify Notify
 	Envelope  Envelope
 }
 
@@ -123,6 +124,7 @@ func (msg *Message) MarshalJSON() ([]byte, error) {
 	data := map[string]interface{}{}
 	data["Type"] = msg.Type
 	data["Timestamp"] = msg.Timestamp
+	data["Notify"] = msg.Notify // FIXME
 	// cleanup fields
 	value := reflect.ValueOf(msg.Envelope)
 	field := value.FieldByName(msg.Type)
