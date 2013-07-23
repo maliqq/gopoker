@@ -15,29 +15,37 @@ const (
 type Payload interface{}
 
 type Envelope struct {
+	// notice
+	Error    *Error
+	Chat     *Chat
+	Announce *Announce
+
+	// gameplay
+	PlayStart   *PlayStart
+	StreetStart *StreetStart
+	ChangeGame  *ChangeGame
+
+	// table
 	JoinTable  *JoinTable
 	LeaveTable *LeaveTable
 	SitOut     *SitOut
 	ComeBack   *ComeBack
-
 	MoveButton *MoveButton
 
+	// betting
 	RequireBet *RequireBet
 	AddBet     *AddBet
 
-	DealCards *DealCards
-
+	// dealing
+	DealCards      *DealCards
 	RequireDiscard *RequireDiscard
 	Discarded      *Discarded
 	DiscardCards   *DiscardCards
 
-	CollectPot *CollectPot
-	ChangeGame *ChangeGame
-
+	// showdown
 	ShowHand  *ShowHand
 	ShowCards *ShowCards
-
-	Winner *Winner
+	Winner    *Winner
 }
 
 type Message struct {
@@ -64,6 +72,15 @@ func NewMessage(payload Payload) *Message {
 		field.SetPointer(&payload)
 	*/
 	switch v := payload.(type) {
+	case PlayStart:
+		envelope.PlayStart = &v
+
+	case StreetStart:
+		envelope.StreetStart = &v
+
+	case ChangeGame:
+		envelope.ChangeGame = &v
+
 	case JoinTable:
 		envelope.JoinTable = &v
 
@@ -97,12 +114,6 @@ func NewMessage(payload Payload) *Message {
 	case DiscardCards:
 		envelope.DiscardCards = &v
 
-	case CollectPot:
-		envelope.CollectPot = &v
-
-	case ChangeGame:
-		envelope.ChangeGame = &v
-
 	case ShowHand:
 		envelope.ShowHand = &v
 
@@ -111,6 +122,9 @@ func NewMessage(payload Payload) *Message {
 
 	case Winner:
 		envelope.Winner = &v
+
+	default:
+		log.Fatalf("[protocol] can't handle %#v", payload)
 	}
 
 	return &Message{

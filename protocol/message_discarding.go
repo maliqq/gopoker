@@ -23,19 +23,15 @@ func NewRequireDiscard(req *RequireDiscard) *Message {
 }
 
 func NewDiscarded(pos int, cardsNum int) *Message {
-	return NewMessage(
-		Discarded{
-			Pos: pos,
-			Num: cardsNum,
-		},
-	)
+	return NewMessage(Discarded{
+		Pos: pos,
+		Num: cardsNum,
+	})
 }
 
 func NewDiscardCards(pos int, cards poker.Cards) *Message {
-	return NewMessage(
-		DiscardCards{
-			Pos:   pos,
-			Cards: cards,
-		},
-	)
+	return NewMessage(DiscardCards{
+		Pos:   pos,
+		Cards: cards,
+	})
 }

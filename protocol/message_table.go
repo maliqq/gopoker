@@ -4,9 +4,6 @@ import (
 	"gopoker/model"
 )
 
-// table info
-type Table struct{}
-
 type MoveButton struct {
 	Pos int
 }
@@ -22,21 +19,17 @@ type LeaveTable struct {
 }
 
 func NewMoveButton(pos int) *Message {
-	return NewMessage(
-		MoveButton{
-			Pos: pos,
-		},
-	)
+	return NewMessage(MoveButton{
+		Pos: pos,
+	})
 }
 
 func NewJoinTable(player model.Player, pos int, amount float64) *Message {
-	return NewMessage(
-		JoinTable{
-			Player: player,
-			Pos:    pos,
-			Amount: amount,
-		},
-	)
+	return NewMessage(JoinTable{
+		Player: player,
+		Pos:    pos,
+		Amount: amount,
+	})
 }
 
 func NewLeaveTable(player model.Player) *Message {

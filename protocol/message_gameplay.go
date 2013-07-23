@@ -5,42 +5,13 @@ import (
 	"gopoker/model/game"
 )
 
-// error
-type Error struct {
-	Message string
+type PlayStart struct {
 }
 
-func NewError(err error) *Message {
-	return NewMessage(
-		Error{
-			Message: err.Error(),
-		},
-	)
-}
-
-type CollectPot struct {
-	Amount float64
-}
-
-func NewCollectPot(pot *model.Pot) *Message {
-	return NewMessage(
-		CollectPot{
-			Amount: pot.Total(),
-		},
-	)
-}
-
-type Chat struct {
-	Pos     int
-	Message string
-}
-
-// deal info
-type Deal struct {
-}
-
-type ChangeDealState struct {
-	State string
+type StreetStart struct {
+	Name string
+	Pot  float64
+	Rake float64
 }
 
 type ChangeGame struct {
@@ -48,11 +19,20 @@ type ChangeGame struct {
 	game.Limit
 }
 
+func NewStreetStart(name string, pot *model.Pot) *Message {
+	return NewMessage(StreetStart{
+		Name: name,
+		Pot:  pot.Total(),
+	})
+}
+
+func NewPlayStart() *Message {
+	return NewMessage(PlayStart{})
+}
+
 func NewChangeGame(g *model.Game) *Message {
-	return NewMessage(
-		ChangeGame{
-			Type:  g.Type,
-			Limit: g.Limit,
-		},
-	)
+	return NewMessage(ChangeGame{
+		Type:  g.Type,
+		Limit: g.Limit,
+	})
 }

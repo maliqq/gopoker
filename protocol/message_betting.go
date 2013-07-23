@@ -23,10 +23,8 @@ type AddBet struct {
 }
 
 func NewAddBet(pos int, bet *model.Bet) *Message {
-	return NewMessage(
-		AddBet{
-			Pos: pos,
-			Bet: *bet,
-		},
-	)
+	return NewMessage(AddBet{
+		Pos: pos,
+		Bet: *bet,
+	})
 }

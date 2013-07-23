@@ -26,39 +26,31 @@ type Winner struct {
 }
 
 func NewShowHand(pos int, cards poker.Cards, hand *poker.Hand) *Message {
-	return NewMessage(
-		ShowHand{
-			Pos:   pos,
-			Cards: cards,
-			Hand:  hand,
-		},
-	)
+	return NewMessage(ShowHand{
+		Pos:   pos,
+		Cards: cards,
+		Hand:  hand,
+	})
 }
 
 func NewShowCards(pos int, cards poker.Cards) *Message {
-	return NewMessage(
-		ShowCards{
-			Pos:   pos,
-			Cards: cards,
-		},
-	)
+	return NewMessage(ShowCards{
+		Pos:   pos,
+		Cards: cards,
+	})
 }
 
 func NewMuckCards(pos int, cards *poker.Cards) *Message {
-	return NewMessage(
-		ShowCards{
-			Pos:   pos,
-			Cards: *cards,
-			Muck:  true,
-		},
-	)
+	return NewMessage(ShowCards{
+		Pos:   pos,
+		Cards: *cards,
+		Muck:  true,
+	})
 }
 
 func NewWinner(player model.Player, amount float64) *Message {
-	return NewMessage(
-		Winner{
-			Player: player,
-			Amount: amount,
-		},
-	)
+	return NewMessage(Winner{
+		Player: player,
+		Amount: amount,
+	})
 }

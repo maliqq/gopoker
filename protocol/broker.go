@@ -32,8 +32,7 @@ func (s System) RouteKey() string {
 }
 
 const (
-	Private System = "private"
-	Public  System = "public"
+	Monitor System = "monitor"
 )
 
 func NewBroker() *Broker {
@@ -114,14 +113,19 @@ func (broker *Broker) Dispatch(n *Notify, msg *Message) {
 		return
 	}
 
+	defer broker.send("monitor", msg)
+
 	if n.One != "" {
 		broker.send(n.One, msg)
-		broker.send("private", msg)
 
 		return
 	}
 
 	for key, _ := range broker.Send {
+		if key == "monitor" {
+			continue
+		}
+
 		if !n.All {
 			var skip bool
 
@@ -151,9 +155,5 @@ func (broker *Broker) Dispatch(n *Notify, msg *Message) {
 		}
 
 		broker.send(key, msg)
-	}
-
-	if n.All {
-		broker.send("public", msg)
 	}
 }
