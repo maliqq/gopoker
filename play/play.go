@@ -23,7 +23,7 @@ type Play struct {
 	// finite state machine
 	FSM
 	// receive protocol messages
-	Receive protocol.MessageChannel `json:"-"`
+	Recv protocol.MessageChannel `json:"-"`
 }
 
 func NewPlay(variation model.Variation, stake *model.Stake, table *model.Table) *Play {
@@ -39,7 +39,7 @@ func NewPlay(variation model.Variation, stake *model.Stake, table *model.Table) 
 			stateChange: make(chan State),
 			Mode:        mode.Cash, // FIXME
 		},
-		Receive: make(chan *protocol.Message),
+		Recv: make(chan *protocol.Message),
 	}
 
 	if variation.IsMixed() {
@@ -63,7 +63,7 @@ func (this *Play) String() string {
 func (this *Play) receive() {
 	for {
 		select {
-		case msg := <-this.Receive:
+		case msg := <-this.Recv:
 			this.processMessage(msg)
 		case newState := <-this.stateChange:
 			this.processStateChange(newState)

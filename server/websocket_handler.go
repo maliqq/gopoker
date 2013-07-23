@@ -34,14 +34,14 @@ func (nodeHTTP *NodeHTTP) WebSocketHandler(conn *websocket.Conn) {
 
 	//session.Connection.Send(room)
 
-	session.Receive = make(protocol.MessageChannel)
-	session.Send = &room.Receive
-	defer close(session.Receive)
+	session.Recv = make(protocol.MessageChannel)
+	session.Send = &room.Recv
+	defer close(session.Recv)
 
 	//for _, player := range room.Table.AllPlayers() {
-	//	room.Broadcast.Bind(player, &session.Receive)
+	//	room.Broadcast.Bind(player, &session.Recv)
 	//}
-	room.Broadcast.Bind(protocol.Monitor, &session.Receive)
+	room.Broadcast.Bind(protocol.Monitor, &session.Recv)
 
 	session.Start()
 }

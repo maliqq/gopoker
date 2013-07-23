@@ -24,7 +24,7 @@ type Connection struct {
 }
 
 func (c *Connection) Reply(msg *protocol.Message) {
-	c.Server.Receive <- msg
+	c.Server.Recv <- msg
 }
 
 func (c *Connection) Handle(msg *protocol.Message) {
@@ -94,11 +94,11 @@ func (c *Connection) Handle(msg *protocol.Message) {
 
 		fmt.Printf("Player %s: %s\n", player, payload.Bet)
 
-	case protocol.CollectPot:
+	case protocol.StreetStart:
 
-		payload := msg.Envelope.CollectPot
+		payload := msg.Envelope.StreetStart
 
-		fmt.Printf("Pot size: %.2f\nBoard: %s\n", payload.Amount, c.Server.Deal.Board.ConsoleString())
+		fmt.Printf("Pot size: %.2f\nBoard: %s\n", payload.Pot, c.Server.Deal.Board.ConsoleString())
 
 	case protocol.ShowHand:
 

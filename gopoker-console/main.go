@@ -13,12 +13,8 @@ import (
 	"gopoker/model"
 	"gopoker/model/game"
 
-	"gopoker/play"
-	"gopoker/play/command"
-	"gopoker/play/mode"
-
-	_ "gopoker/client"
 	"gopoker/client/console_client"
+	"gopoker/play"
 )
 
 var (
@@ -46,8 +42,7 @@ func main() {
 	play := createPlay(me)
 	fmt.Printf("%s\n", play)
 
-	go play.Run(mode.Cash)
-	play.Control <- command.NextDeal
+	go play.Start()
 
 	conn := &console_client.Connection{
 		Server: play,
@@ -78,8 +73,8 @@ func createPlay(me protocol.MessageChannel) *play.Play {
 
 	for i, player := range players {
 		if i < size {
-			play.Receive <- protocol.NewJoinTable(player, i, stack)
-			play.Broadcast.Bind(player, me)
+			play.Recv <- protocol.NewJoinTable(player, i, stack)
+			play.Broadcast.Bind(player, &me)
 		}
 	}
 

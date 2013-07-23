@@ -17,7 +17,7 @@ type Connection interface {
 type Session struct {
 	Id         string
 	Connection Connection
-	Receive    protocol.MessageChannel
+	Recv       protocol.MessageChannel
 	Send       *protocol.MessageChannel
 }
 
@@ -54,7 +54,7 @@ func (session *Session) Read() {
 }
 
 func (session *Session) Write() {
-	for message := range session.Receive {
+	for message := range session.Recv {
 		err := session.Connection.Send(message)
 		if err != nil {
 			log.Printf("[session] write error: %s", err)

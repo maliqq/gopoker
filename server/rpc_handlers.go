@@ -21,7 +21,7 @@ func (n *NodeRPC) DeleteRoom(requestRoom *rpc_service.RequestRoom, r *rpc_servic
 // send protocol message to room subscribers
 func (n *NodeRPC) NotifyRoom(notifyRoom *rpc_service.NotifyRoom, r *rpc_service.CallResult) error {
 	room := n.Node.Room(notifyRoom.Id)
-	room.Receive <- notifyRoom.Message
+	room.Recv <- notifyRoom.Message
 
 	return nil
 }
