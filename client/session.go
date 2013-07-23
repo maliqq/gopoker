@@ -29,7 +29,7 @@ func NewSession(id string, connection Connection) *Session {
 }
 
 func (session *Session) Start() {
-	log.Printf("[session] start with connection: %#v", session.Connection)
+	log.Printf("[session] start connection: %#v", session.Connection)
 
 	go session.Read()
 
@@ -42,7 +42,7 @@ func (session *Session) Read() {
 
 		err := session.Connection.Receive(&message)
 		if err != nil {
-			log.Printf("[websocket] receive error: %s", err)
+			log.Printf("[session] read error: %s", err)
 
 			break
 		}
@@ -57,7 +57,7 @@ func (session *Session) Write() {
 	for message := range session.Receive {
 		err := session.Connection.Send(message)
 		if err != nil {
-			log.Printf("[websocket] send error: %s", err)
+			log.Printf("[session] write error: %s", err)
 
 			break
 		}
@@ -68,6 +68,6 @@ func (session *Session) Write() {
 
 func (session *Session) close() {
 	if err := session.Connection.Close(); err != nil {
-		log.Fatalf("Error closing session connection: %s", err)
+		log.Fatalf("[session] close error: %s", err)
 	}
 }
