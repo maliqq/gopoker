@@ -41,8 +41,7 @@ func (nodeHTTP *NodeHTTP) WebSocketHandler(conn *websocket.Conn) {
 	//for _, player := range room.Table.AllPlayers() {
 	//	room.Broadcast.Bind(player, &session.Receive)
 	//}
-	room.Broadcast.Bind(protocol.Private, &session.Receive)
-	room.Broadcast.Bind(protocol.Public, &session.Receive)
+	room.Broadcast.Bind(protocol.Monitor, &session.Receive)
 
 	session.Start()
 }
