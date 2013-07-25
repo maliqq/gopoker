@@ -20,11 +20,13 @@ func (r RequireBet) String() string {
 type AddBet struct {
 	Pos int
 	Bet model.Bet
+	BetString string
 }
 
 func NewAddBet(pos int, bet *model.Bet) *Message {
 	return NewMessage(AddBet{
 		Pos: pos,
 		Bet: *bet,
+		BetString: bet.PrintString(),
 	})
 }

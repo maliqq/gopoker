@@ -10,6 +10,7 @@ type ShowHand struct {
 	Pos   int
 	Cards poker.Cards
 	Hand  *poker.Hand
+	HandString string
 }
 
 // pocket cards show
@@ -30,6 +31,7 @@ func NewShowHand(pos int, cards poker.Cards, hand *poker.Hand) *Message {
 		Pos:   pos,
 		Cards: cards,
 		Hand:  hand,
+		HandString: hand.PrintString(),
 	})
 }
 
