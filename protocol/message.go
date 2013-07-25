@@ -16,8 +16,8 @@ type Payload interface{}
 
 type Envelope struct {
 	// notice
-	ErrorMessage    *ErrorMessage
-	ChatMessage     *ChatMessage
+	ErrorMessage  *ErrorMessage
+	ChatMessage   *ChatMessage
 	DealerMessage *DealerMessage
 
 	// gameplay
