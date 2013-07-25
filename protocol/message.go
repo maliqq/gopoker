@@ -16,9 +16,9 @@ type Payload interface{}
 
 type Envelope struct {
 	// notice
-	Error    *Error
-	Chat     *Chat
-	Announce *Announce
+	ErrorMessage    *ErrorMessage
+	ChatMessage     *ChatMessage
+	DealerMessage *DealerMessage
 
 	// gameplay
 	PlayStart   *PlayStart
@@ -171,4 +171,31 @@ func (msg *Message) String() string {
 	}
 
 	return string(s)
+}
+
+// error
+type ErrorMessage struct {
+	Message string
+}
+
+// chat
+type ChatMessage struct {
+	Pos     int
+	Message string
+}
+
+type DealerMessage struct {
+	Message string
+}
+
+func NewErrorMessage(err error) *Message {
+	return NewMessage(ErrorMessage{
+		Message: err.Error(),
+	})
+}
+
+func NewChatMessage(body string) *Message {
+	return NewMessage(ChatMessage{
+		Message: body,
+	})
 }

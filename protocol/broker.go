@@ -3,6 +3,7 @@ package protocol
 import (
 	"fmt"
 	"log"
+	"time"
 )
 
 import (
@@ -98,6 +99,11 @@ func (n *Notify) String() string {
 }
 
 func (broker *Broker) send(key string, msg *Message) {
+	// sign message with timestamp
+	if msg.Timestamp == 0 {
+		msg.Timestamp = time.Now().Unix()
+	}
+
 	ch, found := broker.Send[key]
 	if found {
 		*ch <- msg

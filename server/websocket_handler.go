@@ -22,7 +22,7 @@ func (nodeHTTP *NodeHTTP) WebSocketHandler(conn *websocket.Conn) {
 	room, found := node.Rooms[roomId]
 
 	if !found {
-		errMsg := protocol.NewError(fmt.Errorf("room with id=%s not found", roomId))
+		errMsg := protocol.NewErrorMessage(fmt.Errorf("room with id=%s not found", roomId))
 		websocket.JSON.Send(conn, errMsg)
 		conn.Close()
 		return
