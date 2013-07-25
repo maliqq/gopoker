@@ -26,6 +26,4 @@ func TestBinary(t *testing.T) {
 
 	b, _ := json.Marshal(c)
 	t.Logf("raw=%#v json=%s", c.Binary(), b)
-
-	t.FailNow()
 }

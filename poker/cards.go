@@ -76,6 +76,14 @@ func (c Cards) String() string {
 	return s
 }
 
+func (c Cards) Uint64() uint64 {
+	var result uint64 = uint64(c[0].Index(AceHigh))
+	for i := 1; i < len(c); i++ {
+		result |= uint64(card.Masks[c[i].Index(AceHigh)])
+	}
+	return result
+}
+
 func (c Cards) Binary() []byte {
 	b := make([]byte, len(c))
 	for i, card := range c {
