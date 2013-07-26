@@ -22,9 +22,20 @@ type AddBet struct {
 	Bet model.Bet
 }
 
+type BettingComplete struct {
+	Pot float64
+	Rake float64
+}
+
 func NewAddBet(pos int, bet *model.Bet) *Message {
 	return NewMessage(AddBet{
 		Pos: pos,
 		Bet: *bet,
+	})
+}
+
+func NewBettingComplete(pot *model.Pot) *Message {
+	return NewMessage(BettingComplete{
+		Pot: pot.Total(),
 	})
 }

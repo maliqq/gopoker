@@ -26,6 +26,10 @@ func (b Bet) String() string {
 	return string(b.Type)
 }
 
+func (b Bet) PrintString() string {
+	return b.String()
+}
+
 func (b Bet) IsActive() bool {
 	switch b.Type {
 	case bet.Raise, bet.Call:

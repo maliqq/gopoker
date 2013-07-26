@@ -31,17 +31,18 @@ func (nodeHTTP *NodeHTTP) WebSocketHandler(conn *websocket.Conn) {
 	id := util.RandomUuid()
 	connection := &websocket_client.Connection{conn}
 	session := client.NewSession(id, connection)
+	session.Send = &room.Recv
 
 	//session.Connection.Send(room)
-
-	session.Recv = make(protocol.MessageChannel)
-	session.Send = &room.Recv
-	defer close(session.Recv)
 
 	//for _, player := range room.Table.AllPlayers() {
 	//	room.Broadcast.Bind(player, &session.Recv)
 	//}
 	room.Broadcast.Bind(protocol.Monitor, &session.Recv)
+	defer func() {
+		room.Broadcast.Unbind(protocol.Monitor)
+		session.Close()
+	}()
 
 	session.Start()
 }

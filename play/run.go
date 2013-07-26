@@ -86,7 +86,7 @@ func (this *Play) run() {
 	// run streets
 	for _, street := range street.Get(this.Game.Group) {
 		log.Printf("[play] street %s\n", street)
-		this.Broadcast.All <- protocol.NewStreetStart(string(street), this.Betting.Pot)
+		this.Broadcast.All <- protocol.NewStreetStart(string(street))
 
 		this.Street = street
 
@@ -124,6 +124,6 @@ func (this *Play) run() {
 	// deal stop
 	log.Println("[play] deal stop")
 
-	<-time.After(10 * time.Second)
+	<-time.After(5 * time.Second)
 	this.GamePlay.Control <- command.NextDeal
 }
