@@ -25,7 +25,7 @@ var (
 	}}
 
 	Betting = Stage{"betting", func(play *Play) gameplay.Transition {
-		log.Println("[play] betting")
+		//log.Println("[play] betting")
 
 		return play.GamePlay.StartBettingRound()
 	}}

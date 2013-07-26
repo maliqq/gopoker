@@ -20,13 +20,22 @@ func (r RequireBet) String() string {
 type AddBet struct {
 	Pos int
 	Bet model.Bet
-	BetString string
+}
+
+type BettingComplete struct {
+	Pot float64
+	Rake float64
 }
 
 func NewAddBet(pos int, bet *model.Bet) *Message {
 	return NewMessage(AddBet{
 		Pos: pos,
 		Bet: *bet,
-		BetString: bet.PrintString(),
+	})
+}
+
+func NewBettingComplete(pot *model.Pot) *Message {
+	return NewMessage(BettingComplete{
+		Pot: pot.Total(),
 	})
 }

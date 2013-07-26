@@ -24,6 +24,7 @@ type Session struct {
 func NewSession(id string, connection Connection) *Session {
 	return &Session{
 		Id:         id,
+		Recv: make(protocol.MessageChannel),
 		Connection: connection,
 	}
 }
@@ -49,8 +50,6 @@ func (session *Session) Read() {
 
 		*session.Send <- &message
 	}
-
-	session.close()
 }
 
 func (session *Session) Write() {
@@ -62,11 +61,11 @@ func (session *Session) Write() {
 			break
 		}
 	}
-
-	session.close()
 }
 
-func (session *Session) close() {
+func (session *Session) Close() {
+	close(session.Recv)
+
 	if err := session.Connection.Close(); err != nil {
 		log.Fatalf("[session] close error: %s", err)
 	}

@@ -10,8 +10,6 @@ type PlayStart struct {
 
 type StreetStart struct {
 	Name string
-	Pot  float64
-	Rake float64
 }
 
 type ChangeGame struct {
@@ -19,15 +17,14 @@ type ChangeGame struct {
 	game.Limit
 }
 
-func NewStreetStart(name string, pot *model.Pot) *Message {
-	return NewMessage(StreetStart{
-		Name: name,
-		Pot:  pot.Total(),
-	})
-}
-
 func NewPlayStart() *Message {
 	return NewMessage(PlayStart{})
+}
+
+func NewStreetStart(name string) *Message {
+	return NewMessage(StreetStart{
+		Name: name,
+	})
 }
 
 func NewChangeGame(g *model.Game) *Message {

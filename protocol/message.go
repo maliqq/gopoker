@@ -24,6 +24,7 @@ type Envelope struct {
 	PlayStart   *PlayStart
 	StreetStart *StreetStart
 	ChangeGame  *ChangeGame
+	BettingComplete *BettingComplete
 
 	// table
 	JoinTable  *JoinTable
@@ -72,11 +73,17 @@ func NewMessage(payload Payload) *Message {
 		field.SetPointer(&payload)
 	*/
 	switch v := payload.(type) {
+	case ErrorMessage:
+		envelope.ErrorMessage = &v
+
 	case PlayStart:
 		envelope.PlayStart = &v
 
 	case StreetStart:
 		envelope.StreetStart = &v
+
+	case BettingComplete:
+		envelope.BettingComplete = &v
 
 	case ChangeGame:
 		envelope.ChangeGame = &v

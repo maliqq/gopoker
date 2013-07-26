@@ -1,5 +1,9 @@
 package gameplay
 
+import (
+	"gopoker/protocol"
+)
+
 const (
 	DefaultTimer = 30
 )
@@ -46,5 +50,5 @@ func (this *GamePlay) ResetBetting() {
 		seat.Play()
 	}
 
-	//this.Broadcast.All <- protocol.NewBettingStop(this.Betting)
+	this.Broadcast.All <- protocol.NewBettingComplete(this.Betting.Pot)
 }
