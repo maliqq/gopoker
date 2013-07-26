@@ -7,9 +7,9 @@ import (
 
 // hand info
 type ShowHand struct {
-	Pos   int
-	Cards poker.Cards
-	Hand  *poker.Hand
+	Pos        int
+	Cards      poker.Cards
+	Hand       *poker.Hand
 	HandString string
 }
 
@@ -28,9 +28,9 @@ type Winner struct {
 
 func NewShowHand(pos int, cards poker.Cards, hand *poker.Hand) *Message {
 	return NewMessage(ShowHand{
-		Pos:   pos,
-		Cards: cards,
-		Hand:  hand,
+		Pos:        pos,
+		Cards:      cards,
+		Hand:       hand,
 		HandString: hand.PrintString(),
 	})
 }

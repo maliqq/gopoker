@@ -21,9 +21,9 @@ type Envelope struct {
 	DealerMessage *DealerMessage
 
 	// gameplay
-	PlayStart   *PlayStart
-	StreetStart *StreetStart
-	ChangeGame  *ChangeGame
+	PlayStart       *PlayStart
+	StreetStart     *StreetStart
+	ChangeGame      *ChangeGame
 	BettingComplete *BettingComplete
 
 	// table

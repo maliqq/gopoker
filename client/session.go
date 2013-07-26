@@ -24,7 +24,7 @@ type Session struct {
 func NewSession(id string, connection Connection) *Session {
 	return &Session{
 		Id:         id,
-		Recv: make(protocol.MessageChannel),
+		Recv:       make(protocol.MessageChannel),
 		Connection: connection,
 	}
 }

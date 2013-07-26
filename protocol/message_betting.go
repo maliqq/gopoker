@@ -23,7 +23,7 @@ type AddBet struct {
 }
 
 type BettingComplete struct {
-	Pot float64
+	Pot  float64
 	Rake float64
 }
 
