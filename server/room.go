@@ -1,6 +1,12 @@
 package server
 
 import (
+	"os"
+	"path"
+	"log"
+)
+
+import (
 	"gopoker/client"
 	"gopoker/model"
 	"gopoker/play"
@@ -40,10 +46,21 @@ func NewRoom(createRoom *rpc_service.CreateRoom) *Room {
 	stake := model.NewStake(createRoom.BetSize)
 	newPlay := play.NewPlay(variation, stake, table)
 
-	return &Room{
+	room := &Room{
 		Id:       createRoom.Id,
 		Play:     newPlay,
 		Waiting:  map[string]*client.Session{},
 		Watchers: map[string]*client.Session{},
 	}
+
+	return room
+}
+
+func (r *Room) createLogger(dir string) {
+	f, err := os.Create(path.Join(dir, r.Id + ".log"))
+	if err != nil {
+		log.Fatal("cant create logger file", err)
+	}
+	logger := play.NewLogger(f)
+	r.Broadcast.Broker.BindSystem("logger", &logger.Recv)
 }

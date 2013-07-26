@@ -6,6 +6,8 @@ import (
 
 func (n *NodeRPC) CreateRoom(createRoom *rpc_service.CreateRoom, r *rpc_service.CallResult) error {
 	room := NewRoom(createRoom)
+	
+	// add to node
 	n.Node.AddRoom(room)
 
 	return nil

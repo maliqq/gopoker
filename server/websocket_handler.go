@@ -38,9 +38,9 @@ func (nodeHTTP *NodeHTTP) WebSocketHandler(conn *websocket.Conn) {
 	//for _, player := range room.Table.AllPlayers() {
 	//	room.Broadcast.Bind(player, &session.Recv)
 	//}
-	room.Broadcast.Bind(protocol.Monitor, &session.Recv)
+	room.Broadcast.BindSystem("test", &session.Recv)
 	defer func() {
-		room.Broadcast.Unbind(protocol.Monitor)
+		room.Broadcast.UnbindSystem("test")
 		session.Close()
 	}()
 

@@ -1,19 +1,22 @@
 package server
 
+type Config struct {
+	Logdir string
+	ApiAddr string
+	RpcAddr string
+}
+
 type Node struct {
 	Name    string
-	ApiAddr string
-	//apiService
-	RpcAddr string
-	//rpcService
+
+	*Config
 	Rooms map[string]*Room
 }
 
-func NewNode(name string, apiAddr string, rpcAddr string) *Node {
+func NewNode(name string, config *Config) *Node {
 	return &Node{
 		Name:    name,
-		ApiAddr: apiAddr,
-		RpcAddr: rpcAddr,
+		Config: config,
 		Rooms:   map[string]*Room{},
 	}
 }
@@ -26,6 +29,9 @@ func (n *Node) Room(id string) *Room {
 
 func (n *Node) AddRoom(room *Room) bool {
 	n.Rooms[room.Id] = room
+
+	room.createLogger(n.Logdir)
+
 	return true
 }
 
