@@ -26,4 +26,10 @@ func TestBinary(t *testing.T) {
 
 	b, _ := json.Marshal(c)
 	t.Logf("raw=%#v json=%s", c.Binary(), b)
+
+	c = Cards{nil, &Card{0, 0}, &Card{2, 3}}
+
+	b, _ = json.Marshal(c)
+
+	t.Logf("raw=%#v json=%s", c.Binary(), b)
 }

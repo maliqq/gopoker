@@ -94,7 +94,11 @@ func (c Cards) Uint64() uint64 {
 func (c Cards) Binary() []byte {
 	b := make([]byte, len(c))
 	for i, card := range c {
-		b[i] = card.Byte()
+		if card == nil {
+			b[i] = 0
+		} else {
+			b[i] = card.Byte()
+		}
 	}
 
 	return b

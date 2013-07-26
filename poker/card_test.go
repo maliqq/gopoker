@@ -42,16 +42,16 @@ func TestCard(t *testing.T) {
 
 func TestParse(t *testing.T) {
 	card1, _ := ParseCard("2s")
-	_card1, _ := NewCard(0)
-	t.Logf("card1=%s", *card1)
-	if !_card1.Equal(*card1) {
+	_card1, _ := NewCard(1)
+	t.Logf("card1=%s", card1)
+	if !_card1.Equal(card1) {
 		t.FailNow()
 	}
 
 	card2, _ := ParseCard("Ac")
-	_card2, _ := NewCard(51)
-	t.Logf("card2=%s", *card2)
-	if !_card2.Equal(*card2) {
+	_card2, _ := NewCard(52)
+	t.Logf("card2=%s", card2)
+	if !_card2.Equal(card2) {
 		t.FailNow()
 	}
 

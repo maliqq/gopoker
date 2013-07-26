@@ -163,7 +163,7 @@ func AllSuits() []Suit {
 	return suits
 }
 
-func all() []Tuple {
+func AllTuples() []Tuple {
 	cards := make([]Tuple, CardsNum)
 
 	k := 0
@@ -176,8 +176,6 @@ func all() []Tuple {
 
 	return cards
 }
-
-var All = all()
 
 func MakeKind(kind int) (Kind, error) {
 	if kind < 0 || kind >= len(Kinds) {

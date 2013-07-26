@@ -37,7 +37,7 @@ func (c Card) Int() int {
 }
 
 func (c Card) Byte() byte {
-	return (byte(c.kind) << 2) + byte(c.suit)
+	return (byte(c.kind) << 2) + byte(c.suit) + 1
 }
 
 func (c Card) ConsoleString() string {
@@ -45,10 +45,14 @@ func (c Card) ConsoleString() string {
 }
 
 func NewCard(i byte) (*Card, error) {
-	if i < 0 || int(i) >= card.CardsNum {
+	if i <= 0 {
+		return nil, nil
+	}
+	if int(i) > card.CardsNum {
 		return nil, errors.New("invalid card")
 	}
 
+	i -= 1
 	return &Card{card.Kind(i >> 2), card.Suit(i % 4)}, nil
 }
 
