@@ -18,7 +18,7 @@ type Cards []*Card
 
 func AllCards() Cards {
 	cards := make(Cards, card.CardsNum)
-	
+
 	k := 0
 	for _, kind := range card.AllKinds() {
 		for _, suit := range card.AllSuits() {
