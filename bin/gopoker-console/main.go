@@ -1,5 +1,8 @@
 package main
 
+//
+// command line play
+//
 import (
 	"flag"
 	"fmt"

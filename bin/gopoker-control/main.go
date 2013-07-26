@@ -1,5 +1,8 @@
 package main
 
+//
+// create new play via JSONRPC
+//
 import (
 	"flag"
 	"fmt"

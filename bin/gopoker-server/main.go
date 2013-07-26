@@ -1,5 +1,8 @@
 package main
 
+//
+// start server node
+//
 import (
   "encoding/json"
 	"flag"
