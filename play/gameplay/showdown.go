@@ -76,7 +76,8 @@ func (this *GamePlay) Winners(highHands ShowdownHands, lowHands ShowdownHands) {
 		}
 
 		for winner, amount := range winners {
-			this.Broadcast.All <- protocol.NewWinner(winner, amount)
+			pos, _ := this.Table.Pos(winner)
+			this.Broadcast.All <- protocol.NewWinner(pos, amount)
 		}
 	}
 }
