@@ -78,7 +78,7 @@ func (c ByMax) Less(i, j int) bool {
 	max1 := c.GroupedCards[i].Max(c.Ordering)
 	max2 := c.GroupedCards[j].Max(c.Ordering)
 
-	return max2.Compare(*max1, c.Ordering) == -1
+	return max2.Compare(max1, c.Ordering) == -1
 }
 
 //

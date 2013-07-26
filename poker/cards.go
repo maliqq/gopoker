@@ -14,16 +14,23 @@ import (
 	"gopoker/util"
 )
 
-type Cards []Card
+type Cards []*Card
 
 func AllCards() Cards {
-	all := card.All
-	cards := make(Cards, len(all))
-	for i, tuple := range all {
-		cards[i] = Card{tuple.Kind, tuple.Suit}
+	cards := make(Cards, card.CardsNum)
+	
+	k := 0
+	for _, kind := range card.AllKinds() {
+		for _, suit := range card.AllSuits() {
+			cards[k] = &Card{kind, suit}
+			k++
+		}
 	}
+
 	return cards
 }
+
+var All = AllCards()
 
 func GenerateCards(n int) Cards {
 	deck := NewDeck()
@@ -32,7 +39,7 @@ func GenerateCards(n int) Cards {
 }
 
 func NewDeck() Cards {
-	return AllCards().Shuffle()
+	return All.Shuffle()
 }
 
 func ParseCards(s string) (Cards, error) {
@@ -47,7 +54,7 @@ func ParseCards(s string) (Cards, error) {
 		if err != nil {
 			return nil, err
 		}
-		cards[i] = *card
+		cards[i] = card
 		i++
 	}
 
@@ -61,7 +68,7 @@ func ParseBinary(s []byte) (Cards, error) {
 		if err != nil {
 			return nil, err
 		}
-		cards[i] = *card
+		cards[i] = card
 	}
 
 	return cards, nil
@@ -174,7 +181,7 @@ func (this Cards) Group(test groupFunc) GroupedCards {
 
 		} else {
 			prev := this[i-1]
-			result := test(&card, &prev)
+			result := test(card, prev)
 
 			if result == 1 {
 				group[j] = card
@@ -270,7 +277,7 @@ func (c Cards) Reverse(ord Ordering) Cards {
 type maxFunc func(d int) bool
 
 func (c Cards) MaxBy(ord Ordering, f maxFunc) *Card {
-	result := &c[0]
+	result := c[0]
 
 	max := result.Index(ord)
 
@@ -278,7 +285,7 @@ func (c Cards) MaxBy(ord Ordering, f maxFunc) *Card {
 		i := card.Index(ord)
 		if f(i - max) {
 			max = i
-			result = &card
+			result = card
 		}
 	}
 

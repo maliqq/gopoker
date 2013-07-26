@@ -7,7 +7,7 @@ import (
 
 func (this *GamePlay) BringIn() Transition {
 	minPos := 0
-	var card poker.Card
+	var card *poker.Card
 
 	for _, pos := range this.Table.AllSeats().Active() {
 		s := this.Table.Seat(pos)

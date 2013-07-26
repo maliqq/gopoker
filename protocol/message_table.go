@@ -33,11 +33,9 @@ func NewJoinTable(player model.Player, pos int, amount float64) *Message {
 }
 
 func NewLeaveTable(player model.Player) *Message {
-	return NewMessage(
-		LeaveTable{
-			Player: player,
-		},
-	)
+	return NewMessage(LeaveTable{
+		Player: player,
+	})
 }
 
 type ChangeTableState struct {

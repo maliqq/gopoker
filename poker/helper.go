@@ -129,7 +129,7 @@ func (this *cardsHelper) IsLow() (*Hand, error) {
 	max := lowCards.Max(this.Ordering)
 	newHand := &Hand{
 		Value: lowCards,
-		High:  Cards{*max},
+		High:  Cards{max},
 	}
 
 	if len(lowCards) == 5 {

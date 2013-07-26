@@ -41,7 +41,7 @@ func (hc *handCards) isBadugiOne() *Hand {
 		card := hc.groupSuit[0].Min(hc.Ordering)
 
 		return &Hand{
-			Value: Cards{*card},
+			Value: Cards{card},
 		}
 	}
 
@@ -71,15 +71,15 @@ func (hc *handCards) isBadugiThree() *Hand {
 	if len(paired) == 1 && len(suited) != 2 {
 		cards := paired[0]
 
-		a = &cards[0]
+		a = cards[0]
 
 		for _, card := range hc.Cards.Diff(cards) {
 			if a.kind != card.kind {
 				n := card
 				if b == nil {
-					b = &n
+					b = n
 				} else {
-					c = &n
+					c = n
 				}
 			}
 		}
@@ -89,7 +89,7 @@ func (hc *handCards) isBadugiThree() *Hand {
 		}
 
 		if a.suit == b.suit || a.suit == c.suit {
-			a = &cards[1]
+			a = cards[1]
 		}
 
 	} else if !hasPaired && len(suited) == 1 {
@@ -99,9 +99,9 @@ func (hc *handCards) isBadugiThree() *Hand {
 			if a.suit != card.suit {
 				n := card
 				if b == nil {
-					b = &n
+					b = n
 				} else {
-					c = &n
+					c = n
 				}
 			}
 		}
@@ -114,7 +114,7 @@ func (hc *handCards) isBadugiThree() *Hand {
 		return nil
 	}
 
-	cards := Cards{*a, *b, *c}.Arrange(hc.Ordering)
+	cards := Cards{a, b, c}.Arrange(hc.Ordering)
 
 	return &Hand{
 		Value: cards,
@@ -132,12 +132,12 @@ func (hc *handCards) isBadugiTwo() *Hand {
 
 		diff := hc.Cards.Diff(cards)
 
-		b = &diff[0]
+		b = diff[0]
 
 		for _, card := range cards {
 			if b.suit != card.suit {
 				n := card
-				a = &n
+				a = n
 				break
 			}
 		}
@@ -147,7 +147,7 @@ func (hc *handCards) isBadugiTwo() *Hand {
 
 		diff := hc.Cards.Diff(cards)
 
-		a = &diff[0]
+		a = diff[0]
 
 		c := Cards{}
 		for _, card := range cards {
@@ -175,7 +175,7 @@ func (hc *handCards) isBadugiTwo() *Hand {
 	} else {
 		cards := hc.groupKind[0]
 
-		a = &cards[0]
+		a = cards[0]
 
 		c := Cards{}
 		for _, card := range hc.Cards.Diff(cards) {
@@ -187,7 +187,7 @@ func (hc *handCards) isBadugiTwo() *Hand {
 		b = c.Min(hc.Ordering)
 	}
 
-	cards := Cards{*a, *b}.Arrange(hc.Ordering)
+	cards := Cards{a, b}.Arrange(hc.Ordering)
 
 	return &Hand{
 		Value: cards,
