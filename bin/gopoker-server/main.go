@@ -4,34 +4,34 @@ package main
 // start server node
 //
 import (
-  "encoding/json"
+	"encoding/json"
 	"flag"
-  "os"
-  "log"
+	"log"
+	"os"
 	"runtime"
 )
 
 import (
-  "gopoker/server"
+	"gopoker/server"
 )
 
 var (
-  config = flag.String("config", "/etc/gopoker.json", "Config file path")
+	config = flag.String("config", "/etc/gopoker.json", "Config file path")
 )
 
 func readConfig() *server.Config {
-  f, err := os.Open(*config)
-  if err != nil {
-    log.Fatal("read config error", err)
-  }
-  var config server.Config
-  decoder := json.NewDecoder(f)
-  err = decoder.Decode(&config)
-  if err != nil {
-    log.Fatal("parse config error", err)
-  }
+	f, err := os.Open(*config)
+	if err != nil {
+		log.Fatal("read config error", err)
+	}
+	var config server.Config
+	decoder := json.NewDecoder(f)
+	err = decoder.Decode(&config)
+	if err != nil {
+		log.Fatal("parse config error", err)
+	}
 
-  return &config
+	return &config
 }
 
 func main() {

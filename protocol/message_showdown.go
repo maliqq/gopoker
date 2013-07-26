@@ -22,7 +22,7 @@ type ShowCards struct {
 
 // win info
 type Winner struct {
-	Pos int
+	Pos    int
 	Amount float64
 }
 
@@ -52,7 +52,7 @@ func NewMuckCards(pos int, cards *poker.Cards) *Message {
 
 func NewWinner(pos int, amount float64) *Message {
 	return NewMessage(Winner{
-		Pos: pos,
+		Pos:    pos,
 		Amount: amount,
 	})
 }

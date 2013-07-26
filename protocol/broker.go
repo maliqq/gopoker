@@ -14,7 +14,7 @@ type MessageChannel chan *Message
 
 // pubsub
 type Broker struct {
-	User map[string]*MessageChannel
+	User   map[string]*MessageChannel
 	System map[string]*MessageChannel
 }
 
@@ -35,7 +35,7 @@ func (s System) RouteKey() string {
 
 func NewBroker() *Broker {
 	return &Broker{
-		User: map[string]*MessageChannel{},
+		User:   map[string]*MessageChannel{},
 		System: map[string]*MessageChannel{},
 	}
 }

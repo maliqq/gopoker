@@ -1,8 +1,8 @@
 package play
 
 import (
-	"io"
 	"fmt"
+	"io"
 )
 
 import (
@@ -11,13 +11,13 @@ import (
 
 type Logger struct {
 	Writer io.Writer
-	Recv protocol.MessageChannel
+	Recv   protocol.MessageChannel
 }
 
 func NewLogger(writer io.Writer) *Logger {
 	logger := &Logger{
 		Writer: writer,
-		Recv: make(protocol.MessageChannel),
+		Recv:   make(protocol.MessageChannel),
 	}
 
 	go logger.receive()
@@ -75,6 +75,6 @@ func (l *Logger) handle(msg *protocol.Message) {
 	}
 }
 
-func (l *Logger) log(format string, args... interface{}) {
+func (l *Logger) log(format string, args ...interface{}) {
 	fmt.Fprintf(l.Writer, format, args...)
 }

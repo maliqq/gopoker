@@ -1,13 +1,13 @@
 package server
 
 type Config struct {
-	Logdir string
+	Logdir  string
 	ApiAddr string
 	RpcAddr string
 }
 
 type Node struct {
-	Name    string
+	Name string
 
 	*Config
 	Rooms map[string]*Room
@@ -15,9 +15,9 @@ type Node struct {
 
 func NewNode(name string, config *Config) *Node {
 	return &Node{
-		Name:    name,
+		Name:   name,
 		Config: config,
-		Rooms:   map[string]*Room{},
+		Rooms:  map[string]*Room{},
 	}
 }
 

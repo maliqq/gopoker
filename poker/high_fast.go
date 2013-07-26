@@ -13,17 +13,17 @@ const (
 )
 
 var (
-	Flush = make([]uint, 8129)
+	Flush    = make([]uint, 8129)
 	Straight = make([]uint, 8129)
-	Top1_16 = make([]uint, 8129)
-	Top1_12 =  make([]uint, 8129)
-	Top1_8 = make([]uint, 8129)
-	Top2_12 = make([]uint, 8129)
-	Top2_8 = make([]uint, 8129)
-	Top3_4 = make([]uint, 8129)
-	Top5 = make([]uint, 8129)
-	Bit1 = make([]uint, 8129)
-	Bit2 = make([]uint, 8129)
+	Top1_16  = make([]uint, 8129)
+	Top1_12  = make([]uint, 8129)
+	Top1_8   = make([]uint, 8129)
+	Top2_12  = make([]uint, 8129)
+	Top2_8   = make([]uint, 8129)
+	Top3_4   = make([]uint, 8129)
+	Top5     = make([]uint, 8129)
+	Bit1     = make([]uint, 8129)
+	Bit2     = make([]uint, 8129)
 )
 
 func doRank(hand uint64) uint {
@@ -35,7 +35,7 @@ func doRank(hand uint64) uint {
 	d = uint((hand >> 32) & 0x1fff)
 	c = uint((hand >> 48) & 0x1fff)
 
-	if Flush[s] | Flush[h] | Flush[d] | Flush[c] != 0 {
+	if Flush[s]|Flush[h]|Flush[d]|Flush[c] != 0 {
 		return Flush[s] | Flush[h] | Flush[d] | Flush[c]
 	}
 
@@ -66,7 +66,7 @@ func doRank(hand uint64) uint {
 	}
 
 	if p4 == 0 { // Deal with trips/sets/boats
-		if (p2 > p3) || (p3 & (p3 - 1) != 0) {
+		if (p2 > p3) || (p3&(p3-1) != 0) {
 			return FullHouseFlag | uint(Top1_16[p3]) | uint(Top1_12[p2^Bit1[p3]])
 		}
 		return ThreeKindFlag | uint(Top1_16[p3]) | uint(Top2_8[p1^Bit1[p3]])

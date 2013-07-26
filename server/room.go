@@ -1,9 +1,9 @@
 package server
 
 import (
+	"log"
 	"os"
 	"path"
-	"log"
 )
 
 import (
@@ -57,7 +57,7 @@ func NewRoom(createRoom *rpc_service.CreateRoom) *Room {
 }
 
 func (r *Room) createLogger(dir string) {
-	f, err := os.Create(path.Join(dir, r.Id + ".log"))
+	f, err := os.Create(path.Join(dir, r.Id+".log"))
 	if err != nil {
 		log.Fatal("cant create logger file", err)
 	}

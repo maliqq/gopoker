@@ -13,7 +13,7 @@ func TestHighFast(t *testing.T) {
 	InitFast()
 
 	rank := doRank(c)
-	t.Logf("rank=%d", int(rank) >> 12)
+	t.Logf("rank=%d", int(rank)>>12)
 
 	t.FailNow()
 }
