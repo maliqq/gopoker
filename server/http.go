@@ -14,9 +14,9 @@ import (
 )
 
 const (
-	HttpApiPath   = "/_api"
-	RpcPath       = "/_rpc"
-	WebSocketPath = "/_ws"
+	DefaultApiPath       = "/_api"
+	DefaultRpcPath       = "/_rpc"
+	DefaultWebSocketPath = "/_ws"
 )
 
 type NodeHTTP struct {
@@ -31,17 +31,53 @@ func (n *Node) StartHTTP() {
 	router := gorilla_mux.NewRouter()
 	n.drawRoutes(router)
 
-	log.Printf("[http] Starting service at %s", n.ApiAddr)
-	if err := http.ListenAndServe(n.ApiAddr, router); err != nil {
-		log.Fatalf("[http] Can't start at %s", n.ApiAddr)
+	log.Printf("[http] Starting service at %s", n.Http.Addr)
+	if err := http.ListenAndServe(n.Http.Addr, router); err != nil {
+		log.Fatalf("[http] Can't start at %s", n.Http.Addr)
 	}
 }
 
+func paths(httpConfig *HttpConfig) (string, string, string) {
+	apiPath := httpConfig.ApiPath
+	if apiPath == "" {
+		apiPath = DefaultApiPath
+	}
+
+	webSocketPath := httpConfig.WebSocketPath
+	if webSocketPath == "" {
+		webSocketPath = DefaultWebSocketPath
+	}
+
+	rpcPath := httpConfig.RpcPath
+	if rpcPath == "" {
+		rpcPath = DefaultRpcPath
+	}
+
+	return apiPath, rpcPath, webSocketPath
+}
+
 func (n *Node) drawRoutes(router *gorilla_mux.Router) {
+	apiPath, rpcPath, webSocketPath := paths(n.Config.Http)
+
+	// REST API
 	nodeHTTP := &NodeHTTP{n}
+	api := router.PathPrefix(apiPath).Subrouter()
+	nodeHTTP.drawApi(api)
 
-	api := router.PathPrefix(HttpApiPath).Subrouter()
+	// JSON-RPC over HTTP
+	nodeRPC := NodeRPC{n}
+	rpc := gorilla_rpc.NewServer()
+	rpc.RegisterService(nodeRPC, "")
+	rpc.RegisterCodec(gorilla_json.NewCodec(), "application/json")
 
+	// handle RPC
+	router.Handle(rpcPath, rpc)
+
+	// handle WebSocket
+	router.Handle(webSocketPath, websocket.Handler(nodeHTTP.WebSocketHandler))
+}
+
+func (nodeHTTP *NodeHTTP) drawApi(api *gorilla_mux.Router) {
 	// Room
 	api.HandleFunc("/rooms", nodeHTTP.Rooms).Methods("GET", "OPTIONS")
 	api.HandleFunc("/room/{room}", nodeHTTP.Room).Methods("GET", "OPTIONS")
@@ -74,17 +110,6 @@ func (n *Node) drawRoutes(router *gorilla_mux.Router) {
 	api.HandleFunc("/deal/{deal}/stage", nodeHTTP.Stage).Methods("GET")
 	api.HandleFunc("/deal/{deal}/results", nodeHTTP.Results).Methods("GET")
 	api.HandleFunc("/deal/{deal}/known_hands", nodeHTTP.KnownHands).Methods("GET")
-
-	// RPC over HTTP
-	nodeRPC := NodeRPC{n}
-	rpc := gorilla_rpc.NewServer()
-	rpc.RegisterService(nodeRPC, "")
-	rpc.RegisterCodec(gorilla_json.NewCodec(), "application/json")
-
-	router.Handle(RpcPath, rpc)
-
-	// WebSocket
-	router.Handle(WebSocketPath, websocket.Handler(nodeHTTP.WebSocketHandler))
 }
 
 func (nodeHTTP *NodeHTTP) Log(req *http.Request) {

@@ -17,7 +17,7 @@ func (n *Node) StartRPC() {
 	server := rpc.NewServer()
 	server.Register(nodeRPC)
 
-	l := listen(n.RpcAddr)
+	l := listen(n.Rpc.Addr)
 	for {
 		c, err := l.Accept()
 		if err != nil {

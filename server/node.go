@@ -1,9 +1,25 @@
 package server
 
+import (
+	"time"
+)
+
+type HttpConfig struct {
+	Addr          string
+	ApiPath       string
+	RpcPath       string
+	WebSocketPath string
+}
+
+type RpcConfig struct {
+	Addr    string
+	Timeout time.Duration
+}
+
 type Config struct {
-	Logdir  string
-	ApiAddr string
-	RpcAddr string
+	Logdir string
+	Http   *HttpConfig
+	Rpc    *RpcConfig
 }
 
 type Node struct {

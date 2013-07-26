@@ -1,5 +1,12 @@
 {
-  "RpcAddr": "localhost:8081",
-  "ApiAddr": "localhost:8080",
+  "Http": {
+    "Addr": "localhost:8080",
+    "ApiPath": "_api",
+    "RpcPath": "_rpc",
+    "WebSocketPath": "_ws"
+  },
+  "Rpc": {
+    "Addr": "localhost:8081"
+  },
   "Logdir": "/var/log/gopoker"
 }
