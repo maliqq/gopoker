@@ -79,13 +79,9 @@ func (this *Broadcast) Only(actors ...Actor) MessageChannel {
 }
 
 func (this *Broadcast) Bind(actor Actor, ch *MessageChannel) {
-	this.Broker.Bind(actor.RouteKey(), ch)
+	this.Broker.BindUser(actor.RouteKey(), ch)
 }
 
 func (this *Broadcast) Unbind(actor Actor) {
-	this.Broker.Unbind(actor.RouteKey())
-}
-
-func (this *Broadcast) For(actor Actor) *MessageChannel {
-	return this.Broker.For(actor.RouteKey())
+	this.Broker.UnbindUser(actor.RouteKey())
 }

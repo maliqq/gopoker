@@ -1,7 +1,7 @@
 package protocol
 
 import (
-	"gopoker/model"
+	_ "gopoker/model"
 	"gopoker/poker"
 )
 
@@ -22,7 +22,7 @@ type ShowCards struct {
 
 // win info
 type Winner struct {
-	Player model.Player
+	Pos int
 	Amount float64
 }
 
@@ -50,9 +50,9 @@ func NewMuckCards(pos int, cards *poker.Cards) *Message {
 	})
 }
 
-func NewWinner(player model.Player, amount float64) *Message {
+func NewWinner(pos int, amount float64) *Message {
 	return NewMessage(Winner{
-		Player: player,
+		Pos: pos,
 		Amount: amount,
 	})
 }

@@ -14,7 +14,8 @@ type MessageChannel chan *Message
 
 // pubsub
 type Broker struct {
-	Send map[string]*MessageChannel
+	User map[string]*MessageChannel
+	System map[string]*MessageChannel
 }
 
 // route
@@ -32,32 +33,27 @@ func (s System) RouteKey() string {
 	return string(s)
 }
 
-const (
-	Monitor System = "monitor"
-)
-
 func NewBroker() *Broker {
 	return &Broker{
-		Send: map[string]*MessageChannel{},
+		User: map[string]*MessageChannel{},
+		System: map[string]*MessageChannel{},
 	}
 }
 
-func (broker *Broker) Bind(key string, channel *MessageChannel) {
-	broker.Send[key] = channel
+func (broker *Broker) BindUser(key string, channel *MessageChannel) {
+	broker.User[key] = channel
 }
 
-func (broker *Broker) For(key string) *MessageChannel {
-	ch, found := broker.Send[key]
-
-	if !found {
-		// ...
-	}
-
-	return ch
+func (broker *Broker) UnbindUser(key string) {
+	delete(broker.User, key)
 }
 
-func (broker *Broker) Unbind(key string) {
-	delete(broker.Send, key)
+func (broker *Broker) BindSystem(key string, channel *MessageChannel) {
+	broker.System[key] = channel
+}
+
+func (broker *Broker) UnbindSystem(key string) {
+	delete(broker.System, key)
 }
 
 func (n *Notify) RouteType() string {
@@ -98,15 +94,21 @@ func (n *Notify) String() string {
 	return s
 }
 
-func (broker *Broker) send(key string, msg *Message) {
+func (broker *Broker) sendUser(key string, msg *Message) {
 	// sign message with timestamp
 	if msg.Timestamp == 0 {
 		msg.Timestamp = time.Now().Unix()
 	}
 
-	ch, found := broker.Send[key]
+	user, found := broker.User[key]
 	if found {
-		*ch <- msg
+		*user <- msg
+	}
+}
+
+func (broker *Broker) sendSystem(msg *Message) {
+	for _, system := range broker.System {
+		*system <- msg
 	}
 }
 
@@ -119,19 +121,15 @@ func (broker *Broker) Dispatch(n *Notify, msg *Message) {
 		return
 	}
 
-	defer broker.send("monitor", msg)
+	defer broker.sendSystem(msg)
 
 	if n.One != "" {
-		broker.send(n.One, msg)
+		broker.sendUser(n.One, msg)
 
 		return
 	}
 
-	for key, _ := range broker.Send {
-		if key == "monitor" {
-			continue
-		}
-
+	for key, _ := range broker.User {
 		if !n.All {
 			var skip bool
 
@@ -160,6 +158,6 @@ func (broker *Broker) Dispatch(n *Notify, msg *Message) {
 			}
 		}
 
-		broker.send(key, msg)
+		broker.sendUser(key, msg)
 	}
 }
