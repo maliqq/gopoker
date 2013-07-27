@@ -2,7 +2,13 @@ package storage
 
 import (
 	"database/sql"
+  _ "github.com/bmizerany/pq"
 )
+
+type StoreConfig struct {
+  Driver string
+  ConnectionString string
+}
 
 type Store struct {
 	*sql.DB
@@ -12,10 +18,13 @@ const (
 	DefaultDriver = "postgres"
 )
 
-func OpenStore(driver string, dataSource string) (*Store, error) {
-	store = &Store{}
-	store.DB, err = sql.Open(driver, dataSource)
-	return store, err
+func Open(config *StoreConfig) (*Store, error) {
+	store := &Store{}
+  
+  var err error
+	store.DB, err = sql.Open(config.Driver, config.ConnectionString)
+	
+  return store, err
 }
 
 func (store *Store) Close() {

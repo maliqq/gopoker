@@ -2,6 +2,11 @@ package server
 
 import (
 	"time"
+	"log"
+)
+
+import (
+	"gopoker/storage"
 )
 
 type HttpConfig struct {
@@ -20,6 +25,7 @@ type Config struct {
 	Logdir string
 	Http   *HttpConfig
 	Rpc    *RpcConfig
+	Store *storage.StoreConfig
 }
 
 type Node struct {
@@ -27,14 +33,29 @@ type Node struct {
 
 	*Config
 	Rooms map[string]*Room
+	Store *storage.Store
 }
 
 func NewNode(name string, config *Config) *Node {
-	return &Node{
+	node := &Node{
 		Name:   name,
 		Config: config,
 		Rooms:  map[string]*Room{},
 	}
+
+	node.connectStore()
+
+	return node
+}
+
+func (n *Node) connectStore() {
+	var err error
+	n.Store, err = storage.Open(n.Config.Store)
+
+	if err != nil {
+		log.Fatal("Can't open store", err)
+	}
+	log.Print("[store] connected")
 }
 
 func (n *Node) Room(id string) *Room {
