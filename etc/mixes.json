@@ -1,0 +1,58 @@
+{
+    "eight": [
+        {
+            "Type": "triple27",
+            "Limit": "fixed-limit"
+        },
+        {
+            "Type": "texas",
+            "Limit": "fixed-limit"
+        },
+        {
+            "Type": "omaha8",
+            "Limit": "fixed-limit"
+        },
+        {
+            "Type": "razz",
+            "Limit": "fixed-limit"
+        },
+        {
+            "Type": "stud",
+            "Limit": "fixed-limit"
+        },
+        {
+            "Type": "stud8",
+            "Limit": "fixed-limit"
+        },
+        {
+            "Type": "texas",
+            "Limit": "no-limit"
+        },
+        {
+            "Type": "omaha",
+            "Limit": "pot-limit"
+        }
+    ],
+    "horse": [
+        {
+            "Type": "texas",
+            "Limit": "fixed-limit"
+        },
+        {
+            "Type": "omaha8",
+            "Limit": "fixed-limit"
+        },
+        {
+            "Type": "razz",
+            "Limit": "fixed-limit"
+        },
+        {
+            "Type": "stud",
+            "Limit": "fixed-limit"
+        },
+        {
+            "Type": "stud8",
+            "Limit": "fixed-limit"
+        }
+    ]
+}

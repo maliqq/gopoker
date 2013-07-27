@@ -1,7 +1,12 @@
 package model
 
 import (
+	"encoding/json"
+	"os"
+	"path"
+	"log"
 	"fmt"
+	"flag"
 )
 
 import (
@@ -11,6 +16,8 @@ import (
 
 const (
 	MixedGameMaxTableSize = 8
+	GamesConfigFile = "games.json"
+	MixesConfigFile = "mixes.json"
 )
 
 type GameOptions struct {
@@ -55,150 +62,33 @@ type Variation interface {
 	IsMixed() bool
 }
 
-var Games = map[game.LimitedGame]*GameOptions{
-	game.Texas: &GameOptions{
-		Group:        game.Holdem,
-		HasBoard:     true,
-		HasBlinds:    true,
-		MaxTableSize: 10,
-		Hi:           ranking.High,
-		PocketSize:   2,
-		DefaultLimit: game.NoLimit,
-	},
+var Games map[game.LimitedGame]*GameOptions
+var Mixes map[game.MixedGame][]*MixOptions
 
-	game.Omaha: &GameOptions{
-		Group:        game.Holdem,
-		HasBoard:     true,
-		HasBlinds:    true,
-		MaxTableSize: 10,
-		PocketSize:   4,
-		Hi:           ranking.High,
-		DefaultLimit: game.PotLimit,
-	},
+func readConfig(filepath string, result interface{}) {
+	f, err := os.Open(filepath)
 
-	game.Omaha8: &GameOptions{
-		Group:        game.Holdem,
-		HasBoard:     true,
-		HasBlinds:    true,
-		MaxTableSize: 10,
-		PocketSize:   4,
-		Hi:           ranking.High,
-		Lo:           ranking.AceFive8,
-		DefaultLimit: game.PotLimit,
-	},
+	if err != nil {
+		log.Fatalf("Can't open %s: %s", filepath, err)
+	}
 
-	game.Stud: &GameOptions{
-		Group:        game.SevenCard,
-		HasAnte:      true,
-		HasBringIn:   true,
-		HasVela:      true,
-		MaxTableSize: 8,
-		PocketSize:   7,
-		Hi:           ranking.High,
-		DefaultLimit: game.FixedLimit,
-	},
-
-	game.Stud8: &GameOptions{
-		Group:        game.SevenCard,
-		HasAnte:      true,
-		HasBringIn:   true,
-		HasVela:      true,
-		MaxTableSize: 8,
-		PocketSize:   7,
-		Hi:           ranking.High,
-		Lo:           ranking.AceFive8,
-		DefaultLimit: game.FixedLimit,
-	},
-
-	game.Razz: &GameOptions{
-		Group:        game.SevenCard,
-		HasAnte:      true,
-		HasBringIn:   true,
-		HasVela:      true,
-		MaxTableSize: 8,
-		PocketSize:   7,
-		Hi:           ranking.AceFive,
-		DefaultLimit: game.FixedLimit,
-	},
-
-	game.London: &GameOptions{
-		Group:        game.SevenCard,
-		HasAnte:      true,
-		HasBringIn:   true,
-		HasVela:      true,
-		MaxTableSize: 8,
-		PocketSize:   7,
-		Hi:           ranking.AceSix,
-		DefaultLimit: game.FixedLimit,
-	},
-
-	game.FiveCard: &GameOptions{
-		Group:        game.SingleDraw,
-		HasBlinds:    true,
-		Discards:     true,
-		Reshuffle:    true,
-		MaxTableSize: 6,
-		PocketSize:   5,
-		Streets:      1,
-		Hi:           ranking.High,
-		DefaultLimit: game.FixedLimit,
-	},
-
-	game.Single27: &GameOptions{
-		Group:        game.SingleDraw,
-		HasBlinds:    true,
-		Discards:     true,
-		Reshuffle:    true,
-		MaxTableSize: 6,
-		PocketSize:   5,
-		Streets:      1,
-		Hi:           ranking.DeuceSeven,
-		DefaultLimit: game.FixedLimit,
-	},
-
-	game.Triple27: &GameOptions{
-		Group:        game.TripleDraw,
-		HasBlinds:    true,
-		Discards:     true,
-		Reshuffle:    true,
-		MaxTableSize: 6,
-		PocketSize:   5,
-		Streets:      3,
-		Hi:           ranking.DeuceSeven,
-		DefaultLimit: game.FixedLimit,
-	},
-
-	game.Badugi: &GameOptions{
-		Group:        game.TripleDraw,
-		HasBlinds:    true,
-		Discards:     true,
-		Reshuffle:    true,
-		MaxTableSize: 6,
-		PocketSize:   4,
-		Hi:           ranking.Badugi,
-		DefaultLimit: game.FixedLimit,
-	},
+	decoder := json.NewDecoder(f)
+	
+	err = decoder.Decode(&result)
+	if err != nil {
+		log.Fatal("Can't decode %s: %s", filepath, err)
+	}
 }
 
-var Mixes = map[game.MixedGame][]MixOptions{
-	game.Horse: []MixOptions{
-		MixOptions{Type: game.Texas, Limit: game.FixedLimit},
-		MixOptions{Type: game.Omaha8, Limit: game.FixedLimit},
-		MixOptions{Type: game.Razz, Limit: game.FixedLimit},
-		MixOptions{Type: game.Stud, Limit: game.FixedLimit},
-		MixOptions{Type: game.Stud8, Limit: game.FixedLimit},
-	},
+var configDir = flag.String("config-dir", "/etc/gopoker", "Config dir")
 
-	game.Eight: []MixOptions{
-		MixOptions{Type: game.Triple27, Limit: game.FixedLimit},
-		MixOptions{Type: game.Texas, Limit: game.FixedLimit},
-		MixOptions{Type: game.Omaha8, Limit: game.FixedLimit},
-		MixOptions{Type: game.Razz, Limit: game.FixedLimit},
-		MixOptions{Type: game.Stud, Limit: game.FixedLimit},
-		MixOptions{Type: game.Stud8, Limit: game.FixedLimit},
-		MixOptions{Type: game.Texas, Limit: game.NoLimit},
-		MixOptions{Type: game.Omaha, Limit: game.PotLimit},
-	},
+func init() {
+	if !flag.Parsed() {
+		flag.Parse()
+	}
+
+	readConfig(path.Join(*configDir, GamesConfigFile), &Games)
+	readConfig(path.Join(*configDir, MixesConfigFile), &Mixes)
 }
 
 func NewGame(g game.Type, limit game.Limit) *Game {

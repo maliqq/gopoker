@@ -1,18 +1,16 @@
 {
-  "Http": {
-    "Addr": "localhost:8080",
-    "ApiPath": "_api",
-    "RpcPath": "_rpc",
-    "WebSocketPath": "_ws"
-  },
-  "Rpc": {
-    "Addr": "localhost:8081"
-  },
-  
-  "Logdir": "/var/log/gopoker",
-  
-  "Store": {
-    "Driver": "postgres",
-    "ConnectionString": "user=postgres password=postgres dbname=poker sslmode=disable"
-  }
+    "Http": {
+        "Addr": "localhost:8080",
+        "ApiPath": "_api",
+        "RpcPath": "_rpc",
+        "WebSocketPath": "_ws"
+    },
+    "Rpc": {
+        "Addr": "localhost:8081"
+    },
+    "Logdir": "/var/log/gopoker",
+    "Store": {
+        "Driver": "postgres",
+        "ConnectionString": "user=postgres password=postgres dbname=poker sslmode=disable"
+    }
 }
