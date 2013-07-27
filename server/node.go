@@ -7,6 +7,7 @@ import (
 
 import (
 	"gopoker/storage"
+	"gopoker/model"
 )
 
 type HttpConfig struct {
@@ -21,6 +22,7 @@ type RpcConfig struct {
 	Timeout time.Duration
 }
 
+// NodeConfig
 type Config struct {
 	Logdir string
 	Http   *HttpConfig
@@ -36,7 +38,18 @@ type Node struct {
 	Store *storage.Store
 }
 
-func NewNode(name string, config *Config) *Node {
+const (
+	NodeConfigFile = "node.json"
+)
+
+func NewNode(name string, configFile string) *Node {
+	var config *Config
+
+	if configFile == "" {
+		configFile = NodeConfigFile // use default
+	}
+	model.ReadConfig(configFile, &config)
+
 	node := &Node{
 		Name:   name,
 		Config: config,

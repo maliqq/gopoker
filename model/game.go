@@ -1,12 +1,7 @@
 package model
 
 import (
-	"encoding/json"
-	"os"
-	"path"
-	"log"
 	"fmt"
-	"flag"
 )
 
 import (
@@ -16,8 +11,6 @@ import (
 
 const (
 	MixedGameMaxTableSize = 8
-	GamesConfigFile = "games.json"
-	MixesConfigFile = "mixes.json"
 )
 
 type GameOptions struct {
@@ -65,30 +58,9 @@ type Variation interface {
 var Games map[game.LimitedGame]*GameOptions
 var Mixes map[game.MixedGame][]*MixOptions
 
-func readConfig(filepath string, result interface{}) {
-	f, err := os.Open(filepath)
-
-	if err != nil {
-		log.Fatalf("Can't open %s: %s", filepath, err)
-	}
-
-	decoder := json.NewDecoder(f)
-	
-	err = decoder.Decode(&result)
-	if err != nil {
-		log.Fatal("Can't decode %s: %s", filepath, err)
-	}
-}
-
-var configDir = flag.String("config-dir", "/etc/gopoker", "Config dir")
-
 func init() {
-	if !flag.Parsed() {
-		flag.Parse()
-	}
-
-	readConfig(path.Join(*configDir, GamesConfigFile), &Games)
-	readConfig(path.Join(*configDir, MixesConfigFile), &Mixes)
+	ReadConfig(GamesConfigFile, &Games)
+	ReadConfig(MixesConfigFile, &Mixes)
 }
 
 func NewGame(g game.Type, limit game.Limit) *Game {
