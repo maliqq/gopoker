@@ -31,37 +31,18 @@ func (n *Node) StartHTTP() {
 	router := gorilla_mux.NewRouter()
 	n.drawRoutes(router)
 
-	log.Printf("[http] Starting service at %s", n.Http.Addr)
+	log.Printf("[http] starting service at %s", n.Http.Addr)
 	if err := http.ListenAndServe(n.Http.Addr, router); err != nil {
-		log.Fatalf("[http] Can't start at %s", n.Http.Addr)
+		log.Fatalf("[http] can't start at %s", n.Http.Addr)
 	}
-}
-
-func paths(httpConfig *HttpConfig) (string, string, string) {
-	apiPath := httpConfig.ApiPath
-	if apiPath == "" {
-		apiPath = DefaultApiPath
-	}
-
-	webSocketPath := httpConfig.WebSocketPath
-	if webSocketPath == "" {
-		webSocketPath = DefaultWebSocketPath
-	}
-
-	rpcPath := httpConfig.RpcPath
-	if rpcPath == "" {
-		rpcPath = DefaultRpcPath
-	}
-
-	return apiPath, rpcPath, webSocketPath
 }
 
 func (n *Node) drawRoutes(router *gorilla_mux.Router) {
-	apiPath, rpcPath, webSocketPath := paths(n.Config.Http)
+	config := n.Config.Http
 
 	// REST API
 	nodeHTTP := &NodeHTTP{n}
-	api := router.PathPrefix(apiPath).Subrouter()
+	api := router.PathPrefix(config.ApiPathOr(DefaultApiPath)).Subrouter()
 	nodeHTTP.drawApi(api)
 
 	// JSON-RPC over HTTP
@@ -71,10 +52,10 @@ func (n *Node) drawRoutes(router *gorilla_mux.Router) {
 	rpc.RegisterCodec(gorilla_json.NewCodec(), "application/json")
 
 	// handle RPC
-	router.Handle(rpcPath, rpc)
+	router.Handle(config.RpcPathOr(DefaultRpcPath), rpc)
 
 	// handle WebSocket
-	router.Handle(webSocketPath, websocket.Handler(nodeHTTP.WebSocketHandler))
+	router.Handle(config.WebSocketPathOr(DefaultWebSocketPath), websocket.Handler(nodeHTTP.WebSocketHandler))
 }
 
 func (nodeHTTP *NodeHTTP) drawApi(api *gorilla_mux.Router) {

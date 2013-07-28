@@ -57,9 +57,9 @@ func NewRoom(createRoom *rpc_service.CreateRoom) *Room {
 }
 
 func (r *Room) createLogger(dir string) {
-	f, err := os.Create(path.Join(dir, r.Id+".log"))
+	f, err := os.OpenFile(path.Join(dir, r.Id+".log"), os.O_CREATE|os.O_RDWR|os.O_APPEND, 0755)
 	if err != nil {
-		log.Fatal("cant create logger file", err)
+		log.Fatal("cant open logger file", err)
 	}
 	logger := play.NewLogger(f)
 	r.Broadcast.Broker.BindSystem("logger", &logger.Recv)

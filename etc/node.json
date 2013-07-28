@@ -1,9 +1,9 @@
 {
     "Http": {
         "Addr": "localhost:8080",
-        "ApiPath": "_api",
-        "RpcPath": "_rpc",
-        "WebSocketPath": "_ws"
+        "ApiPath": "/_api",
+        "RpcPath": "/_rpc",
+        "WebSocketPath": "/_ws"
     },
     "Rpc": {
         "Addr": "localhost:8081"

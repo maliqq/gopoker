@@ -66,7 +66,7 @@ func (n *Node) connectStore() {
 	n.Store, err = storage.Open(n.Config.Store)
 
 	if err != nil {
-		log.Fatal("Can't open store", err)
+		log.Fatalf("[store] can't open %s (%s): %s", n.Config.Store.Driver, n.Config.Store.ConnectionString, err)
 	}
 	log.Print("[store] connected")
 }
@@ -93,4 +93,28 @@ func (n *Node) RemoveRoom(room *Room) bool {
 func (n *Node) Start() {
 	go n.StartRPC()
 	n.StartHTTP()
+}
+
+func (httpConfig *HttpConfig) ApiPathOr(defaultPath string) string {
+	apiPath := httpConfig.ApiPath
+	if apiPath == "" {
+		return defaultPath
+	}
+	return apiPath
+}
+
+func (httpConfig *HttpConfig) WebSocketPathOr(defaultPath string) string {
+	webSocketPath := httpConfig.WebSocketPath
+	if webSocketPath == "" {
+		return defaultPath
+	}
+	return webSocketPath
+}
+
+func (httpConfig *HttpConfig) RpcPathOr(defaultPath string) string {
+	rpcPath := httpConfig.RpcPath
+	if rpcPath == "" {
+		return defaultPath
+	}
+	return rpcPath
 }

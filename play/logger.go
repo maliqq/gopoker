@@ -41,9 +41,9 @@ func (l *Logger) handle(msg *protocol.Message) {
 		payload := msg.Envelope.DealCards
 
 		if payload.Type.IsBoard() {
-			l.log("Dealt %s %s\n", payload.Type, payload.Cards.PrintString())
+			l.log("Dealt %s [%s]\n", payload.Type, payload.Cards.PrintString())
 		} else {
-			l.log("Dealt %s %s to %d\n", payload.Type, payload.Cards.PrintString(), payload.Pos)
+			l.log("Dealt %s [%s] to %d\n", payload.Type, payload.Cards.PrintString(), payload.Pos)
 		}
 
 	case protocol.MoveButton:
@@ -53,25 +53,24 @@ func (l *Logger) handle(msg *protocol.Message) {
 	case protocol.AddBet:
 
 		payload := msg.Envelope.AddBet
-		l.log("Payload: %s", payload)
+		l.log("Seat %d: %s\n", payload.Pos, payload.Bet)
 
 	case protocol.StreetStart:
 
 		payload := msg.Envelope.StreetStart
-		l.log("Payload: %s", payload)
+		l.log("=== %s\n", payload.Name)
 
 	case protocol.ShowHand:
 
 		payload := msg.Envelope.ShowHand
-		l.log("Payload: %s", payload)
+		l.log("Seat %d: shows [%s] (%s)\n", payload.Pos, payload.Cards.PrintString(), payload.Hand.PrintString())
 
 	case protocol.Winner:
 		payload := msg.Envelope.Winner
-		l.log("Payload: %s", payload)
+		l.log("Seat %d: wins %.2f\n", payload.Pos, payload.Amount)
 
-	case protocol.ChangeGame:
-		payload := msg.Envelope.ChangeGame
-		l.log("Payload: %s", payload)
+	default:
+		l.log("got %#v\n", msg.Envelope)
 	}
 }
 

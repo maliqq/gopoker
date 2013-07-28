@@ -6,6 +6,7 @@ get-deps:
 	go get github.com/gorilla/rpc
 	go get code.google.com/p/go.net
 	go get code.google.com/p/goprotobuf
+	go get -tags zmq_3_x github.com/alecthomas/gozmq
 
 build-all:
 	go build gopoker/gopoker-console
@@ -18,6 +19,6 @@ test-all:
 	go test gopoker/play/context
 
 install-all:
-	go install gopoker/gopoker-console
-	go install gopoker/gopoker-control
-	go install gopoker/gopoker-server
+	go install gopoker/bin/gopoker-console
+	go install gopoker/bin/gopoker-control
+	go install gopoker/bin/gopoker-server

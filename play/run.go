@@ -63,7 +63,6 @@ func (this *Play) run() {
 
 		if nextGame := this.GameRotation.Next(); nextGame != nil {
 			this.Game = nextGame
-			this.Broadcast.All <- protocol.NewChangeGame(nextGame)
 		}
 	}
 
@@ -100,8 +99,6 @@ func (this *Play) run() {
 				continue
 			case gameplay.Stop:
 				break
-			case gameplay.Skip:
-			case gameplay.Redo:
 			}
 		}
 	}
