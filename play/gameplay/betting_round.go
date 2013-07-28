@@ -2,6 +2,7 @@ package gameplay
 
 import (
 	"gopoker/protocol"
+	seatState "gopoker/model/seat"
 )
 
 const (
@@ -10,13 +11,19 @@ const (
 
 func (this *GamePlay) StartBettingRound() Transition {
 	//this.Broadcast.All <- protocol.NewBettingStart(this.Betting)
-	pos := make(chan int)
-	defer close(pos)
+	nextPos := make(chan int)
+	defer close(nextPos)
 
-	go this.Betting.Start(&pos)
+	go this.Betting.Start(&nextPos)
 
 	var next Transition
-	for current := range pos {
+	for current := range nextPos {
+		for _, pos := range this.Table.AllSeats().InPlay() {
+			seat := this.Table.Seat(pos)
+			if !seat.Calls(this.Betting.Required.Call) {
+				seat.State = seatState.Play
+			}
+		}
 		active := this.Table.Seats.From(current).Playing()
 		inPot := this.Table.Seats.From(current).InPot()
 

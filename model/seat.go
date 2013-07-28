@@ -52,8 +52,12 @@ func (this *Seat) Fold() {
 	this.State = seat.Fold
 }
 
+func (this *Seat) Calls(amount float64) bool {
+	return this.Bet >= amount || this.State == seat.AllIn
+}
+
 func (this *Seat) SetBet(amount float64) {
-	this.Stack -= (amount - this.Bet)
+	this.Stack += (this.Bet - amount)
 	this.Bet = amount
 
 	if this.Stack == 0. {
