@@ -48,11 +48,22 @@ func (n *Node) drawRoutes(router *gorilla_mux.Router) {
 	// JSON-RPC over HTTP
 	nodeRPC := NodeRPC{n}
 	rpc := gorilla_rpc.NewServer()
-	rpc.RegisterService(nodeRPC, "")
+	err := rpc.RegisterService(nodeRPC, "")
+	if err != nil {
+		log.Fatalf("[http-rpc] %s", err)
+	}
 	rpc.RegisterCodec(gorilla_json.NewCodec(), "application/json")
 
 	// handle RPC
-	router.Handle(config.RpcPathOr(DefaultRpcPath), rpc)
+	router.HandleFunc(config.RpcPathOr(DefaultRpcPath), func(resp http.ResponseWriter, req *http.Request) {
+			RespondCORS(resp)
+			resp.Write([]byte("\n"))
+		}).Methods("OPTIONS")
+
+	router.HandleFunc(config.RpcPathOr(DefaultRpcPath), func(resp http.ResponseWriter, req *http.Request) {
+			RespondCORS(resp)
+			rpc.ServeHTTP(resp, req)
+		}).Methods("POST")
 
 	// handle WebSocket
 	router.Handle(config.WebSocketPathOr(DefaultWebSocketPath), websocket.Handler(nodeHTTP.WebSocketHandler))
@@ -99,6 +110,12 @@ func (nodeHTTP *NodeHTTP) Log(req *http.Request) {
 	log.Printf("%s - [%s %s %s] %s\n", req.RemoteAddr, req.Method, req.RequestURI, req.Proto, req.UserAgent())
 }
 
+func RespondCORS(resp http.ResponseWriter) {
+	// CORS headers
+	resp.Header().Set("Access-Control-Allow-Origin", "*")
+	resp.Header().Set("Access-Control-Allow-Headers", "X-Requested-With, Content-Type")
+}
+
 func (nodeHTTP *NodeHTTP) RespondJSON(resp http.ResponseWriter, result interface{}) {
 	data, err := json.Marshal(result)
 	if err != nil {
@@ -107,8 +124,7 @@ func (nodeHTTP *NodeHTTP) RespondJSON(resp http.ResponseWriter, result interface
 
 	resp.Header().Set("Content-Type", "application/json; charset=utf-8")
 	// CORS headers
-	resp.Header().Set("Access-Control-Allow-Origin", "*")
-	resp.Header().Set("Access-Control-Allow-Headers", "X-Requested-With")
+	RespondCORS(resp)
 
 	resp.Write(data)
 	resp.Write([]byte{0xA})

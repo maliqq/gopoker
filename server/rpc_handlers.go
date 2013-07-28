@@ -1,6 +1,7 @@
 package server
 
 import (
+	"net/http"
 	"gopoker/server/rpc_service"
 )
 
@@ -11,6 +12,10 @@ func (n *NodeRPC) CreateRoom(createRoom *rpc_service.CreateRoom, r *rpc_service.
 	n.Node.AddRoom(room)
 
 	return nil
+}
+
+func (n NodeRPC) CreateRoomHTTP(req *http.Request, createRoom *rpc_service.CreateRoom, r *rpc_service.CallResult) error {
+	return n.CreateRoom(createRoom, r)
 }
 
 func (n *NodeRPC) DeleteRoom(requestRoom *rpc_service.RequestRoom, r *rpc_service.CallResult) error {
