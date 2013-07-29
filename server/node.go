@@ -42,13 +42,9 @@ const (
 	NodeConfigFile = "node.json"
 )
 
-func NewNode(name string, configFile string) *Node {
+func NewNode(name string, configDir string) *Node {
 	var config *Config
-
-	if configFile == "" {
-		configFile = NodeConfigFile // use default
-	}
-	model.ReadConfig(configFile, &config)
+	model.ReadConfig(configDir, NodeConfigFile, &config)
 
 	node := &Node{
 		Name:   name,

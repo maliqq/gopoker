@@ -12,8 +12,12 @@ import (
 	"gopoker/server"
 )
 
+const (
+  DefaultConfigDir = "/etc/gopoker"
+)
+
 var (
-	nodeConfigFile = flag.String("config-file", "", "Node config file")
+  ConfigDir = flag.String("config-dir", DefaultConfigDir, "Config dir")
 )
 
 func main() {
@@ -21,6 +25,6 @@ func main() {
 
 	flag.Parse()
 
-	node := server.NewNode("localhost", *nodeConfigFile)
+	node := server.NewNode("localhost", *ConfigDir)
 	node.Start()
 }

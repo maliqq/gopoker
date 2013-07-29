@@ -58,9 +58,14 @@ type Variation interface {
 var Games map[game.LimitedGame]*GameOptions
 var Mixes map[game.MixedGame][]*MixOptions
 
-func init() {
-	ReadConfig(GamesConfigFile, &Games)
-	ReadConfig(MixesConfigFile, &Mixes)
+const (
+	GamesConfigFile  = "games.json"
+	MixesConfigFile  = "mixes.json"
+)
+
+func LoadGames(configDir string) {
+	ReadConfig(configDir, GamesConfigFile, &Games)
+	ReadConfig(configDir, MixesConfigFile, &Mixes)
 }
 
 func NewGame(g game.Type, limit game.Limit) *Game {
