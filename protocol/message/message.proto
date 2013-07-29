@@ -8,3 +8,161 @@ message ChatMessage {
   required int32 pos = 1;
   required string Message = 2;
 }
+
+message DealerMessage {
+  required string Message = 1;
+}
+
+message BetRange {
+  required float Call = 1;
+  required float Min = 2;
+  required float Max = 3;
+}
+
+message RequireBet {
+  required int32 pos = 1;
+  required BetRange BetRange = 2;
+}
+
+enum BetType {
+  CHECK = 0;
+  CALL = 1;
+  FOLD = 2;
+  RAISE = 3;
+}
+
+message Bet {
+  required BetType Type = 1;
+  optional float Amount = 2;
+}
+
+message AddBet {
+  required int32 pos = 1;
+  required Bet Bet = 2;
+}
+
+message BettingComplete {
+  required float Pot = 1;
+  required float Rake = 2;
+}
+
+enum DealType {
+  BOARD = 0;
+  HOLE = 1;
+  DOOR = 2;
+  DISCARD = 3;
+}
+
+message DealCards {
+  required int32 Pos = 1;
+  repeated int64 Cards = 2;
+  required DealType Type = 3;
+}
+
+message RequireDiscard {
+  required int32 Pos = 1;
+}
+
+message Discarded {
+  required int32 Pos = 1;
+  required int32 Num = 2;
+}
+
+message DiscardCards {
+  required int32 Pos = 1;
+  repeated int32 Cards = 2;
+}
+
+message PlayStart {
+}
+
+message StreetStart {
+  required string Name = 1;
+}
+
+enum GameType {
+  TEXAS = 0;
+  OMAHA = 1;
+  OMAHA8 = 2;
+  STUD = 3;
+  STUD8 = 4;
+  RAZZ = 9;
+  LONDON = 10;
+  FIVECARD = 11;
+  SINGLE27 = 12;
+  TRIPLE27 = 13;
+  BADUGI = 14;
+}
+
+enum GameLimit {
+  NO_LIMIT = 0;
+  POT_LIMIT = 1;
+  FIXED_LIMIT = 2;
+}
+
+message ChangeGame {
+  required GameType Type = 1;
+  required GameLimit Limit = 2;
+}
+
+/*
+type SeatState struct {
+  Pos int
+}
+
+type ChangeSeatState struct {
+  Pos   int
+  State seat.State
+}
+
+type SitOut struct {
+  Pos int
+}
+
+type ComeBack struct {
+  Pos int
+}
+
+// seat info
+type Seat struct {
+  State string
+  Stack float
+  Bet   float
+}
+
+
+// hand info
+type ShowHand struct {
+  Pos        int
+  Cards      poker.Cards
+  Hand       *poker.Hand
+  HandString string
+}
+
+// pocket cards show
+type ShowCards struct {
+  Pos   int
+  Cards poker.Cards
+  Muck  bool
+}
+
+// win info
+type Winner struct {
+  Pos    int
+  Amount float
+}
+
+type MoveButton struct {
+  Pos int
+}
+
+type JoinTable struct {
+  Player model.Player
+  Pos    int
+  Amount float
+}
+
+type LeaveTable struct {
+  Player model.Player
+}*/
+
