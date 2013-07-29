@@ -1,0 +1,10 @@
+package protocol;
+
+message ErrorMessage {
+  required string Message = 1;
+}
+
+message ChatMessage {
+  required int32 pos = 1;
+  required string Message = 2;
+}
