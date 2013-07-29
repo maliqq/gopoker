@@ -45,7 +45,6 @@ func TestBot(t *testing.T) {
 	for i := 0; i < tableSize; i++ {
 		bot := NewBot(rpcAddr)
 		bots[i] = bot
-		bot.Join(roomId, i)
 	}
 	t.Logf("bots=%#v", bots)
 }

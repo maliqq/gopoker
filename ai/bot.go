@@ -1,29 +1,20 @@
 package ai
 
 import (
-	"net/rpc"
-)
-
-import (
-	_ "gopoker/client/rpc_client"
+	"gopoker/client/zeromq_client"
 	"gopoker/util"
 )
 
 type Bot struct {
 	Id        string
-	rpcClient *rpc.Client
+	zmqConn *zeromq_client.Connection
 }
 
-func NewBot(rpcAddr string) *Bot {
+func NewBot(sockAddr string) *Bot {
 	id := util.RandomUuid()
-	client, _ := rpc.DialHTTP("tcp", rpcAddr)
 
 	return &Bot{
 		Id:        id,
-		rpcClient: client,
+		zmqConn: zeromq_client.NewConnection(sockAddr),
 	}
-}
-
-func (b *Bot) Join(roomId string, pos int) {
-
 }

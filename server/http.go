@@ -57,7 +57,7 @@ func (n *Node) drawRoutes(router *gorilla_mux.Router) {
 	// handle RPC
 	router.HandleFunc(config.RpcPathOr(DefaultRpcPath), func(resp http.ResponseWriter, req *http.Request) {
 			RespondCORS(resp)
-			resp.Write([]byte("\n"))
+			resp.Write([]byte{0xA})
 		}).Methods("OPTIONS")
 
 	router.HandleFunc(config.RpcPathOr(DefaultRpcPath), func(resp http.ResponseWriter, req *http.Request) {
