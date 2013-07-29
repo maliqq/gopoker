@@ -59,8 +59,8 @@ var Games map[game.LimitedGame]*GameOptions
 var Mixes map[game.MixedGame][]*MixOptions
 
 const (
-	GamesConfigFile  = "games.json"
-	MixesConfigFile  = "mixes.json"
+	GamesConfigFile = "games.json"
+	MixesConfigFile = "mixes.json"
 )
 
 func LoadGames(configDir string) {

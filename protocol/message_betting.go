@@ -12,7 +12,7 @@ func NewAddBet(pos int, bet *model.Bet) *Message {
 	return NewMessage(AddBet{
 		Pos: proto.Int32(int32(pos)),
 		Bet: &Bet{
-			Type: BetType(BetType_value[string(bet.Type)]).Enum(),
+			Type:   BetType(BetType_value[string(bet.Type)]).Enum(),
 			Amount: proto.Float64(bet.Amount),
 		},
 	})

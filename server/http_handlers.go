@@ -91,7 +91,7 @@ func (nodeHTTP *NodeHTTP) CalculateOdds(resp http.ResponseWriter, req *http.Requ
 	b, _ := poker.ParseCards(q.Get("b"))
 
 	total := 10000
-	chances := calc.ChancesAgainstOne{N: total}.Preflop(a, b)
+	chances := calc.ChancesAgainstOne{SamplesNum: total}.Preflop(a, b)
 
 	result := &http_service.OddsResult{
 		A:     a,

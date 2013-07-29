@@ -77,7 +77,9 @@ func (this *Play) processMessage(msg *protocol.Message) {
 	switch msg.Payload().(type) {
 	case protocol.JoinTable:
 		join := msg.Envelope.JoinTable
-		_, err := this.Table.AddPlayer(join.Player, join.Pos, join.Amount)
+		player := model.Player(*join.Player)
+
+		_, err := this.Table.AddPlayer(player, int(*join.Pos), *join.Amount)
 		if err == nil {
 			// start next deal
 		} else {
@@ -88,18 +90,20 @@ func (this *Play) processMessage(msg *protocol.Message) {
 
 	case protocol.LeaveTable:
 		leave := msg.Envelope.LeaveTable
-		this.Table.RemovePlayer(leave.Player)
+		player := model.Player(*leave.Player)
+
+		this.Table.RemovePlayer(player)
 		this.Broadcast.All <- msg
 		// TODO: fold & autoplay
 
 	case protocol.SitOut:
 		sitOut := msg.Envelope.SitOut
-		this.Table.Seat(sitOut.Pos).State = seat.Idle
+		this.Table.Seat(int(*sitOut.Pos)).State = seat.Idle
 		// TODO: fold
 
 	case protocol.ComeBack:
 		comeBack := msg.Envelope.ComeBack
-		this.Table.Seat(comeBack.Pos).State = seat.Ready
+		this.Table.Seat(int(*comeBack.Pos)).State = seat.Ready
 
 	case protocol.ChatMessage:
 		this.Broadcast.All <- msg

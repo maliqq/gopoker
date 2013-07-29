@@ -13,11 +13,11 @@ import (
 )
 
 const (
-  DefaultConfigDir = "/etc/gopoker"
+	DefaultConfigDir = "/etc/gopoker"
 )
 
 var (
-  ConfigDir = flag.String("config-dir", DefaultConfigDir, "Config dir")
+	ConfigDir = flag.String("config-dir", DefaultConfigDir, "Config dir")
 )
 
 func main() {

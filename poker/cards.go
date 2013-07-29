@@ -74,6 +74,12 @@ func ParseBinary(s []byte) (Cards, error) {
 	return cards, nil
 }
 
+func FromBinary(s []byte) Cards {
+	cards, _ := ParseBinary(s)
+
+	return cards
+}
+
 func (c Cards) Uint64() uint64 {
 	var result uint64 = uint64(c[0].Index(AceHigh))
 	for i := 1; i < len(c); i++ {
@@ -104,7 +110,7 @@ func (c Cards) String() string {
 	return s
 }
 
-func (c *Cards) PrintString() string {
+func (c Cards) PrintString() string {
 	return c.String()
 }
 

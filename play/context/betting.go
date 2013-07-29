@@ -24,7 +24,7 @@ type Betting struct {
 	Pot *model.Pot
 
 	Seat     *model.Seat
-	Required *protocol.RequireBet
+	Required *Required
 
 	Bet chan *protocol.Message `json:"-"`
 
@@ -32,11 +32,16 @@ type Betting struct {
 	stop chan int `json:"-"`
 }
 
+type Required struct {
+	Pos int
+	model.BetRange
+}
+
 func NewBetting() *Betting {
 	return &Betting{
 		Pot: model.NewPot(),
 
-		Required: &protocol.RequireBet{},
+		Required: &Required{},
 
 		Bet: make(chan *protocol.Message),
 
@@ -70,9 +75,11 @@ Loop:
 			break Loop
 
 		case msg := <-this.Bet:
-			newBet := msg.Envelope.AddBet.Bet
+			betData := msg.Envelope.AddBet.Bet
 
-			err := this.AddBet(&newBet)
+			newBet := model.NewBet(bet.Type(string(*betData.Type)), *betData.Amount)
+
+			err := this.AddBet(newBet)
 
 			if err != nil {
 				log.Printf("[betting] %s", err)

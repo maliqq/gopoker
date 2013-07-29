@@ -5,6 +5,10 @@ import (
 )
 
 import (
+	"code.google.com/p/goprotobuf/proto"
+)
+
+import (
 	"gopoker/model"
 	"gopoker/protocol"
 )
@@ -26,7 +30,7 @@ func NewDiscarding(d *model.Deal) *Discarding {
 
 func (this *Discarding) RequireDiscard(pos int, seat *model.Seat) *protocol.Message {
 	this.Seat = seat
-	this.Required.Pos = pos
+	this.Required.Pos = proto.Int32(int32(pos))
 	return protocol.NewRequireDiscard(this.Required)
 }
 

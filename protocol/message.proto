@@ -1,10 +1,23 @@
 package protocol;
 
 enum BetType {
-  Check = 0;
-  Call = 1;
-  Fold = 2;
-  Raise = 3;
+  Ante = 1;
+  BringIn = 2;
+  SmallBlind = 3;
+  BigBlind = 4;
+  GuestBlind = 5;
+  Straddle = 6;
+
+  Raise = 7;
+  Call = 8;
+  Check = 9;
+  Fold = 10;
+
+  Discard = 11;
+  StandPat = 12;
+
+  Show = 13;
+  Muck = 14;
 }
 
 enum DealType {

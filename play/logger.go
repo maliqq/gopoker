@@ -6,6 +6,8 @@ import (
 )
 
 import (
+	"gopoker/poker"
+	"gopoker/poker/hand"
 	"gopoker/protocol"
 )
 
@@ -40,15 +42,15 @@ func (l *Logger) handle(msg *protocol.Message) {
 	case protocol.DealCards:
 		payload := msg.Envelope.DealCards
 
-		if payload.Type.IsBoard() {
-			l.log("Dealt %s [%s]\n", payload.Type, payload.Cards.PrintString())
+		if *payload.Type == protocol.DealType_Board {
+			l.log("Dealt %s [%s]\n", payload.Type, poker.FromBinary(payload.Cards).PrintString())
 		} else {
-			l.log("Dealt %s [%s] to %d\n", payload.Type, payload.Cards.PrintString(), payload.Pos)
+			l.log("Dealt %s [%s] to %d\n", payload.Type, poker.FromBinary(payload.Cards).PrintString(), payload.Pos)
 		}
 
 	case protocol.MoveButton:
 		payload := msg.Envelope.MoveButton
-		l.log("Button is %d\n", payload.Pos+1)
+		l.log("Button is %d\n", *payload.Pos+1)
 
 	case protocol.AddBet:
 
@@ -63,7 +65,14 @@ func (l *Logger) handle(msg *protocol.Message) {
 	case protocol.ShowHand:
 
 		payload := msg.Envelope.ShowHand
-		l.log("Seat %d: shows [%s] (%s)\n", payload.Pos, payload.Cards.PrintString(), payload.Hand.PrintString())
+		handData := payload.Hand
+		hand := poker.Hand{
+			Rank:   hand.Rank(handData.Rank.String()),
+			High:   poker.FromBinary(handData.High),
+			Value:  poker.FromBinary(handData.Value),
+			Kicker: poker.FromBinary(handData.Kicker),
+		}
+		l.log("Seat %d: shows [%s] (%s)\n", payload.Pos, poker.FromBinary(payload.Cards).PrintString(), hand.PrintString())
 
 	case protocol.Winner:
 		payload := msg.Envelope.Winner
