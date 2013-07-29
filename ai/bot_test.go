@@ -23,7 +23,7 @@ func TestBot(t *testing.T) {
 
 	client, err := rpc.DialHTTP("tcp", rpcAddr)
 	if err != nil {
-		t.Fatalf("dialing error: ", err)
+		t.Fatal("dialing error: ", err)
 	}
 
 	args := &rpc_service.CreateRoom{
@@ -37,7 +37,7 @@ func TestBot(t *testing.T) {
 
 	err = client.Call("NodeRPC.CreateRoom", args, &result)
 	if err != nil {
-		t.Fatalf("call error: ", err)
+		t.Fatal("call error: ", err)
 	}
 	t.Logf("rooms=%s", node.Rooms)
 

@@ -266,8 +266,6 @@ func (a Cards) Compare(b Cards, ord Ordering) int {
 
 		return a[0:min].Compare(b[0:min], ord)
 	}
-
-	return 1
 }
 
 func (c Cards) Arrange(ord Ordering) Cards {

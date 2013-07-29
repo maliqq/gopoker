@@ -94,7 +94,7 @@ func (game *Game) IsMixed() bool {
 }
 
 func (game *Game) String() string {
-	return fmt.Sprintf("%s %s %s", game.Type, game.Limit)
+	return fmt.Sprintf("%s %s", game.Type, game.Limit)
 }
 
 func NewMix(g game.Type) *Mix {
@@ -126,7 +126,7 @@ func (mix *Mix) WithDefaults() *Mix {
 }
 
 func (mix *Mix) String() string {
-	return fmt.Sprintf("%s %s", mix.Type)
+	return fmt.Sprintf("%s", mix.Type)
 }
 
 func (mix *Mix) IsMixed() bool {

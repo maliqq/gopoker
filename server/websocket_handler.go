@@ -29,7 +29,7 @@ func (nodeHTTP *NodeHTTP) WebSocketHandler(conn *websocket.Conn) {
 	}
 
 	id := util.RandomUuid()
-	connection := &websocket_client.Connection{conn}
+	connection := &websocket_client.Connection{Conn: conn}
 	session := client.NewSession(id, connection)
 	session.Send = &room.Recv
 
