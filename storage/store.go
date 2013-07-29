@@ -2,12 +2,12 @@ package storage
 
 import (
 	"database/sql"
-  _ "github.com/bmizerany/pq"
+	_ "github.com/bmizerany/pq"
 )
 
 type StoreConfig struct {
-  Driver string
-  ConnectionString string
+	Driver           string
+	ConnectionString string
 }
 
 type Store struct {
@@ -20,11 +20,11 @@ const (
 
 func Open(config *StoreConfig) (*Store, error) {
 	store := &Store{}
-  
-  var err error
+
+	var err error
 	store.DB, err = sql.Open(config.Driver, config.ConnectionString)
-	
-  return store, err
+
+	return store, err
 }
 
 func (store *Store) Close() {

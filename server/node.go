@@ -1,13 +1,13 @@
 package server
 
 import (
-	"time"
 	"log"
+	"time"
 )
 
 import (
-	"gopoker/storage"
 	"gopoker/model"
+	"gopoker/storage"
 )
 
 type HttpConfig struct {
@@ -27,7 +27,7 @@ type Config struct {
 	Logdir string
 	Http   *HttpConfig
 	Rpc    *RpcConfig
-	Store *storage.StoreConfig
+	Store  *storage.StoreConfig
 }
 
 type Node struct {

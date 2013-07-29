@@ -56,14 +56,14 @@ func (n *Node) drawRoutes(router *gorilla_mux.Router) {
 
 	// handle RPC
 	router.HandleFunc(config.RpcPathOr(DefaultRpcPath), func(resp http.ResponseWriter, req *http.Request) {
-			RespondCORS(resp)
-			resp.Write([]byte{0xA})
-		}).Methods("OPTIONS")
+		RespondCORS(resp)
+		resp.Write([]byte{0xA})
+	}).Methods("OPTIONS")
 
 	router.HandleFunc(config.RpcPathOr(DefaultRpcPath), func(resp http.ResponseWriter, req *http.Request) {
-			RespondCORS(resp)
-			rpc.ServeHTTP(resp, req)
-		}).Methods("POST")
+		RespondCORS(resp)
+		rpc.ServeHTTP(resp, req)
+	}).Methods("POST")
 
 	// handle WebSocket
 	router.Handle(config.WebSocketPathOr(DefaultWebSocketPath), websocket.Handler(nodeHTTP.WebSocketHandler))

@@ -6,7 +6,7 @@ import (
 )
 
 type Bot struct {
-	Id        string
+	Id      string
 	zmqConn *zeromq_client.Connection
 }
 
@@ -14,7 +14,7 @@ func NewBot(sockAddr string) *Bot {
 	id := util.RandomUuid()
 
 	return &Bot{
-		Id:        id,
+		Id:      id,
 		zmqConn: zeromq_client.NewConnection(sockAddr),
 	}
 }
