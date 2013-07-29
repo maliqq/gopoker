@@ -1,0 +1,257 @@
+package protocol;
+
+enum BetType {
+  Check = 0;
+  Call = 1;
+  Fold = 2;
+  Raise = 3;
+}
+
+enum DealType {
+  Board = 0;
+  Hole = 1;
+  Door = 2;
+  Discard = 3;
+}
+
+enum GameType {
+  Texas = 0;
+  Omaha = 1;
+  Omaha8 = 2;
+  Stud = 3;
+  Stud8 = 4;
+  Razz = 9;
+  London = 10;
+  FiveCard = 11;
+  Single27 = 12;
+  Triple27 = 13;
+  Badugi = 14;
+}
+
+enum GameLimit {
+  NoLimit = 0;
+  PotLimit = 1;
+  FixedLimit = 2;
+}
+
+enum Rank {
+  StraightFlush = 0;
+  FourKind = 1;
+  FullHouse = 2;
+  Flush = 3;
+  Straight = 4;
+  ThreeKind = 5;
+  TwoPair = 6;
+  OnePair = 7;
+  HighCard = 8;
+
+  BadugiFour = 9;
+  BadugiThree = 10;
+  BadugiTwo = 11;
+  BadugiOne = 12;
+
+  CompleteLow = 13;
+  IncompleteLow = 14;
+}
+
+enum SeatState {
+  Empty = 0;
+  Taken = 1;
+  Ready = 2;
+
+  WaitBB = 3;
+  PostBB = 4;
+
+  Play = 5;
+  PutBet = 6;
+  AllIn = 7;
+  Folded = 8;
+  Auto = 9;
+
+  Kicked = 10;
+  Busted = 11;
+
+  Away = 12;
+  Idle = 13;
+}
+
+message ErrorMessage {
+  required string Message = 1;
+}
+
+message ChatMessage {
+  required int32 pos = 1;
+  required string Message = 2;
+}
+
+message DealerMessage {
+  required string Message = 1;
+}
+
+message BetRange {
+  required double Call = 1;
+  required double Min = 2;
+  required double Max = 3;
+}
+
+message RequireBet {
+  required int32 pos = 1;
+  required BetRange BetRange = 2;
+}
+
+message Bet {
+  required BetType Type = 1;
+  optional double Amount = 2;
+}
+
+message AddBet {
+  required int32 pos = 1;
+  required Bet Bet = 2;
+}
+
+message BettingComplete {
+  required double Pot = 1;
+  required double Rake = 2;
+}
+
+message DealCards {
+  required int32 Pos = 1;
+  required bytes Cards = 2;
+  required DealType Type = 3;
+}
+
+message RequireDiscard {
+  required int32 Pos = 1;
+}
+
+message Discarded {
+  required int32 Pos = 1;
+  required int32 Num = 2;
+}
+
+message DiscardCards {
+  required int32 Pos = 1;
+  required bytes Cards = 2;
+}
+
+message PlayStart {
+}
+
+message StreetStart {
+  required string Name = 1;
+}
+
+message ChangeGame {
+  required GameType Type = 1;
+  required GameLimit Limit = 2;
+}
+
+message Hand {
+  required Rank Rank = 1;
+  required bytes Value = 2;
+  required bytes High = 3;
+  required bytes Kicker = 4;
+}
+
+message ShowHand {
+  required int32 Pos = 1;
+  required bytes Cards = 2;
+  required Hand Hand = 3;
+  required string HandString = 4;
+}
+
+message ShowCards {
+  required int32 Pos = 1;
+  required bytes Cards = 2;
+  required bool Muck = 3 [default = false];
+}
+
+message Winner {
+  required int32 Pos = 1;
+  required double Amount = 2;
+}
+
+message MoveButton {
+  required int32 Pos = 1;
+}
+
+message JoinTable {
+  required string Player = 1;
+  required int32 Pos = 2;
+  required double Amount = 3;
+}
+
+message LeaveTable {
+  required string Player = 1;
+}
+
+message SitOut {
+  required int32 Pos = 1;
+}
+
+message ComeBack {
+  required int32 Pos = 1;
+}
+
+message Seat {
+  required int32 Pos = 1;
+  optional SeatState State = 2;
+  optional double Stack = 3;
+  optional double Bet = 4;
+}
+
+message Table {
+  required string Id = 1;
+  required int32 Size = 2;
+  required int32 Button = 3;
+  repeated Seat Seats = 4;
+}
+
+message Envelope {
+  optional ErrorMessage ErrorMessage = 1;
+  optional ChatMessage ChatMessage = 2;
+  optional DealerMessage DealerMessage = 3;
+
+  // gameplay
+  optional PlayStart PlayStart = 4;
+  optional StreetStart StreetStart = 5;
+  optional ChangeGame ChangeGame = 6;
+  optional BettingComplete BettingComplete = 7;
+
+  // table
+  optional JoinTable JoinTable = 8;
+  optional LeaveTable LeaveTable = 9;
+  optional SitOut SitOut = 10;
+  optional ComeBack ComeBack = 11;
+  optional MoveButton MoveButton = 12;
+
+  // betting
+  optional RequireBet RequireBet = 13;
+  optional AddBet AddBet = 14;
+
+  // dealing
+  optional DealCards DealCards = 15;
+  optional RequireDiscard RequireDiscard = 16;
+  optional Discarded Discarded = 17;
+  optional DiscardCards DiscardCards = 18;
+
+  // showdown
+  optional ShowHand ShowHand = 19;
+  optional ShowCards ShowCards = 20;
+  optional Winner Winner = 21;
+}
+
+/*message Notify {
+  optional bool All = 1;
+  optional bool None = 2;
+  optional string One = 3;
+  repeated string Only = 4;
+  repeated string Except = 5;
+}*/
+
+message Message {
+  required string Type = 1;
+  required int64 Timestamp = 2;
+  //optional Notify Notify = 3;
+  required Envelope Envelope = 4;
+}

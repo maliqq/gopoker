@@ -1,43 +1,29 @@
 package protocol
 
 import (
+	"code.google.com/p/goprotobuf/proto"
+)
+
+import (
 	"gopoker/model"
 )
 
-type MoveButton struct {
-	Pos int
-}
-
-type JoinTable struct {
-	Player model.Player
-	Pos    int
-	Amount float64
-}
-
-type LeaveTable struct {
-	Player model.Player
-}
-
 func NewMoveButton(pos int) *Message {
 	return NewMessage(MoveButton{
-		Pos: pos,
+		Pos: proto.Int32(int32(pos)),
 	})
 }
 
 func NewJoinTable(player model.Player, pos int, amount float64) *Message {
 	return NewMessage(JoinTable{
-		Player: player,
-		Pos:    pos,
-		Amount: amount,
+		Player: proto.String(string(player)),
+		Pos:    proto.Int32(int32(pos)),
+		Amount: proto.Float64(amount),
 	})
 }
 
 func NewLeaveTable(player model.Player) *Message {
 	return NewMessage(LeaveTable{
-		Player: player,
+		Player: proto.String(string(player)),
 	})
-}
-
-type ChangeTableState struct {
-	State string
 }

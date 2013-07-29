@@ -7,6 +7,10 @@ import (
 )
 
 import (
+	"code.google.com/p/goprotobuf/proto"
+)
+
+import (
 	"gopoker/util/console"
 )
 
@@ -96,8 +100,8 @@ func (n *Notify) String() string {
 
 func (broker *Broker) sendUser(key string, msg *Message) {
 	// sign message with timestamp
-	if msg.Timestamp == 0 {
-		msg.Timestamp = time.Now().Unix()
+	if msg.GetTimestamp() == 0 {
+		msg.Timestamp = proto.Int64(time.Now().Unix())
 	}
 
 	user, found := broker.User[key]
@@ -114,8 +118,6 @@ func (broker *Broker) sendSystem(msg *Message) {
 
 func (broker *Broker) Dispatch(n *Notify, msg *Message) {
 	log.Println(console.Color(console.CYAN, fmt.Sprintf("%s %s", n, msg)))
-
-	msg.Notify = *n // FIXME
 
 	if n.None {
 		return

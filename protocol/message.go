@@ -8,53 +8,15 @@ import (
 	"time"
 )
 
+import (
+	"code.google.com/p/goprotobuf/proto"
+)
+
 const (
 	UseIndent = false
 )
 
 type Payload interface{}
-
-type Envelope struct {
-	// notice
-	ErrorMessage  *ErrorMessage
-	ChatMessage   *ChatMessage
-	DealerMessage *DealerMessage
-
-	// gameplay
-	PlayStart       *PlayStart
-	StreetStart     *StreetStart
-	ChangeGame      *ChangeGame
-	BettingComplete *BettingComplete
-
-	// table
-	JoinTable  *JoinTable
-	LeaveTable *LeaveTable
-	SitOut     *SitOut
-	ComeBack   *ComeBack
-	MoveButton *MoveButton
-
-	// betting
-	RequireBet *RequireBet
-	AddBet     *AddBet
-
-	// dealing
-	DealCards      *DealCards
-	RequireDiscard *RequireDiscard
-	Discarded      *Discarded
-	DiscardCards   *DiscardCards
-
-	// showdown
-	ShowHand  *ShowHand
-	ShowCards *ShowCards
-	Winner    *Winner
-}
-
-type Message struct {
-	Type      string
-	Timestamp int64
-	Notify    Notify
-	Envelope  Envelope
-}
 
 func NewMessage(payload Payload) *Message {
 	payloadType := reflect.TypeOf(payload)
@@ -135,33 +97,32 @@ func NewMessage(payload Payload) *Message {
 	}
 
 	return &Message{
-		Type:      typeName,
-		Timestamp: time.Now().Unix(),
-		Envelope:  envelope,
+		Type:      proto.String(typeName),
+		Timestamp: proto.Int64(time.Now().Unix()),
+		Envelope:  &envelope,
 	}
 }
 
 func (msg *Message) MarshalJSON() ([]byte, error) {
 	data := map[string]interface{}{}
-	data["Type"] = msg.Type
-	data["Timestamp"] = msg.Timestamp
-	data["Notify"] = msg.Notify // FIXME
+	data["Type"] = msg.GetType()
+	data["Timestamp"] = msg.GetTimestamp()
 	// cleanup fields
-	value := reflect.ValueOf(msg.Envelope)
-	field := value.FieldByName(msg.Type)
+	value := reflect.ValueOf(*msg.Envelope)
+	field := value.FieldByName(*msg.Type)
 	data["Envelope"] = map[string]interface{}{
-		msg.Type: field.Interface(),
+		*msg.Type: field.Interface(),
 	}
 	return json.Marshal(data)
 }
 
 func (msg *Message) Payload() Payload {
 	value := reflect.ValueOf(msg.Envelope)
-	field := value.FieldByName(msg.Type)
+	field := value.FieldByName(*msg.Type)
 	return reflect.Indirect(field).Interface()
 }
 
-func (msg *Message) String() string {
+func (msg *Message) PrintString() string {
 	var err error
 	var s []byte
 	if UseIndent {
@@ -180,29 +141,14 @@ func (msg *Message) String() string {
 	return string(s)
 }
 
-// error
-type ErrorMessage struct {
-	Message string
-}
-
-// chat
-type ChatMessage struct {
-	Pos     int
-	Message string
-}
-
-type DealerMessage struct {
-	Message string
-}
-
 func NewErrorMessage(err error) *Message {
 	return NewMessage(ErrorMessage{
-		Message: err.Error(),
+		Message: proto.String(err.Error()),
 	})
 }
 
 func NewChatMessage(body string) *Message {
 	return NewMessage(ChatMessage{
-		Message: body,
+		Message: proto.String(body),
 	})
 }

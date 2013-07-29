@@ -1,41 +1,25 @@
 package protocol
 
 import (
-	"fmt"
+	"code.google.com/p/goprotobuf/proto"
 )
 
 import (
 	"gopoker/model"
 )
 
-type RequireBet struct {
-	Pos int
-	model.BetRange
-}
-
-func (r RequireBet) String() string {
-	return fmt.Sprintf("call: %.2f min: %.2f max: %.2f", r.Call, r.Min, r.Max)
-}
-
-type AddBet struct {
-	Pos int
-	Bet model.Bet
-}
-
-type BettingComplete struct {
-	Pot  float64
-	Rake float64
-}
-
 func NewAddBet(pos int, bet *model.Bet) *Message {
 	return NewMessage(AddBet{
-		Pos: pos,
-		Bet: *bet,
+		Pos: proto.Int32(int32(pos)),
+		Bet: &Bet{
+			Type: BetType(BetType_value[string(bet.Type)]).Enum(),
+			Amount: proto.Float64(bet.Amount),
+		},
 	})
 }
 
 func NewBettingComplete(pot *model.Pot) *Message {
 	return NewMessage(BettingComplete{
-		Pot: pot.Total(),
+		Pot: proto.Float64(pot.Total()),
 	})
 }

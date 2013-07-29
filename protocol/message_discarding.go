@@ -1,22 +1,12 @@
 package protocol
 
 import (
-	"gopoker/poker"
+	"code.google.com/p/goprotobuf/proto"
 )
 
-type RequireDiscard struct {
-	Pos int
-}
-
-type Discarded struct {
-	Pos int
-	Num int
-}
-
-type DiscardCards struct {
-	Pos   int
-	Cards poker.Cards
-}
+import (
+	"gopoker/poker"
+)
 
 func NewRequireDiscard(req *RequireDiscard) *Message {
 	return NewMessage(*req)
@@ -24,14 +14,14 @@ func NewRequireDiscard(req *RequireDiscard) *Message {
 
 func NewDiscarded(pos int, cardsNum int) *Message {
 	return NewMessage(Discarded{
-		Pos: pos,
-		Num: cardsNum,
+		Pos: proto.Int32(int32(pos)),
+		Num: proto.Int32(int32(cardsNum)),
 	})
 }
 
 func NewDiscardCards(pos int, cards poker.Cards) *Message {
 	return NewMessage(DiscardCards{
-		Pos:   pos,
-		Cards: cards,
+		Pos:   proto.Int32(int32(pos)),
+		Cards: cards.Binary(),
 	})
 }
