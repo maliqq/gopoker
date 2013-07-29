@@ -274,6 +274,78 @@ func (x *Rank) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+type SeatState int32
+
+const (
+	SeatState_EMPTY   SeatState = 0
+	SeatState_TAKEN   SeatState = 1
+	SeatState_READY   SeatState = 2
+	SeatState_WAIT_BB SeatState = 3
+	SeatState_POST_BB SeatState = 4
+	SeatState_PLAY    SeatState = 5
+	SeatState_BET     SeatState = 6
+	SeatState_ALL_IN  SeatState = 7
+	SeatState_FOLDED  SeatState = 8
+	SeatState_AUTO    SeatState = 9
+	SeatState_KICKED  SeatState = 10
+	SeatState_BUSTED  SeatState = 11
+	SeatState_AWAY    SeatState = 12
+	SeatState_IDLE    SeatState = 13
+)
+
+var SeatState_name = map[int32]string{
+	0:  "EMPTY",
+	1:  "TAKEN",
+	2:  "READY",
+	3:  "WAIT_BB",
+	4:  "POST_BB",
+	5:  "PLAY",
+	6:  "BET",
+	7:  "ALL_IN",
+	8:  "FOLDED",
+	9:  "AUTO",
+	10: "KICKED",
+	11: "BUSTED",
+	12: "AWAY",
+	13: "IDLE",
+}
+var SeatState_value = map[string]int32{
+	"EMPTY":   0,
+	"TAKEN":   1,
+	"READY":   2,
+	"WAIT_BB": 3,
+	"POST_BB": 4,
+	"PLAY":    5,
+	"BET":     6,
+	"ALL_IN":  7,
+	"FOLDED":  8,
+	"AUTO":    9,
+	"KICKED":  10,
+	"BUSTED":  11,
+	"AWAY":    12,
+	"IDLE":    13,
+}
+
+func (x SeatState) Enum() *SeatState {
+	p := new(SeatState)
+	*p = x
+	return p
+}
+func (x SeatState) String() string {
+	return proto.EnumName(SeatState_name, int32(x))
+}
+func (x SeatState) MarshalJSON() ([]byte, error) {
+	return json.Marshal(x.String())
+}
+func (x *SeatState) UnmarshalJSON(data []byte) error {
+	value, err := proto.UnmarshalJSONEnum(SeatState_value, data, "SeatState")
+	if err != nil {
+		return err
+	}
+	*x = SeatState(value)
+	return nil
+}
+
 type ErrorMessage struct {
 	Message          *string `protobuf:"bytes,1,req" json:"Message,omitempty"`
 	XXX_unrecognized []byte  `json:"-"`
@@ -836,6 +908,86 @@ func (this *ComeBack) GetPos() int32 {
 	return 0
 }
 
+type Seat struct {
+	Pos              *int32     `protobuf:"varint,1,req" json:"Pos,omitempty"`
+	State            *SeatState `protobuf:"varint,2,opt,enum=protocol.SeatState" json:"State,omitempty"`
+	Stack            *float32   `protobuf:"fixed32,3,opt" json:"Stack,omitempty"`
+	Bet              *float32   `protobuf:"fixed32,4,opt" json:"Bet,omitempty"`
+	XXX_unrecognized []byte     `json:"-"`
+}
+
+func (this *Seat) Reset()         { *this = Seat{} }
+func (this *Seat) String() string { return proto.CompactTextString(this) }
+func (*Seat) ProtoMessage()       {}
+
+func (this *Seat) GetPos() int32 {
+	if this != nil && this.Pos != nil {
+		return *this.Pos
+	}
+	return 0
+}
+
+func (this *Seat) GetState() SeatState {
+	if this != nil && this.State != nil {
+		return *this.State
+	}
+	return 0
+}
+
+func (this *Seat) GetStack() float32 {
+	if this != nil && this.Stack != nil {
+		return *this.Stack
+	}
+	return 0
+}
+
+func (this *Seat) GetBet() float32 {
+	if this != nil && this.Bet != nil {
+		return *this.Bet
+	}
+	return 0
+}
+
+type Table struct {
+	Id               *string `protobuf:"bytes,1,req" json:"Id,omitempty"`
+	Size             *int32  `protobuf:"varint,2,req" json:"Size,omitempty"`
+	Button           *int32  `protobuf:"varint,3,req" json:"Button,omitempty"`
+	Seats            []*Seat `protobuf:"bytes,4,rep" json:"Seats,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
+}
+
+func (this *Table) Reset()         { *this = Table{} }
+func (this *Table) String() string { return proto.CompactTextString(this) }
+func (*Table) ProtoMessage()       {}
+
+func (this *Table) GetId() string {
+	if this != nil && this.Id != nil {
+		return *this.Id
+	}
+	return ""
+}
+
+func (this *Table) GetSize() int32 {
+	if this != nil && this.Size != nil {
+		return *this.Size
+	}
+	return 0
+}
+
+func (this *Table) GetButton() int32 {
+	if this != nil && this.Button != nil {
+		return *this.Button
+	}
+	return 0
+}
+
+func (this *Table) GetSeats() []*Seat {
+	if this != nil {
+		return this.Seats
+	}
+	return nil
+}
+
 type Envelope struct {
 	XXX_unrecognized []byte `json:"-"`
 }
@@ -850,4 +1002,5 @@ func init() {
 	proto.RegisterEnum("protocol.GameType", GameType_name, GameType_value)
 	proto.RegisterEnum("protocol.GameLimit", GameLimit_name, GameLimit_value)
 	proto.RegisterEnum("protocol.Rank", Rank_name, Rank_value)
+	proto.RegisterEnum("protocol.SeatState", SeatState_name, SeatState_value)
 }

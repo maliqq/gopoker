@@ -54,6 +54,27 @@ enum Rank {
   IncompleteLow = 14;
 }
 
+enum SeatState {
+  EMPTY = 0;
+  TAKEN = 1;
+  READY = 2;
+
+  WAIT_BB = 3;
+  POST_BB = 4;
+
+  PLAY = 5;
+  BET = 6;
+  ALL_IN = 7;
+  FOLDED = 8;
+  AUTO = 9;
+
+  KICKED = 10;
+  BUSTED = 11;
+
+  AWAY = 12;
+  IDLE = 13;
+}
+
 message ErrorMessage {
   required string Message = 1;
 }
@@ -92,6 +113,7 @@ message BettingComplete {
   required float Pot = 1;
   required float Rake = 2;
 }
+
 message DealCards {
   required int32 Pos = 1;
   repeated int64 Cards = 2;
@@ -171,23 +193,19 @@ message ComeBack {
   required int32 Pos = 1;
 }
 
+message Seat {
+  required int32 Pos = 1;
+  optional SeatState State = 2;
+  optional float Stack = 3;
+  optional float Bet = 4;
+}
+
+message Table {
+  required string Id = 1;
+  required int32 Size = 2;
+  required int32 Button = 3;
+  repeated Seat Seats = 4;
+}
+
 message Envelope {
 }
-
-/*
-type SeatState struct {
-  Pos int
-}
-
-type ChangeSeatState struct {
-  Pos   int
-  State seat.State
-}
-
-// seat info
-type Seat struct {
-  State string
-  Stack float
-  Bet   float
-}
-*/
