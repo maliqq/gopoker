@@ -18,6 +18,17 @@ func NewAddBet(pos int, bet *model.Bet) *Message {
 	})
 }
 
+func NewRequireBet(pos int, betRange model.BetRange) *Message {
+	return NewMessage(RequireBet{
+		Pos: proto.Int32(int32(pos)),
+		BetRange: &BetRange{
+			Call: proto.Float64(betRange.Call),
+			Min:  proto.Float64(betRange.Min),
+			Max:  proto.Float64(betRange.Max),
+		},
+	})
+}
+
 func NewBettingComplete(pot *model.Pot) *Message {
 	return NewMessage(BettingComplete{
 		Pot: proto.Float64(pot.Total()),

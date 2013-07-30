@@ -109,7 +109,7 @@ func (msg *Message) MarshalJSON() ([]byte, error) {
 	data["Timestamp"] = msg.GetTimestamp()
 	// cleanup fields
 	value := reflect.ValueOf(*msg.Envelope)
-	field := value.FieldByName(*msg.Type)
+	field := value.FieldByName(msg.GetType())
 	data["Envelope"] = map[string]interface{}{
 		*msg.Type: field.Interface(),
 	}
@@ -118,8 +118,9 @@ func (msg *Message) MarshalJSON() ([]byte, error) {
 
 func (msg *Message) Payload() Payload {
 	value := reflect.ValueOf(msg.Envelope)
-	field := value.FieldByName(*msg.Type)
-	return reflect.Indirect(field).Interface()
+	method := value.MethodByName("Get" + msg.GetType())
+	result := method.Call([]reflect.Value{})
+	return result[0].Interface()
 }
 
 func (msg *Message) PrintString() string {

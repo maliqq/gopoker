@@ -76,11 +76,13 @@ func (this *Play) handleMessage(msg *protocol.Message) {
 	log.Printf(console.Color(console.YELLOW, msg.String()))
 
 	switch msg.Payload().(type) {
-	case protocol.JoinTable:
+	case *protocol.JoinTable:
 		join := msg.Envelope.JoinTable
 		player := model.Player(join.GetPlayer())
+		pos := int(join.GetPos())
+		amount := join.GetAmount()
 
-		_, err := this.Table.AddPlayer(player, int(*join.Pos), *join.Amount)
+		_, err := this.Table.AddPlayer(player, pos, amount)
 		if err == nil {
 			// start next deal
 		} else {
@@ -89,7 +91,7 @@ func (this *Play) handleMessage(msg *protocol.Message) {
 		// retranslate
 		this.Broadcast.All <- msg
 
-	case protocol.LeaveTable:
+	case *protocol.LeaveTable:
 		leave := msg.Envelope.LeaveTable
 		player := model.Player(leave.GetPlayer())
 
@@ -97,28 +99,31 @@ func (this *Play) handleMessage(msg *protocol.Message) {
 		this.Broadcast.All <- msg
 		// TODO: fold & autoplay
 
-	case protocol.SitOut:
+	case *protocol.SitOut:
 		sitOut := msg.Envelope.SitOut
 		pos := int(sitOut.GetPos())
 
 		this.Table.Seat(pos).State = seat.Idle
 		// TODO: fold
 
-	case protocol.ComeBack:
+	case *protocol.ComeBack:
 		comeBack := msg.Envelope.ComeBack
 		pos := int(comeBack.GetPos())
 
 		this.Table.Seat(pos).State = seat.Ready
 
-	case protocol.ChatMessage:
+	case *protocol.ChatMessage:
 		this.Broadcast.All <- msg
 
-	case protocol.AddBet:
+	case *protocol.AddBet:
 		this.Betting.Bet <- msg
 		this.Broadcast.All <- msg
 
-	case protocol.DiscardCards:
+	case *protocol.DiscardCards:
 		this.Discarding.Discard <- msg
+
+	default:
+		log.Printf("Unknown message: %#v", msg.Payload())
 	}
 }
 

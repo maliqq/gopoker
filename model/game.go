@@ -2,6 +2,7 @@ package model
 
 import (
 	"fmt"
+	"log"
 )
 
 import (
@@ -65,14 +66,17 @@ const (
 
 func LoadGames(configDir string) {
 	ReadConfig(configDir, GamesConfigFile, &Games)
+	log.Printf("games loaded: %d", len(Games))
+
 	ReadConfig(configDir, MixesConfigFile, &Mixes)
+	log.Printf("mixes loaded: %d", len(Mixes))
 }
 
 func NewGame(g game.Type, limit game.Limit) *Game {
 	limitedGame, success := g.(game.LimitedGame)
 
 	if !success {
-		fmt.Printf("got: %s\n", g)
+		log.Printf("got: %#v", g)
 		panic("can't create game")
 	}
 
@@ -85,7 +89,12 @@ func NewGame(g game.Type, limit game.Limit) *Game {
 }
 
 func (game *Game) WithDefaults() *Game {
-	game.GameOptions = Games[game.Type]
+	var success bool
+	game.GameOptions, success = Games[game.Type]
+	if !success {
+		log.Printf("got: %#v", game)
+		panic("can't populate game with options")
+	}
 
 	if game.Limit == "" {
 		game.Limit = game.GameOptions.DefaultLimit
@@ -106,7 +115,7 @@ func NewMix(g game.Type) *Mix {
 	mixedGame, success := g.(game.MixedGame)
 
 	if !success {
-		fmt.Printf("got: %s\n", g)
+		log.Printf("got: %#v\n", g)
 
 		panic("can't create mix")
 	}
@@ -119,7 +128,11 @@ func NewMix(g game.Type) *Mix {
 }
 
 func (mix *Mix) WithDefaults() *Mix {
-	options, _ := Mixes[mix.Type]
+	options, success := Mixes[mix.Type]
+	if !success {
+		log.Printf("got: %#v\n", mix)
+		panic("can't populate mix with options")
+	}
 
 	games := make([]*Game, len(options))
 	for i, mixOptions := range options {

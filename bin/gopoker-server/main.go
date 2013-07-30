@@ -9,6 +9,7 @@ import (
 )
 
 import (
+	"gopoker/model"
 	"gopoker/server"
 )
 
@@ -24,6 +25,7 @@ func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 
 	flag.Parse()
+	model.LoadGames(*ConfigDir)
 
 	node := server.NewNode("localhost", *ConfigDir)
 	node.Start()

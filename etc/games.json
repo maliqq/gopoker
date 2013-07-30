@@ -1,16 +1,16 @@
 {
-    "badugi": {
-        "Group": "triple-draw",
+    "Badugi": {
+        "Group": "TripleDraw",
         "HasBlinds": true,
         "Discards": true,
         "Reshuffle": true,
         "MaxTableSize": 6,
         "PocketSize": 4,
         "Hi": "badugi",
-        "DefaultLimit": "fixed-limit"
+        "DefaultLimit": "FixedLimit"
     },
-    "five-card": {
-        "Group": "single-draw",
+    "FiveCard": {
+        "Group": "SingleDraw",
         "HasBlinds": true,
         "Discards": true,
         "Reshuffle": true,
@@ -18,49 +18,49 @@
         "PocketSize": 5,
         "Streets": 1,
         "Hi": "high",
-        "DefaultLimit": "fixed-limit"
+        "DefaultLimit": "FixedLimit"
     },
-    "london": {
-        "Group": "seven-card",
+    ":ondon": {
+        "Group": "SevenCard",
         "HasAnte": true,
         "HasBringIn": true,
         "HasVela": true,
         "MaxTableSize": 8,
         "PocketSize": 7,
         "Hi": "ace-six",
-        "DefaultLimit": "fixed-limit"
+        "DefaultLimit": "FixedLimit"
     },
-    "omaha": {
-        "Group": "holdem",
+    "Omaha": {
+        "Group": "Holdem",
         "HasBlinds": true,
         "HasBoard": true,
         "MaxTableSize": 10,
         "PocketSize": 4,
         "Hi": "high",
-        "DefaultLimit": "pot-limit"
+        "DefaultLimit": "PotLimit"
     },
-    "omaha8": {
-        "Group": "holdem",
+    "Omaha8": {
+        "Group": "Holdem",
         "HasBlinds": true,
         "HasBoard": true,
         "MaxTableSize": 10,
         "PocketSize": 4,
         "Hi": "high",
         "Lo": "ace-five8",
-        "DefaultLimit": "pot-limit"
+        "DefaultLimit": "PotLimit"
     },
-    "razz": {
-        "Group": "seven-card",
+    "Razz": {
+        "Group": "SevenCard",
         "HasAnte": true,
         "HasBringIn": true,
         "HasVela": true,
         "MaxTableSize": 8,
         "PocketSize": 7,
         "Hi": "ace-five",
-        "DefaultLimit": "fixed-limit"
+        "DefaultLimit": "FixedLimit"
     },
-    "single27": {
-        "Group": "single-draw",
+    "Single27": {
+        "Group": "SingleDraw",
         "HasBlinds": true,
         "Discards": true,
         "Reshuffle": true,
@@ -68,20 +68,20 @@
         "PocketSize": 5,
         "Streets": 1,
         "Hi": "deuce-seven",
-        "DefaultLimit": "fixed-limit"
+        "DefaultLimit": "FixedLimit"
     },
-    "stud": {
-        "Group": "seven-card",
+    "Stud": {
+        "Group": "SevenCard",
         "HasAnte": true,
         "HasBringIn": true,
         "HasVela": true,
         "MaxTableSize": 8,
         "PocketSize": 7,
         "Hi": "high",
-        "DefaultLimit": "fixed-limit"
+        "DefaultLimit": "FixedLimit"
     },
-    "stud8": {
-        "Group": "seven-card",
+    "Stud8": {
+        "Group": "SevenCard",
         "HasAnte": true,
         "HasBringIn": true,
         "HasVela": true,
@@ -89,19 +89,19 @@
         "PocketSize": 7,
         "Hi": "high",
         "Lo": "ace-five8",
-        "DefaultLimit": "fixed-limit"
+        "DefaultLimit": "FixedLimit"
     },
-    "texas": {
-        "Group": "holdem",
+    "Texas": {
+        "Group": "Holdem",
         "HasBlinds": true,
         "HasBoard": true,
         "MaxTableSize": 10,
         "PocketSize": 2,
         "Hi": "high",
-        "DefaultLimit": "no-limit"
+        "DefaultLimit": "NoLimit"
     },
-    "triple27": {
-        "Group": "triple-draw",
+    "Triple27": {
+        "Group": "TripleDraw",
         "HasBlinds": true,
         "Discards": true,
         "Reshuffle": true,
@@ -109,6 +109,6 @@
         "PocketSize": 5,
         "Streets": 3,
         "Hi": "deuce-seven",
-        "DefaultLimit": "fixed-limit"
+        "DefaultLimit": "FixedLimit"
     }
 }

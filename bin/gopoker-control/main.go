@@ -23,13 +23,22 @@ import (
 var (
 	tableSize   = flag.Int("tablesize", 9, "Table size")
 	betSize     = flag.Float64("betsize", 20., "Bet size")
-	limit       = flag.String("limit", "fixed-limit", "Limit to play")
-	limitedGame = flag.String("game", "texas", "Game to play")
+	limit       = flag.String("limit", "FixedLimit", "Limit to play")
+	limitedGame = flag.String("game", "Texas", "Game to play")
 	mixedGame   = flag.String("mix", "", "Mix to play")
+)
+
+const (
+	DefaultConfigDir = "/etc/gopoker"
+)
+
+var (
+	ConfigDir = flag.String("config-dir", DefaultConfigDir, "Config dir")
 )
 
 func main() {
 	flag.Parse()
+	model.LoadGames(*ConfigDir)
 
 	client, err := jsonrpc.Dial("tcp", "localhost:8081")
 	if err != nil {

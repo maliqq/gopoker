@@ -1,58 +1,58 @@
 {
-    "eight": [
+    "Eight": [
         {
-            "Type": "triple27",
-            "Limit": "fixed-limit"
+            "Type": "Triple27",
+            "Limit": "FixedLimit"
         },
         {
-            "Type": "texas",
-            "Limit": "fixed-limit"
+            "Type": "Texas",
+            "Limit": "FixedLimit"
         },
         {
-            "Type": "omaha8",
-            "Limit": "fixed-limit"
+            "Type": "Omaha8",
+            "Limit": "FixedLimit"
         },
         {
-            "Type": "razz",
-            "Limit": "fixed-limit"
+            "Type": "Razz",
+            "Limit": "FixedLimit"
         },
         {
-            "Type": "stud",
-            "Limit": "fixed-limit"
+            "Type": "Stud",
+            "Limit": "FixedLimit"
         },
         {
-            "Type": "stud8",
-            "Limit": "fixed-limit"
+            "Type": "Stud8",
+            "Limit": "FixedLimit"
         },
         {
-            "Type": "texas",
-            "Limit": "no-limit"
+            "Type": "Texas",
+            "Limit": "NoLimit"
         },
         {
-            "Type": "omaha",
-            "Limit": "pot-limit"
+            "Type": "Omaha",
+            "Limit": "PotLimit"
         }
     ],
-    "horse": [
+    "Horse": [
         {
-            "Type": "texas",
-            "Limit": "fixed-limit"
+            "Type": "Texas",
+            "Limit": "FixedLimit"
         },
         {
-            "Type": "omaha8",
-            "Limit": "fixed-limit"
+            "Type": "Omaha8",
+            "Limit": "FixedLimit"
         },
         {
-            "Type": "razz",
-            "Limit": "fixed-limit"
+            "Type": "Razz",
+            "Limit": "FixedLimit"
         },
         {
-            "Type": "stud",
-            "Limit": "fixed-limit"
+            "Type": "Stud",
+            "Limit": "FixedLimit"
         },
         {
-            "Type": "stud8",
-            "Limit": "fixed-limit"
+            "Type": "Stud8",
+            "Limit": "FixedLimit"
         }
     ]
 }

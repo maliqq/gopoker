@@ -136,7 +136,7 @@ func (this *Betting) RequireBet(pos int, seat *model.Seat, game *model.Game, sta
 		this.Required.Min, this.Required.Max = call+min, call+max
 	}
 
-	return protocol.NewMessage(*this.Required)
+	return protocol.NewRequireBet(this.Required.Pos, this.Required.BetRange)
 }
 
 func (this *Betting) AddBet(newBet *model.Bet) error {
