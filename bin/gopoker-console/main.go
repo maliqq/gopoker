@@ -5,8 +5,8 @@ package main
 //
 import (
 	"flag"
-	"fmt"
 	"log"
+	"fmt"
 	"os"
 )
 
@@ -25,11 +25,20 @@ var (
 	logfile     = flag.String("logfile", "", "Log file path")
 	betsize     = flag.Float64("betsize", 20., "Bet size")
 	mixedGame   = flag.String("mix", "", "Mix to play")
-	limitedGame = flag.String("game", "texas", "Game to play")
+	limitedGame = flag.String("game", "Texas", "Game to play")
+)
+
+const (
+	DefaultConfigDir = "/etc/gopoker"
+)
+
+var (
+	ConfigDir = flag.String("config-dir", DefaultConfigDir, "Config dir")
 )
 
 func main() {
 	flag.Parse()
+	model.LoadGames(*ConfigDir)
 
 	if *logfile != "" {
 		w, err := os.Create(*logfile)
@@ -42,11 +51,11 @@ func main() {
 		log.SetOutput(w)
 	}
 
-	me := make(protocol.MessageChannel)
-	play := createPlay(me)
+	me := make(protocol.MessageChannel, 100)
+	play := createPlay(&me)
 	fmt.Printf("%s\n", play)
 
-	go play.Start()
+	play.Start()
 
 	conn := &console_client.Connection{
 		Server: play,
@@ -57,7 +66,7 @@ func main() {
 	}
 }
 
-func createPlay(me protocol.MessageChannel) *play.Play {
+func createPlay(me *protocol.MessageChannel) *play.Play {
 	size := 3
 	table := model.NewTable(size)
 	stake := model.NewStake(*betsize)
@@ -77,8 +86,8 @@ func createPlay(me protocol.MessageChannel) *play.Play {
 
 	for i, player := range players {
 		if i < size {
+			play.Broadcast.Bind(player, me)
 			play.Recv <- message.NewJoinTable(player, i, stack)
-			play.Broadcast.Bind(player, &me)
 		}
 	}
 

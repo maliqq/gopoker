@@ -20,6 +20,7 @@ import (
 )
 
 func (this *Play) Run() {
+	log.Printf("started run loop")
 Loop:
 	for {
 		select {
