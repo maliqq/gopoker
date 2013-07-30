@@ -3,21 +3,21 @@ package seat
 type State string
 
 const (
-	Empty State = "empty"
-	Taken State = "taken"
-	Ready State = "ready"
+	Empty State = "Empty"
+	Taken State = "Taken"
+	Ready State = "Ready"
 
-	WaitBB State = "wait-bb"
-	PostBB State = "post-bb"
+	WaitBB State = "WaitBB"
+	PostBB State = "PostBB"
 
-	Play  State = "play"
-	Bet   State = "bet"
-	AllIn State = "all-in"
-	Fold  State = "fold"
+	Play  State = "Play"
+	Bet   State = "Bet"
+	AllIn State = "AllIn"
+	Fold  State = "Fold"
 
-	Auto State = "auto"
-	Kick State = "kick"
+	Auto State = "Auto"
+	Kick State = "Kick"
 
-	Away State = "away"
-	Idle State = "idle"
+	Away State = "Away"
+	Idle State = "Idle"
 )

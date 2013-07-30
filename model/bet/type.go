@@ -3,22 +3,22 @@ package bet
 type Type string
 
 const (
-	Ante       Type = "ante"
-	BringIn    Type = "bring-in"
-	SmallBlind Type = "small-blind"
-	BigBlind   Type = "big-blind"
-	GuestBlind Type = "guest-blind"
-	Straddle   Type = "straddle"
+	Ante       Type = "Ante"
+	BringIn    Type = "BringIn"
+	SmallBlind Type = "SmallBlind"
+	BigBlind   Type = "BigBlind"
+	GuestBlind Type = "GuestBlind"
+	Straddle   Type = "Straddle"
 
-	Raise Type = "raise"
-	Call  Type = "call"
+	Raise Type = "Raise"
+	Call  Type = "Call"
 
-	Check Type = "check"
-	Fold  Type = "fold"
+	Check Type = "Check"
+	Fold  Type = "Fold"
 
-	Discard  Type = "discard"
-	StandPat Type = "stand-pat"
+	Discard  Type = "Discard"
+	StandPat Type = "StandPat"
 
-	Show Type = "show"
-	Muck Type = "muck"
+	Show Type = "Show"
+	Muck Type = "Muck"
 )

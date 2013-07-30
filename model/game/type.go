@@ -18,27 +18,27 @@ func (g MixedGame) Game() Game {
 }
 
 const (
-	Texas    LimitedGame = "texas"
-	Omaha    LimitedGame = "omaha"
-	Omaha8   LimitedGame = "omaha8"
-	Stud     LimitedGame = "stud"
-	Stud8    LimitedGame = "stud8"
-	Razz     LimitedGame = "razz"
-	London   LimitedGame = "london"
-	FiveCard LimitedGame = "five-card"
-	Single27 LimitedGame = "single27"
-	Triple27 LimitedGame = "triple27"
-	Badugi   LimitedGame = "badugi"
+	Texas    LimitedGame = "Texas"
+	Omaha    LimitedGame = "Omaha"
+	Omaha8   LimitedGame = "Omaha8"
+	Stud     LimitedGame = "Stud"
+	Stud8    LimitedGame = "Stud8"
+	Razz     LimitedGame = "Razz"
+	London   LimitedGame = "London"
+	FiveCard LimitedGame = "FiveCard"
+	Single27 LimitedGame = "Single27"
+	Triple27 LimitedGame = "Triple27"
+	Badugi   LimitedGame = "Badugi"
 
 	// mixes
-	Horse MixedGame = "horse"
-	Eight MixedGame = "eight"
+	Horse MixedGame = "Horse"
+	Eight MixedGame = "Eight"
 
 	// groups
-	Holdem     Group = "holdem"
-	SevenCard  Group = "seven-card"
-	SingleDraw Group = "single-draw"
-	TripleDraw Group = "triple-draw"
+	Holdem     Group = "Holdem"
+	SevenCard  Group = "SevenCard"
+	SingleDraw Group = "SingleDraw"
+	TripleDraw Group = "TripleDraw"
 )
 
 var (
