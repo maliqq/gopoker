@@ -1,0 +1,46 @@
+package protocol;
+
+enum Rank {
+  StraightFlush = 0;
+  FourKind = 1;
+  FullHouse = 2;
+  Flush = 3;
+  Straight = 4;
+  ThreeKind = 5;
+  TwoPair = 6;
+  OnePair = 7;
+  HighCard = 8;
+
+  BadugiFour = 9;
+  BadugiThree = 10;
+  BadugiTwo = 11;
+  BadugiOne = 12;
+
+  CompleteLow = 13;
+  IncompleteLow = 14;
+}
+
+message Hand {
+  required Rank Rank = 1;
+  required bytes Value = 2;
+  required bytes High = 3;
+  required bytes Kicker = 4;
+}
+
+message ShowHand {
+  required int32 Pos = 1;
+  required bytes Cards = 2;
+  required Hand Hand = 3;
+  required string HandString = 4;
+}
+
+message ShowCards {
+  required int32 Pos = 1;
+  required bytes Cards = 2;
+  required bool Muck = 3 [default = false];
+}
+
+message Winner {
+  required int32 Pos = 1;
+  required double Amount = 2;
+}

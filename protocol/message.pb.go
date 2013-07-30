@@ -13,351 +13,18 @@ var _ = proto.Marshal
 var _ = &json.SyntaxError{}
 var _ = math.Inf
 
-type BetType int32
-
-const (
-	BetType_Check BetType = 0
-	BetType_Call  BetType = 1
-	BetType_Fold  BetType = 2
-	BetType_Raise BetType = 3
-)
-
-var BetType_name = map[int32]string{
-	0: "Check",
-	1: "Call",
-	2: "Fold",
-	3: "Raise",
-}
-var BetType_value = map[string]int32{
-	"Check": 0,
-	"Call":  1,
-	"Fold":  2,
-	"Raise": 3,
-}
-
-func (x BetType) Enum() *BetType {
-	p := new(BetType)
-	*p = x
-	return p
-}
-func (x BetType) String() string {
-	return proto.EnumName(BetType_name, int32(x))
-}
-func (x BetType) MarshalJSON() ([]byte, error) {
-	return json.Marshal(x.String())
-}
-func (x *BetType) UnmarshalJSON(data []byte) error {
-	value, err := proto.UnmarshalJSONEnum(BetType_value, data, "BetType")
-	if err != nil {
-		return err
-	}
-	*x = BetType(value)
-	return nil
-}
-
-type DealType int32
-
-const (
-	DealType_Board   DealType = 0
-	DealType_Hole    DealType = 1
-	DealType_Door    DealType = 2
-	DealType_Discard DealType = 3
-)
-
-var DealType_name = map[int32]string{
-	0: "Board",
-	1: "Hole",
-	2: "Door",
-	3: "Discard",
-}
-var DealType_value = map[string]int32{
-	"Board":   0,
-	"Hole":    1,
-	"Door":    2,
-	"Discard": 3,
-}
-
-func (x DealType) Enum() *DealType {
-	p := new(DealType)
-	*p = x
-	return p
-}
-func (x DealType) String() string {
-	return proto.EnumName(DealType_name, int32(x))
-}
-func (x DealType) MarshalJSON() ([]byte, error) {
-	return json.Marshal(x.String())
-}
-func (x *DealType) UnmarshalJSON(data []byte) error {
-	value, err := proto.UnmarshalJSONEnum(DealType_value, data, "DealType")
-	if err != nil {
-		return err
-	}
-	*x = DealType(value)
-	return nil
-}
-
-type GameType int32
-
-const (
-	GameType_Texas    GameType = 0
-	GameType_Omaha    GameType = 1
-	GameType_Omaha8   GameType = 2
-	GameType_Stud     GameType = 3
-	GameType_Stud8    GameType = 4
-	GameType_Razz     GameType = 9
-	GameType_London   GameType = 10
-	GameType_FiveCard GameType = 11
-	GameType_Single27 GameType = 12
-	GameType_Triple27 GameType = 13
-	GameType_Badugi   GameType = 14
-)
-
-var GameType_name = map[int32]string{
-	0:  "Texas",
-	1:  "Omaha",
-	2:  "Omaha8",
-	3:  "Stud",
-	4:  "Stud8",
-	9:  "Razz",
-	10: "London",
-	11: "FiveCard",
-	12: "Single27",
-	13: "Triple27",
-	14: "Badugi",
-}
-var GameType_value = map[string]int32{
-	"Texas":    0,
-	"Omaha":    1,
-	"Omaha8":   2,
-	"Stud":     3,
-	"Stud8":    4,
-	"Razz":     9,
-	"London":   10,
-	"FiveCard": 11,
-	"Single27": 12,
-	"Triple27": 13,
-	"Badugi":   14,
-}
-
-func (x GameType) Enum() *GameType {
-	p := new(GameType)
-	*p = x
-	return p
-}
-func (x GameType) String() string {
-	return proto.EnumName(GameType_name, int32(x))
-}
-func (x GameType) MarshalJSON() ([]byte, error) {
-	return json.Marshal(x.String())
-}
-func (x *GameType) UnmarshalJSON(data []byte) error {
-	value, err := proto.UnmarshalJSONEnum(GameType_value, data, "GameType")
-	if err != nil {
-		return err
-	}
-	*x = GameType(value)
-	return nil
-}
-
-type GameLimit int32
-
-const (
-	GameLimit_NoLimit    GameLimit = 0
-	GameLimit_PotLimit   GameLimit = 1
-	GameLimit_FixedLimit GameLimit = 2
-)
-
-var GameLimit_name = map[int32]string{
-	0: "NoLimit",
-	1: "PotLimit",
-	2: "FixedLimit",
-}
-var GameLimit_value = map[string]int32{
-	"NoLimit":    0,
-	"PotLimit":   1,
-	"FixedLimit": 2,
-}
-
-func (x GameLimit) Enum() *GameLimit {
-	p := new(GameLimit)
-	*p = x
-	return p
-}
-func (x GameLimit) String() string {
-	return proto.EnumName(GameLimit_name, int32(x))
-}
-func (x GameLimit) MarshalJSON() ([]byte, error) {
-	return json.Marshal(x.String())
-}
-func (x *GameLimit) UnmarshalJSON(data []byte) error {
-	value, err := proto.UnmarshalJSONEnum(GameLimit_value, data, "GameLimit")
-	if err != nil {
-		return err
-	}
-	*x = GameLimit(value)
-	return nil
-}
-
-type Rank int32
-
-const (
-	Rank_StraightFlush Rank = 0
-	Rank_FourKind      Rank = 1
-	Rank_FullHouse     Rank = 2
-	Rank_Flush         Rank = 3
-	Rank_Straight      Rank = 4
-	Rank_ThreeKind     Rank = 5
-	Rank_TwoPair       Rank = 6
-	Rank_OnePair       Rank = 7
-	Rank_HighCard      Rank = 8
-	Rank_BadugiFour    Rank = 9
-	Rank_BadugiThree   Rank = 10
-	Rank_BadugiTwo     Rank = 11
-	Rank_BadugiOne     Rank = 12
-	Rank_CompleteLow   Rank = 13
-	Rank_IncompleteLow Rank = 14
-)
-
-var Rank_name = map[int32]string{
-	0:  "StraightFlush",
-	1:  "FourKind",
-	2:  "FullHouse",
-	3:  "Flush",
-	4:  "Straight",
-	5:  "ThreeKind",
-	6:  "TwoPair",
-	7:  "OnePair",
-	8:  "HighCard",
-	9:  "BadugiFour",
-	10: "BadugiThree",
-	11: "BadugiTwo",
-	12: "BadugiOne",
-	13: "CompleteLow",
-	14: "IncompleteLow",
-}
-var Rank_value = map[string]int32{
-	"StraightFlush": 0,
-	"FourKind":      1,
-	"FullHouse":     2,
-	"Flush":         3,
-	"Straight":      4,
-	"ThreeKind":     5,
-	"TwoPair":       6,
-	"OnePair":       7,
-	"HighCard":      8,
-	"BadugiFour":    9,
-	"BadugiThree":   10,
-	"BadugiTwo":     11,
-	"BadugiOne":     12,
-	"CompleteLow":   13,
-	"IncompleteLow": 14,
-}
-
-func (x Rank) Enum() *Rank {
-	p := new(Rank)
-	*p = x
-	return p
-}
-func (x Rank) String() string {
-	return proto.EnumName(Rank_name, int32(x))
-}
-func (x Rank) MarshalJSON() ([]byte, error) {
-	return json.Marshal(x.String())
-}
-func (x *Rank) UnmarshalJSON(data []byte) error {
-	value, err := proto.UnmarshalJSONEnum(Rank_value, data, "Rank")
-	if err != nil {
-		return err
-	}
-	*x = Rank(value)
-	return nil
-}
-
-type SeatState int32
-
-const (
-	SeatState_Empty  SeatState = 0
-	SeatState_Taken  SeatState = 1
-	SeatState_Ready  SeatState = 2
-	SeatState_WaitBB SeatState = 3
-	SeatState_PostBB SeatState = 4
-	SeatState_Play   SeatState = 5
-	SeatState_PutBet SeatState = 6
-	SeatState_AllIn  SeatState = 7
-	SeatState_Folded SeatState = 8
-	SeatState_Auto   SeatState = 9
-	SeatState_Kicked SeatState = 10
-	SeatState_Busted SeatState = 11
-	SeatState_Away   SeatState = 12
-	SeatState_Idle   SeatState = 13
-)
-
-var SeatState_name = map[int32]string{
-	0:  "Empty",
-	1:  "Taken",
-	2:  "Ready",
-	3:  "WaitBB",
-	4:  "PostBB",
-	5:  "Play",
-	6:  "PutBet",
-	7:  "AllIn",
-	8:  "Folded",
-	9:  "Auto",
-	10: "Kicked",
-	11: "Busted",
-	12: "Away",
-	13: "Idle",
-}
-var SeatState_value = map[string]int32{
-	"Empty":  0,
-	"Taken":  1,
-	"Ready":  2,
-	"WaitBB": 3,
-	"PostBB": 4,
-	"Play":   5,
-	"PutBet": 6,
-	"AllIn":  7,
-	"Folded": 8,
-	"Auto":   9,
-	"Kicked": 10,
-	"Busted": 11,
-	"Away":   12,
-	"Idle":   13,
-}
-
-func (x SeatState) Enum() *SeatState {
-	p := new(SeatState)
-	*p = x
-	return p
-}
-func (x SeatState) String() string {
-	return proto.EnumName(SeatState_name, int32(x))
-}
-func (x SeatState) MarshalJSON() ([]byte, error) {
-	return json.Marshal(x.String())
-}
-func (x *SeatState) UnmarshalJSON(data []byte) error {
-	value, err := proto.UnmarshalJSONEnum(SeatState_value, data, "SeatState")
-	if err != nil {
-		return err
-	}
-	*x = SeatState(value)
-	return nil
-}
-
 type ErrorMessage struct {
 	Message          *string `protobuf:"bytes,1,req" json:"Message,omitempty"`
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *ErrorMessage) Reset()         { *m = ErrorMessage{} }
-func (m *ErrorMessage) String() string { return proto.CompactTextString(m) }
-func (*ErrorMessage) ProtoMessage()    {}
+func (this *ErrorMessage) Reset()         { *this = ErrorMessage{} }
+func (this *ErrorMessage) String() string { return proto.CompactTextString(this) }
+func (*ErrorMessage) ProtoMessage()       {}
 
-func (m *ErrorMessage) GetMessage() string {
-	if m != nil && m.Message != nil {
-		return *m.Message
+func (this *ErrorMessage) GetMessage() string {
+	if this != nil && this.Message != nil {
+		return *this.Message
 	}
 	return ""
 }
@@ -368,20 +35,20 @@ type ChatMessage struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *ChatMessage) Reset()         { *m = ChatMessage{} }
-func (m *ChatMessage) String() string { return proto.CompactTextString(m) }
-func (*ChatMessage) ProtoMessage()    {}
+func (this *ChatMessage) Reset()         { *this = ChatMessage{} }
+func (this *ChatMessage) String() string { return proto.CompactTextString(this) }
+func (*ChatMessage) ProtoMessage()       {}
 
-func (m *ChatMessage) GetPos() int32 {
-	if m != nil && m.Pos != nil {
-		return *m.Pos
+func (this *ChatMessage) GetPos() int32 {
+	if this != nil && this.Pos != nil {
+		return *this.Pos
 	}
 	return 0
 }
 
-func (m *ChatMessage) GetMessage() string {
-	if m != nil && m.Message != nil {
-		return *m.Message
+func (this *ChatMessage) GetMessage() string {
+	if this != nil && this.Message != nil {
+		return *this.Message
 	}
 	return ""
 }
@@ -391,601 +58,15 @@ type DealerMessage struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *DealerMessage) Reset()         { *m = DealerMessage{} }
-func (m *DealerMessage) String() string { return proto.CompactTextString(m) }
-func (*DealerMessage) ProtoMessage()    {}
+func (this *DealerMessage) Reset()         { *this = DealerMessage{} }
+func (this *DealerMessage) String() string { return proto.CompactTextString(this) }
+func (*DealerMessage) ProtoMessage()       {}
 
-func (m *DealerMessage) GetMessage() string {
-	if m != nil && m.Message != nil {
-		return *m.Message
+func (this *DealerMessage) GetMessage() string {
+	if this != nil && this.Message != nil {
+		return *this.Message
 	}
 	return ""
-}
-
-type BetRange struct {
-	Call             *float64 `protobuf:"fixed64,1,req" json:"Call,omitempty"`
-	Min              *float64 `protobuf:"fixed64,2,req" json:"Min,omitempty"`
-	Max              *float64 `protobuf:"fixed64,3,req" json:"Max,omitempty"`
-	XXX_unrecognized []byte   `json:"-"`
-}
-
-func (m *BetRange) Reset()         { *m = BetRange{} }
-func (m *BetRange) String() string { return proto.CompactTextString(m) }
-func (*BetRange) ProtoMessage()    {}
-
-func (m *BetRange) GetCall() float64 {
-	if m != nil && m.Call != nil {
-		return *m.Call
-	}
-	return 0
-}
-
-func (m *BetRange) GetMin() float64 {
-	if m != nil && m.Min != nil {
-		return *m.Min
-	}
-	return 0
-}
-
-func (m *BetRange) GetMax() float64 {
-	if m != nil && m.Max != nil {
-		return *m.Max
-	}
-	return 0
-}
-
-type RequireBet struct {
-	Pos              *int32    `protobuf:"varint,1,req,name=pos" json:"pos,omitempty"`
-	BetRange         *BetRange `protobuf:"bytes,2,req" json:"BetRange,omitempty"`
-	XXX_unrecognized []byte    `json:"-"`
-}
-
-func (m *RequireBet) Reset()         { *m = RequireBet{} }
-func (m *RequireBet) String() string { return proto.CompactTextString(m) }
-func (*RequireBet) ProtoMessage()    {}
-
-func (m *RequireBet) GetPos() int32 {
-	if m != nil && m.Pos != nil {
-		return *m.Pos
-	}
-	return 0
-}
-
-func (m *RequireBet) GetBetRange() *BetRange {
-	if m != nil {
-		return m.BetRange
-	}
-	return nil
-}
-
-type Bet struct {
-	Type             *BetType `protobuf:"varint,1,req,enum=protocol.BetType" json:"Type,omitempty"`
-	Amount           *float64 `protobuf:"fixed64,2,opt" json:"Amount,omitempty"`
-	XXX_unrecognized []byte   `json:"-"`
-}
-
-func (m *Bet) Reset()         { *m = Bet{} }
-func (m *Bet) String() string { return proto.CompactTextString(m) }
-func (*Bet) ProtoMessage()    {}
-
-func (m *Bet) GetType() BetType {
-	if m != nil && m.Type != nil {
-		return *m.Type
-	}
-	return 0
-}
-
-func (m *Bet) GetAmount() float64 {
-	if m != nil && m.Amount != nil {
-		return *m.Amount
-	}
-	return 0
-}
-
-type AddBet struct {
-	Pos              *int32 `protobuf:"varint,1,req,name=pos" json:"pos,omitempty"`
-	Bet              *Bet   `protobuf:"bytes,2,req" json:"Bet,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
-}
-
-func (m *AddBet) Reset()         { *m = AddBet{} }
-func (m *AddBet) String() string { return proto.CompactTextString(m) }
-func (*AddBet) ProtoMessage()    {}
-
-func (m *AddBet) GetPos() int32 {
-	if m != nil && m.Pos != nil {
-		return *m.Pos
-	}
-	return 0
-}
-
-func (m *AddBet) GetBet() *Bet {
-	if m != nil {
-		return m.Bet
-	}
-	return nil
-}
-
-type BettingComplete struct {
-	Pot              *float64 `protobuf:"fixed64,1,req" json:"Pot,omitempty"`
-	Rake             *float64 `protobuf:"fixed64,2,req" json:"Rake,omitempty"`
-	XXX_unrecognized []byte   `json:"-"`
-}
-
-func (m *BettingComplete) Reset()         { *m = BettingComplete{} }
-func (m *BettingComplete) String() string { return proto.CompactTextString(m) }
-func (*BettingComplete) ProtoMessage()    {}
-
-func (m *BettingComplete) GetPot() float64 {
-	if m != nil && m.Pot != nil {
-		return *m.Pot
-	}
-	return 0
-}
-
-func (m *BettingComplete) GetRake() float64 {
-	if m != nil && m.Rake != nil {
-		return *m.Rake
-	}
-	return 0
-}
-
-type DealCards struct {
-	Pos              *int32    `protobuf:"varint,1,req" json:"Pos,omitempty"`
-	Cards            []byte    `protobuf:"bytes,2,req" json:"Cards,omitempty"`
-	Type             *DealType `protobuf:"varint,3,req,enum=protocol.DealType" json:"Type,omitempty"`
-	XXX_unrecognized []byte    `json:"-"`
-}
-
-func (m *DealCards) Reset()         { *m = DealCards{} }
-func (m *DealCards) String() string { return proto.CompactTextString(m) }
-func (*DealCards) ProtoMessage()    {}
-
-func (m *DealCards) GetPos() int32 {
-	if m != nil && m.Pos != nil {
-		return *m.Pos
-	}
-	return 0
-}
-
-func (m *DealCards) GetCards() []byte {
-	if m != nil {
-		return m.Cards
-	}
-	return nil
-}
-
-func (m *DealCards) GetType() DealType {
-	if m != nil && m.Type != nil {
-		return *m.Type
-	}
-	return 0
-}
-
-type RequireDiscard struct {
-	Pos              *int32 `protobuf:"varint,1,req" json:"Pos,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
-}
-
-func (m *RequireDiscard) Reset()         { *m = RequireDiscard{} }
-func (m *RequireDiscard) String() string { return proto.CompactTextString(m) }
-func (*RequireDiscard) ProtoMessage()    {}
-
-func (m *RequireDiscard) GetPos() int32 {
-	if m != nil && m.Pos != nil {
-		return *m.Pos
-	}
-	return 0
-}
-
-type Discarded struct {
-	Pos              *int32 `protobuf:"varint,1,req" json:"Pos,omitempty"`
-	Num              *int32 `protobuf:"varint,2,req" json:"Num,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
-}
-
-func (m *Discarded) Reset()         { *m = Discarded{} }
-func (m *Discarded) String() string { return proto.CompactTextString(m) }
-func (*Discarded) ProtoMessage()    {}
-
-func (m *Discarded) GetPos() int32 {
-	if m != nil && m.Pos != nil {
-		return *m.Pos
-	}
-	return 0
-}
-
-func (m *Discarded) GetNum() int32 {
-	if m != nil && m.Num != nil {
-		return *m.Num
-	}
-	return 0
-}
-
-type DiscardCards struct {
-	Pos              *int32 `protobuf:"varint,1,req" json:"Pos,omitempty"`
-	Cards            []byte `protobuf:"bytes,2,req" json:"Cards,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
-}
-
-func (m *DiscardCards) Reset()         { *m = DiscardCards{} }
-func (m *DiscardCards) String() string { return proto.CompactTextString(m) }
-func (*DiscardCards) ProtoMessage()    {}
-
-func (m *DiscardCards) GetPos() int32 {
-	if m != nil && m.Pos != nil {
-		return *m.Pos
-	}
-	return 0
-}
-
-func (m *DiscardCards) GetCards() []byte {
-	if m != nil {
-		return m.Cards
-	}
-	return nil
-}
-
-type PlayStart struct {
-	XXX_unrecognized []byte `json:"-"`
-}
-
-func (m *PlayStart) Reset()         { *m = PlayStart{} }
-func (m *PlayStart) String() string { return proto.CompactTextString(m) }
-func (*PlayStart) ProtoMessage()    {}
-
-type StreetStart struct {
-	Name             *string `protobuf:"bytes,1,req" json:"Name,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
-}
-
-func (m *StreetStart) Reset()         { *m = StreetStart{} }
-func (m *StreetStart) String() string { return proto.CompactTextString(m) }
-func (*StreetStart) ProtoMessage()    {}
-
-func (m *StreetStart) GetName() string {
-	if m != nil && m.Name != nil {
-		return *m.Name
-	}
-	return ""
-}
-
-type ChangeGame struct {
-	Type             *GameType  `protobuf:"varint,1,req,enum=protocol.GameType" json:"Type,omitempty"`
-	Limit            *GameLimit `protobuf:"varint,2,req,enum=protocol.GameLimit" json:"Limit,omitempty"`
-	XXX_unrecognized []byte     `json:"-"`
-}
-
-func (m *ChangeGame) Reset()         { *m = ChangeGame{} }
-func (m *ChangeGame) String() string { return proto.CompactTextString(m) }
-func (*ChangeGame) ProtoMessage()    {}
-
-func (m *ChangeGame) GetType() GameType {
-	if m != nil && m.Type != nil {
-		return *m.Type
-	}
-	return 0
-}
-
-func (m *ChangeGame) GetLimit() GameLimit {
-	if m != nil && m.Limit != nil {
-		return *m.Limit
-	}
-	return 0
-}
-
-type Hand struct {
-	Rank             *Rank  `protobuf:"varint,1,req,enum=protocol.Rank" json:"Rank,omitempty"`
-	Value            []byte `protobuf:"bytes,2,req" json:"Value,omitempty"`
-	High             []byte `protobuf:"bytes,3,req" json:"High,omitempty"`
-	Kicker           []byte `protobuf:"bytes,4,req" json:"Kicker,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
-}
-
-func (m *Hand) Reset()         { *m = Hand{} }
-func (m *Hand) String() string { return proto.CompactTextString(m) }
-func (*Hand) ProtoMessage()    {}
-
-func (m *Hand) GetRank() Rank {
-	if m != nil && m.Rank != nil {
-		return *m.Rank
-	}
-	return 0
-}
-
-func (m *Hand) GetValue() []byte {
-	if m != nil {
-		return m.Value
-	}
-	return nil
-}
-
-func (m *Hand) GetHigh() []byte {
-	if m != nil {
-		return m.High
-	}
-	return nil
-}
-
-func (m *Hand) GetKicker() []byte {
-	if m != nil {
-		return m.Kicker
-	}
-	return nil
-}
-
-type ShowHand struct {
-	Pos              *int32  `protobuf:"varint,1,req" json:"Pos,omitempty"`
-	Cards            []byte  `protobuf:"bytes,2,req" json:"Cards,omitempty"`
-	Hand             *Hand   `protobuf:"bytes,3,req" json:"Hand,omitempty"`
-	HandString       *string `protobuf:"bytes,4,req" json:"HandString,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
-}
-
-func (m *ShowHand) Reset()         { *m = ShowHand{} }
-func (m *ShowHand) String() string { return proto.CompactTextString(m) }
-func (*ShowHand) ProtoMessage()    {}
-
-func (m *ShowHand) GetPos() int32 {
-	if m != nil && m.Pos != nil {
-		return *m.Pos
-	}
-	return 0
-}
-
-func (m *ShowHand) GetCards() []byte {
-	if m != nil {
-		return m.Cards
-	}
-	return nil
-}
-
-func (m *ShowHand) GetHand() *Hand {
-	if m != nil {
-		return m.Hand
-	}
-	return nil
-}
-
-func (m *ShowHand) GetHandString() string {
-	if m != nil && m.HandString != nil {
-		return *m.HandString
-	}
-	return ""
-}
-
-type ShowCards struct {
-	Pos              *int32 `protobuf:"varint,1,req" json:"Pos,omitempty"`
-	Cards            []byte `protobuf:"bytes,2,req" json:"Cards,omitempty"`
-	Muck             *bool  `protobuf:"varint,3,req,def=0" json:"Muck,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
-}
-
-func (m *ShowCards) Reset()         { *m = ShowCards{} }
-func (m *ShowCards) String() string { return proto.CompactTextString(m) }
-func (*ShowCards) ProtoMessage()    {}
-
-const Default_ShowCards_Muck bool = false
-
-func (m *ShowCards) GetPos() int32 {
-	if m != nil && m.Pos != nil {
-		return *m.Pos
-	}
-	return 0
-}
-
-func (m *ShowCards) GetCards() []byte {
-	if m != nil {
-		return m.Cards
-	}
-	return nil
-}
-
-func (m *ShowCards) GetMuck() bool {
-	if m != nil && m.Muck != nil {
-		return *m.Muck
-	}
-	return Default_ShowCards_Muck
-}
-
-type Winner struct {
-	Pos              *int32   `protobuf:"varint,1,req" json:"Pos,omitempty"`
-	Amount           *float64 `protobuf:"fixed64,2,req" json:"Amount,omitempty"`
-	XXX_unrecognized []byte   `json:"-"`
-}
-
-func (m *Winner) Reset()         { *m = Winner{} }
-func (m *Winner) String() string { return proto.CompactTextString(m) }
-func (*Winner) ProtoMessage()    {}
-
-func (m *Winner) GetPos() int32 {
-	if m != nil && m.Pos != nil {
-		return *m.Pos
-	}
-	return 0
-}
-
-func (m *Winner) GetAmount() float64 {
-	if m != nil && m.Amount != nil {
-		return *m.Amount
-	}
-	return 0
-}
-
-type MoveButton struct {
-	Pos              *int32 `protobuf:"varint,1,req" json:"Pos,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
-}
-
-func (m *MoveButton) Reset()         { *m = MoveButton{} }
-func (m *MoveButton) String() string { return proto.CompactTextString(m) }
-func (*MoveButton) ProtoMessage()    {}
-
-func (m *MoveButton) GetPos() int32 {
-	if m != nil && m.Pos != nil {
-		return *m.Pos
-	}
-	return 0
-}
-
-type JoinTable struct {
-	Player           *string  `protobuf:"bytes,1,req" json:"Player,omitempty"`
-	Pos              *int32   `protobuf:"varint,2,req" json:"Pos,omitempty"`
-	Amount           *float64 `protobuf:"fixed64,3,req" json:"Amount,omitempty"`
-	XXX_unrecognized []byte   `json:"-"`
-}
-
-func (m *JoinTable) Reset()         { *m = JoinTable{} }
-func (m *JoinTable) String() string { return proto.CompactTextString(m) }
-func (*JoinTable) ProtoMessage()    {}
-
-func (m *JoinTable) GetPlayer() string {
-	if m != nil && m.Player != nil {
-		return *m.Player
-	}
-	return ""
-}
-
-func (m *JoinTable) GetPos() int32 {
-	if m != nil && m.Pos != nil {
-		return *m.Pos
-	}
-	return 0
-}
-
-func (m *JoinTable) GetAmount() float64 {
-	if m != nil && m.Amount != nil {
-		return *m.Amount
-	}
-	return 0
-}
-
-type LeaveTable struct {
-	Player           *string `protobuf:"bytes,1,req" json:"Player,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
-}
-
-func (m *LeaveTable) Reset()         { *m = LeaveTable{} }
-func (m *LeaveTable) String() string { return proto.CompactTextString(m) }
-func (*LeaveTable) ProtoMessage()    {}
-
-func (m *LeaveTable) GetPlayer() string {
-	if m != nil && m.Player != nil {
-		return *m.Player
-	}
-	return ""
-}
-
-type SitOut struct {
-	Pos              *int32 `protobuf:"varint,1,req" json:"Pos,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
-}
-
-func (m *SitOut) Reset()         { *m = SitOut{} }
-func (m *SitOut) String() string { return proto.CompactTextString(m) }
-func (*SitOut) ProtoMessage()    {}
-
-func (m *SitOut) GetPos() int32 {
-	if m != nil && m.Pos != nil {
-		return *m.Pos
-	}
-	return 0
-}
-
-type ComeBack struct {
-	Pos              *int32 `protobuf:"varint,1,req" json:"Pos,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
-}
-
-func (m *ComeBack) Reset()         { *m = ComeBack{} }
-func (m *ComeBack) String() string { return proto.CompactTextString(m) }
-func (*ComeBack) ProtoMessage()    {}
-
-func (m *ComeBack) GetPos() int32 {
-	if m != nil && m.Pos != nil {
-		return *m.Pos
-	}
-	return 0
-}
-
-type Seat struct {
-	Pos              *int32     `protobuf:"varint,1,req" json:"Pos,omitempty"`
-	State            *SeatState `protobuf:"varint,2,opt,enum=protocol.SeatState" json:"State,omitempty"`
-	Stack            *float64   `protobuf:"fixed64,3,opt" json:"Stack,omitempty"`
-	Bet              *float64   `protobuf:"fixed64,4,opt" json:"Bet,omitempty"`
-	XXX_unrecognized []byte     `json:"-"`
-}
-
-func (m *Seat) Reset()         { *m = Seat{} }
-func (m *Seat) String() string { return proto.CompactTextString(m) }
-func (*Seat) ProtoMessage()    {}
-
-func (m *Seat) GetPos() int32 {
-	if m != nil && m.Pos != nil {
-		return *m.Pos
-	}
-	return 0
-}
-
-func (m *Seat) GetState() SeatState {
-	if m != nil && m.State != nil {
-		return *m.State
-	}
-	return 0
-}
-
-func (m *Seat) GetStack() float64 {
-	if m != nil && m.Stack != nil {
-		return *m.Stack
-	}
-	return 0
-}
-
-func (m *Seat) GetBet() float64 {
-	if m != nil && m.Bet != nil {
-		return *m.Bet
-	}
-	return 0
-}
-
-type Table struct {
-	Id               *string `protobuf:"bytes,1,req" json:"Id,omitempty"`
-	Size             *int32  `protobuf:"varint,2,req" json:"Size,omitempty"`
-	Button           *int32  `protobuf:"varint,3,req" json:"Button,omitempty"`
-	Seats            []*Seat `protobuf:"bytes,4,rep" json:"Seats,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
-}
-
-func (m *Table) Reset()         { *m = Table{} }
-func (m *Table) String() string { return proto.CompactTextString(m) }
-func (*Table) ProtoMessage()    {}
-
-func (m *Table) GetId() string {
-	if m != nil && m.Id != nil {
-		return *m.Id
-	}
-	return ""
-}
-
-func (m *Table) GetSize() int32 {
-	if m != nil && m.Size != nil {
-		return *m.Size
-	}
-	return 0
-}
-
-func (m *Table) GetButton() int32 {
-	if m != nil && m.Button != nil {
-		return *m.Button
-	}
-	return 0
-}
-
-func (m *Table) GetSeats() []*Seat {
-	if m != nil {
-		return m.Seats
-	}
-	return nil
 }
 
 type Envelope struct {
@@ -1013,153 +94,153 @@ type Envelope struct {
 	XXX_unrecognized []byte           `json:"-"`
 }
 
-func (m *Envelope) Reset()         { *m = Envelope{} }
-func (m *Envelope) String() string { return proto.CompactTextString(m) }
-func (*Envelope) ProtoMessage()    {}
+func (this *Envelope) Reset()         { *this = Envelope{} }
+func (this *Envelope) String() string { return proto.CompactTextString(this) }
+func (*Envelope) ProtoMessage()       {}
 
-func (m *Envelope) GetErrorMessage() *ErrorMessage {
-	if m != nil {
-		return m.ErrorMessage
+func (this *Envelope) GetErrorMessage() *ErrorMessage {
+	if this != nil {
+		return this.ErrorMessage
 	}
 	return nil
 }
 
-func (m *Envelope) GetChatMessage() *ChatMessage {
-	if m != nil {
-		return m.ChatMessage
+func (this *Envelope) GetChatMessage() *ChatMessage {
+	if this != nil {
+		return this.ChatMessage
 	}
 	return nil
 }
 
-func (m *Envelope) GetDealerMessage() *DealerMessage {
-	if m != nil {
-		return m.DealerMessage
+func (this *Envelope) GetDealerMessage() *DealerMessage {
+	if this != nil {
+		return this.DealerMessage
 	}
 	return nil
 }
 
-func (m *Envelope) GetPlayStart() *PlayStart {
-	if m != nil {
-		return m.PlayStart
+func (this *Envelope) GetPlayStart() *PlayStart {
+	if this != nil {
+		return this.PlayStart
 	}
 	return nil
 }
 
-func (m *Envelope) GetStreetStart() *StreetStart {
-	if m != nil {
-		return m.StreetStart
+func (this *Envelope) GetStreetStart() *StreetStart {
+	if this != nil {
+		return this.StreetStart
 	}
 	return nil
 }
 
-func (m *Envelope) GetChangeGame() *ChangeGame {
-	if m != nil {
-		return m.ChangeGame
+func (this *Envelope) GetChangeGame() *ChangeGame {
+	if this != nil {
+		return this.ChangeGame
 	}
 	return nil
 }
 
-func (m *Envelope) GetBettingComplete() *BettingComplete {
-	if m != nil {
-		return m.BettingComplete
+func (this *Envelope) GetBettingComplete() *BettingComplete {
+	if this != nil {
+		return this.BettingComplete
 	}
 	return nil
 }
 
-func (m *Envelope) GetJoinTable() *JoinTable {
-	if m != nil {
-		return m.JoinTable
+func (this *Envelope) GetJoinTable() *JoinTable {
+	if this != nil {
+		return this.JoinTable
 	}
 	return nil
 }
 
-func (m *Envelope) GetLeaveTable() *LeaveTable {
-	if m != nil {
-		return m.LeaveTable
+func (this *Envelope) GetLeaveTable() *LeaveTable {
+	if this != nil {
+		return this.LeaveTable
 	}
 	return nil
 }
 
-func (m *Envelope) GetSitOut() *SitOut {
-	if m != nil {
-		return m.SitOut
+func (this *Envelope) GetSitOut() *SitOut {
+	if this != nil {
+		return this.SitOut
 	}
 	return nil
 }
 
-func (m *Envelope) GetComeBack() *ComeBack {
-	if m != nil {
-		return m.ComeBack
+func (this *Envelope) GetComeBack() *ComeBack {
+	if this != nil {
+		return this.ComeBack
 	}
 	return nil
 }
 
-func (m *Envelope) GetMoveButton() *MoveButton {
-	if m != nil {
-		return m.MoveButton
+func (this *Envelope) GetMoveButton() *MoveButton {
+	if this != nil {
+		return this.MoveButton
 	}
 	return nil
 }
 
-func (m *Envelope) GetRequireBet() *RequireBet {
-	if m != nil {
-		return m.RequireBet
+func (this *Envelope) GetRequireBet() *RequireBet {
+	if this != nil {
+		return this.RequireBet
 	}
 	return nil
 }
 
-func (m *Envelope) GetAddBet() *AddBet {
-	if m != nil {
-		return m.AddBet
+func (this *Envelope) GetAddBet() *AddBet {
+	if this != nil {
+		return this.AddBet
 	}
 	return nil
 }
 
-func (m *Envelope) GetDealCards() *DealCards {
-	if m != nil {
-		return m.DealCards
+func (this *Envelope) GetDealCards() *DealCards {
+	if this != nil {
+		return this.DealCards
 	}
 	return nil
 }
 
-func (m *Envelope) GetRequireDiscard() *RequireDiscard {
-	if m != nil {
-		return m.RequireDiscard
+func (this *Envelope) GetRequireDiscard() *RequireDiscard {
+	if this != nil {
+		return this.RequireDiscard
 	}
 	return nil
 }
 
-func (m *Envelope) GetDiscarded() *Discarded {
-	if m != nil {
-		return m.Discarded
+func (this *Envelope) GetDiscarded() *Discarded {
+	if this != nil {
+		return this.Discarded
 	}
 	return nil
 }
 
-func (m *Envelope) GetDiscardCards() *DiscardCards {
-	if m != nil {
-		return m.DiscardCards
+func (this *Envelope) GetDiscardCards() *DiscardCards {
+	if this != nil {
+		return this.DiscardCards
 	}
 	return nil
 }
 
-func (m *Envelope) GetShowHand() *ShowHand {
-	if m != nil {
-		return m.ShowHand
+func (this *Envelope) GetShowHand() *ShowHand {
+	if this != nil {
+		return this.ShowHand
 	}
 	return nil
 }
 
-func (m *Envelope) GetShowCards() *ShowCards {
-	if m != nil {
-		return m.ShowCards
+func (this *Envelope) GetShowCards() *ShowCards {
+	if this != nil {
+		return this.ShowCards
 	}
 	return nil
 }
 
-func (m *Envelope) GetWinner() *Winner {
-	if m != nil {
-		return m.Winner
+func (this *Envelope) GetWinner() *Winner {
+	if this != nil {
+		return this.Winner
 	}
 	return nil
 }
@@ -1171,36 +252,30 @@ type Message struct {
 	XXX_unrecognized []byte    `json:"-"`
 }
 
-func (m *Message) Reset()         { *m = Message{} }
-func (m *Message) String() string { return proto.CompactTextString(m) }
-func (*Message) ProtoMessage()    {}
+func (this *Message) Reset()         { *this = Message{} }
+func (this *Message) String() string { return proto.CompactTextString(this) }
+func (*Message) ProtoMessage()       {}
 
-func (m *Message) GetType() string {
-	if m != nil && m.Type != nil {
-		return *m.Type
+func (this *Message) GetType() string {
+	if this != nil && this.Type != nil {
+		return *this.Type
 	}
 	return ""
 }
 
-func (m *Message) GetTimestamp() int64 {
-	if m != nil && m.Timestamp != nil {
-		return *m.Timestamp
+func (this *Message) GetTimestamp() int64 {
+	if this != nil && this.Timestamp != nil {
+		return *this.Timestamp
 	}
 	return 0
 }
 
-func (m *Message) GetEnvelope() *Envelope {
-	if m != nil {
-		return m.Envelope
+func (this *Message) GetEnvelope() *Envelope {
+	if this != nil {
+		return this.Envelope
 	}
 	return nil
 }
 
 func init() {
-	proto.RegisterEnum("protocol.BetType", BetType_name, BetType_value)
-	proto.RegisterEnum("protocol.DealType", DealType_name, DealType_value)
-	proto.RegisterEnum("protocol.GameType", GameType_name, GameType_value)
-	proto.RegisterEnum("protocol.GameLimit", GameLimit_name, GameLimit_value)
-	proto.RegisterEnum("protocol.Rank", Rank_name, Rank_value)
-	proto.RegisterEnum("protocol.SeatState", SeatState_name, SeatState_value)
 }

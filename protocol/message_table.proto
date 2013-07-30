@@ -1,0 +1,58 @@
+package protocol;
+
+enum SeatState {
+  Empty = 0;
+  Taken = 1;
+  Ready = 2;
+
+  WaitBB = 3;
+  PostBB = 4;
+
+  Play = 5;
+  PutBet = 6;
+  AllIn = 7;
+  Folded = 8;
+  Auto = 9;
+
+  Kicked = 10;
+  Busted = 11;
+
+  Away = 12;
+  Idle = 13;
+}
+
+message MoveButton {
+  required int32 Pos = 1;
+}
+
+message JoinTable {
+  required string Player = 1;
+  required int32 Pos = 2;
+  required double Amount = 3;
+}
+
+message LeaveTable {
+  required string Player = 1;
+}
+
+message SitOut {
+  required int32 Pos = 1;
+}
+
+message ComeBack {
+  required int32 Pos = 1;
+}
+
+message Seat {
+  required int32 Pos = 1;
+  optional SeatState State = 2;
+  optional double Stack = 3;
+  optional double Bet = 4;
+}
+
+message Table {
+  required string Id = 1;
+  required int32 Size = 2;
+  required int32 Button = 3;
+  repeated Seat Seats = 4;
+}

@@ -1,0 +1,47 @@
+package protocol;
+
+enum BetType {
+  Ante = 1;
+  BringIn = 2;
+  SmallBlind = 3;
+  BigBlind = 4;
+  GuestBlind = 5;
+  Straddle = 6;
+
+  Raise = 7;
+  Call = 8;
+  Check = 9;
+  Fold = 10;
+
+  Discard = 11;
+  StandPat = 12;
+
+  Show = 13;
+  Muck = 14;
+}
+
+message BetRange {
+  required double Call = 1;
+  required double Min = 2;
+  required double Max = 3;
+}
+
+message RequireBet {
+  required int32 pos = 1;
+  required BetRange BetRange = 2;
+}
+
+message Bet {
+  required BetType Type = 1;
+  optional double Amount = 2;
+}
+
+message AddBet {
+  required int32 pos = 1;
+  required Bet Bet = 2;
+}
+
+message BettingComplete {
+  required double Pot = 1;
+  required double Rake = 2;
+}

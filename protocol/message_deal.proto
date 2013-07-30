@@ -1,0 +1,28 @@
+package protocol;
+
+enum DealType {
+  Board = 0;
+  Hole = 1;
+  Door = 2;
+  //Discard = 3;
+}
+
+message DealCards {
+  required int32 Pos = 1;
+  required bytes Cards = 2;
+  required DealType Type = 3;
+}
+
+message RequireDiscard {
+  required int32 Pos = 1;
+}
+
+message Discarded {
+  required int32 Pos = 1;
+  required int32 Num = 2;
+}
+
+message DiscardCards {
+  required int32 Pos = 1;
+  required bytes Cards = 2;
+}
