@@ -1,9 +1,9 @@
-package protocol;
-import "protocol/message_betting.proto";
-import "protocol/message_deal.proto";
-import "protocol/message_gameplay.proto";
-import "protocol/message_showdown.proto";
-import "protocol/message_table.proto";
+package message;
+import "protocol/message/message_betting.proto";
+import "protocol/message/message_deal.proto";
+import "protocol/message/message_gameplay.proto";
+import "protocol/message/message_showdown.proto";
+import "protocol/message/message_table.proto";
 
 message ErrorMessage {
   required string Message = 1;

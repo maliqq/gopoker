@@ -1,7 +1,11 @@
 package protocol
 
+import (
+	"gopoker/protocol/message"
+)
+
 type Notification struct {
-	*Message
+	*message.Message
 	*Notify
 }
 

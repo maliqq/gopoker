@@ -12,7 +12,7 @@ import (
 import (
 	"gopoker/poker"
 	"gopoker/poker/hand"
-	"gopoker/protocol"
+	"gopoker/protocol/message"
 	"gopoker/util/console"
 
 	"gopoker/model"
@@ -24,15 +24,15 @@ type Connection struct {
 	Server *play.Play
 }
 
-func (c *Connection) Reply(msg *protocol.Message) {
+func (c *Connection) Reply(msg *message.Message) {
 	c.Server.Recv <- msg
 }
 
-func (c *Connection) Handle(msg *protocol.Message) {
+func (c *Connection) Handle(msg *message.Message) {
 	log.Println(console.Color(console.GREEN, fmt.Sprintf("[receive] %s", msg)))
 
 	switch msg.Payload().(type) {
-	case protocol.RequireBet:
+	case *message.RequireBet:
 
 		r := msg.Envelope.RequireBet
 
@@ -60,10 +60,10 @@ func (c *Connection) Handle(msg *protocol.Message) {
 
 		if newBet != nil {
 			pos := int(r.GetPos())
-			c.Reply(protocol.NewAddBet(pos, newBet))
+			c.Reply(message.NewAddBet(pos, newBet))
 		}
 
-	case protocol.RequireDiscard:
+	case *message.RequireDiscard:
 
 		r := msg.Envelope.RequireDiscard
 		pos := int(r.GetPos())
@@ -77,26 +77,26 @@ func (c *Connection) Handle(msg *protocol.Message) {
 			cards = readCards()
 		}
 
-		c.Reply(protocol.NewDiscardCards(pos, cards))
+		c.Reply(message.NewDiscardCards(pos, cards))
 
-	case protocol.DealCards:
+	case *message.DealCards:
 
 		payload := msg.Envelope.DealCards
 
-		if payload.GetType() == protocol.DealType_Board {
+		if payload.GetType() == message.DealType_Board {
 			fmt.Printf("Dealt %s %s\n", payload.Type, poker.BinaryCards(payload.Cards).ConsoleString())
 		} else {
 			fmt.Printf("Dealt %s %s to %d\n", payload.Type, poker.BinaryCards(payload.Cards).ConsoleString(), payload.Pos)
 		}
 
-	case protocol.MoveButton:
+	case *message.MoveButton:
 
 		payload := msg.Envelope.MoveButton
 		pos := int(payload.GetPos())
 
 		fmt.Printf("Button is %d\n", pos+1)
 
-	case protocol.AddBet:
+	case *message.AddBet:
 
 		payload := msg.Envelope.AddBet
 		pos := int(payload.GetPos())
@@ -104,14 +104,14 @@ func (c *Connection) Handle(msg *protocol.Message) {
 
 		fmt.Printf("Player %s: %s\n", player, payload.Bet)
 
-	case protocol.BettingComplete:
+	case *message.BettingComplete:
 
 		payload := msg.Envelope.BettingComplete
 		pot := int(payload.GetPot())
 
 		fmt.Printf("Pot size: %.2f\nBoard: %s\n", pot, c.Server.Deal.Board.ConsoleString())
 
-	case protocol.ShowHand:
+	case *message.ShowHand:
 
 		payload := msg.Envelope.ShowHand
 		pos := int(payload.GetPos())
@@ -127,7 +127,7 @@ func (c *Connection) Handle(msg *protocol.Message) {
 
 		fmt.Printf("Player %s has %s (%s)\n", player, poker.BinaryCards(payload.Cards).ConsoleString(), hand.PrintString())
 
-	case protocol.Winner:
+	case *message.Winner:
 
 		payload := msg.Envelope.Winner
 		pos := int(payload.GetPos())
@@ -136,7 +136,7 @@ func (c *Connection) Handle(msg *protocol.Message) {
 
 		fmt.Printf("Player %s won %.2f\n", player, amount)
 
-	case protocol.ChangeGame:
+	case *message.ChangeGame:
 
 		payload := msg.Envelope.ChangeGame
 

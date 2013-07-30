@@ -2,7 +2,7 @@ package gameplay
 
 import (
 	"gopoker/poker"
-	"gopoker/protocol"
+	"gopoker/protocol/message"
 )
 
 func (this *GamePlay) BringIn() Transition {
@@ -26,7 +26,7 @@ func (this *GamePlay) BringIn() Transition {
 	}
 
 	this.Table.SetButton(minPos)
-	this.Broadcast.All <- protocol.NewMoveButton(minPos)
+	this.Broadcast.All <- message.NewMoveButton(minPos)
 
 	seat := this.Table.Seat(minPos)
 	this.Broadcast.One(seat.Player) <- this.Betting.RequireBet(minPos, seat, this.Game, this.Stake)

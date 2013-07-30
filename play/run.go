@@ -16,7 +16,7 @@ import (
 	"gopoker/play/context"
 	"gopoker/play/gameplay"
 	"gopoker/play/street"
-	"gopoker/protocol"
+	"gopoker/protocol/message"
 )
 
 func (this *Play) Run() {
@@ -36,7 +36,7 @@ Loop:
 }
 
 func (this *Play) run() {
-	this.Broadcast.All <- protocol.NewPlayStart()
+	this.Broadcast.All <- message.NewPlayStart()
 
 	// prepare seats
 	log.Println("[play] prepare seats")
@@ -85,7 +85,7 @@ func (this *Play) run() {
 	// run streets
 	for _, street := range street.Get(this.Game.Group) {
 		log.Printf("[play] street %s\n", street)
-		this.Broadcast.All <- protocol.NewStreetStart(string(street))
+		this.Broadcast.All <- message.NewStreetStart(string(street))
 
 		this.Street = street
 

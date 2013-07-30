@@ -2,7 +2,7 @@ package gameplay
 
 import (
 	"gopoker/model/bet"
-	"gopoker/protocol"
+	"gopoker/protocol/message"
 )
 
 func (this *GamePlay) PostAntes() {
@@ -13,6 +13,6 @@ func (this *GamePlay) PostAntes() {
 
 		this.Betting.AddBet(newBet)
 
-		this.Broadcast.All <- protocol.NewAddBet(pos, newBet)
+		this.Broadcast.All <- message.NewAddBet(pos, newBet)
 	}
 }

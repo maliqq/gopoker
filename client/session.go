@@ -6,6 +6,7 @@ import (
 
 import (
 	"gopoker/protocol"
+	"gopoker/protocol/message"
 )
 
 type Connection interface {
@@ -39,7 +40,7 @@ func (session *Session) Start() {
 
 func (session *Session) Read() {
 	for {
-		var message protocol.Message
+		var message message.Message
 
 		err := session.Connection.Receive(&message)
 		if err != nil {

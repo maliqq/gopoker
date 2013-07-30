@@ -11,10 +11,11 @@ import (
 )
 
 import (
+	"gopoker/protocol/message"
 	"gopoker/util/console"
 )
 
-type MessageChannel chan *Message
+type MessageChannel chan *message.Message
 
 // pubsub
 type Broker struct {
@@ -98,7 +99,7 @@ func (n *Notify) String() string {
 	return s
 }
 
-func (broker *Broker) sendUser(key string, msg *Message) {
+func (broker *Broker) sendUser(key string, msg *message.Message) {
 	// sign message with timestamp
 	if msg.GetTimestamp() == 0 {
 		msg.Timestamp = proto.Int64(time.Now().Unix())
@@ -110,13 +111,13 @@ func (broker *Broker) sendUser(key string, msg *Message) {
 	}
 }
 
-func (broker *Broker) sendSystem(msg *Message) {
+func (broker *Broker) sendSystem(msg *message.Message) {
 	for _, system := range broker.System {
 		*system <- msg
 	}
 }
 
-func (broker *Broker) Dispatch(n *Notify, msg *Message) {
+func (broker *Broker) Dispatch(n *Notify, msg *message.Message) {
 	log.Println(console.Color(console.CYAN, fmt.Sprintf("%s %s", n, msg)))
 
 	if n.None {

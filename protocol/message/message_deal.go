@@ -1,4 +1,4 @@
-package protocol
+package message
 
 import (
 	"code.google.com/p/goprotobuf/proto"

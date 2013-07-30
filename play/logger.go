@@ -9,6 +9,7 @@ import (
 	"gopoker/poker"
 	"gopoker/poker/hand"
 	"gopoker/protocol"
+	"gopoker/protocol/message"
 )
 
 type Logger struct {
@@ -34,35 +35,35 @@ func (l *Logger) receive() {
 	}
 }
 
-func (l *Logger) handle(msg *protocol.Message) {
+func (l *Logger) handle(msg *message.Message) {
 	switch msg.Payload().(type) {
-	case protocol.RequireBet:
-	case protocol.RequireDiscard:
+	case message.RequireBet:
+	case message.RequireDiscard:
 
-	case protocol.DealCards:
+	case message.DealCards:
 		payload := msg.Envelope.DealCards
 
-		if payload.GetType() == protocol.DealType_Board {
+		if payload.GetType() == message.DealType_Board {
 			l.log("Dealt %s [%s]\n", payload.Type, poker.BinaryCards(payload.Cards).PrintString())
 		} else {
 			l.log("Dealt %s [%s] to %d\n", payload.Type, poker.BinaryCards(payload.Cards).PrintString(), payload.Pos)
 		}
 
-	case protocol.MoveButton:
+	case message.MoveButton:
 		payload := msg.Envelope.MoveButton
 		l.log("Button is %d\n", *payload.Pos+1)
 
-	case protocol.AddBet:
+	case message.AddBet:
 
 		payload := msg.Envelope.AddBet
 		l.log("Seat %d: %s\n", payload.Pos, payload.Bet)
 
-	case protocol.StreetStart:
+	case message.StreetStart:
 
 		payload := msg.Envelope.StreetStart
 		l.log("=== %s\n", payload.Name)
 
-	case protocol.ShowHand:
+	case message.ShowHand:
 
 		payload := msg.Envelope.ShowHand
 		handData := payload.Hand
@@ -74,7 +75,7 @@ func (l *Logger) handle(msg *protocol.Message) {
 		}
 		l.log("Seat %d: shows [%s] (%s)\n", payload.Pos, poker.BinaryCards(payload.Cards).PrintString(), hand.PrintString())
 
-	case protocol.Winner:
+	case message.Winner:
 		payload := msg.Envelope.Winner
 		l.log("Seat %d: wins %.2f\n", payload.GetPos(), payload.GetAmount())
 

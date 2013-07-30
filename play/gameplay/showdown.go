@@ -4,7 +4,7 @@ import (
 	"gopoker/model"
 	"gopoker/poker"
 	"gopoker/poker/ranking"
-	"gopoker/protocol"
+	"gopoker/protocol/message"
 )
 
 type ShowdownHands map[model.Player]*poker.Hand
@@ -19,7 +19,7 @@ func (this *GamePlay) ShowHands(ranking ranking.Ranking, withBoard bool) Showdow
 		if pocket, hand := d.Rank(player, ranking, withBoard); hand != nil {
 			hands[player] = hand
 
-			this.Broadcast.All <- protocol.NewShowHand(pos, pocket, hand)
+			this.Broadcast.All <- message.NewShowHand(pos, pocket, hand)
 		}
 	}
 
@@ -77,7 +77,7 @@ func (this *GamePlay) Winners(highHands ShowdownHands, lowHands ShowdownHands) {
 
 		for winner, amount := range winners {
 			pos, _ := this.Table.Pos(winner)
-			this.Broadcast.All <- protocol.NewWinner(pos, amount)
+			this.Broadcast.All <- message.NewWinner(pos, amount)
 		}
 	}
 }

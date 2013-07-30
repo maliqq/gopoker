@@ -11,7 +11,7 @@ import (
 import (
 	"gopoker/client"
 	"gopoker/client/websocket_client"
-	"gopoker/protocol"
+	"gopoker/protocol/message"
 	"gopoker/util"
 )
 
@@ -22,7 +22,7 @@ func (nodeHTTP *NodeHTTP) WebSocketHandler(conn *websocket.Conn) {
 	room, found := node.Rooms[roomId]
 
 	if !found {
-		errMsg := protocol.NewErrorMessage(fmt.Errorf("room with id=%s not found", roomId))
+		errMsg := message.NewErrorMessage(fmt.Errorf("room with id=%s not found", roomId))
 		websocket.JSON.Send(conn, errMsg)
 		conn.Close()
 		return

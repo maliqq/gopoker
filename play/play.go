@@ -13,6 +13,7 @@ import (
 	"gopoker/play/gameplay"
 	"gopoker/play/mode"
 	"gopoker/protocol"
+	"gopoker/protocol/message"
 	"gopoker/util/console"
 )
 
@@ -39,7 +40,7 @@ func NewPlay(variation model.Variation, stake *model.Stake, table *model.Table) 
 			stateChange: make(chan State),
 			Mode:        mode.Cash, // FIXME
 		},
-		Recv: make(chan *protocol.Message),
+		Recv: make(chan *message.Message),
 	}
 
 	if variation.IsMixed() {
@@ -72,11 +73,11 @@ func (this *Play) receive() {
 	}
 }
 
-func (this *Play) handleMessage(msg *protocol.Message) {
+func (this *Play) handleMessage(msg *message.Message) {
 	log.Printf(console.Color(console.YELLOW, msg.String()))
 
 	switch msg.Payload().(type) {
-	case *protocol.JoinTable:
+	case *message.JoinTable:
 		join := msg.Envelope.JoinTable
 		player := model.Player(join.GetPlayer())
 		pos := int(join.GetPos())
@@ -91,7 +92,7 @@ func (this *Play) handleMessage(msg *protocol.Message) {
 		// retranslate
 		this.Broadcast.All <- msg
 
-	case *protocol.LeaveTable:
+	case *message.LeaveTable:
 		leave := msg.Envelope.LeaveTable
 		player := model.Player(leave.GetPlayer())
 
@@ -99,27 +100,27 @@ func (this *Play) handleMessage(msg *protocol.Message) {
 		this.Broadcast.All <- msg
 		// TODO: fold & autoplay
 
-	case *protocol.SitOut:
+	case *message.SitOut:
 		sitOut := msg.Envelope.SitOut
 		pos := int(sitOut.GetPos())
 
 		this.Table.Seat(pos).State = seat.Idle
 		// TODO: fold
 
-	case *protocol.ComeBack:
+	case *message.ComeBack:
 		comeBack := msg.Envelope.ComeBack
 		pos := int(comeBack.GetPos())
 
 		this.Table.Seat(pos).State = seat.Ready
 
-	case *protocol.ChatMessage:
+	case *message.ChatMessage:
 		this.Broadcast.All <- msg
 
-	case *protocol.AddBet:
+	case *message.AddBet:
 		this.Betting.Bet <- msg
 		this.Broadcast.All <- msg
 
-	case *protocol.DiscardCards:
+	case *message.DiscardCards:
 		this.Discarding.Discard <- msg
 
 	default:

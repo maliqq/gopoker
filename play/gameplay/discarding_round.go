@@ -4,7 +4,7 @@ import (
 	"gopoker/model"
 	"gopoker/model/deal"
 	"gopoker/poker"
-	"gopoker/protocol"
+	"gopoker/protocol/message"
 )
 
 func (this *GamePlay) StartDiscardingRound() Transition {
@@ -24,11 +24,11 @@ func (this *GamePlay) discard(p model.Player, cards poker.Cards) {
 
 	cardsNum := len(cards)
 
-	this.Broadcast.All <- protocol.NewDiscarded(pos, cardsNum)
+	this.Broadcast.All <- message.NewDiscarded(pos, cardsNum)
 
 	if cardsNum > 0 {
 		newCards := this.Deal.Discard(p, cards)
 
-		this.Broadcast.One(p) <- protocol.NewDealPocket(pos, newCards, deal.Discard)
+		this.Broadcast.One(p) <- message.NewDealPocket(pos, newCards, deal.Discard)
 	}
 }

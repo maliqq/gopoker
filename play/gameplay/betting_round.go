@@ -2,7 +2,7 @@ package gameplay
 
 import (
 	seatState "gopoker/model/seat"
-	"gopoker/protocol"
+	"gopoker/protocol/message"
 )
 
 const (
@@ -10,7 +10,7 @@ const (
 )
 
 func (this *GamePlay) StartBettingRound() Transition {
-	//this.Broadcast.All <- protocol.NewBettingStart(this.Betting)
+	//this.Broadcast.All <- message.NewBettingStart(this.Betting)
 	nextPos := make(chan int)
 	defer close(nextPos)
 
@@ -57,5 +57,5 @@ func (this *GamePlay) ResetBetting() {
 		seat.Play()
 	}
 
-	this.Broadcast.All <- protocol.NewBettingComplete(this.Betting.Pot)
+	this.Broadcast.All <- message.NewBettingComplete(this.Betting.Pot)
 }

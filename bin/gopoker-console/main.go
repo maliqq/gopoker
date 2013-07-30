@@ -12,6 +12,7 @@ import (
 
 import (
 	"gopoker/protocol"
+	"gopoker/protocol/message"
 
 	"gopoker/model"
 	"gopoker/model/game"
@@ -76,7 +77,7 @@ func createPlay(me protocol.MessageChannel) *play.Play {
 
 	for i, player := range players {
 		if i < size {
-			play.Recv <- protocol.NewJoinTable(player, i, stack)
+			play.Recv <- message.NewJoinTable(player, i, stack)
 			play.Broadcast.Bind(player, &me)
 		}
 	}

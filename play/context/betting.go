@@ -9,7 +9,7 @@ import (
 	"gopoker/model"
 	"gopoker/model/bet"
 	"gopoker/model/game"
-	"gopoker/protocol"
+	"gopoker/protocol/message"
 )
 
 const (
@@ -26,7 +26,7 @@ type Betting struct {
 	Seat     *model.Seat
 	Required *Required
 
-	Bet chan *protocol.Message `json:"-"`
+	Bet chan *message.Message `json:"-"`
 
 	Next chan int `json:"-"`
 	stop chan int `json:"-"`
@@ -43,7 +43,7 @@ func NewBetting() *Betting {
 
 		Required: &Required{},
 
-		Bet: make(chan *protocol.Message),
+		Bet: make(chan *message.Message),
 
 		stop: make(chan int),
 	}
@@ -124,7 +124,7 @@ func (this *Betting) ForceBet(pos int, seat *model.Seat, betType bet.Type, stake
 	return model.NewBet(betType, amount)
 }
 
-func (this *Betting) RequireBet(pos int, seat *model.Seat, game *model.Game, stake *model.Stake) *protocol.Message {
+func (this *Betting) RequireBet(pos int, seat *model.Seat, game *model.Game, stake *model.Stake) *message.Message {
 	this.Seat = seat
 	this.Required.Pos = pos
 
@@ -136,7 +136,7 @@ func (this *Betting) RequireBet(pos int, seat *model.Seat, game *model.Game, sta
 		this.Required.Min, this.Required.Max = call+min, call+max
 	}
 
-	return protocol.NewRequireBet(this.Required.Pos, this.Required.BetRange)
+	return message.NewRequireBet(this.Required.Pos, this.Required.BetRange)
 }
 
 func (this *Betting) AddBet(newBet *model.Bet) error {

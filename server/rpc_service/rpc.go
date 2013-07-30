@@ -3,7 +3,7 @@ package rpc_service
 import (
 	"gopoker/model"
 	"gopoker/play/mode"
-	"gopoker/protocol"
+	"gopoker/protocol/message"
 )
 
 type CallResult struct {
@@ -30,5 +30,5 @@ type StartRoom struct {
 
 type NotifyRoom struct {
 	Id      string
-	Message *protocol.Message
+	Message *message.Message
 }

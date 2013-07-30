@@ -10,28 +10,28 @@ import (
 
 import (
 	"gopoker/model"
-	"gopoker/protocol"
+	"gopoker/protocol/message"
 )
 
 type Discarding struct {
 	*model.Deal
 	Seat     *model.Seat
-	Required *protocol.RequireDiscard
+	Required *message.RequireDiscard
 
-	Discard chan *protocol.Message
+	Discard chan *message.Message
 }
 
 func NewDiscarding(d *model.Deal) *Discarding {
 	return &Discarding{
-		Required: &protocol.RequireDiscard{},
-		Discard:  make(chan *protocol.Message),
+		Required: &message.RequireDiscard{},
+		Discard:  make(chan *message.Message),
 	}
 }
 
-func (this *Discarding) RequireDiscard(pos int, seat *model.Seat) *protocol.Message {
+func (this *Discarding) RequireDiscard(pos int, seat *model.Seat) *message.Message {
 	this.Seat = seat
 	this.Required.Pos = proto.Int32(int32(pos))
-	return protocol.NewRequireDiscard(this.Required)
+	return message.NewRequireDiscard(this.Required)
 }
 
 func (this *Discarding) Start() {

@@ -15,7 +15,7 @@ import (
 import (
 	"gopoker/model"
 	"gopoker/model/game"
-	"gopoker/protocol"
+	"gopoker/protocol/message"
 	"gopoker/server/rpc_service"
 	_ "gopoker/util"
 )
@@ -65,7 +65,7 @@ func main() {
 		amount := float64(rand.Intn(1000) + 1000)
 		call(client, "NodeRPC.NotifyRoom", &rpc_service.NotifyRoom{
 			Id:      roomId,
-			Message: protocol.NewJoinTable(model.Player(player), pos, amount),
+			Message: message.NewJoinTable(model.Player(player), pos, amount),
 		})
 	}
 
