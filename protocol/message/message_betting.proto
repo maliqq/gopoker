@@ -27,7 +27,7 @@ message BetRange {
 }
 
 message RequireBet {
-  required int32 pos = 1;
+  required int32 Pos = 1;
   required BetRange BetRange = 2;
 }
 
@@ -37,7 +37,7 @@ message Bet {
 }
 
 message AddBet {
-  required int32 pos = 1;
+  required int32 Pos = 1;
   required Bet Bet = 2;
 }
 

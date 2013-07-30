@@ -17,7 +17,7 @@
         "MaxTableSize": 6,
         "PocketSize": 5,
         "Streets": 1,
-        "Hi": "high",
+        "Hi": "High",
         "DefaultLimit": "FixedLimit"
     },
     ":ondon": {
@@ -27,7 +27,7 @@
         "HasVela": true,
         "MaxTableSize": 8,
         "PocketSize": 7,
-        "Hi": "ace-six",
+        "Hi": "AceSix",
         "DefaultLimit": "FixedLimit"
     },
     "Omaha": {
@@ -36,7 +36,7 @@
         "HasBoard": true,
         "MaxTableSize": 10,
         "PocketSize": 4,
-        "Hi": "high",
+        "Hi": "High",
         "DefaultLimit": "PotLimit"
     },
     "Omaha8": {
@@ -45,8 +45,8 @@
         "HasBoard": true,
         "MaxTableSize": 10,
         "PocketSize": 4,
-        "Hi": "high",
-        "Lo": "ace-five8",
+        "Hi": "High",
+        "Lo": "AceFive8",
         "DefaultLimit": "PotLimit"
     },
     "Razz": {
@@ -56,7 +56,7 @@
         "HasVela": true,
         "MaxTableSize": 8,
         "PocketSize": 7,
-        "Hi": "ace-five",
+        "Hi": "AceFive",
         "DefaultLimit": "FixedLimit"
     },
     "Single27": {
@@ -67,7 +67,7 @@
         "MaxTableSize": 6,
         "PocketSize": 5,
         "Streets": 1,
-        "Hi": "deuce-seven",
+        "Hi": "DeuceSeven",
         "DefaultLimit": "FixedLimit"
     },
     "Stud": {
@@ -77,7 +77,7 @@
         "HasVela": true,
         "MaxTableSize": 8,
         "PocketSize": 7,
-        "Hi": "high",
+        "Hi": "High",
         "DefaultLimit": "FixedLimit"
     },
     "Stud8": {
@@ -87,8 +87,8 @@
         "HasVela": true,
         "MaxTableSize": 8,
         "PocketSize": 7,
-        "Hi": "high",
-        "Lo": "ace-five8",
+        "Hi": "High",
+        "Lo": "AceFive8",
         "DefaultLimit": "FixedLimit"
     },
     "Texas": {
@@ -97,7 +97,7 @@
         "HasBoard": true,
         "MaxTableSize": 10,
         "PocketSize": 2,
-        "Hi": "high",
+        "Hi": "High",
         "DefaultLimit": "NoLimit"
     },
     "Triple27": {
@@ -108,7 +108,7 @@
         "MaxTableSize": 6,
         "PocketSize": 5,
         "Streets": 3,
-        "Hi": "deuce-seven",
+        "Hi": "DeuceSeven",
         "DefaultLimit": "FixedLimit"
     }
 }

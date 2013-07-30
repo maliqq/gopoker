@@ -1,7 +1,7 @@
 package poker
 
 import (
-	"bytes"
+	_ "bytes"
 	"encoding/json"
 	"math/rand"
 	"regexp"
@@ -140,8 +140,11 @@ func (c Cards) MarshalJSON() ([]byte, error) {
 	//if len(c) == 0 {
 	//  return []byte("null"), nil
 	//}
-	runes := bytes.Runes(c.Binary())
-	return json.Marshal(runes)
+
+	//var buf bytes.Buffer
+	//buf.Write(c.Binary())
+	//return json.Marshal(buf.String())
+	return json.Marshal(c.Binary())
 }
 
 func (this Cards) Shuffle() Cards {

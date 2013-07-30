@@ -13,6 +13,7 @@ build-all:
 	go build gopoker/bin/gopoker-control
 	go build gopoker/bin/gopoker-server
 	protoc --go_out=. protocol/message/*.proto
+	gofmt -w .
 
 test-all:
 	go test gopoker/model

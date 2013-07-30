@@ -90,13 +90,13 @@ type MoveButton struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (this *MoveButton) Reset()         { *this = MoveButton{} }
-func (this *MoveButton) String() string { return proto.CompactTextString(this) }
-func (*MoveButton) ProtoMessage()       {}
+func (m *MoveButton) Reset()         { *m = MoveButton{} }
+func (m *MoveButton) String() string { return proto.CompactTextString(m) }
+func (*MoveButton) ProtoMessage()    {}
 
-func (this *MoveButton) GetPos() int32 {
-	if this != nil && this.Pos != nil {
-		return *this.Pos
+func (m *MoveButton) GetPos() int32 {
+	if m != nil && m.Pos != nil {
+		return *m.Pos
 	}
 	return 0
 }
@@ -108,27 +108,27 @@ type JoinTable struct {
 	XXX_unrecognized []byte   `json:"-"`
 }
 
-func (this *JoinTable) Reset()         { *this = JoinTable{} }
-func (this *JoinTable) String() string { return proto.CompactTextString(this) }
-func (*JoinTable) ProtoMessage()       {}
+func (m *JoinTable) Reset()         { *m = JoinTable{} }
+func (m *JoinTable) String() string { return proto.CompactTextString(m) }
+func (*JoinTable) ProtoMessage()    {}
 
-func (this *JoinTable) GetPlayer() string {
-	if this != nil && this.Player != nil {
-		return *this.Player
+func (m *JoinTable) GetPlayer() string {
+	if m != nil && m.Player != nil {
+		return *m.Player
 	}
 	return ""
 }
 
-func (this *JoinTable) GetPos() int32 {
-	if this != nil && this.Pos != nil {
-		return *this.Pos
+func (m *JoinTable) GetPos() int32 {
+	if m != nil && m.Pos != nil {
+		return *m.Pos
 	}
 	return 0
 }
 
-func (this *JoinTable) GetAmount() float64 {
-	if this != nil && this.Amount != nil {
-		return *this.Amount
+func (m *JoinTable) GetAmount() float64 {
+	if m != nil && m.Amount != nil {
+		return *m.Amount
 	}
 	return 0
 }
@@ -138,13 +138,13 @@ type LeaveTable struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (this *LeaveTable) Reset()         { *this = LeaveTable{} }
-func (this *LeaveTable) String() string { return proto.CompactTextString(this) }
-func (*LeaveTable) ProtoMessage()       {}
+func (m *LeaveTable) Reset()         { *m = LeaveTable{} }
+func (m *LeaveTable) String() string { return proto.CompactTextString(m) }
+func (*LeaveTable) ProtoMessage()    {}
 
-func (this *LeaveTable) GetPlayer() string {
-	if this != nil && this.Player != nil {
-		return *this.Player
+func (m *LeaveTable) GetPlayer() string {
+	if m != nil && m.Player != nil {
+		return *m.Player
 	}
 	return ""
 }
@@ -154,13 +154,13 @@ type SitOut struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (this *SitOut) Reset()         { *this = SitOut{} }
-func (this *SitOut) String() string { return proto.CompactTextString(this) }
-func (*SitOut) ProtoMessage()       {}
+func (m *SitOut) Reset()         { *m = SitOut{} }
+func (m *SitOut) String() string { return proto.CompactTextString(m) }
+func (*SitOut) ProtoMessage()    {}
 
-func (this *SitOut) GetPos() int32 {
-	if this != nil && this.Pos != nil {
-		return *this.Pos
+func (m *SitOut) GetPos() int32 {
+	if m != nil && m.Pos != nil {
+		return *m.Pos
 	}
 	return 0
 }
@@ -170,13 +170,13 @@ type ComeBack struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (this *ComeBack) Reset()         { *this = ComeBack{} }
-func (this *ComeBack) String() string { return proto.CompactTextString(this) }
-func (*ComeBack) ProtoMessage()       {}
+func (m *ComeBack) Reset()         { *m = ComeBack{} }
+func (m *ComeBack) String() string { return proto.CompactTextString(m) }
+func (*ComeBack) ProtoMessage()    {}
 
-func (this *ComeBack) GetPos() int32 {
-	if this != nil && this.Pos != nil {
-		return *this.Pos
+func (m *ComeBack) GetPos() int32 {
+	if m != nil && m.Pos != nil {
+		return *m.Pos
 	}
 	return 0
 }
@@ -189,34 +189,34 @@ type Seat struct {
 	XXX_unrecognized []byte     `json:"-"`
 }
 
-func (this *Seat) Reset()         { *this = Seat{} }
-func (this *Seat) String() string { return proto.CompactTextString(this) }
-func (*Seat) ProtoMessage()       {}
+func (m *Seat) Reset()         { *m = Seat{} }
+func (m *Seat) String() string { return proto.CompactTextString(m) }
+func (*Seat) ProtoMessage()    {}
 
-func (this *Seat) GetPos() int32 {
-	if this != nil && this.Pos != nil {
-		return *this.Pos
+func (m *Seat) GetPos() int32 {
+	if m != nil && m.Pos != nil {
+		return *m.Pos
 	}
 	return 0
 }
 
-func (this *Seat) GetState() SeatState {
-	if this != nil && this.State != nil {
-		return *this.State
+func (m *Seat) GetState() SeatState {
+	if m != nil && m.State != nil {
+		return *m.State
 	}
 	return 0
 }
 
-func (this *Seat) GetStack() float64 {
-	if this != nil && this.Stack != nil {
-		return *this.Stack
+func (m *Seat) GetStack() float64 {
+	if m != nil && m.Stack != nil {
+		return *m.Stack
 	}
 	return 0
 }
 
-func (this *Seat) GetBet() float64 {
-	if this != nil && this.Bet != nil {
-		return *this.Bet
+func (m *Seat) GetBet() float64 {
+	if m != nil && m.Bet != nil {
+		return *m.Bet
 	}
 	return 0
 }
@@ -229,34 +229,34 @@ type Table struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (this *Table) Reset()         { *this = Table{} }
-func (this *Table) String() string { return proto.CompactTextString(this) }
-func (*Table) ProtoMessage()       {}
+func (m *Table) Reset()         { *m = Table{} }
+func (m *Table) String() string { return proto.CompactTextString(m) }
+func (*Table) ProtoMessage()    {}
 
-func (this *Table) GetId() string {
-	if this != nil && this.Id != nil {
-		return *this.Id
+func (m *Table) GetId() string {
+	if m != nil && m.Id != nil {
+		return *m.Id
 	}
 	return ""
 }
 
-func (this *Table) GetSize() int32 {
-	if this != nil && this.Size != nil {
-		return *this.Size
+func (m *Table) GetSize() int32 {
+	if m != nil && m.Size != nil {
+		return *m.Size
 	}
 	return 0
 }
 
-func (this *Table) GetButton() int32 {
-	if this != nil && this.Button != nil {
-		return *this.Button
+func (m *Table) GetButton() int32 {
+	if m != nil && m.Button != nil {
+		return *m.Button
 	}
 	return 0
 }
 
-func (this *Table) GetSeats() []*Seat {
-	if this != nil {
-		return this.Seats
+func (m *Table) GetSeats() []*Seat {
+	if m != nil {
+		return m.Seats
 	}
 	return nil
 }

@@ -15,6 +15,7 @@ type HttpConfig struct {
 	ApiPath       string
 	RpcPath       string
 	WebSocketPath string
+	ZmqAddr       string
 }
 
 type RpcConfig struct {

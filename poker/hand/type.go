@@ -3,21 +3,21 @@ package hand
 type Rank string
 
 const (
-	StraightFlush Rank = "straight-flush"
-	FourKind      Rank = "four-kind"
-	FullHouse     Rank = "full-house"
-	Flush         Rank = "flush"
-	Straight      Rank = "straight"
-	ThreeKind     Rank = "three-kind"
-	TwoPair       Rank = "two-pair"
-	OnePair       Rank = "one-pair"
-	HighCard      Rank = "high-card"
-	BadugiFour    Rank = "badugi-four"
-	BadugiThree   Rank = "badugi-three"
-	BadugiTwo     Rank = "badugi-two"
-	BadugiOne     Rank = "badugi-one"
-	CompleteLow   Rank = "complete-low"
-	IncompleteLow Rank = "incomplete-low"
+	StraightFlush Rank = "StraightFlush"
+	FourKind      Rank = "FourKind"
+	FullHouse     Rank = "FullHouse"
+	Flush         Rank = "Flush"
+	Straight      Rank = "Straight"
+	ThreeKind     Rank = "ThreeKind"
+	TwoPair       Rank = "TwoPair"
+	OnePair       Rank = "OnePair"
+	HighCard      Rank = "HighCard"
+	BadugiFour    Rank = "BadugiFour"
+	BadugiThree   Rank = "BadugiThree"
+	BadugiTwo     Rank = "BadugiTwo"
+	BadugiOne     Rank = "BadugiOne"
+	CompleteLow   Rank = "CompleteLow"
+	IncompleteLow Rank = "IncompleteLow"
 )
 
 var (

@@ -75,10 +75,11 @@ Loop:
 			break Loop
 
 		case msg := <-this.Bet:
-			betData := msg.Envelope.AddBet.Bet
+			protoBet := msg.Envelope.AddBet.Bet
+			betType := protoBet.GetType().String()
+			amount := protoBet.GetAmount()
 
-			newBet := model.NewBet(bet.Type(string(*betData.Type)), *betData.Amount)
-
+			newBet := model.NewBet(bet.Type(betType), amount)
 			err := this.AddBet(newBet)
 
 			if err != nil {

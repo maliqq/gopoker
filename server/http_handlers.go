@@ -36,7 +36,7 @@ func (nodeHTTP *NodeHTTP) DetectHand(resp http.ResponseWriter, req *http.Request
 
 	r := q.Get("ranking")
 	if r == "" {
-		r = "high"
+		r = "High"
 	}
 	ranking := ranking.Ranking(r)
 

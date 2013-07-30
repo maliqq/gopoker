@@ -16,6 +16,7 @@ import (
 	"gopoker/util/console"
 
 	"gopoker/model"
+	"gopoker/model/bet"
 
 	"gopoker/play"
 )
@@ -101,8 +102,9 @@ func (c *Connection) Handle(msg *message.Message) {
 		payload := msg.Envelope.AddBet
 		pos := int(payload.GetPos())
 		player := c.Server.Table.Player(pos)
+		betType := payload.Bet.GetType().String()
 
-		fmt.Printf("Player %s: %s\n", player, payload.Bet)
+		fmt.Printf("Player %s: %s\n", player, model.NewBet(bet.Type(betType), payload.Bet.GetAmount()))
 
 	case *message.BettingComplete:
 

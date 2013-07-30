@@ -119,22 +119,22 @@ type PlayStart struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (this *PlayStart) Reset()         { *this = PlayStart{} }
-func (this *PlayStart) String() string { return proto.CompactTextString(this) }
-func (*PlayStart) ProtoMessage()       {}
+func (m *PlayStart) Reset()         { *m = PlayStart{} }
+func (m *PlayStart) String() string { return proto.CompactTextString(m) }
+func (*PlayStart) ProtoMessage()    {}
 
 type StreetStart struct {
 	Name             *string `protobuf:"bytes,1,req" json:"Name,omitempty"`
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (this *StreetStart) Reset()         { *this = StreetStart{} }
-func (this *StreetStart) String() string { return proto.CompactTextString(this) }
-func (*StreetStart) ProtoMessage()       {}
+func (m *StreetStart) Reset()         { *m = StreetStart{} }
+func (m *StreetStart) String() string { return proto.CompactTextString(m) }
+func (*StreetStart) ProtoMessage()    {}
 
-func (this *StreetStart) GetName() string {
-	if this != nil && this.Name != nil {
-		return *this.Name
+func (m *StreetStart) GetName() string {
+	if m != nil && m.Name != nil {
+		return *m.Name
 	}
 	return ""
 }
@@ -145,20 +145,20 @@ type ChangeGame struct {
 	XXX_unrecognized []byte     `json:"-"`
 }
 
-func (this *ChangeGame) Reset()         { *this = ChangeGame{} }
-func (this *ChangeGame) String() string { return proto.CompactTextString(this) }
-func (*ChangeGame) ProtoMessage()       {}
+func (m *ChangeGame) Reset()         { *m = ChangeGame{} }
+func (m *ChangeGame) String() string { return proto.CompactTextString(m) }
+func (*ChangeGame) ProtoMessage()    {}
 
-func (this *ChangeGame) GetType() GameType {
-	if this != nil && this.Type != nil {
-		return *this.Type
+func (m *ChangeGame) GetType() GameType {
+	if m != nil && m.Type != nil {
+		return *m.Type
 	}
 	return 0
 }
 
-func (this *ChangeGame) GetLimit() GameLimit {
-	if this != nil && this.Limit != nil {
-		return *this.Limit
+func (m *ChangeGame) GetLimit() GameLimit {
+	if m != nil && m.Limit != nil {
+		return *m.Limit
 	}
 	return 0
 }
