@@ -74,9 +74,13 @@ func ParseBinary(s []byte) (Cards, error) {
 	return cards, nil
 }
 
-func FromBinary(s []byte) Cards {
-	cards, _ := ParseBinary(s)
+func StringCards(s string) Cards {
+	cards, _ := ParseCards(s)
+	return cards
+}
 
+func BinaryCards(s []byte) Cards {
+	cards, _ := ParseBinary(s)
 	return cards
 }
 

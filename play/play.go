@@ -77,7 +77,7 @@ func (this *Play) processMessage(msg *protocol.Message) {
 	switch msg.Payload().(type) {
 	case protocol.JoinTable:
 		join := msg.Envelope.JoinTable
-		player := model.Player(*join.Player)
+		player := model.Player(join.GetPlayer())
 
 		_, err := this.Table.AddPlayer(player, int(*join.Pos), *join.Amount)
 		if err == nil {
@@ -90,7 +90,7 @@ func (this *Play) processMessage(msg *protocol.Message) {
 
 	case protocol.LeaveTable:
 		leave := msg.Envelope.LeaveTable
-		player := model.Player(*leave.Player)
+		player := model.Player(leave.GetPlayer())
 
 		this.Table.RemovePlayer(player)
 		this.Broadcast.All <- msg
@@ -98,12 +98,16 @@ func (this *Play) processMessage(msg *protocol.Message) {
 
 	case protocol.SitOut:
 		sitOut := msg.Envelope.SitOut
-		this.Table.Seat(int(*sitOut.Pos)).State = seat.Idle
+		pos := int(sitOut.GetPos())
+		
+		this.Table.Seat(pos).State = seat.Idle
 		// TODO: fold
 
 	case protocol.ComeBack:
 		comeBack := msg.Envelope.ComeBack
-		this.Table.Seat(int(*comeBack.Pos)).State = seat.Ready
+		pos := int(comeBack.GetPos())
+
+		this.Table.Seat(pos).State = seat.Ready
 
 	case protocol.ChatMessage:
 		this.Broadcast.All <- msg
