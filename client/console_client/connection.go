@@ -46,8 +46,8 @@ func (c *Connection) Handle(msg *protocol.Message) {
 		for newBet == nil {
 			betRange := model.BetRange{
 				Call: r.BetRange.GetCall(),
-				Min: r.BetRange.GetMin(),
-				Max: r.BetRange.GetMax(),
+				Min:  r.BetRange.GetMin(),
+				Max:  r.BetRange.GetMax(),
 			}
 			newBet = readBet(betRange.Call, betRange.Call-seat.Bet)
 

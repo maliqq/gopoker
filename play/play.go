@@ -64,14 +64,15 @@ func (this *Play) receive() {
 	for {
 		select {
 		case msg := <-this.Recv:
-			this.processMessage(msg)
+			this.handleMessage(msg)
+
 		case newState := <-this.stateChange:
-			this.processStateChange(newState)
+			this.handleStateChange(newState)
 		}
 	}
 }
 
-func (this *Play) processMessage(msg *protocol.Message) {
+func (this *Play) handleMessage(msg *protocol.Message) {
 	log.Printf(console.Color(console.YELLOW, msg.String()))
 
 	switch msg.Payload().(type) {
@@ -99,7 +100,7 @@ func (this *Play) processMessage(msg *protocol.Message) {
 	case protocol.SitOut:
 		sitOut := msg.Envelope.SitOut
 		pos := int(sitOut.GetPos())
-		
+
 		this.Table.Seat(pos).State = seat.Idle
 		// TODO: fold
 
@@ -121,7 +122,7 @@ func (this *Play) processMessage(msg *protocol.Message) {
 	}
 }
 
-func (this *Play) processStateChange(newState State) {
+func (this *Play) handleStateChange(newState State) {
 	log.Printf("[play] state %s", newState)
 
 	oldState := this.State
