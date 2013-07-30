@@ -11,6 +11,7 @@ import (
 
 import (
 	"gopoker/poker"
+	"gopoker/poker/hand"
 	"gopoker/protocol"
 	"gopoker/util/console"
 
@@ -39,12 +40,18 @@ func (c *Connection) Handle(msg *protocol.Message) {
 
 		var newBet *model.Bet
 
-		seat := c.Server.Table.Seat(r.Pos)
+		pos := int(r.GetPos())
+		seat := c.Server.Table.Seat(pos)
 
 		for newBet == nil {
-			newBet = readBet(r.Call, r.Call-seat.Bet)
+			betRange := model.BetRange{
+				Call: r.BetRange.GetCall(),
+				Min: r.BetRange.GetMin(),
+				Max: r.BetRange.GetMax(),
+			}
+			newBet = readBet(betRange.Call, betRange.Call-seat.Bet)
 
-			err := newBet.Validate(seat, r.BetRange)
+			err := newBet.Validate(seat, betRange)
 			if err != nil {
 				fmt.Println(err.Error())
 				newBet = nil
@@ -52,14 +59,16 @@ func (c *Connection) Handle(msg *protocol.Message) {
 		}
 
 		if newBet != nil {
-			c.Reply(protocol.NewAddBet(r.Pos, newBet))
+			pos := int(r.GetPos())
+			c.Reply(protocol.NewAddBet(pos, newBet))
 		}
 
 	case protocol.RequireDiscard:
 
 		r := msg.Envelope.RequireDiscard
+		pos := int(r.GetPos())
 
-		seat := c.Server.Table.Seat(r.Pos)
+		seat := c.Server.Table.Seat(pos)
 
 		fmt.Printf("Your cards: [%s]\n", c.Server.Deal.Pocket(seat.Player))
 
@@ -68,51 +77,64 @@ func (c *Connection) Handle(msg *protocol.Message) {
 			cards = readCards()
 		}
 
-		c.Reply(protocol.NewDiscardCards(r.Pos, cards))
+		c.Reply(protocol.NewDiscardCards(pos, cards))
 
 	case protocol.DealCards:
 
 		payload := msg.Envelope.DealCards
 
-		if payload.Type.IsBoard() {
-			fmt.Printf("Dealt %s %s\n", payload.Type, payload.Cards.ConsoleString())
+		if payload.GetType() == protocol.DealType_Board {
+			fmt.Printf("Dealt %s %s\n", payload.Type, poker.BinaryCards(payload.Cards).ConsoleString())
 		} else {
-			fmt.Printf("Dealt %s %s to %d\n", payload.Type, payload.Cards.ConsoleString(), payload.Pos)
+			fmt.Printf("Dealt %s %s to %d\n", payload.Type, poker.BinaryCards(payload.Cards).ConsoleString(), payload.Pos)
 		}
 
 	case protocol.MoveButton:
 
 		payload := msg.Envelope.MoveButton
+		pos := int(payload.GetPos())
 
-		fmt.Printf("Button is %d\n", payload.Pos+1)
+		fmt.Printf("Button is %d\n", pos+1)
 
 	case protocol.AddBet:
 
 		payload := msg.Envelope.AddBet
-
-		player := c.Server.Table.Player(payload.Pos)
+		pos := int(payload.GetPos())
+		player := c.Server.Table.Player(pos)
 
 		fmt.Printf("Player %s: %s\n", player, payload.Bet)
 
-	case protocol.StreetStart:
+	case protocol.BettingComplete:
 
-		payload := msg.Envelope.StreetStart
+		payload := msg.Envelope.BettingComplete
+		pot := int(payload.GetPot())
 
-		fmt.Printf("Pot size: %.2f\nBoard: %s\n", payload.Pot, c.Server.Deal.Board.ConsoleString())
+		fmt.Printf("Pot size: %.2f\nBoard: %s\n", pot, c.Server.Deal.Board.ConsoleString())
 
 	case protocol.ShowHand:
 
 		payload := msg.Envelope.ShowHand
+		pos := int(payload.GetPos())
+		player := c.Server.Table.Player(pos)
 
-		player := c.Server.Table.Player(payload.Pos)
+		handData := payload.Hand
+		hand := poker.Hand{
+			Rank:   hand.Rank(handData.Rank.String()),
+			High:   poker.BinaryCards(handData.High),
+			Value:  poker.BinaryCards(handData.Value),
+			Kicker: poker.BinaryCards(handData.Kicker),
+		}
 
-		fmt.Printf("Player %s has %s (%s)\n", player, payload.Cards.ConsoleString(), payload.Hand.PrintString())
+		fmt.Printf("Player %s has %s (%s)\n", player, poker.BinaryCards(payload.Cards).ConsoleString(), hand.PrintString())
 
 	case protocol.Winner:
 
 		payload := msg.Envelope.Winner
+		pos := int(payload.GetPos())
+		player := c.Server.Table.Player(pos)
+		amount := payload.GetAmount()
 
-		fmt.Printf("Player %s won %.2f\n", payload.Player, payload.Amount)
+		fmt.Printf("Player %s won %.2f\n", player, amount)
 
 	case protocol.ChangeGame:
 
