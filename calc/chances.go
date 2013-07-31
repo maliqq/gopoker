@@ -3,7 +3,7 @@ package calc
 import (
 	"gopoker/model"
 	"gopoker/poker"
-	"gopoker/poker/ranking"
+	"gopoker/poker/hand"
 	"gopoker/util"
 )
 
@@ -29,8 +29,8 @@ type ChancesAgainstN struct {
 }
 
 func (this *Chances) Compare(c1, c2 poker.Cards) {
-	h1, _ := poker.Detect[ranking.High](&c1)
-	h2, _ := poker.Detect[ranking.High](&c2)
+	h1, _ := poker.Detect[hand.High](&c1)
+	h2, _ := poker.Detect[hand.High](&c2)
 
 	switch h1.Compare(h2) {
 	case -1:

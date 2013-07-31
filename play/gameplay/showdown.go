@@ -3,13 +3,13 @@ package gameplay
 import (
 	"gopoker/model"
 	"gopoker/poker"
-	"gopoker/poker/ranking"
+	"gopoker/poker/hand"
 	"gopoker/protocol/message"
 )
 
 type ShowdownHands map[model.Player]*poker.Hand
 
-func (this *GamePlay) ShowHands(ranking ranking.Ranking, withBoard bool) ShowdownHands {
+func (this *GamePlay) ShowHands(ranking hand.Ranking, withBoard bool) ShowdownHands {
 	d := this.Deal
 
 	hands := ShowdownHands{}

@@ -6,7 +6,7 @@ import (
 
 import (
 	"gopoker/poker"
-	"gopoker/poker/ranking"
+	"gopoker/poker/hand"
 )
 
 type Deal struct {
@@ -62,7 +62,7 @@ func (this *Deal) Discard(player Player, cards poker.Cards) poker.Cards {
 	return newCards
 }
 
-func (this *Deal) Rank(player Player, ranking ranking.Ranking, hasBoard bool) (poker.Cards, *poker.Hand) {
+func (this *Deal) Rank(player Player, ranking hand.Ranking, hasBoard bool) (poker.Cards, *poker.Hand) {
 	pocket := this.Pocket(player)
 
 	if !hasBoard {

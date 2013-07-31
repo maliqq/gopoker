@@ -13,9 +13,9 @@ import (
 	"gopoker/calc"
 	"gopoker/model"
 	"gopoker/poker"
-	"gopoker/poker/ranking"
+	"gopoker/poker/hand"
 	"gopoker/server/http_service"
-	"gopoker/store"
+	_"gopoker/storage"
 )
 
 func (nodeHTTP *NodeHTTP) Rooms(resp http.ResponseWriter, req *http.Request) {
@@ -39,7 +39,7 @@ func (nodeHTTP *NodeHTTP) DetectHand(resp http.ResponseWriter, req *http.Request
 	if r == "" {
 		r = "High"
 	}
-	ranking := ranking.Ranking(r)
+	ranking := hand.Ranking(r)
 
 	if c := q.Get("cards"); c != "" {
 		cards, err := poker.ParseCards(c)
@@ -72,8 +72,8 @@ func (nodeHTTP *NodeHTTP) CompareHands(resp http.ResponseWriter, req *http.Reque
 	board := dealer.Share(5)
 	c1 := append(a, board...)
 	c2 := append(b, board...)
-	h1, _ := poker.Detect[ranking.High](&c1)
-	h2, _ := poker.Detect[ranking.High](&c2)
+	h1, _ := poker.Detect[hand.High](&c1)
+	h2, _ := poker.Detect[hand.High](&c2)
 
 	s, _ := json.Marshal(&http_service.CompareResult{
 		A:      h1,
@@ -116,7 +116,7 @@ func (nodeHTTP *NodeHTTP) RandomHand(resp http.ResponseWriter, req *http.Request
 		pocket := dealer.Deal(2)
 		cards := append(pocket, board...)
 		//log.Printf("dealer=%s", dealer.String())
-		hand, _ := poker.Detect[ranking.High](&cards)
+		hand, _ := poker.Detect[hand.High](&cards)
 		h[i].Pocket = pocket
 		h[i].Hand = hand
 		i++

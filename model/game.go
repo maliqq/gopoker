@@ -7,7 +7,7 @@ import (
 
 import (
 	"gopoker/model/game"
-	"gopoker/poker/ranking"
+	"gopoker/poker/hand"
 )
 
 const (
@@ -30,8 +30,8 @@ type GameOptions struct {
 	PocketSize   int
 	Streets      int // number of streets till showdown
 
-	Hi ranking.Ranking
-	Lo ranking.Ranking
+	Hi hand.Ranking
+	Lo hand.Ranking
 
 	DefaultLimit game.Limit
 }

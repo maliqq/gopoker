@@ -1,16 +1,16 @@
 package poker
 
 import (
-	"gopoker/poker/ranking"
+	"gopoker/poker/hand"
 )
 
 type detectFunc func(*Cards) (*Hand, error)
 
-var Detect = map[ranking.Ranking]detectFunc{
-	ranking.High:       isHigh,
-	ranking.Badugi:     isBadugi,
-	ranking.AceFive:    isAceFive,
-	ranking.AceFive8:   isAceFive8,
-	ranking.AceSix:     isAceSix,
-	ranking.DeuceSeven: isDeuceSeven,
+var Detect = map[hand.Ranking]detectFunc{
+	hand.High:       isHigh,
+	hand.Badugi:     isBadugi,
+	hand.AceFive:    isAceFive,
+	hand.AceFive8:   isAceFive8,
+	hand.AceSix:     isAceSix,
+	hand.DeuceSeven: isDeuceSeven,
 }

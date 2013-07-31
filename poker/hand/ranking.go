@@ -1,4 +1,4 @@
-package ranking
+package hand
 
 type Ranking string
 
