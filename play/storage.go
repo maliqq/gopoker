@@ -39,6 +39,7 @@ func (this *Storage) receive() {
 func (this *Storage) handle(msg *message.Message) {
 	switch msg.Payload().(type) {
 	case *message.PlayStart:
+		this.Current.Id = storage.NewObjectId()
 		this.Current.Start = time.Now()
 		this.Current.Play = msg.Envelope.PlayStart.Play
 

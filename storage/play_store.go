@@ -6,6 +6,7 @@ import (
 
 import (
 	"labix.org/v2/mgo"
+	"labix.org/v2/mgo/bson"
 )
 
 import (
@@ -23,10 +24,15 @@ type PlayStore struct {
 }
 
 type Play struct {
+	Id    bson.ObjectId `bson:"_id"`
 	Start time.Time
 	Stop  time.Time
 	*message.Play
 	Log []*message.Message
+}
+
+func NewObjectId() bson.ObjectId {
+	return bson.NewObjectId()
 }
 
 func OpenPlayStore(config *PlayStoreConfig) (*PlayStore, error) {
