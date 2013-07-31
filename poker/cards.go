@@ -11,6 +11,7 @@ import (
 
 import (
 	"gopoker/poker/card"
+	"gopoker/protocol/message"
 	"gopoker/util"
 )
 
@@ -103,6 +104,10 @@ func (c Cards) Binary() []byte {
 	}
 
 	return b
+}
+
+func (c Cards) Proto() message.Cards {
+	return c.Binary()
 }
 
 func (c Cards) String() string {

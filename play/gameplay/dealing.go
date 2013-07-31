@@ -11,7 +11,7 @@ func (this *GamePlay) DealHole(cardsNum int) {
 
 		cards := this.Deal.DealPocket(player, cardsNum)
 
-		this.Broadcast.One(player) <- message.NewDealPocket(pos, cards, deal.Hole)
+		this.Broadcast.One(player) <- message.NewDealPocket(pos, cards.Proto(), deal.Hole)
 	}
 }
 
@@ -21,12 +21,12 @@ func (this *GamePlay) DealDoor(cardsNum int) {
 
 		cards := this.Deal.DealPocket(player, cardsNum)
 
-		this.Broadcast.All <- message.NewDealPocket(pos, cards, deal.Door)
+		this.Broadcast.All <- message.NewDealPocket(pos, cards.Proto(), deal.Door)
 	}
 }
 
 func (this *GamePlay) DealBoard(cardsNum int) {
 	cards := this.Deal.DealBoard(cardsNum)
 
-	this.Broadcast.All <- message.NewDealShared(cards, deal.Board)
+	this.Broadcast.All <- message.NewDealShared(cards.Proto(), deal.Board)
 }

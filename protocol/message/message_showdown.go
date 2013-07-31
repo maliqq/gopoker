@@ -4,35 +4,28 @@ import (
 	"code.google.com/p/goprotobuf/proto"
 )
 
-import (
-	"gopoker/poker"
-)
+type Cards []byte
 
-func NewShowHand(pos int, cards poker.Cards, hand *poker.Hand) *Message {
+func NewShowHand(pos int, cards Cards, hand *Hand, handStr string) *Message {
 	return NewMessage(ShowHand{
-		Pos:   proto.Int32(int32(pos)),
-		Cards: cards.Binary(),
-		Hand: &Hand{
-			Rank:   Rank(Rank_value[string(hand.Rank)]).Enum(),
-			High:   hand.High.Binary(),
-			Value:  hand.Value.Binary(),
-			Kicker: hand.Kicker.Binary(),
-		},
-		HandString: proto.String(hand.PrintString()),
+		Pos:        proto.Int32(int32(pos)),
+		Cards:      cards,
+		Hand:       hand,
+		HandString: proto.String(handStr),
 	})
 }
 
-func NewShowCards(pos int, cards poker.Cards) *Message {
+func NewShowCards(pos int, cards Cards) *Message {
 	return NewMessage(ShowCards{
 		Pos:   proto.Int32(int32(pos)),
-		Cards: cards.Binary(),
+		Cards: cards,
 	})
 }
 
-func NewMuckCards(pos int, cards poker.Cards) *Message {
+func NewMuckCards(pos int, cards Cards) *Message {
 	return NewMessage(ShowCards{
 		Pos:   proto.Int32(int32(pos)),
-		Cards: cards.Binary(),
+		Cards: cards,
 		Muck:  proto.Bool(true),
 	})
 }

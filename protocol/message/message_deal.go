@@ -6,20 +6,19 @@ import (
 
 import (
 	"gopoker/model/deal"
-	"gopoker/poker"
 )
 
-func NewDealPocket(pos int, cards poker.Cards, dealingType deal.Type) *Message {
+func NewDealPocket(pos int, cards Cards, dealingType deal.Type) *Message {
 	return NewMessage(DealCards{
 		Pos:   proto.Int32(int32(pos)),
-		Cards: cards.Binary(),
+		Cards: cards,
 		Type:  DealType(DealType_value[string(dealingType)]).Enum(),
 	})
 }
 
-func NewDealShared(cards poker.Cards, dealingType deal.Type) *Message {
+func NewDealShared(cards Cards, dealingType deal.Type) *Message {
 	return NewMessage(DealCards{
-		Cards: cards.Binary(),
+		Cards: cards,
 		Type:  DealType(DealType_value[string(dealingType)]).Enum(),
 	})
 }
@@ -35,9 +34,9 @@ func NewDiscarded(pos int, cardsNum int) *Message {
 	})
 }
 
-func NewDiscardCards(pos int, cards poker.Cards) *Message {
+func NewDiscardCards(pos int, cards Cards) *Message {
 	return NewMessage(DiscardCards{
 		Pos:   proto.Int32(int32(pos)),
-		Cards: cards.Binary(),
+		Cards: cards,
 	})
 }

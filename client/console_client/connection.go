@@ -78,7 +78,7 @@ func (c *Connection) Handle(msg *message.Message) {
 			cards = readCards()
 		}
 
-		c.Reply(message.NewDiscardCards(pos, cards))
+		c.Reply(message.NewDiscardCards(pos, cards.Proto()))
 
 	case *message.DealCards:
 

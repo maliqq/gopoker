@@ -7,6 +7,7 @@ import (
 
 import (
 	"gopoker/poker/hand"
+	"gopoker/protocol/message"
 )
 
 type handCards struct {
@@ -150,6 +151,18 @@ func (h *Hand) PrintString() string {
 	}
 
 	return ""
+}
+
+func (hand *Hand) Proto() *message.Hand {
+	return &message.Hand{
+		Rank: message.Rank(
+			message.Rank_value[string(hand.Rank)],
+		).Enum(),
+
+		High:   hand.High.Binary(),
+		Value:  hand.Value.Binary(),
+		Kicker: hand.Kicker.Binary(),
+	}
 }
 
 type compareFunc func(*Hand, *Hand) int
