@@ -3,12 +3,12 @@ package play
 import (
 	"fmt"
 	"log"
+	"time"
 )
 
 import (
 	"gopoker/model"
 	"gopoker/model/seat"
-	"gopoker/play/command"
 	"gopoker/play/context"
 	"gopoker/play/gameplay"
 	"gopoker/play/mode"
@@ -28,13 +28,12 @@ type Play struct {
 }
 
 func NewPlay(variation model.Variation, stake *model.Stake, table *model.Table) *Play {
+	gp := gameplay.NewGamePlay()
+	gp.Table = table
+	gp.Stake = stake
+
 	play := &Play{
-		GamePlay: &gameplay.GamePlay{
-			Table:     table,
-			Stake:     stake,
-			Broadcast: protocol.NewBroadcast(),
-			Control:   make(chan command.Command),
-		},
+		GamePlay: gp,
 		FSM: FSM{
 			State:       Waiting,
 			stateChange: make(chan State),
@@ -139,7 +138,13 @@ func (this *Play) handleStateChange(newState State) {
 		this.State = newState
 		if newState == Active {
 			go this.Run()
-			this.Control <- command.NextDeal
+			this.scheduleNextDeal()
 		}
 	}
+}
+
+func (this *Play) scheduleNextDeal() {
+	log.Printf("[play] scheduling next deal in %d seconds", 5)
+
+	this.NextDeal <- time.After(5 * time.Second)
 }

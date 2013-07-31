@@ -1,8 +1,11 @@
 package gameplay
 
 import (
+	"time"
+)
+
+import (
 	"gopoker/model"
-	"gopoker/play/command"
 	"gopoker/play/context"
 	"gopoker/protocol"
 )
@@ -34,6 +37,16 @@ type GamePlay struct {
 
 	Betting             *context.Betting
 	*context.Discarding `json:"-"`
+
 	// manage play
-	Control chan command.Command `json:"-"`
+	NextDeal chan (<-chan time.Time)
+	Exit     chan int
+}
+
+func NewGamePlay() *GamePlay {
+	return &GamePlay{
+		Broadcast: protocol.NewBroadcast(),
+		NextDeal:  make(chan (<-chan time.Time)),
+		Exit:      make(chan int),
+	}
 }

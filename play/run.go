@@ -6,13 +6,11 @@ package play
 
 import (
 	"log"
-	"time"
 )
 
 import (
 	"gopoker/model"
 	"gopoker/model/seat"
-	"gopoker/play/command"
 	"gopoker/play/context"
 	"gopoker/play/gameplay"
 	"gopoker/play/street"
@@ -24,14 +22,11 @@ func (this *Play) Run() {
 Loop:
 	for {
 		select {
-		case cmd := <-this.Control:
-			switch cmd {
-			case command.NextDeal:
-				go this.run()
-
-			case command.Exit:
-				break Loop
-			}
+		case timeout := <-this.NextDeal:
+			<-timeout
+			go this.run()
+		case <-this.Exit:
+			break Loop
 		}
 	}
 }
@@ -122,6 +117,5 @@ func (this *Play) run() {
 	// deal stop
 	log.Println("[play] deal stop")
 
-	<-time.After(5 * time.Second)
-	this.GamePlay.Control <- command.NextDeal
+	this.scheduleNextDeal()
 }
