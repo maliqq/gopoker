@@ -1,8 +1,8 @@
 package play
 
 import (
-	"fmt"
 	"io"
+	"log"
 )
 
 import (
@@ -15,13 +15,13 @@ import (
 )
 
 type Logger struct {
-	Writer io.Writer
+	*log.Logger
 	Recv   protocol.MessageChannel
 }
 
 func NewLogger(writer io.Writer) *Logger {
 	logger := &Logger{
-		Writer: writer,
+		Logger: log.New(writer, "", log.LstdFlags),
 		Recv:   make(protocol.MessageChannel),
 	}
 
@@ -46,12 +46,12 @@ func (l *Logger) handle(msg *message.Message) {
 		payload := msg.Envelope.DealCards
 
 		if payload.GetType() == message.DealType_Board {
-			l.log("Dealt %s [%s]\n",
+			l.Printf("Dealt %s [%s]\n",
 				payload.GetType(),
 				poker.BinaryCards(payload.Cards).PrintString(),
 			)
 		} else {
-			l.log("Dealt %s [%s] to %d\n",
+			l.Printf("Dealt %s [%s] to %d\n",
 				payload.GetType(),
 				poker.BinaryCards(payload.Cards).PrintString(),
 				payload.GetPos(),
@@ -60,7 +60,7 @@ func (l *Logger) handle(msg *message.Message) {
 
 	case *message.MoveButton:
 		payload := msg.Envelope.MoveButton
-		l.log("Button is %d\n",
+		l.Printf("Button is %d\n",
 			payload.GetPos()+1,
 		)
 
@@ -69,7 +69,7 @@ func (l *Logger) handle(msg *message.Message) {
 		payload := msg.Envelope.AddBet
 		betType := payload.Bet.GetType().String()
 
-		l.log("Seat %d: %s\n",
+		l.Printf("Seat %d: %s\n",
 			payload.GetPos(),
 			model.NewBet(bet.Type(betType), payload.Bet.GetAmount()),
 		)
@@ -77,7 +77,7 @@ func (l *Logger) handle(msg *message.Message) {
 	case *message.StreetStart:
 
 		payload := msg.Envelope.StreetStart
-		l.log("=== %s\n", payload.GetName())
+		l.Printf("=== %s\n", payload.GetName())
 
 	case *message.ShowHand:
 
@@ -89,17 +89,13 @@ func (l *Logger) handle(msg *message.Message) {
 			Value:  poker.BinaryCards(protoHand.Value),
 			Kicker: poker.BinaryCards(protoHand.Kicker),
 		}
-		l.log("Seat %d: shows [%s] (%s)\n", payload.GetPos(), poker.BinaryCards(payload.Cards).PrintString(), hand.PrintString())
+		l.Printf("Seat %d: shows [%s] (%s)\n", payload.GetPos(), poker.BinaryCards(payload.Cards).PrintString(), hand.PrintString())
 
 	case *message.Winner:
 		payload := msg.Envelope.Winner
-		l.log("Seat %d: wins %.2f\n", payload.GetPos(), payload.GetAmount())
+		l.Printf("Seat %d: wins %.2f\n", payload.GetPos(), payload.GetAmount())
 
 	default:
-		l.log("got %s\n", msg.Envelope)
+		l.Printf("got %s\n", msg.Envelope)
 	}
-}
-
-func (l *Logger) log(format string, args ...interface{}) {
-	fmt.Fprintf(l.Writer, format, args...)
 }
