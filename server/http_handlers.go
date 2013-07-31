@@ -15,6 +15,7 @@ import (
 	"gopoker/poker"
 	"gopoker/poker/ranking"
 	"gopoker/server/http_service"
+	"gopoker/store"
 )
 
 func (nodeHTTP *NodeHTTP) Rooms(resp http.ResponseWriter, req *http.Request) {
