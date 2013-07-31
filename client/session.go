@@ -49,6 +49,8 @@ func (session *Session) Read() {
 				case io.EOF:
 					log.Printf("[session] EOF: %s", err)
 
+					continue
+
 				default:
 					log.Printf("[session] read error: %s", err)
 
