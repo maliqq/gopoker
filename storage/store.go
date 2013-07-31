@@ -18,7 +18,7 @@ const (
 	DefaultDriver = "postgres"
 )
 
-func Open(config *StoreConfig) (*Store, error) {
+func OpenStore(config *StoreConfig) (*Store, error) {
 	store := &Store{}
 
 	var err error

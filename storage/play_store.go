@@ -1,10 +1,6 @@
 package storage
 
 import (
-	"log"
-)
-
-import (
 	"labix.org/v2/mgo"
 )
 
@@ -18,10 +14,10 @@ type PlayStore struct {
 	Config  *PlayStoreConfig
 }
 
-func OpenPlayStore(config *PlayStoreConfig) *PlayStore {
+func OpenPlayStore(config *PlayStoreConfig) (*PlayStore, error) {
 	session, err := mgo.Dial(config.Host)
 	if err != nil {
-		log.Fatalf("[mongo] error: %s", err)
+		return nil, err
 	}
 
 	session.SetMode(mgo.Monotonic, true)
@@ -30,7 +26,7 @@ func OpenPlayStore(config *PlayStoreConfig) *PlayStore {
 		Config:  config,
 	}
 
-	return store
+	return store, nil
 }
 
 func (ps *PlayStore) Close() {

@@ -11,6 +11,7 @@ import (
 	"gopoker/model"
 	"gopoker/play"
 	"gopoker/server/rpc_service"
+	"gopoker/storage"
 )
 
 type Room struct {
@@ -63,4 +64,9 @@ func (r *Room) createLogger(dir string) {
 	}
 	logger := play.NewLogger(f)
 	r.Broadcast.Broker.BindSystem("logger", &logger.Recv)
+}
+
+func (r *Room) createStorage(ps *storage.PlayStore) {
+	storage := play.NewStorage(ps)
+	r.Broadcast.Broker.BindSystem("storage", &storage.Recv)
 }

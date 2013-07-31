@@ -25,18 +25,20 @@ type RpcConfig struct {
 
 // NodeConfig
 type Config struct {
-	Logdir string
-	Http   *HttpConfig
-	Rpc    *RpcConfig
-	Store  *storage.StoreConfig
+	Logdir    string
+	Http      *HttpConfig
+	Rpc       *RpcConfig
+	Store     *storage.StoreConfig
+	PlayStore *storage.PlayStoreConfig
 }
 
 type Node struct {
 	Name string
 
 	*Config
-	Rooms map[string]*Room
-	Store *storage.Store
+	Rooms     map[string]*Room
+	Store     *storage.Store
+	PlayStore *storage.PlayStore
 }
 
 const (
@@ -54,18 +56,28 @@ func NewNode(name string, configDir string) *Node {
 	}
 
 	node.connectStore()
+	node.connectPlayStore()
 
 	return node
 }
 
 func (n *Node) connectStore() {
 	var err error
-	n.Store, err = storage.Open(n.Config.Store)
+	n.Store, err = storage.OpenStore(n.Config.Store)
 
 	if err != nil {
 		log.Fatalf("[store] can't open %s (%s): %s", n.Config.Store.Driver, n.Config.Store.ConnectionString, err)
 	}
-	log.Print("[store] connected")
+	log.Printf("[store] connected to %s", n.Config.Store)
+}
+
+func (n *Node) connectPlayStore() {
+	var err error
+	n.PlayStore, err = storage.OpenPlayStore(n.Config.PlayStore)
+	if err != nil {
+		log.Fatalf("[store] can't open %s: %s", n.Config.PlayStore.Host, err)
+	}
+	log.Print("[store] connected to %s", n.Config.PlayStore)
 }
 
 func (n *Node) Room(id string) *Room {
@@ -78,6 +90,7 @@ func (n *Node) AddRoom(room *Room) bool {
 	n.Rooms[room.Id] = room
 
 	room.createLogger(n.Logdir)
+	room.createStorage(n.PlayStore)
 
 	return true
 }
