@@ -39,8 +39,8 @@ type GamePlay struct {
 	*context.Discarding `json:"-"`
 
 	// manage play
-	NextDeal chan (<-chan time.Time)
-	Exit     chan int
+	NextDeal chan (<-chan time.Time) `json:"-"`
+	Exit     chan int                `json:"-"`
 }
 
 func NewGamePlay() *GamePlay {

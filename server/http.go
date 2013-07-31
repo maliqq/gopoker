@@ -119,7 +119,7 @@ func RespondCORS(resp http.ResponseWriter) {
 func (nodeHTTP *NodeHTTP) RespondJSON(resp http.ResponseWriter, result interface{}) {
 	data, err := json.Marshal(result)
 	if err != nil {
-		log.Fatalf("[http] Can't marshal object: %+v", result)
+		log.Fatalf("[http] Can't marshal object: %+v", err)
 	}
 
 	resp.Header().Set("Content-Type", "application/json; charset=utf-8")
