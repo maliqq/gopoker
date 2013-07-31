@@ -4,8 +4,10 @@ import (
 	"code.google.com/p/goprotobuf/proto"
 )
 
-func NewPlayStart() *Message {
-	return NewMessage(PlayStart{})
+func NewPlayStart(play *Play) *Message {
+	return NewMessage(PlayStart{
+		Play: play,
+	})
 }
 
 func NewStreetStart(name string) *Message {
