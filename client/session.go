@@ -2,6 +2,7 @@ package client
 
 import (
 	"log"
+	"io"
 )
 
 import (
@@ -44,9 +45,16 @@ func (session *Session) Read() {
 
 		err := session.Connection.Receive(&message)
 		if err != nil {
-			log.Printf("[session] read error: %s", err)
+			switch err {
+				case io.EOF:
+					log.Printf("[session] EOF: %s", err)
 
-			break
+				default:
+					log.Printf("[session] read error: %s", err)
+
+					break
+			}
+			
 		}
 
 		*session.Send <- &message
