@@ -23,7 +23,7 @@ const (
 )
 
 const (
-	Kinds = "23456789TJQKA"
+	Kinds    = "23456789TJQKA"
 	KindsNum = len(Kinds)
 )
 

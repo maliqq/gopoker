@@ -18,7 +18,7 @@ const (
 )
 
 const (
-	Suits = "shdc"
+	Suits    = "shdc"
 	SuitsNum = len(Suits)
 )
 

@@ -29,10 +29,10 @@ func AllTuples() []Tuple {
 
 func AllMasks() []uint64 {
 	masks := make([]uint64, CardsNum)
-	i := 0;
-	for suit := SuitsNum-1; suit >= 0; suit-- {
+	i := 0
+	for suit := SuitsNum - 1; suit >= 0; suit-- {
 		for kind := 0; kind < KindsNum; kind++ {
-			masks[i] = uint64((1 << uint(kind) << uint(1 << 4 * suit)))
+			masks[i] = uint64((1 << uint(kind) << uint(1<<4*suit)))
 			i++
 		}
 	}
