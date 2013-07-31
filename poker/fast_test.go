@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestHighFast(t *testing.T) {
+func _TestHighFast(t *testing.T) {
 	cards, _ := ParseCards("AdKdQdJdTd7s8s")
 	c := cards.Uint64()
 
