@@ -75,7 +75,6 @@ type Envelope struct {
 	DealerMessage    *DealerMessage   `protobuf:"bytes,3,opt" json:"DealerMessage,omitempty"`
 	PlayStart        *PlayStart       `protobuf:"bytes,4,opt" json:"PlayStart,omitempty"`
 	StreetStart      *StreetStart     `protobuf:"bytes,5,opt" json:"StreetStart,omitempty"`
-	ChangeGame       *ChangeGame      `protobuf:"bytes,6,opt" json:"ChangeGame,omitempty"`
 	BettingComplete  *BettingComplete `protobuf:"bytes,7,opt" json:"BettingComplete,omitempty"`
 	JoinTable        *JoinTable       `protobuf:"bytes,8,opt" json:"JoinTable,omitempty"`
 	LeaveTable       *LeaveTable      `protobuf:"bytes,9,opt" json:"LeaveTable,omitempty"`
@@ -129,13 +128,6 @@ func (m *Envelope) GetPlayStart() *PlayStart {
 func (m *Envelope) GetStreetStart() *StreetStart {
 	if m != nil {
 		return m.StreetStart
-	}
-	return nil
-}
-
-func (m *Envelope) GetChangeGame() *ChangeGame {
-	if m != nil {
-		return m.ChangeGame
 	}
 	return nil
 }

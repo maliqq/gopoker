@@ -20,6 +20,11 @@ enum BetType {
   Muck = 14;
 }
 
+message Bet {
+  required BetType Type = 1;
+  optional double Amount = 2;
+}
+
 message BetRange {
   required double Call = 1;
   required double Min = 2;
@@ -29,11 +34,6 @@ message BetRange {
 message RequireBet {
   required int32 Pos = 1;
   required BetRange BetRange = 2;
-}
-
-message Bet {
-  required BetType Type = 1;
-  optional double Amount = 2;
 }
 
 message AddBet {

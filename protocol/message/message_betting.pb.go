@@ -85,6 +85,30 @@ func (x *BetType) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+type Bet struct {
+	Type             *BetType `protobuf:"varint,1,req,enum=message.BetType" json:"Type,omitempty"`
+	Amount           *float64 `protobuf:"fixed64,2,opt" json:"Amount,omitempty"`
+	XXX_unrecognized []byte   `json:"-"`
+}
+
+func (m *Bet) Reset()         { *m = Bet{} }
+func (m *Bet) String() string { return proto.CompactTextString(m) }
+func (*Bet) ProtoMessage()    {}
+
+func (m *Bet) GetType() BetType {
+	if m != nil && m.Type != nil {
+		return *m.Type
+	}
+	return 0
+}
+
+func (m *Bet) GetAmount() float64 {
+	if m != nil && m.Amount != nil {
+		return *m.Amount
+	}
+	return 0
+}
+
 type BetRange struct {
 	Call             *float64 `protobuf:"fixed64,1,req" json:"Call,omitempty"`
 	Min              *float64 `protobuf:"fixed64,2,req" json:"Min,omitempty"`
@@ -139,30 +163,6 @@ func (m *RequireBet) GetBetRange() *BetRange {
 		return m.BetRange
 	}
 	return nil
-}
-
-type Bet struct {
-	Type             *BetType `protobuf:"varint,1,req,enum=message.BetType" json:"Type,omitempty"`
-	Amount           *float64 `protobuf:"fixed64,2,opt" json:"Amount,omitempty"`
-	XXX_unrecognized []byte   `json:"-"`
-}
-
-func (m *Bet) Reset()         { *m = Bet{} }
-func (m *Bet) String() string { return proto.CompactTextString(m) }
-func (*Bet) ProtoMessage()    {}
-
-func (m *Bet) GetType() BetType {
-	if m != nil && m.Type != nil {
-		return *m.Type
-	}
-	return 0
-}
-
-func (m *Bet) GetAmount() float64 {
-	if m != nil && m.Amount != nil {
-		return *m.Amount
-	}
-	return 0
 }
 
 type AddBet struct {

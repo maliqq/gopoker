@@ -47,9 +47,6 @@ func NewMessage(payload Payload) *Message {
 	case BettingComplete:
 		envelope.BettingComplete = &v
 
-	case ChangeGame:
-		envelope.ChangeGame = &v
-
 	case JoinTable:
 		envelope.JoinTable = &v
 

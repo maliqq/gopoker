@@ -32,8 +32,6 @@ Loop:
 }
 
 func (this *Play) run() {
-	this.Broadcast.All <- message.NewPlayStart()
-
 	// prepare seats
 	log.Println("[play] prepare seats")
 

@@ -137,12 +137,13 @@ func (c *Connection) Handle(msg *message.Message) {
 		amount := payload.GetAmount()
 
 		fmt.Printf("Player %s won %.2f\n", player, amount)
+		/*
+			case *message.ChangeGame:
 
-	case *message.ChangeGame:
+				payload := msg.Envelope.ChangeGame
 
-		payload := msg.Envelope.ChangeGame
-
-		fmt.Printf("Game changed to %s %s\n", payload.Type, payload.Limit)
+				fmt.Printf("Game changed to %s %s\n", payload.Type, payload.Limit)
+		*/
 	}
 }
 

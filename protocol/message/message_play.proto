@@ -1,0 +1,90 @@
+package message;
+
+enum GameType {
+  Texas = 0;
+  Omaha = 1;
+  Omaha8 = 2;
+  Stud = 3;
+  Stud8 = 4;
+  Razz = 9;
+  London = 10;
+  FiveCard = 11;
+  Single27 = 12;
+  Triple27 = 13;
+  Badugi = 14;
+}
+
+enum GameLimit {
+  NoLimit = 0;
+  PotLimit = 1;
+  FixedLimit = 2;
+}
+
+enum SeatState {
+  Empty = 0;
+  Reserved = 1;
+  Ready = 2;
+
+  WaitingBigBlind = 3;
+  PostingBigBlind = 4;
+
+  Playing = 5;
+  Betting = 6;
+  Allin = 7;
+  Folded = 8;
+  Autoplay = 9;
+
+  OutOfStack = 10;
+  OutOfTournament = 11;
+
+  NotPlaying = 12;
+  Disconnected = 13;
+}
+
+message Seat {
+  required int32 Pos = 1;
+  optional SeatState State = 2;
+  optional double Stack = 3;
+  optional double Bet = 4;
+}
+
+message Table {
+  required string Id = 1;
+  required int32 Size = 2;
+  required int32 Button = 3;
+  repeated Seat Seats = 4;
+}
+
+message Game {
+  required GameType Type = 1;
+  required GameLimit Limit = 2;
+}
+
+message Stake {
+  required double BigBlind = 1;
+  optional double SmallBlind = 2;
+  optional double Ante = 3;
+  optional double BringIn = 4;
+}
+
+message Deal {
+  required double Pot = 1;
+  repeated int32 Board = 2;
+}
+
+message Play {
+  required Game Game = 1;
+  required Table Table = 2;
+  required Stake Stake = 3;
+  required Deal Deal = 4;
+}
+
+message PlayStart {
+  required int64 Start = 1;
+  required int64 Stop = 2;
+  required Play Play = 4;
+}
+
+message StreetStart {
+  required string Name = 1;
+}
