@@ -4,17 +4,13 @@ import (
 	"code.google.com/p/goprotobuf/proto"
 )
 
-import (
-	"gopoker/model"
-)
-
 func NewMoveButton(pos int) *Message {
 	return NewMessage(MoveButton{
 		Pos: proto.Int32(int32(pos)),
 	})
 }
 
-func NewJoinTable(player model.Player, pos int, amount float64) *Message {
+func NewJoinTable(player string, pos int, amount float64) *Message {
 	return NewMessage(JoinTable{
 		Player: proto.String(string(player)),
 		Pos:    proto.Int32(int32(pos)),
@@ -22,7 +18,7 @@ func NewJoinTable(player model.Player, pos int, amount float64) *Message {
 	})
 }
 
-func NewLeaveTable(player model.Player) *Message {
+func NewLeaveTable(player string) *Message {
 	return NewMessage(LeaveTable{
 		Player: proto.String(string(player)),
 	})

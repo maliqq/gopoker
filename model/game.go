@@ -6,8 +6,13 @@ import (
 )
 
 import (
+	_ "code.google.com/p/goprotobuf/proto"
+)
+
+import (
 	"gopoker/model/game"
 	"gopoker/poker/hand"
+	"gopoker/protocol/message"
 )
 
 const (
@@ -93,6 +98,18 @@ func (game *Game) IsMixed() bool {
 
 func (game *Game) String() string {
 	return fmt.Sprintf("%s %s", game.Type, game.Limit)
+}
+
+func (game *Game) Proto() *message.Game {
+	return &message.Game{
+		Type: message.GameType(
+			message.GameType_value[string(game.Type)],
+		).Enum(),
+
+		Limit: message.GameLimit(
+			message.GameLimit_value[string(game.Limit)],
+		).Enum(),
+	}
 }
 
 func NewMix(g game.Type) *Mix {

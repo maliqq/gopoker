@@ -4,33 +4,22 @@ import (
 	"code.google.com/p/goprotobuf/proto"
 )
 
-import (
-	"gopoker/model"
-)
-
-func NewAddBet(pos int, bet *model.Bet) *Message {
+func NewAddBet(pos int, bet *Bet) *Message {
 	return NewMessage(AddBet{
 		Pos: proto.Int32(int32(pos)),
-		Bet: &Bet{
-			Type:   BetType(BetType_value[string(bet.Type)]).Enum(),
-			Amount: proto.Float64(bet.Amount),
-		},
+		Bet: bet,
 	})
 }
 
-func NewRequireBet(pos int, betRange model.BetRange) *Message {
+func NewRequireBet(pos int, betRange *BetRange) *Message {
 	return NewMessage(RequireBet{
-		Pos: proto.Int32(int32(pos)),
-		BetRange: &BetRange{
-			Call: proto.Float64(betRange.Call),
-			Min:  proto.Float64(betRange.Min),
-			Max:  proto.Float64(betRange.Max),
-		},
+		Pos:      proto.Int32(int32(pos)),
+		BetRange: betRange,
 	})
 }
 
-func NewBettingComplete(pot *model.Pot) *Message {
+func NewBettingComplete(total float64) *Message {
 	return NewMessage(BettingComplete{
-		Pot: proto.Float64(pot.Total()),
+		Pot: proto.Float64(total),
 	})
 }

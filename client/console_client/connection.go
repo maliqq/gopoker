@@ -45,7 +45,7 @@ func (c *Connection) Handle(msg *message.Message) {
 		seat := c.Server.Table.Seat(pos)
 
 		for newBet == nil {
-			betRange := model.BetRange{
+			betRange := bet.Range{
 				Call: r.BetRange.GetCall(),
 				Min:  r.BetRange.GetMin(),
 				Max:  r.BetRange.GetMax(),
@@ -61,7 +61,7 @@ func (c *Connection) Handle(msg *message.Message) {
 
 		if newBet != nil {
 			pos := int(r.GetPos())
-			c.Reply(message.NewAddBet(pos, newBet))
+			c.Reply(message.NewAddBet(pos, newBet.Proto()))
 		}
 
 	case *message.RequireDiscard:

@@ -7,7 +7,12 @@ import (
 )
 
 import (
+	"code.google.com/p/goprotobuf/proto"
+)
+
+import (
 	"gopoker/model/position"
+	"gopoker/protocol/message"
 )
 
 type Table struct {
@@ -136,4 +141,16 @@ func (t *Table) RemovePlayer(player Player) (*Seat, error) {
 
 func (t *Table) String() string {
 	return fmt.Sprintf("size: %d button: %d\n%s", t.Size, t.Button, t.Seats)
+}
+
+func (t *Table) Proto() *message.Table {
+	seats := make([]*message.Seat, t.Size)
+	for i, seat := range t.Seats {
+		seats[i] = seat.Proto()
+	}
+	return &message.Table{
+		Size:   proto.Int32(int32(t.Size)),
+		Button: proto.Int32(int32(t.Button)),
+		Seats:  seats,
+	}
 }

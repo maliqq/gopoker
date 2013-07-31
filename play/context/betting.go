@@ -34,7 +34,7 @@ type Betting struct {
 
 type Required struct {
 	Pos int
-	model.BetRange
+	bet.Range
 }
 
 func NewBetting() *Betting {
@@ -137,13 +137,13 @@ func (this *Betting) RequireBet(pos int, seat *model.Seat, game *model.Game, sta
 		this.Required.Min, this.Required.Max = call+min, call+max
 	}
 
-	return message.NewRequireBet(this.Required.Pos, this.Required.BetRange)
+	return message.NewRequireBet(this.Required.Pos, this.Required.Range.Proto())
 }
 
 func (this *Betting) AddBet(newBet *model.Bet) error {
 	log.Printf("[betting] Player %s %s\n", this.Seat.Player, newBet.String())
 
-	err := newBet.Validate(this.Seat, this.Required.BetRange)
+	err := newBet.Validate(this.Seat, this.Required.Range)
 
 	if err != nil {
 		this.Seat.Fold()

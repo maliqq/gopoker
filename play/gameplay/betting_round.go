@@ -57,5 +57,6 @@ func (this *GamePlay) ResetBetting() {
 		seat.Play()
 	}
 
-	this.Broadcast.All <- message.NewBettingComplete(this.Betting.Pot)
+	total := this.Betting.Pot.Total()
+	this.Broadcast.All <- message.NewBettingComplete(total)
 }

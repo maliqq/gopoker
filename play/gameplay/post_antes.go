@@ -13,6 +13,6 @@ func (this *GamePlay) PostAntes() {
 
 		this.Betting.AddBet(newBet)
 
-		this.Broadcast.All <- message.NewAddBet(pos, newBet)
+		this.Broadcast.All <- message.NewAddBet(pos, newBet.Proto())
 	}
 }

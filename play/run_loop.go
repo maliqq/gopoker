@@ -52,7 +52,7 @@ func (this *Play) run() {
 	}
 
 	// notify about play start
-	this.Broadcast.System <- message.NewMessage(this.dumpProto())
+	this.Broadcast.System <- message.NewMessage(this.Proto())
 
 	// rotate game
 	if this.Mix != nil {

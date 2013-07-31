@@ -41,11 +41,13 @@ func (this *Storage) handle(msg *message.Message) {
 	case *message.PlayStart:
 		this.Current.Start = time.Now()
 		this.Current.Play = msg.Envelope.PlayStart.Play
+
 	case *message.PlayStop:
 		this.Current.Stop = time.Now()
 		log.Printf("[storage] saving %+v", this.Current)
 		db := this.PlayStore.Database()
 		db.C("plays").Insert(this.Current)
+
 	default:
 		log.Printf("[storage] got %s", msg)
 	}

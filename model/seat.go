@@ -5,8 +5,13 @@ import (
 )
 
 import (
+	"code.google.com/p/goprotobuf/proto"
+)
+
+import (
 	"gopoker/model/bet"
 	"gopoker/model/seat"
+	"gopoker/protocol/message"
 )
 
 type Seat struct {
@@ -120,5 +125,17 @@ func (this *Seat) SetStack(amount float64) {
 
 	if this.State == seat.Taken {
 		this.State = seat.Ready
+	}
+}
+
+func (this *Seat) Proto() *message.Seat {
+	return &message.Seat{
+		State: message.SeatState(
+			message.SeatState_value[string(this.State)],
+		).Enum(),
+
+		Stack: proto.Float64(this.Stack),
+
+		Bet: proto.Float64(this.Bet),
 	}
 }

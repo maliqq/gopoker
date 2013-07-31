@@ -24,7 +24,7 @@ func (this *GamePlay) postSmallBlind(pos int) {
 		log.Fatalf("Error adding small blind for %d: %s", pos, err)
 	}
 
-	this.Broadcast.All <- message.NewAddBet(pos, newBet)
+	this.Broadcast.All <- message.NewAddBet(pos, newBet.Proto())
 }
 
 func (this *GamePlay) postBigBlind(pos int) {
@@ -36,7 +36,7 @@ func (this *GamePlay) postBigBlind(pos int) {
 		log.Fatalf("Error adding big blind for %d: %s", pos, err)
 	}
 
-	this.Broadcast.All <- message.NewAddBet(pos, newBet)
+	this.Broadcast.All <- message.NewAddBet(pos, newBet.Proto())
 }
 
 func (this *GamePlay) PostBlinds() {

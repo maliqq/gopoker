@@ -149,6 +149,10 @@ func (this *Play) scheduleNextDeal() {
 	this.NextDeal <- time.After(5 * time.Second)
 }
 
-func (play *Play) dumpProto() *message.Play {
-	return &message.Play{}
+func (this *Play) Proto() *message.Play {
+	return &message.Play{
+		Table: this.Table.Proto(),
+		Game:  this.Game.Proto(),
+		Stake: this.Stake.Proto(),
+	}
 }

@@ -6,7 +6,12 @@ import (
 )
 
 import (
+	"code.google.com/p/goprotobuf/proto"
+)
+
+import (
 	"gopoker/model/bet"
+	"gopoker/protocol/message"
 )
 
 type Stake struct {
@@ -129,4 +134,13 @@ func (stake *Stake) MarshalJSON() ([]byte, error) {
 		data["BringIn"] = stake.BringInAmount()
 	}
 	return json.Marshal(data)
+}
+
+func (stake *Stake) Proto() *message.Stake {
+	return &message.Stake{
+		BigBlind:   proto.Float64(stake.BigBlindAmount()),
+		SmallBlind: proto.Float64(stake.SmallBlindAmount()),
+		Ante:       proto.Float64(stake.AnteAmount()),
+		BringIn:    proto.Float64(stake.BringInAmount()),
+	}
 }

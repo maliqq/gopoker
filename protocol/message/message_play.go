@@ -4,10 +4,6 @@ import (
 	"code.google.com/p/goprotobuf/proto"
 )
 
-import (
-	_ "gopoker/model"
-)
-
 func NewPlayStart() *Message {
 	return NewMessage(PlayStart{})
 }

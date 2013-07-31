@@ -5,18 +5,17 @@ import (
 )
 
 import (
+	"code.google.com/p/goprotobuf/proto"
+)
+
+import (
 	"gopoker/model/bet"
+	"gopoker/protocol/message"
 )
 
 type Bet struct {
 	bet.Type
 	Amount float64
-}
-
-type BetRange struct {
-	Call float64
-	Min  float64
-	Max  float64
 }
 
 func (b Bet) String() string {
@@ -28,6 +27,13 @@ func (b Bet) String() string {
 
 func (b Bet) PrintString() string {
 	return b.String()
+}
+
+func (b Bet) Proto() *message.Bet {
+	return &message.Bet{
+		Type:   message.BetType(message.BetType_value[string(b.Type)]).Enum(),
+		Amount: proto.Float64(b.Amount),
+	}
 }
 
 func (b Bet) IsActive() bool {
@@ -68,7 +74,7 @@ func NewCall(amount float64) *Bet {
 	return &Bet{Type: bet.Call, Amount: amount}
 }
 
-func (newBet *Bet) Validate(seat *Seat, betRange BetRange) error {
+func (newBet *Bet) Validate(seat *Seat, betRange bet.Range) error {
 	switch newBet.Type {
 	case bet.Fold:
 		// no error
