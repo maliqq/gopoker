@@ -16,7 +16,7 @@ import (
 
 type Logger struct {
 	*log.Logger
-	Recv   protocol.MessageChannel
+	Recv protocol.MessageChannel
 }
 
 func NewLogger(writer io.Writer) *Logger {
@@ -60,12 +60,12 @@ func (l *Logger) handle(msg *message.Message) {
 
 	case *message.MoveButton:
 		payload := msg.Envelope.MoveButton
+
 		l.Printf("Button is %d\n",
 			payload.GetPos()+1,
 		)
 
 	case *message.AddBet:
-
 		payload := msg.Envelope.AddBet
 		betType := payload.Bet.GetType().String()
 
@@ -75,12 +75,11 @@ func (l *Logger) handle(msg *message.Message) {
 		)
 
 	case *message.StreetStart:
-
 		payload := msg.Envelope.StreetStart
+
 		l.Printf("=== %s\n", payload.GetName())
 
 	case *message.ShowHand:
-
 		payload := msg.Envelope.ShowHand
 		protoHand := payload.Hand
 		hand := poker.Hand{
@@ -89,11 +88,20 @@ func (l *Logger) handle(msg *message.Message) {
 			Value:  poker.BinaryCards(protoHand.Value),
 			Kicker: poker.BinaryCards(protoHand.Kicker),
 		}
-		l.Printf("Seat %d: shows [%s] (%s)\n", payload.GetPos(), poker.BinaryCards(payload.Cards).PrintString(), hand.PrintString())
+
+		l.Printf("Seat %d: shows [%s] (%s)\n",
+			payload.GetPos(),
+			poker.BinaryCards(payload.Cards).PrintString(),
+			hand.PrintString(),
+		)
 
 	case *message.Winner:
 		payload := msg.Envelope.Winner
-		l.Printf("Seat %d: wins %.2f\n", payload.GetPos(), payload.GetAmount())
+
+		l.Printf("Seat %d: wins %.2f\n",
+			payload.GetPos(),
+			payload.GetAmount(),
+		)
 
 	default:
 		l.Printf("got %s\n", msg.Envelope)
