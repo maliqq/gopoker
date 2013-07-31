@@ -56,22 +56,6 @@ type Variation interface {
 	IsMixed() bool
 }
 
-var Games map[game.LimitedGame]*GameOptions
-var Mixes map[game.MixedGame][]*MixOptions
-
-const (
-	GamesConfigFile = "games.json"
-	MixesConfigFile = "mixes.json"
-)
-
-func LoadGames(configDir string) {
-	ReadConfig(configDir, GamesConfigFile, &Games)
-	log.Printf("games loaded: %d", len(Games))
-
-	ReadConfig(configDir, MixesConfigFile, &Mixes)
-	log.Printf("mixes loaded: %d", len(Mixes))
-}
-
 func NewGame(g game.Type, limit game.Limit) *Game {
 	limitedGame, success := g.(game.LimitedGame)
 
