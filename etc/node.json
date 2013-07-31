@@ -8,9 +8,14 @@
     "Rpc": {
         "Addr": "localhost:8081"
     },
+    "Zmq": {},
     "Logdir": "/var/log/gopoker",
     "Store": {
         "Driver": "postgres",
         "ConnectionString": "user=postgres password=postgres dbname=poker sslmode=disable"
+    },
+    "PlayStore": {
+        "Host": "localhost:27017",
+        "Database": "poker"
     }
 }

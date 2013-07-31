@@ -1,3 +1,4 @@
 {
-  "MaxRaises": 8
+  "MaxRaises": 8,
+  "DealStartDelay": 15
 }
