@@ -47,13 +47,11 @@ func (session *Session) Read() {
 		if err != nil {
 			switch err {
 			case io.EOF:
-				log.Printf("[session] EOF: %s", err)
-
-				continue
+				log.Print("[session] EOF")
+				break
 
 			default:
 				log.Printf("[session] read error: %s", err)
-
 				break
 			}
 

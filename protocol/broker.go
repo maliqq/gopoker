@@ -120,11 +120,11 @@ func (broker *Broker) sendSystem(msg *message.Message) {
 func (broker *Broker) Dispatch(n *Notify, msg *message.Message) {
 	log.Println(console.Color(console.CYAN, fmt.Sprintf("%s %s", n, msg)))
 
+	defer broker.sendSystem(msg)
+
 	if n.None {
 		return
 	}
-
-	defer broker.sendSystem(msg)
 
 	if n.One != "" {
 		broker.sendUser(n.One, msg)

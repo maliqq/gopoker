@@ -1,6 +1,11 @@
 package play
 
 import (
+	"log"
+	"time"
+)
+
+import (
 	"gopoker/protocol"
 	"gopoker/protocol/message"
 	"gopoker/storage"
@@ -8,14 +13,18 @@ import (
 
 type Storage struct {
 	*storage.PlayStore
-	Recv protocol.MessageChannel
+	Current *storage.Play
+	Recv    protocol.MessageChannel
 }
 
 func NewStorage(ps *storage.PlayStore) *Storage {
 	storage := &Storage{
 		PlayStore: ps,
+		Current:   &storage.Play{},
 		Recv:      make(protocol.MessageChannel),
 	}
+
+	go storage.receive()
 
 	return storage
 }
@@ -30,5 +39,14 @@ func (this *Storage) receive() {
 func (this *Storage) handle(msg *message.Message) {
 	switch msg.Payload().(type) {
 	case *message.PlayStart:
+		this.Current.Start = time.Now()
+		this.Current.Play = msg.Envelope.PlayStart.Play
+	case *message.PlayStop:
+		this.Current.Stop = time.Now()
+		log.Printf("[storage] saving %+v", this.Current)
+		db := this.PlayStore.Database()
+		db.C("plays").Insert(this.Current)
+	default:
+		log.Printf("[storage] got %s", msg)
 	}
 }

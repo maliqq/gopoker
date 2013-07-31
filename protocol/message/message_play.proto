@@ -80,9 +80,11 @@ message Play {
 }
 
 message PlayStart {
-  required int64 Start = 1;
-  required int64 Stop = 2;
-  required Play Play = 4;
+  optional Play Play = 1;
+}
+
+message PlayStop {
+  optional Play Play = 1;
 }
 
 message StreetStart {

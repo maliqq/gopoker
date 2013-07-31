@@ -25,7 +25,8 @@ message Envelope {
 
   // gameplay
   optional PlayStart PlayStart = 4;
-  optional StreetStart StreetStart = 5;
+  optional PlayStop PlayStop = 5;
+  optional StreetStart StreetStart = 6;
   optional BettingComplete BettingComplete = 7;
 
   // table

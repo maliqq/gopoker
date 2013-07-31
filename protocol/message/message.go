@@ -41,6 +41,9 @@ func NewMessage(payload Payload) *Message {
 	case PlayStart:
 		envelope.PlayStart = &v
 
+	case PlayStop:
+		envelope.PlayStop = &v
+
 	case StreetStart:
 		envelope.StreetStart = &v
 

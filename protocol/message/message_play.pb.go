@@ -396,9 +396,7 @@ func (m *Play) GetDeal() *Deal {
 }
 
 type PlayStart struct {
-	Start            *int64 `protobuf:"varint,1,req" json:"Start,omitempty"`
-	Stop             *int64 `protobuf:"varint,2,req" json:"Stop,omitempty"`
-	Play             *Play  `protobuf:"bytes,4,req" json:"Play,omitempty"`
+	Play             *Play  `protobuf:"bytes,1,opt" json:"Play,omitempty"`
 	XXX_unrecognized []byte `json:"-"`
 }
 
@@ -406,21 +404,23 @@ func (m *PlayStart) Reset()         { *m = PlayStart{} }
 func (m *PlayStart) String() string { return proto.CompactTextString(m) }
 func (*PlayStart) ProtoMessage()    {}
 
-func (m *PlayStart) GetStart() int64 {
-	if m != nil && m.Start != nil {
-		return *m.Start
-	}
-	return 0
-}
-
-func (m *PlayStart) GetStop() int64 {
-	if m != nil && m.Stop != nil {
-		return *m.Stop
-	}
-	return 0
-}
-
 func (m *PlayStart) GetPlay() *Play {
+	if m != nil {
+		return m.Play
+	}
+	return nil
+}
+
+type PlayStop struct {
+	Play             *Play  `protobuf:"bytes,1,opt" json:"Play,omitempty"`
+	XXX_unrecognized []byte `json:"-"`
+}
+
+func (m *PlayStop) Reset()         { *m = PlayStop{} }
+func (m *PlayStop) String() string { return proto.CompactTextString(m) }
+func (*PlayStop) ProtoMessage()    {}
+
+func (m *PlayStop) GetPlay() *Play {
 	if m != nil {
 		return m.Play
 	}

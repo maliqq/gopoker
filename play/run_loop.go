@@ -51,6 +51,9 @@ func (this *Play) run() {
 		this.Discarding = context.NewDiscarding(this.Deal)
 	}
 
+	// notify about play start
+	this.Broadcast.System <- message.NewMessage(this.dumpProto())
+
 	// rotate game
 	if this.Mix != nil {
 		log.Println("[play] rotate game")
@@ -114,6 +117,7 @@ func (this *Play) run() {
 
 	// deal stop
 	log.Println("[play] deal stop")
+	this.Broadcast.All <- message.NewMessage(message.PlayStop{})
 
 	this.scheduleNextDeal()
 }

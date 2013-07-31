@@ -10,10 +10,10 @@ get-deps:
 	go get labix.org/v2/mgo
 
 build-all:
+	protoc --go_out=. protocol/message/*.proto
 	go build gopoker/bin/gopoker-console
 	go build gopoker/bin/gopoker-control
 	go build gopoker/bin/gopoker-server
-	protoc --go_out=. protocol/message/*.proto
 	gofmt -w .
 
 test-all:

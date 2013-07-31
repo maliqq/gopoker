@@ -148,3 +148,7 @@ func (this *Play) scheduleNextDeal() {
 
 	this.NextDeal <- time.After(5 * time.Second)
 }
+
+func (play *Play) dumpProto() *message.Play {
+	return &message.Play{}
+}

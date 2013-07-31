@@ -11,8 +11,9 @@ type Notification struct {
 
 type Broadcast struct {
 	*Broker
-	All   MessageChannel
-	Route chan *Notification
+	All    MessageChannel
+	System MessageChannel
+	Route  chan *Notification
 }
 
 type Actor interface {
@@ -23,6 +24,7 @@ func NewBroadcast() *Broadcast {
 	broadcast := &Broadcast{
 		Broker: NewBroker(),
 		All:    make(MessageChannel),
+		System: make(MessageChannel),
 		Route:  make(chan *Notification),
 	}
 
@@ -36,6 +38,9 @@ func (this *Broadcast) receive() {
 		select {
 		case msg := <-this.All:
 			this.Broker.Dispatch(&Notify{All: true}, msg)
+
+		case msg := <-this.System:
+			this.Broker.Dispatch(&Notify{None: true}, msg)
 
 		case notification := <-this.Route:
 			this.Broker.Dispatch(notification.Notify, notification.Message)

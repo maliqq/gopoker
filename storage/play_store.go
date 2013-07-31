@@ -1,7 +1,15 @@
 package storage
 
 import (
+	"time"
+)
+
+import (
 	"labix.org/v2/mgo"
+)
+
+import (
+	"gopoker/protocol/message"
 )
 
 type PlayStoreConfig struct {
@@ -12,6 +20,13 @@ type PlayStoreConfig struct {
 type PlayStore struct {
 	Session *mgo.Session
 	Config  *PlayStoreConfig
+}
+
+type Play struct {
+	Start time.Time
+	Stop  time.Time
+	*message.Play
+	Log []*message.Message
 }
 
 func OpenPlayStore(config *PlayStoreConfig) (*PlayStore, error) {
