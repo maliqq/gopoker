@@ -20,7 +20,6 @@ type Storage struct {
 func NewStorage(ps *storage.PlayStore) *Storage {
 	storage := &Storage{
 		PlayStore: ps,
-		Current:   &storage.Play{},
 		Recv:      make(protocol.MessageChannel),
 	}
 
@@ -39,8 +38,7 @@ func (this *Storage) receive() {
 func (this *Storage) handle(msg *message.Message) {
 	switch msg.Payload().(type) {
 	case *message.PlayStart:
-		this.Current.Id = storage.NewObjectId()
-		this.Current.Start = time.Now()
+		this.Current = this.NewPlay()
 		this.Current.Play = msg.Envelope.PlayStart.Play
 
 	case *message.PlayStop:
@@ -50,7 +48,24 @@ func (this *Storage) handle(msg *message.Message) {
 
 		this.PlayStore.Collection("plays").Insert(this.Current)
 
+	case *message.ShowHand:
+		show := msg.Envelope.ShowHand
+		this.Current.KnownCards[show.GetPlayer()] = show.GetCards()
+
+	case *message.Winner:
+		winner := msg.Envelope.Winner
+		this.Current.Winners[winner.GetPlayer()] = winner.GetAmount()
+
 	default:
 		log.Printf("[storage] got %s", msg)
+	}
+}
+
+func (this *Storage) NewPlay() *storage.Play {
+	return &storage.Play{
+		Id:         storage.NewObjectId(),
+		Start:      time.Now(),
+		Winners:    map[string]float64{},
+		KnownCards: map[string]message.Cards{},
 	}
 }

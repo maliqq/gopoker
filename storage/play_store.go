@@ -31,7 +31,9 @@ type Play struct {
 	Stop       time.Time
 	Play       *message.Play `bson:"play"`
 	Winners    map[string]float64
-	KnownHands map[string]message.Cards
+	KnownCards map[string]message.Cards
+	Pot        float64
+	Rake       float64
 	Log        []*message.Message
 }
 

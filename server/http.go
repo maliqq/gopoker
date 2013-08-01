@@ -101,7 +101,7 @@ func (nodeHTTP *NodeHTTP) drawApi(api *gorilla_mux.Router) {
 	api.HandleFunc("/play/{id}/pot", nodeHTTP.Pot).Methods("GET")
 	api.HandleFunc("/play/{id}/stage", nodeHTTP.Stage).Methods("GET")
 	api.HandleFunc("/play/{id}/winners", nodeHTTP.Winners).Methods("GET")
-	api.HandleFunc("/play/{id}/known_hands", nodeHTTP.KnownHands).Methods("GET")
+	api.HandleFunc("/play/{id}/known_cards", nodeHTTP.KnownCards).Methods("GET")
 }
 
 func (nodeHTTP *NodeHTTP) Log(req *http.Request) {

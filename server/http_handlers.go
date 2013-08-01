@@ -165,7 +165,7 @@ func (nodeHTTP *NodeHTTP) Winners(resp http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func (nodeHTTP *NodeHTTP) KnownHands(resp http.ResponseWriter, req *http.Request) {
+func (nodeHTTP *NodeHTTP) KnownCards(resp http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
 	id := vars["id"]
 
@@ -176,7 +176,7 @@ func (nodeHTTP *NodeHTTP) KnownHands(resp http.ResponseWriter, req *http.Request
 
 		nodeHTTP.RespondJSONError(resp, err)
 	} else {
-		nodeHTTP.RespondJSON(resp, play.KnownHands)
+		nodeHTTP.RespondJSON(resp, play.KnownCards)
 	}
 }
 
