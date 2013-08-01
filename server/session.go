@@ -40,6 +40,7 @@ func (session *Session) Start() {
 }
 
 func (session *Session) Read() {
+Loop:
 	for {
 		var message message.Message
 
@@ -48,11 +49,11 @@ func (session *Session) Read() {
 			switch err {
 			case io.EOF:
 				log.Print("[session] EOF")
-				break
+				break Loop
 
 			default:
 				log.Printf("[session] read error: %s", err)
-				break
+				break Loop
 			}
 
 		}
