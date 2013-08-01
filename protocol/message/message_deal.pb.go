@@ -59,27 +59,27 @@ type DealCards struct {
 	XXX_unrecognized []byte    `json:"-"`
 }
 
-func (m *DealCards) Reset()         { *m = DealCards{} }
-func (m *DealCards) String() string { return proto.CompactTextString(m) }
-func (*DealCards) ProtoMessage()    {}
+func (this *DealCards) Reset()         { *this = DealCards{} }
+func (this *DealCards) String() string { return proto.CompactTextString(this) }
+func (*DealCards) ProtoMessage()       {}
 
-func (m *DealCards) GetPos() int32 {
-	if m != nil && m.Pos != nil {
-		return *m.Pos
+func (this *DealCards) GetPos() int32 {
+	if this != nil && this.Pos != nil {
+		return *this.Pos
 	}
 	return 0
 }
 
-func (m *DealCards) GetCards() []byte {
-	if m != nil {
-		return m.Cards
+func (this *DealCards) GetCards() []byte {
+	if this != nil {
+		return this.Cards
 	}
 	return nil
 }
 
-func (m *DealCards) GetType() DealType {
-	if m != nil && m.Type != nil {
-		return *m.Type
+func (this *DealCards) GetType() DealType {
+	if this != nil && this.Type != nil {
+		return *this.Type
 	}
 	return 0
 }
@@ -89,13 +89,13 @@ type RequireDiscard struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *RequireDiscard) Reset()         { *m = RequireDiscard{} }
-func (m *RequireDiscard) String() string { return proto.CompactTextString(m) }
-func (*RequireDiscard) ProtoMessage()    {}
+func (this *RequireDiscard) Reset()         { *this = RequireDiscard{} }
+func (this *RequireDiscard) String() string { return proto.CompactTextString(this) }
+func (*RequireDiscard) ProtoMessage()       {}
 
-func (m *RequireDiscard) GetPos() int32 {
-	if m != nil && m.Pos != nil {
-		return *m.Pos
+func (this *RequireDiscard) GetPos() int32 {
+	if this != nil && this.Pos != nil {
+		return *this.Pos
 	}
 	return 0
 }
@@ -106,20 +106,20 @@ type Discarded struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *Discarded) Reset()         { *m = Discarded{} }
-func (m *Discarded) String() string { return proto.CompactTextString(m) }
-func (*Discarded) ProtoMessage()    {}
+func (this *Discarded) Reset()         { *this = Discarded{} }
+func (this *Discarded) String() string { return proto.CompactTextString(this) }
+func (*Discarded) ProtoMessage()       {}
 
-func (m *Discarded) GetPos() int32 {
-	if m != nil && m.Pos != nil {
-		return *m.Pos
+func (this *Discarded) GetPos() int32 {
+	if this != nil && this.Pos != nil {
+		return *this.Pos
 	}
 	return 0
 }
 
-func (m *Discarded) GetNum() int32 {
-	if m != nil && m.Num != nil {
-		return *m.Num
+func (this *Discarded) GetNum() int32 {
+	if this != nil && this.Num != nil {
+		return *this.Num
 	}
 	return 0
 }
@@ -130,20 +130,20 @@ type DiscardCards struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *DiscardCards) Reset()         { *m = DiscardCards{} }
-func (m *DiscardCards) String() string { return proto.CompactTextString(m) }
-func (*DiscardCards) ProtoMessage()    {}
+func (this *DiscardCards) Reset()         { *this = DiscardCards{} }
+func (this *DiscardCards) String() string { return proto.CompactTextString(this) }
+func (*DiscardCards) ProtoMessage()       {}
 
-func (m *DiscardCards) GetPos() int32 {
-	if m != nil && m.Pos != nil {
-		return *m.Pos
+func (this *DiscardCards) GetPos() int32 {
+	if this != nil && this.Pos != nil {
+		return *this.Pos
 	}
 	return 0
 }
 
-func (m *DiscardCards) GetCards() []byte {
-	if m != nil {
-		return m.Cards
+func (this *DiscardCards) GetCards() []byte {
+	if this != nil {
+		return this.Cards
 	}
 	return nil
 }

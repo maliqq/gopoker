@@ -96,132 +96,156 @@ type Hand struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *Hand) Reset()         { *m = Hand{} }
-func (m *Hand) String() string { return proto.CompactTextString(m) }
-func (*Hand) ProtoMessage()    {}
+func (this *Hand) Reset()         { *this = Hand{} }
+func (this *Hand) String() string { return proto.CompactTextString(this) }
+func (*Hand) ProtoMessage()       {}
 
-func (m *Hand) GetRank() Rank {
-	if m != nil && m.Rank != nil {
-		return *m.Rank
+func (this *Hand) GetRank() Rank {
+	if this != nil && this.Rank != nil {
+		return *this.Rank
 	}
 	return 0
 }
 
-func (m *Hand) GetValue() []byte {
-	if m != nil {
-		return m.Value
+func (this *Hand) GetValue() []byte {
+	if this != nil {
+		return this.Value
 	}
 	return nil
 }
 
-func (m *Hand) GetHigh() []byte {
-	if m != nil {
-		return m.High
+func (this *Hand) GetHigh() []byte {
+	if this != nil {
+		return this.High
 	}
 	return nil
 }
 
-func (m *Hand) GetKicker() []byte {
-	if m != nil {
-		return m.Kicker
+func (this *Hand) GetKicker() []byte {
+	if this != nil {
+		return this.Kicker
 	}
 	return nil
 }
 
 type ShowHand struct {
 	Pos              *int32  `protobuf:"varint,1,req" json:"Pos,omitempty"`
-	Cards            []byte  `protobuf:"bytes,2,req" json:"Cards,omitempty"`
-	Hand             *Hand   `protobuf:"bytes,3,req" json:"Hand,omitempty"`
-	HandString       *string `protobuf:"bytes,4,req" json:"HandString,omitempty"`
+	Player           *string `protobuf:"bytes,2,req" json:"Player,omitempty"`
+	Cards            []byte  `protobuf:"bytes,3,req" json:"Cards,omitempty"`
+	Hand             *Hand   `protobuf:"bytes,4,req" json:"Hand,omitempty"`
+	HandString       *string `protobuf:"bytes,5,req" json:"HandString,omitempty"`
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *ShowHand) Reset()         { *m = ShowHand{} }
-func (m *ShowHand) String() string { return proto.CompactTextString(m) }
-func (*ShowHand) ProtoMessage()    {}
+func (this *ShowHand) Reset()         { *this = ShowHand{} }
+func (this *ShowHand) String() string { return proto.CompactTextString(this) }
+func (*ShowHand) ProtoMessage()       {}
 
-func (m *ShowHand) GetPos() int32 {
-	if m != nil && m.Pos != nil {
-		return *m.Pos
+func (this *ShowHand) GetPos() int32 {
+	if this != nil && this.Pos != nil {
+		return *this.Pos
 	}
 	return 0
 }
 
-func (m *ShowHand) GetCards() []byte {
-	if m != nil {
-		return m.Cards
+func (this *ShowHand) GetPlayer() string {
+	if this != nil && this.Player != nil {
+		return *this.Player
+	}
+	return ""
+}
+
+func (this *ShowHand) GetCards() []byte {
+	if this != nil {
+		return this.Cards
 	}
 	return nil
 }
 
-func (m *ShowHand) GetHand() *Hand {
-	if m != nil {
-		return m.Hand
+func (this *ShowHand) GetHand() *Hand {
+	if this != nil {
+		return this.Hand
 	}
 	return nil
 }
 
-func (m *ShowHand) GetHandString() string {
-	if m != nil && m.HandString != nil {
-		return *m.HandString
+func (this *ShowHand) GetHandString() string {
+	if this != nil && this.HandString != nil {
+		return *this.HandString
 	}
 	return ""
 }
 
 type ShowCards struct {
-	Pos              *int32 `protobuf:"varint,1,req" json:"Pos,omitempty"`
-	Cards            []byte `protobuf:"bytes,2,req" json:"Cards,omitempty"`
-	Muck             *bool  `protobuf:"varint,3,req,def=0" json:"Muck,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
+	Pos              *int32  `protobuf:"varint,1,req" json:"Pos,omitempty"`
+	Player           *string `protobuf:"bytes,2,req" json:"Player,omitempty"`
+	Cards            []byte  `protobuf:"bytes,3,req" json:"Cards,omitempty"`
+	Muck             *bool   `protobuf:"varint,4,req,def=0" json:"Muck,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *ShowCards) Reset()         { *m = ShowCards{} }
-func (m *ShowCards) String() string { return proto.CompactTextString(m) }
-func (*ShowCards) ProtoMessage()    {}
+func (this *ShowCards) Reset()         { *this = ShowCards{} }
+func (this *ShowCards) String() string { return proto.CompactTextString(this) }
+func (*ShowCards) ProtoMessage()       {}
 
 const Default_ShowCards_Muck bool = false
 
-func (m *ShowCards) GetPos() int32 {
-	if m != nil && m.Pos != nil {
-		return *m.Pos
+func (this *ShowCards) GetPos() int32 {
+	if this != nil && this.Pos != nil {
+		return *this.Pos
 	}
 	return 0
 }
 
-func (m *ShowCards) GetCards() []byte {
-	if m != nil {
-		return m.Cards
+func (this *ShowCards) GetPlayer() string {
+	if this != nil && this.Player != nil {
+		return *this.Player
+	}
+	return ""
+}
+
+func (this *ShowCards) GetCards() []byte {
+	if this != nil {
+		return this.Cards
 	}
 	return nil
 }
 
-func (m *ShowCards) GetMuck() bool {
-	if m != nil && m.Muck != nil {
-		return *m.Muck
+func (this *ShowCards) GetMuck() bool {
+	if this != nil && this.Muck != nil {
+		return *this.Muck
 	}
 	return Default_ShowCards_Muck
 }
 
 type Winner struct {
 	Pos              *int32   `protobuf:"varint,1,req" json:"Pos,omitempty"`
-	Amount           *float64 `protobuf:"fixed64,2,req" json:"Amount,omitempty"`
+	Player           *string  `protobuf:"bytes,2,req" json:"Player,omitempty"`
+	Amount           *float64 `protobuf:"fixed64,3,req" json:"Amount,omitempty"`
 	XXX_unrecognized []byte   `json:"-"`
 }
 
-func (m *Winner) Reset()         { *m = Winner{} }
-func (m *Winner) String() string { return proto.CompactTextString(m) }
-func (*Winner) ProtoMessage()    {}
+func (this *Winner) Reset()         { *this = Winner{} }
+func (this *Winner) String() string { return proto.CompactTextString(this) }
+func (*Winner) ProtoMessage()       {}
 
-func (m *Winner) GetPos() int32 {
-	if m != nil && m.Pos != nil {
-		return *m.Pos
+func (this *Winner) GetPos() int32 {
+	if this != nil && this.Pos != nil {
+		return *this.Pos
 	}
 	return 0
 }
 
-func (m *Winner) GetAmount() float64 {
-	if m != nil && m.Amount != nil {
-		return *m.Amount
+func (this *Winner) GetPlayer() string {
+	if this != nil && this.Player != nil {
+		return *this.Player
+	}
+	return ""
+}
+
+func (this *Winner) GetAmount() float64 {
+	if this != nil && this.Amount != nil {
+		return *this.Amount
 	}
 	return 0
 }

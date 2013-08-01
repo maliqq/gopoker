@@ -29,18 +29,21 @@ message Hand {
 
 message ShowHand {
   required int32 Pos = 1;
-  required bytes Cards = 2;
-  required Hand Hand = 3;
-  required string HandString = 4;
+  required string Player = 2;
+  required bytes Cards = 3;
+  required Hand Hand = 4;
+  required string HandString = 5;
 }
 
 message ShowCards {
   required int32 Pos = 1;
-  required bytes Cards = 2;
-  required bool Muck = 3 [default = false];
+  required string Player = 2;
+  required bytes Cards = 3;
+  required bool Muck = 4 [default = false];
 }
 
 message Winner {
   required int32 Pos = 1;
-  required double Amount = 2;
+  required string Player = 2;
+  required double Amount = 3;
 }

@@ -195,34 +195,34 @@ type Seat struct {
 	XXX_unrecognized []byte     `json:"-"`
 }
 
-func (m *Seat) Reset()         { *m = Seat{} }
-func (m *Seat) String() string { return proto.CompactTextString(m) }
-func (*Seat) ProtoMessage()    {}
+func (this *Seat) Reset()         { *this = Seat{} }
+func (this *Seat) String() string { return proto.CompactTextString(this) }
+func (*Seat) ProtoMessage()       {}
 
-func (m *Seat) GetPos() int32 {
-	if m != nil && m.Pos != nil {
-		return *m.Pos
+func (this *Seat) GetPos() int32 {
+	if this != nil && this.Pos != nil {
+		return *this.Pos
 	}
 	return 0
 }
 
-func (m *Seat) GetState() SeatState {
-	if m != nil && m.State != nil {
-		return *m.State
+func (this *Seat) GetState() SeatState {
+	if this != nil && this.State != nil {
+		return *this.State
 	}
 	return 0
 }
 
-func (m *Seat) GetStack() float64 {
-	if m != nil && m.Stack != nil {
-		return *m.Stack
+func (this *Seat) GetStack() float64 {
+	if this != nil && this.Stack != nil {
+		return *this.Stack
 	}
 	return 0
 }
 
-func (m *Seat) GetBet() float64 {
-	if m != nil && m.Bet != nil {
-		return *m.Bet
+func (this *Seat) GetBet() float64 {
+	if this != nil && this.Bet != nil {
+		return *this.Bet
 	}
 	return 0
 }
@@ -235,34 +235,34 @@ type Table struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *Table) Reset()         { *m = Table{} }
-func (m *Table) String() string { return proto.CompactTextString(m) }
-func (*Table) ProtoMessage()    {}
+func (this *Table) Reset()         { *this = Table{} }
+func (this *Table) String() string { return proto.CompactTextString(this) }
+func (*Table) ProtoMessage()       {}
 
-func (m *Table) GetId() string {
-	if m != nil && m.Id != nil {
-		return *m.Id
+func (this *Table) GetId() string {
+	if this != nil && this.Id != nil {
+		return *this.Id
 	}
 	return ""
 }
 
-func (m *Table) GetSize() int32 {
-	if m != nil && m.Size != nil {
-		return *m.Size
+func (this *Table) GetSize() int32 {
+	if this != nil && this.Size != nil {
+		return *this.Size
 	}
 	return 0
 }
 
-func (m *Table) GetButton() int32 {
-	if m != nil && m.Button != nil {
-		return *m.Button
+func (this *Table) GetButton() int32 {
+	if this != nil && this.Button != nil {
+		return *this.Button
 	}
 	return 0
 }
 
-func (m *Table) GetSeats() []*Seat {
-	if m != nil {
-		return m.Seats
+func (this *Table) GetSeats() []*Seat {
+	if this != nil {
+		return this.Seats
 	}
 	return nil
 }
@@ -273,20 +273,20 @@ type Game struct {
 	XXX_unrecognized []byte     `json:"-"`
 }
 
-func (m *Game) Reset()         { *m = Game{} }
-func (m *Game) String() string { return proto.CompactTextString(m) }
-func (*Game) ProtoMessage()    {}
+func (this *Game) Reset()         { *this = Game{} }
+func (this *Game) String() string { return proto.CompactTextString(this) }
+func (*Game) ProtoMessage()       {}
 
-func (m *Game) GetType() GameType {
-	if m != nil && m.Type != nil {
-		return *m.Type
+func (this *Game) GetType() GameType {
+	if this != nil && this.Type != nil {
+		return *this.Type
 	}
 	return 0
 }
 
-func (m *Game) GetLimit() GameLimit {
-	if m != nil && m.Limit != nil {
-		return *m.Limit
+func (this *Game) GetLimit() GameLimit {
+	if this != nil && this.Limit != nil {
+		return *this.Limit
 	}
 	return 0
 }
@@ -299,34 +299,34 @@ type Stake struct {
 	XXX_unrecognized []byte   `json:"-"`
 }
 
-func (m *Stake) Reset()         { *m = Stake{} }
-func (m *Stake) String() string { return proto.CompactTextString(m) }
-func (*Stake) ProtoMessage()    {}
+func (this *Stake) Reset()         { *this = Stake{} }
+func (this *Stake) String() string { return proto.CompactTextString(this) }
+func (*Stake) ProtoMessage()       {}
 
-func (m *Stake) GetBigBlind() float64 {
-	if m != nil && m.BigBlind != nil {
-		return *m.BigBlind
+func (this *Stake) GetBigBlind() float64 {
+	if this != nil && this.BigBlind != nil {
+		return *this.BigBlind
 	}
 	return 0
 }
 
-func (m *Stake) GetSmallBlind() float64 {
-	if m != nil && m.SmallBlind != nil {
-		return *m.SmallBlind
+func (this *Stake) GetSmallBlind() float64 {
+	if this != nil && this.SmallBlind != nil {
+		return *this.SmallBlind
 	}
 	return 0
 }
 
-func (m *Stake) GetAnte() float64 {
-	if m != nil && m.Ante != nil {
-		return *m.Ante
+func (this *Stake) GetAnte() float64 {
+	if this != nil && this.Ante != nil {
+		return *this.Ante
 	}
 	return 0
 }
 
-func (m *Stake) GetBringIn() float64 {
-	if m != nil && m.BringIn != nil {
-		return *m.BringIn
+func (this *Stake) GetBringIn() float64 {
+	if this != nil && this.BringIn != nil {
+		return *this.BringIn
 	}
 	return 0
 }
@@ -337,20 +337,20 @@ type Deal struct {
 	XXX_unrecognized []byte   `json:"-"`
 }
 
-func (m *Deal) Reset()         { *m = Deal{} }
-func (m *Deal) String() string { return proto.CompactTextString(m) }
-func (*Deal) ProtoMessage()    {}
+func (this *Deal) Reset()         { *this = Deal{} }
+func (this *Deal) String() string { return proto.CompactTextString(this) }
+func (*Deal) ProtoMessage()       {}
 
-func (m *Deal) GetPot() float64 {
-	if m != nil && m.Pot != nil {
-		return *m.Pot
+func (this *Deal) GetPot() float64 {
+	if this != nil && this.Pot != nil {
+		return *this.Pot
 	}
 	return 0
 }
 
-func (m *Deal) GetBoard() []int32 {
-	if m != nil {
-		return m.Board
+func (this *Deal) GetBoard() []int32 {
+	if this != nil {
+		return this.Board
 	}
 	return nil
 }
@@ -363,34 +363,34 @@ type Play struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *Play) Reset()         { *m = Play{} }
-func (m *Play) String() string { return proto.CompactTextString(m) }
-func (*Play) ProtoMessage()    {}
+func (this *Play) Reset()         { *this = Play{} }
+func (this *Play) String() string { return proto.CompactTextString(this) }
+func (*Play) ProtoMessage()       {}
 
-func (m *Play) GetGame() *Game {
-	if m != nil {
-		return m.Game
+func (this *Play) GetGame() *Game {
+	if this != nil {
+		return this.Game
 	}
 	return nil
 }
 
-func (m *Play) GetTable() *Table {
-	if m != nil {
-		return m.Table
+func (this *Play) GetTable() *Table {
+	if this != nil {
+		return this.Table
 	}
 	return nil
 }
 
-func (m *Play) GetStake() *Stake {
-	if m != nil {
-		return m.Stake
+func (this *Play) GetStake() *Stake {
+	if this != nil {
+		return this.Stake
 	}
 	return nil
 }
 
-func (m *Play) GetDeal() *Deal {
-	if m != nil {
-		return m.Deal
+func (this *Play) GetDeal() *Deal {
+	if this != nil {
+		return this.Deal
 	}
 	return nil
 }
@@ -400,13 +400,13 @@ type PlayStart struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *PlayStart) Reset()         { *m = PlayStart{} }
-func (m *PlayStart) String() string { return proto.CompactTextString(m) }
-func (*PlayStart) ProtoMessage()    {}
+func (this *PlayStart) Reset()         { *this = PlayStart{} }
+func (this *PlayStart) String() string { return proto.CompactTextString(this) }
+func (*PlayStart) ProtoMessage()       {}
 
-func (m *PlayStart) GetPlay() *Play {
-	if m != nil {
-		return m.Play
+func (this *PlayStart) GetPlay() *Play {
+	if this != nil {
+		return this.Play
 	}
 	return nil
 }
@@ -416,13 +416,13 @@ type PlayStop struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *PlayStop) Reset()         { *m = PlayStop{} }
-func (m *PlayStop) String() string { return proto.CompactTextString(m) }
-func (*PlayStop) ProtoMessage()    {}
+func (this *PlayStop) Reset()         { *this = PlayStop{} }
+func (this *PlayStop) String() string { return proto.CompactTextString(this) }
+func (*PlayStop) ProtoMessage()       {}
 
-func (m *PlayStop) GetPlay() *Play {
-	if m != nil {
-		return m.Play
+func (this *PlayStop) GetPlay() *Play {
+	if this != nil {
+		return this.Play
 	}
 	return nil
 }
@@ -432,13 +432,13 @@ type StreetStart struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *StreetStart) Reset()         { *m = StreetStart{} }
-func (m *StreetStart) String() string { return proto.CompactTextString(m) }
-func (*StreetStart) ProtoMessage()    {}
+func (this *StreetStart) Reset()         { *this = StreetStart{} }
+func (this *StreetStart) String() string { return proto.CompactTextString(this) }
+func (*StreetStart) ProtoMessage()       {}
 
-func (m *StreetStart) GetName() string {
-	if m != nil && m.Name != nil {
-		return *m.Name
+func (this *StreetStart) GetName() string {
+	if this != nil && this.Name != nil {
+		return *this.Name
 	}
 	return ""
 }

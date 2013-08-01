@@ -91,20 +91,20 @@ type Bet struct {
 	XXX_unrecognized []byte   `json:"-"`
 }
 
-func (m *Bet) Reset()         { *m = Bet{} }
-func (m *Bet) String() string { return proto.CompactTextString(m) }
-func (*Bet) ProtoMessage()    {}
+func (this *Bet) Reset()         { *this = Bet{} }
+func (this *Bet) String() string { return proto.CompactTextString(this) }
+func (*Bet) ProtoMessage()       {}
 
-func (m *Bet) GetType() BetType {
-	if m != nil && m.Type != nil {
-		return *m.Type
+func (this *Bet) GetType() BetType {
+	if this != nil && this.Type != nil {
+		return *this.Type
 	}
 	return 0
 }
 
-func (m *Bet) GetAmount() float64 {
-	if m != nil && m.Amount != nil {
-		return *m.Amount
+func (this *Bet) GetAmount() float64 {
+	if this != nil && this.Amount != nil {
+		return *this.Amount
 	}
 	return 0
 }
@@ -116,27 +116,27 @@ type BetRange struct {
 	XXX_unrecognized []byte   `json:"-"`
 }
 
-func (m *BetRange) Reset()         { *m = BetRange{} }
-func (m *BetRange) String() string { return proto.CompactTextString(m) }
-func (*BetRange) ProtoMessage()    {}
+func (this *BetRange) Reset()         { *this = BetRange{} }
+func (this *BetRange) String() string { return proto.CompactTextString(this) }
+func (*BetRange) ProtoMessage()       {}
 
-func (m *BetRange) GetCall() float64 {
-	if m != nil && m.Call != nil {
-		return *m.Call
+func (this *BetRange) GetCall() float64 {
+	if this != nil && this.Call != nil {
+		return *this.Call
 	}
 	return 0
 }
 
-func (m *BetRange) GetMin() float64 {
-	if m != nil && m.Min != nil {
-		return *m.Min
+func (this *BetRange) GetMin() float64 {
+	if this != nil && this.Min != nil {
+		return *this.Min
 	}
 	return 0
 }
 
-func (m *BetRange) GetMax() float64 {
-	if m != nil && m.Max != nil {
-		return *m.Max
+func (this *BetRange) GetMax() float64 {
+	if this != nil && this.Max != nil {
+		return *this.Max
 	}
 	return 0
 }
@@ -147,20 +147,20 @@ type RequireBet struct {
 	XXX_unrecognized []byte    `json:"-"`
 }
 
-func (m *RequireBet) Reset()         { *m = RequireBet{} }
-func (m *RequireBet) String() string { return proto.CompactTextString(m) }
-func (*RequireBet) ProtoMessage()    {}
+func (this *RequireBet) Reset()         { *this = RequireBet{} }
+func (this *RequireBet) String() string { return proto.CompactTextString(this) }
+func (*RequireBet) ProtoMessage()       {}
 
-func (m *RequireBet) GetPos() int32 {
-	if m != nil && m.Pos != nil {
-		return *m.Pos
+func (this *RequireBet) GetPos() int32 {
+	if this != nil && this.Pos != nil {
+		return *this.Pos
 	}
 	return 0
 }
 
-func (m *RequireBet) GetBetRange() *BetRange {
-	if m != nil {
-		return m.BetRange
+func (this *RequireBet) GetBetRange() *BetRange {
+	if this != nil {
+		return this.BetRange
 	}
 	return nil
 }
@@ -171,20 +171,20 @@ type AddBet struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *AddBet) Reset()         { *m = AddBet{} }
-func (m *AddBet) String() string { return proto.CompactTextString(m) }
-func (*AddBet) ProtoMessage()    {}
+func (this *AddBet) Reset()         { *this = AddBet{} }
+func (this *AddBet) String() string { return proto.CompactTextString(this) }
+func (*AddBet) ProtoMessage()       {}
 
-func (m *AddBet) GetPos() int32 {
-	if m != nil && m.Pos != nil {
-		return *m.Pos
+func (this *AddBet) GetPos() int32 {
+	if this != nil && this.Pos != nil {
+		return *this.Pos
 	}
 	return 0
 }
 
-func (m *AddBet) GetBet() *Bet {
-	if m != nil {
-		return m.Bet
+func (this *AddBet) GetBet() *Bet {
+	if this != nil {
+		return this.Bet
 	}
 	return nil
 }
@@ -195,20 +195,20 @@ type BettingComplete struct {
 	XXX_unrecognized []byte   `json:"-"`
 }
 
-func (m *BettingComplete) Reset()         { *m = BettingComplete{} }
-func (m *BettingComplete) String() string { return proto.CompactTextString(m) }
-func (*BettingComplete) ProtoMessage()    {}
+func (this *BettingComplete) Reset()         { *this = BettingComplete{} }
+func (this *BettingComplete) String() string { return proto.CompactTextString(this) }
+func (*BettingComplete) ProtoMessage()       {}
 
-func (m *BettingComplete) GetPot() float64 {
-	if m != nil && m.Pot != nil {
-		return *m.Pot
+func (this *BettingComplete) GetPot() float64 {
+	if this != nil && this.Pot != nil {
+		return *this.Pot
 	}
 	return 0
 }
 
-func (m *BettingComplete) GetRake() float64 {
-	if m != nil && m.Rake != nil {
-		return *m.Rake
+func (this *BettingComplete) GetRake() float64 {
+	if this != nil && this.Rake != nil {
+		return *this.Rake
 	}
 	return 0
 }
