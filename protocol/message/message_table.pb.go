@@ -18,13 +18,13 @@ type MoveButton struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (this *MoveButton) Reset()         { *this = MoveButton{} }
-func (this *MoveButton) String() string { return proto.CompactTextString(this) }
-func (*MoveButton) ProtoMessage()       {}
+func (m *MoveButton) Reset()         { *m = MoveButton{} }
+func (m *MoveButton) String() string { return proto.CompactTextString(m) }
+func (*MoveButton) ProtoMessage()    {}
 
-func (this *MoveButton) GetPos() int32 {
-	if this != nil && this.Pos != nil {
-		return *this.Pos
+func (m *MoveButton) GetPos() int32 {
+	if m != nil && m.Pos != nil {
+		return *m.Pos
 	}
 	return 0
 }
@@ -36,27 +36,27 @@ type JoinTable struct {
 	XXX_unrecognized []byte   `json:"-"`
 }
 
-func (this *JoinTable) Reset()         { *this = JoinTable{} }
-func (this *JoinTable) String() string { return proto.CompactTextString(this) }
-func (*JoinTable) ProtoMessage()       {}
+func (m *JoinTable) Reset()         { *m = JoinTable{} }
+func (m *JoinTable) String() string { return proto.CompactTextString(m) }
+func (*JoinTable) ProtoMessage()    {}
 
-func (this *JoinTable) GetPlayer() string {
-	if this != nil && this.Player != nil {
-		return *this.Player
+func (m *JoinTable) GetPlayer() string {
+	if m != nil && m.Player != nil {
+		return *m.Player
 	}
 	return ""
 }
 
-func (this *JoinTable) GetPos() int32 {
-	if this != nil && this.Pos != nil {
-		return *this.Pos
+func (m *JoinTable) GetPos() int32 {
+	if m != nil && m.Pos != nil {
+		return *m.Pos
 	}
 	return 0
 }
 
-func (this *JoinTable) GetAmount() float64 {
-	if this != nil && this.Amount != nil {
-		return *this.Amount
+func (m *JoinTable) GetAmount() float64 {
+	if m != nil && m.Amount != nil {
+		return *m.Amount
 	}
 	return 0
 }
@@ -66,13 +66,13 @@ type LeaveTable struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (this *LeaveTable) Reset()         { *this = LeaveTable{} }
-func (this *LeaveTable) String() string { return proto.CompactTextString(this) }
-func (*LeaveTable) ProtoMessage()       {}
+func (m *LeaveTable) Reset()         { *m = LeaveTable{} }
+func (m *LeaveTable) String() string { return proto.CompactTextString(m) }
+func (*LeaveTable) ProtoMessage()    {}
 
-func (this *LeaveTable) GetPlayer() string {
-	if this != nil && this.Player != nil {
-		return *this.Player
+func (m *LeaveTable) GetPlayer() string {
+	if m != nil && m.Player != nil {
+		return *m.Player
 	}
 	return ""
 }
@@ -82,13 +82,13 @@ type SitOut struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (this *SitOut) Reset()         { *this = SitOut{} }
-func (this *SitOut) String() string { return proto.CompactTextString(this) }
-func (*SitOut) ProtoMessage()       {}
+func (m *SitOut) Reset()         { *m = SitOut{} }
+func (m *SitOut) String() string { return proto.CompactTextString(m) }
+func (*SitOut) ProtoMessage()    {}
 
-func (this *SitOut) GetPos() int32 {
-	if this != nil && this.Pos != nil {
-		return *this.Pos
+func (m *SitOut) GetPos() int32 {
+	if m != nil && m.Pos != nil {
+		return *m.Pos
 	}
 	return 0
 }
@@ -98,13 +98,13 @@ type ComeBack struct {
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (this *ComeBack) Reset()         { *this = ComeBack{} }
-func (this *ComeBack) String() string { return proto.CompactTextString(this) }
-func (*ComeBack) ProtoMessage()       {}
+func (m *ComeBack) Reset()         { *m = ComeBack{} }
+func (m *ComeBack) String() string { return proto.CompactTextString(m) }
+func (*ComeBack) ProtoMessage()    {}
 
-func (this *ComeBack) GetPos() int32 {
-	if this != nil && this.Pos != nil {
-		return *this.Pos
+func (m *ComeBack) GetPos() int32 {
+	if m != nil && m.Pos != nil {
+		return *m.Pos
 	}
 	return 0
 }
