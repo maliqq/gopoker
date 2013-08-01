@@ -33,3 +33,7 @@ var (
 func Color(color string, s string) string {
 	return fmt.Sprintf("%s%s%s", color, s, RESET)
 }
+
+func Colorf(color string, format string, args ...interface{}) {
+	fmt.Print(Color(color, fmt.Sprintf(format, args...)))
+}

@@ -12,6 +12,10 @@ import (
 	"code.google.com/p/goprotobuf/proto"
 )
 
+import (
+	"gopoker/util/console"
+)
+
 const (
 	UseIndent = false
 )
@@ -117,6 +121,11 @@ func (msg *Message) MarshalJSON() ([]byte, error) {
 }
 
 func (msg *Message) Payload() Payload {
+	defer func() {
+		if r := recover(); r != nil {
+			console.Colorf(console.RED, "got: %s", msg)
+		}
+	}()
 	value := reflect.ValueOf(msg.Envelope)
 	method := value.MethodByName("Get" + msg.GetType())
 	result := method.Call([]reflect.Value{})
