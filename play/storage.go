@@ -48,6 +48,9 @@ func (this *Storage) handle(msg *message.Message) {
 
 		this.PlayStore.Collection("plays").Insert(this.Current)
 
+	case *message.AddBet:
+		this.Current.Log = append(this.Current.Log, msg)
+
 	case *message.ShowHand:
 		show := msg.Envelope.ShowHand
 		this.Current.KnownCards[show.GetPlayer()] = show.GetCards()
