@@ -123,31 +123,79 @@ func (h *Hand) ConsoleString() string {
 func (h *Hand) PrintString() string {
 	switch h.Rank {
 	case hand.HighCard:
-		return fmt.Sprintf("high card %s", h.High[0].KindTitle())
+		return fmt.Sprintf("high card %s",
+			h.High[0].KindTitle(),
+		)
 
 	case hand.OnePair:
-		return fmt.Sprintf("pair of %ss", h.High[0].KindTitle())
+		return fmt.Sprintf("pair of %ss",
+			h.High[0].KindTitle(),
+		)
 
 	case hand.TwoPair:
-		return fmt.Sprintf("two pairs, %ss and %ss", h.High[0].KindTitle(), h.High[1].KindTitle())
+		return fmt.Sprintf("two pairs, %ss and %ss",
+			h.High[0].KindTitle(),
+			h.High[1].KindTitle(),
+		)
 
 	case hand.ThreeKind:
-		return fmt.Sprintf("three of a kind, %ss", h.High[0].KindTitle())
+		return fmt.Sprintf("three of a kind, %ss",
+			h.High[0].KindTitle(),
+		)
 
 	case hand.Straight:
-		return fmt.Sprintf("straight, %s to %s", h.Value.Min(AceHigh).KindTitle(), h.Value.Max(AceHigh).KindTitle())
+		return fmt.Sprintf("straight, %s to %s",
+			h.Value.Min(AceHigh).KindTitle(),
+			h.Value.Max(AceHigh).KindTitle(),
+		)
 
 	case hand.Flush:
-		return fmt.Sprintf("flush, %s high", h.High[0].KindTitle())
+		return fmt.Sprintf("flush, %s high",
+			h.High[0].KindTitle(),
+		)
 
 	case hand.FullHouse:
-		return fmt.Sprintf("full house, %ss full of %ss", h.High[0].KindTitle(), h.High[1].KindTitle())
+		return fmt.Sprintf("full house, %ss full of %ss",
+			h.High[0].KindTitle(),
+			h.High[1].KindTitle(),
+		)
 
 	case hand.FourKind:
-		return fmt.Sprintf("four of a kind, %ss", h.High[0].KindTitle())
+		return fmt.Sprintf("four of a kind, %ss",
+			h.High[0].KindTitle(),
+		)
 
 	case hand.StraightFlush:
-		return fmt.Sprintf("straight flush, %s to %s", h.Value.Min(AceHigh).KindTitle(), h.Value.Max(AceHigh).KindTitle())
+		return fmt.Sprintf("straight flush, %s to %s",
+			h.Value.Min(AceHigh).KindTitle(),
+			h.Value.Max(AceHigh).KindTitle(),
+		)
+
+	case hand.BadugiOne:
+		return fmt.Sprintf("1-card badugi: %s",
+			h.Value[0].KindTitle(),
+		)
+
+	case hand.BadugiTwo:
+		return fmt.Sprintf("2-card badugi: %s + %s",
+			h.Value[0].KindTitle(),
+			h.Value[1].KindTitle(),
+		)
+
+	case hand.BadugiThree:
+		return fmt.Sprintf("3-card badugi: %s + %s + %s",
+			h.Value[0].KindTitle(),
+			h.Value[1].KindTitle(),
+			h.Value[2].KindTitle(),
+		)
+
+	case hand.BadugiFour:
+		return fmt.Sprintf("4-card badugi: %s + %s + %s + %s",
+			h.Value[0].KindTitle(),
+			h.Value[1].KindTitle(),
+			h.Value[2].KindTitle(),
+			h.Value[3].KindTitle(),
+		)
 	}
 
 	return ""
