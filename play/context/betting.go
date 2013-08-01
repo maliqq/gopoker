@@ -20,20 +20,19 @@ const (
 type Betting struct {
 	raiseCount int `json:"-"`
 	BigBets    bool
+	Pot        *model.Pot
 
-	Pot *model.Pot
-
+	active   bool
 	Required *Required
 
-	Bet chan *Action `json:"-"`
-
-	Next chan int `json:"-"`
-	stop chan int `json:"-"`
+	Bet  chan *Action `json:"-"`
+	Next chan int     `json:"-"`
+	stop chan int     `json:"-"`
 }
 
 type Action struct {
 	Seat *model.Seat
-	Bet *model.Bet
+	Bet  *model.Bet
 }
 
 type Required struct {
@@ -69,6 +68,8 @@ func (this *Betting) String() string {
 func (this *Betting) Start(pos *chan int) {
 	log.Println("[betting] start")
 
+	this.active = true
+
 	*pos <- this.Required.Pos
 
 Loop:
@@ -76,6 +77,7 @@ Loop:
 		select {
 		case <-this.stop:
 			log.Println("[betting] stop")
+			this.active = false
 			break Loop
 
 		case action := <-this.Bet:
@@ -88,6 +90,10 @@ Loop:
 			*pos <- this.Required.Pos
 		}
 	}
+}
+
+func (this *Betting) IsActive() bool {
+	return this.active
 }
 
 func (this *Betting) Stop() {

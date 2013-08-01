@@ -76,7 +76,12 @@ func (this *Play) receive() {
 func (this *Play) handleMessage(msg *message.Message) {
 	log.Printf(console.Color(console.YELLOW, msg.String()))
 
-	switch msg.Payload().(type) {
+	payload := msg.Payload() // FIXME
+	if payload == nil {
+		return
+	}
+
+	switch payload.(type) {
 	case *message.JoinTable:
 		join := msg.Envelope.JoinTable
 		player := model.Player(join.GetPlayer())
@@ -117,13 +122,19 @@ func (this *Play) handleMessage(msg *message.Message) {
 		this.Broadcast.All <- msg
 
 	case *message.AddBet:
+		if !this.Betting.IsActive() {
+			return
+		}
+
 		add := msg.Envelope.AddBet
 
-		seat := this.Table.Seat(int(add.GetPos()))
+		pos := int(add.GetPos())
+		seat := this.Table.Seat(pos)
+
 		betType := bet.Type(add.Bet.GetType().String())
 		amount := add.Bet.GetAmount()
 		newBet := model.NewBet(betType, amount)
-		
+
 		this.Betting.Bet <- &context.Action{Seat: seat, Bet: newBet}
 		this.Broadcast.All <- msg
 
