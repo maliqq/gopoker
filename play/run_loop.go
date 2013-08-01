@@ -80,6 +80,7 @@ func (this *Play) run() {
 	}
 
 	// run streets
+Streets:
 	for _, street := range street.Get(this.Game.Group) {
 		log.Printf("[play] street %s\n", street)
 		this.Broadcast.All <- message.NewStreetStart(string(street))
@@ -95,7 +96,7 @@ func (this *Play) run() {
 			case gameplay.Next:
 				continue
 			case gameplay.Stop:
-				break
+				break Streets
 			}
 		}
 	}
