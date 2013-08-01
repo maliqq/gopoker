@@ -2,6 +2,7 @@ package server
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 )
 
@@ -26,7 +27,7 @@ func (nodeHTTP *NodeHTTP) Rooms(resp http.ResponseWriter, req *http.Request) {
 
 func (nodeHTTP *NodeHTTP) Room(resp http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
-	id := vars["room"]
+	id := vars["id"]
 	room := nodeHTTP.Node.Room(id)
 
 	nodeHTTP.RespondJSON(resp, room)
@@ -134,8 +135,17 @@ func (nodeHTTP *NodeHTTP) GenerateDeck(resp http.ResponseWriter, req *http.Reque
 	resp.Write([]byte(s))
 }
 
-func (nodeHTTP *NodeHTTP) Deal(resp http.ResponseWriter, req *http.Request) {
-	resp.Write([]byte("Hello, world!"))
+func (nodeHTTP *NodeHTTP) Play(resp http.ResponseWriter, req *http.Request) {
+	vars := mux.Vars(req)
+	id := vars["id"]
+
+	play, err := nodeHTTP.Node.PlayStore.FindPlayById(id)
+
+	if err != nil {
+		log.Printf("[error] %s", err)
+	}
+
+	nodeHTTP.RespondJSON(resp, play)
 }
 
 func (nodeHTTP *NodeHTTP) Bet(resp http.ResponseWriter, req *http.Request) {

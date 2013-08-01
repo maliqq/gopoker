@@ -72,12 +72,12 @@ func (n *Node) drawRoutes(router *gorilla_mux.Router) {
 func (nodeHTTP *NodeHTTP) drawApi(api *gorilla_mux.Router) {
 	// Room
 	api.HandleFunc("/rooms", nodeHTTP.Rooms).Methods("GET", "OPTIONS")
-	api.HandleFunc("/room/{room}", nodeHTTP.Room).Methods("GET", "OPTIONS")
+	api.HandleFunc("/room/{id}", nodeHTTP.Room).Methods("GET", "OPTIONS")
 
-	api.HandleFunc("/room/{room}/join", nodeHTTP.Join).Methods("POST")
-	api.HandleFunc("/room/{room}/leave", nodeHTTP.Leave).Methods("DELETE")
-	api.HandleFunc("/room/{room}/rebuy", nodeHTTP.Rebuy).Methods("POST")
-	api.HandleFunc("/room/{room}/addon", nodeHTTP.AddOn).Methods("POST")
+	api.HandleFunc("/room/{id}/join", nodeHTTP.Join).Methods("POST")
+	api.HandleFunc("/room/{id}/leave", nodeHTTP.Leave).Methods("DELETE")
+	api.HandleFunc("/room/{id}/rebuy", nodeHTTP.Rebuy).Methods("POST")
+	api.HandleFunc("/room/{id}/addon", nodeHTTP.AddOn).Methods("POST")
 
 	api.HandleFunc("/room/{room}/seating", nodeHTTP.Seating).Methods("GET")
 	api.HandleFunc("/room/{room}/wait", nodeHTTP.Wait).Methods("PUT")
@@ -91,17 +91,17 @@ func (nodeHTTP *NodeHTTP) drawApi(api *gorilla_mux.Router) {
 
 	api.HandleFunc("/deck/generate", nodeHTTP.GenerateDeck).Methods("GET")
 
-	// Deal
-	api.HandleFunc("/deal/{deal}", nodeHTTP.Deal).Methods("GET")
+	// Play
+	api.HandleFunc("/play/{id}", nodeHTTP.Play).Methods("GET")
 
-	api.HandleFunc("/deal/{deal}/bet", nodeHTTP.Bet).Methods("PUT")
-	api.HandleFunc("/deal/{deal}/discard", nodeHTTP.Discard).Methods("PUT")
-	api.HandleFunc("/deal/{deal}/muck", nodeHTTP.Muck).Methods("PUT")
+	api.HandleFunc("/play/{id}/bet", nodeHTTP.Bet).Methods("PUT")
+	api.HandleFunc("/play/{id}/discard", nodeHTTP.Discard).Methods("PUT")
+	api.HandleFunc("/play/{id}/muck", nodeHTTP.Muck).Methods("PUT")
 
-	api.HandleFunc("/deal/{deal}/pot", nodeHTTP.Pot).Methods("GET")
-	api.HandleFunc("/deal/{deal}/stage", nodeHTTP.Stage).Methods("GET")
-	api.HandleFunc("/deal/{deal}/results", nodeHTTP.Results).Methods("GET")
-	api.HandleFunc("/deal/{deal}/known_hands", nodeHTTP.KnownHands).Methods("GET")
+	api.HandleFunc("/play/{id}/pot", nodeHTTP.Pot).Methods("GET")
+	api.HandleFunc("/play/{id}/stage", nodeHTTP.Stage).Methods("GET")
+	api.HandleFunc("/play/{id}/results", nodeHTTP.Results).Methods("GET")
+	api.HandleFunc("/play/{id}/known_hands", nodeHTTP.KnownHands).Methods("GET")
 }
 
 func (nodeHTTP *NodeHTTP) Log(req *http.Request) {
