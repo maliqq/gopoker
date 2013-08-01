@@ -26,11 +26,13 @@ type PlayStore struct {
 }
 
 type Play struct {
-	Id    bson.ObjectId `bson:"_id"`
-	Start time.Time
-	Stop  time.Time
-	Play  *message.Play `bson:"play"`
-	Log   []*message.Message
+	Id         bson.ObjectId `bson:"_id"`
+	Start      time.Time
+	Stop       time.Time
+	Play       *message.Play `bson:"play"`
+	Winners    map[string]float64
+	KnownHands map[string]message.Cards
+	Log        []*message.Message
 }
 
 func NewObjectId() bson.ObjectId {

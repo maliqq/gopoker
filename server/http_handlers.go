@@ -143,9 +143,41 @@ func (nodeHTTP *NodeHTTP) Play(resp http.ResponseWriter, req *http.Request) {
 
 	if err != nil {
 		log.Printf("[error] %s", err)
-	}
 
-	nodeHTTP.RespondJSON(resp, play)
+		nodeHTTP.RespondJSONError(resp, err)
+	} else {
+		nodeHTTP.RespondJSON(resp, play)
+	}
+}
+
+func (nodeHTTP *NodeHTTP) Winners(resp http.ResponseWriter, req *http.Request) {
+	vars := mux.Vars(req)
+	id := vars["id"]
+
+	play, err := nodeHTTP.Node.PlayStore.FindPlayById(id)
+
+	if err != nil {
+		log.Printf("[error] %s", err)
+
+		nodeHTTP.RespondJSONError(resp, err)
+	} else {
+		nodeHTTP.RespondJSON(resp, play.Winners)
+	}
+}
+
+func (nodeHTTP *NodeHTTP) KnownHands(resp http.ResponseWriter, req *http.Request) {
+	vars := mux.Vars(req)
+	id := vars["id"]
+
+	play, err := nodeHTTP.Node.PlayStore.FindPlayById(id)
+
+	if err != nil {
+		log.Printf("[error] %s", err)
+
+		nodeHTTP.RespondJSONError(resp, err)
+	} else {
+		nodeHTTP.RespondJSON(resp, play.KnownHands)
+	}
 }
 
 func (nodeHTTP *NodeHTTP) Bet(resp http.ResponseWriter, req *http.Request) {
@@ -165,14 +197,6 @@ func (nodeHTTP *NodeHTTP) Pot(resp http.ResponseWriter, req *http.Request) {
 }
 
 func (nodeHTTP *NodeHTTP) Stage(resp http.ResponseWriter, req *http.Request) {
-	resp.Write([]byte("Hello, world!"))
-}
-
-func (nodeHTTP *NodeHTTP) Results(resp http.ResponseWriter, req *http.Request) {
-	resp.Write([]byte("Hello, world!"))
-}
-
-func (nodeHTTP *NodeHTTP) KnownHands(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 

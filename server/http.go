@@ -100,7 +100,7 @@ func (nodeHTTP *NodeHTTP) drawApi(api *gorilla_mux.Router) {
 
 	api.HandleFunc("/play/{id}/pot", nodeHTTP.Pot).Methods("GET")
 	api.HandleFunc("/play/{id}/stage", nodeHTTP.Stage).Methods("GET")
-	api.HandleFunc("/play/{id}/results", nodeHTTP.Results).Methods("GET")
+	api.HandleFunc("/play/{id}/winners", nodeHTTP.Winners).Methods("GET")
 	api.HandleFunc("/play/{id}/known_hands", nodeHTTP.KnownHands).Methods("GET")
 }
 
@@ -128,4 +128,14 @@ func (nodeHTTP *NodeHTTP) RespondJSON(resp http.ResponseWriter, result interface
 
 	resp.Write(data)
 	resp.Write([]byte{0xA})
+}
+
+func (nodeHTTP *NodeHTTP) RespondJSONError(resp http.ResponseWriter, err error) {
+	data := struct {
+		Error string
+	}{
+		Error: err.Error(),
+	}
+
+	nodeHTTP.RespondJSON(resp, data)
 }
