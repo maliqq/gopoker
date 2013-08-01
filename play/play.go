@@ -8,6 +8,7 @@ import (
 
 import (
 	"gopoker/model"
+	"gopoker/model/bet"
 	"gopoker/model/seat"
 	"gopoker/play/context"
 	"gopoker/play/gameplay"
@@ -116,7 +117,14 @@ func (this *Play) handleMessage(msg *message.Message) {
 		this.Broadcast.All <- msg
 
 	case *message.AddBet:
-		this.Betting.Bet <- msg
+		add := msg.Envelope.AddBet
+
+		seat := this.Table.Seat(int(add.GetPos()))
+		betType := bet.Type(add.Bet.GetType().String())
+		amount := add.Bet.GetAmount()
+		newBet := model.NewBet(betType, amount)
+		
+		this.Betting.Bet <- &context.Action{Seat: seat, Bet: newBet}
 		this.Broadcast.All <- msg
 
 	case *message.DiscardCards:

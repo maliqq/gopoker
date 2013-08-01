@@ -34,7 +34,7 @@ func (this *GamePlay) StartBettingRound() Transition {
 			pos := active[0]
 			seat := this.Table.Seat(pos)
 
-			this.Broadcast.One(seat.Player) <- this.Betting.RequireBet(pos, seat, this.Game, this.Stake)
+			this.Broadcast.One(seat.Player) <- this.Betting.RequireBet(pos, seat.Stack, this.Game, this.Stake)
 
 			continue
 		}

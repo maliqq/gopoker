@@ -17,9 +17,9 @@ func (this *GamePlay) MoveButton() {
 
 func (this *GamePlay) postSmallBlind(pos int) {
 	t := this.Table
-	newBet := this.Betting.ForceBet(pos, t.Seat(pos), bet.SmallBlind, this.Stake)
+	newBet := this.Betting.ForceBet(pos, bet.SmallBlind, this.Stake)
 
-	err := this.Betting.AddBet(newBet)
+	err := this.Betting.AddBet(t.Seat(pos), newBet)
 	if err != nil {
 		log.Fatalf("Error adding small blind for %d: %s", pos, err)
 	}
@@ -29,9 +29,9 @@ func (this *GamePlay) postSmallBlind(pos int) {
 
 func (this *GamePlay) postBigBlind(pos int) {
 	t := this.Table
-	newBet := this.Betting.ForceBet(pos, t.Seat(pos), bet.BigBlind, this.Stake)
+	newBet := this.Betting.ForceBet(pos, bet.BigBlind, this.Stake)
 
-	err := this.Betting.AddBet(newBet)
+	err := this.Betting.AddBet(t.Seat(pos), newBet)
 	if err != nil {
 		log.Fatalf("Error adding big blind for %d: %s", pos, err)
 	}

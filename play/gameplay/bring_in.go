@@ -29,7 +29,7 @@ func (this *GamePlay) BringIn() Transition {
 	this.Broadcast.All <- message.NewMoveButton(minPos)
 
 	seat := this.Table.Seat(minPos)
-	this.Broadcast.One(seat.Player) <- this.Betting.RequireBet(minPos, seat, this.Game, this.Stake)
+	this.Broadcast.One(seat.Player) <- this.Betting.RequireBet(minPos, seat.Stack, this.Game, this.Stake)
 
 	return Next
 }
