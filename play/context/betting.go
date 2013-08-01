@@ -145,6 +145,18 @@ func (this *Betting) RequireBet(pos int, stackAvailable float64, game *model.Gam
 		min, max := this.RaiseRange(stackAvailable, game, stake)
 		minRaise, maxRaise := call+min, call+max
 
+		// FIXME
+		//log.Printf("------\nstackAvailable=%.2f; call=%.2f; minRaise=%.2f; maxRaise=%.2f\n", stackAvailable, call, minRaise, maxRaise)
+		if stackAvailable < maxRaise {
+			if stackAvailable < call {
+				minRaise, maxRaise = 0., 0.
+			} else if stackAvailable < minRaise {
+				minRaise, maxRaise = stackAvailable, stackAvailable
+			} else {
+				maxRaise = stackAvailable
+			}
+		}
+
 		this.BetRange.Min, this.BetRange.Max = minRaise, maxRaise
 	}
 
