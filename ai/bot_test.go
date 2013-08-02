@@ -16,7 +16,7 @@ import (
 func TestBot(t *testing.T) {
 	rpcAddr := "localhost:8081"
 	node := server.NewNode("bots_test", "", rpcAddr)
-	roomId := util.RandomUuid()
+	roomID := util.RandomUuid()
 	tableSize := 9
 
 	node.StartRPC()
@@ -27,7 +27,7 @@ func TestBot(t *testing.T) {
 	}
 
 	args := &rpc_service.CreateRoom{
-		Id:        roomId,
+		ID:        roomID,
 		TableSize: tableSize,
 		BetSize:   10.,
 		Game:      model.NewGame(game.Texas, game.FixedLimit),

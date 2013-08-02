@@ -94,7 +94,7 @@ func (n *Node) Room(id string) *Room {
 
 // AddRoom - add room
 func (n *Node) AddRoom(room *Room) bool {
-	n.Rooms[room.Id] = room
+	n.Rooms[room.ID] = room
 
 	room.createLogger(n.Logdir)
 	room.createStorage(n.PlayStore)
@@ -104,7 +104,7 @@ func (n *Node) AddRoom(room *Room) bool {
 
 // RemoveRoom - remove room
 func (n *Node) RemoveRoom(room *Room) bool {
-	delete(n.Rooms, room.Id)
+	delete(n.Rooms, room.ID)
 	return true
 }
 
@@ -114,15 +114,17 @@ func (n *Node) Start() {
 	n.StartHTTP()
 }
 
-func (httpConfig *HttpConfig) apiPathOr(defaultPath string) string {
-	apiPath := httpConfig.ApiPath
+// APIPathOr - API path or default
+func (httpConfig *HTTPConfig) APIPathOr(defaultPath string) string {
+	apiPath := httpConfig.APIPath
 	if apiPath == "" {
 		return defaultPath
 	}
 	return apiPath
 }
 
-func (httpConfig *HttpConfig) webSocketPathOr(defaultPath string) string {
+// WebSocketPathOr - websocket path or default
+func (httpConfig *HTTPConfig) WebSocketPathOr(defaultPath string) string {
 	webSocketPath := httpConfig.WebSocketPath
 	if webSocketPath == "" {
 		return defaultPath
@@ -130,8 +132,9 @@ func (httpConfig *HttpConfig) webSocketPathOr(defaultPath string) string {
 	return webSocketPath
 }
 
-func (httpConfig *HttpConfig) rpcPathOr(defaultPath string) string {
-	rpcPath := httpConfig.RpcPath
+// RPCPathOr - RPC path or default
+func (httpConfig *HTTPConfig) RPCPathOr(defaultPath string) string {
+	rpcPath := httpConfig.RPCPath
 	if rpcPath == "" {
 		return defaultPath
 	}

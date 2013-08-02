@@ -7,11 +7,13 @@ import (
 	"gopoker/util"
 )
 
+// Defaults
 const (
 	DefaultSamplesCount = 1000
 	FullBoardLen        = 5
 )
 
+// Chances - chances
 type Chances struct {
 	Total int
 	Wins  int
@@ -19,15 +21,18 @@ type Chances struct {
 	Loses int
 }
 
+// ChancesAgainstOne - chances against one player
 type ChancesAgainstOne struct {
 	SamplesNum int
 }
 
+// ChancesAgainstN - chances against n players
 type ChancesAgainstN struct {
 	OpponentsNum int
 	SamplesNum   int
 }
 
+// Compare - compare chances
 func (c *Chances) Compare(c1, c2 poker.Cards) {
 	h1, _ := poker.Detect[hand.High](&c1)
 	h2, _ := poker.Detect[hand.High](&c2)
@@ -42,6 +47,7 @@ func (c *Chances) Compare(c1, c2 poker.Cards) {
 	}
 }
 
+// Preflop - chances preflop
 func (c ChancesAgainstOne) Preflop(hole, other poker.Cards) Chances {
 	samplesNum := c.SamplesNum
 	chances := &Chances{}
@@ -61,6 +67,7 @@ func (c ChancesAgainstOne) Preflop(hole, other poker.Cards) Chances {
 	return *chances
 }
 
+// WithBoard - chances with board dealt
 func (c ChancesAgainstOne) WithBoard(hole, board poker.Cards) Chances {
 	if len(board) > 5 || len(board) == 0 {
 		panic("invalid board")
@@ -107,6 +114,7 @@ func (c ChancesAgainstOne) WithBoard(hole, board poker.Cards) Chances {
 	return *chances
 }
 
+// Equity - hand equity
 func (c ChancesAgainstN) Equity(hole poker.Cards, board poker.Cards) float64 {
 	var chances Chances
 	if len(board) == 0 {
@@ -121,6 +129,7 @@ func (c ChancesAgainstN) Equity(hole poker.Cards, board poker.Cards) float64 {
 	return e
 }
 
+// Preflop - chances preflop
 func (c ChancesAgainstN) Preflop(hole poker.Cards) Chances {
 	samplesNum := c.SamplesNum
 	chances := &Chances{}
@@ -140,6 +149,7 @@ func (c ChancesAgainstN) Preflop(hole poker.Cards) Chances {
 	return *chances
 }
 
+// WithBoard - chances with board
 func (c ChancesAgainstN) WithBoard(hole, board poker.Cards) Chances {
 	if len(board) > 5 || len(board) == 0 {
 		panic("board invalid")

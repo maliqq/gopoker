@@ -5,16 +5,18 @@ import (
 	"gopoker/util"
 )
 
+// Bot - bot
 type Bot struct {
-	Id      string
+	ID      string
 	zmqConn *zeromq_client.Connection
 }
 
+// NewBot - create new bot
 func NewBot(sockAddr string) *Bot {
 	id := util.RandomUuid()
 
 	return &Bot{
-		Id:      id,
+		ID:      id,
 		zmqConn: zeromq_client.NewConnection(sockAddr),
 	}
 }

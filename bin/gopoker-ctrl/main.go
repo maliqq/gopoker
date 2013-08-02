@@ -17,7 +17,7 @@ import (
 	"gopoker/model"
 	"gopoker/model/game"
 	"gopoker/protocol/message"
-	"gopoker/server/rpc_service"
+	rpc_service "gopoker/server/noderpc"
 	_ "gopoker/util"
 )
 
@@ -49,7 +49,7 @@ func main() {
 
 	roomID := "0"
 	args := &rpc_service.CreateRoom{
-		Id:        roomID,
+		ID:        roomID,
 		TableSize: *tableSize,
 		BetSize:   *betSize,
 	}
@@ -66,13 +66,13 @@ func main() {
 		player := fmt.Sprintf("player-%d", pos)
 		amount := float64(rand.Intn(1000) + 1000)
 		call(client, "NodeRPC.NotifyRoom", &rpc_service.NotifyRoom{
-			Id:      roomID,
+			ID:      roomID,
 			Message: message.NewJoinTable(player, pos, amount),
 		})
 	}
 
 	call(client, "NodeRPC.StartRoom", &rpc_service.StartRoom{
-		Id: roomID,
+		ID: roomID,
 	})
 }
 

@@ -1,11 +1,11 @@
 {
-    "Http": {
+    "HTTP": {
         "Addr": "localhost:8080",
-        "ApiPath": "/_api",
-        "RpcPath": "/_rpc",
+        "APIPath": "/_api",
+        "RPCPath": "/_rpc",
         "WebSocketPath": "/_ws"
     },
-    "Rpc": {
+    "RPC": {
         "Addr": "localhost:8081"
     },
     "Zmq": {},

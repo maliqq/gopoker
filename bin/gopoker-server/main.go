@@ -27,6 +27,6 @@ func main() {
 	flag.Parse()
 	model.LoadGames(*configDir)
 
-	node := server.NewNode("localhost", *ConfigDir)
+	node := server.NewNode("localhost", *configDir)
 	node.Start()
 }
