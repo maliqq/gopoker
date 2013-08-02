@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	HighRanks = []rankFunc{
+	highRanks = []rankFunc{
 		func(hc *handCards) (hand.Rank, *Hand) {
 			return hand.StraightFlush, hc.isStraightFlush()
 		},
@@ -31,7 +31,7 @@ var (
 		},
 	}
 
-	NoFlushRanks = []rankFunc{
+	noFlushRanks = []rankFunc{
 		func(hc *handCards) (hand.Rank, *Hand) {
 			return hand.FourKind, hc.isFourKind()
 		},
@@ -45,7 +45,7 @@ var (
 		},
 	}
 
-	NoStraightRanks = []rankFunc{
+	noStraightRanks = []rankFunc{
 		func(hc *handCards) (hand.Rank, *Hand) {
 			return hand.FourKind, hc.isFourKind()
 		},
@@ -59,7 +59,7 @@ var (
 func (hc *handCards) isStraightFlush() *Hand {
 	maybeFlush := hc.isFlush()
 	if maybeFlush == nil {
-		hand := hc.Detect(NoFlushRanks)
+		hand := hc.Detect(noFlushRanks)
 
 		if hand != nil {
 			hand.rank = true
@@ -76,7 +76,7 @@ func (hc *handCards) isStraightFlush() *Hand {
 		return maybeStraight
 	}
 
-	maybeHigher := hc.Detect(NoStraightRanks)
+	maybeHigher := hc.Detect(noStraightRanks)
 
 	if maybeHigher != nil {
 		maybeHigher.rank = true
@@ -232,7 +232,7 @@ func isHigh(cards *Cards) (*Hand, error) {
 
 	hc := NewHandCards(cards, AceHigh, false)
 
-	hand := hc.Detect(HighRanks)
+	hand := hc.Detect(highRanks)
 
 	return hand, nil
 }

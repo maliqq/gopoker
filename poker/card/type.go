@@ -1,18 +1,22 @@
 package card
 
+// Tuple - kind and suit pair
 type Tuple struct {
 	Kind
 	Suit
 }
 
 const (
+	// CardsNum - 52
 	CardsNum = KindsNum * SuitsNum
 )
 
 var (
-	Masks = AllMasks()
+	// Masks - bits for all cards
+	Masks = allMasks()
 )
 
+// AllTuples - all tuples
 func AllTuples() []Tuple {
 	cards := make([]Tuple, CardsNum)
 
@@ -27,7 +31,7 @@ func AllTuples() []Tuple {
 	return cards
 }
 
-func AllMasks() []uint64 {
+func allMasks() []uint64 {
 	masks := make([]uint64, CardsNum)
 	i := 0
 	for suit := SuitsNum - 1; suit >= 0; suit-- {

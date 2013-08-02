@@ -11,39 +11,48 @@ import (
 	"gopoker/util/console"
 )
 
+// Card - struct of kind and suit
 type Card struct {
 	kind card.Kind
 	suit card.Suit
 }
 
-func (card Card) String() string {
-	return card.kind.String() + card.suit.String()
+// String - card to string
+func (c Card) String() string {
+	return c.kind.String() + c.suit.String()
 }
 
+// KindName - e.g. "eight"
 func (c Card) KindName() string {
-	return card.KindNames[c.kind]
+	return c.kind.Name()
 }
 
+// KindTitle - e.g. "Eight"
 func (c Card) KindTitle() string {
 	return strings.Title(c.KindName())
 }
 
-func (card Card) UnicodeString() string {
-	return card.kind.String() + card.suit.UnicodeString()
+// UnicodeString - e.g. "K♠"
+func (c Card) UnicodeString() string {
+	return c.kind.String() + c.suit.UnicodeString()
 }
 
+// Int - card to int
 func (c Card) Int() int {
 	return (int(c.kind) << 2) + int(c.suit)
 }
 
+// Byte - card to byte
 func (c Card) Byte() byte {
 	return (byte(c.kind) << 2) + byte(c.suit) + 1
 }
 
+// ConsoleString - colorified unicode string
 func (c Card) ConsoleString() string {
-	return console.Color(card.Colors[c.suit], c.UnicodeString())
+	return console.Color(c.suit.Color(), c.UnicodeString())
 }
 
+// NewCard - new card from byte
 func NewCard(i byte) (*Card, error) {
 	if i <= 0 {
 		return nil, nil
@@ -56,6 +65,7 @@ func NewCard(i byte) (*Card, error) {
 	return &Card{card.Kind(i >> 2), card.Suit(i % 4)}, nil
 }
 
+// MakeCard - make card from kind and suit ints
 func MakeCard(kind int, suit int) (*Card, error) {
 	k, kindErr := card.MakeKind(kind)
 	if kindErr != nil {
@@ -70,6 +80,7 @@ func MakeCard(kind int, suit int) (*Card, error) {
 	return &Card{k, s}, nil
 }
 
+// ParseCard - parse card from plain string, e.g. "Kh"
 func ParseCard(s string) (*Card, error) {
 	if len(s) == 2 {
 		p := strings.Split(s, "")
@@ -102,16 +113,19 @@ func kindIndex(kind card.Kind, ord Ordering) int {
 	return -1
 }
 
+// Index - index of card for specified ordering
 func (c Card) Index(ord Ordering) int {
 	return kindIndex(c.kind, ord)
 }
 
+// Equal - check equality
 func (c *Card) Equal(other *Card) bool {
 	return (c.kind == other.kind) && (c.suit == other.suit)
 }
 
-func (card1 *Card) Compare(card2 *Card, ord Ordering) int {
-	a, b := card1.Index(ord), card2.Index(ord)
+// Compare - compare two cards; -1: less, 0: equal, 1: greater
+func (c *Card) Compare(o *Card, ord Ordering) int {
+	a, b := c.Index(ord), o.Index(ord)
 
 	if a < b {
 		return -1

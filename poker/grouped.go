@@ -5,8 +5,10 @@ import (
 	"strings"
 )
 
+// GroupedCards - list of list of cards
 type GroupedCards []Cards
 
+// String - grouped cards to string
 func (g GroupedCards) String() string {
 	s := "["
 
@@ -19,6 +21,7 @@ func (g GroupedCards) String() string {
 	return s + "]"
 }
 
+// ArrangeByFirst - take first card of each group and reorder
 func (g *GroupedCards) ArrangeByFirst(ord Ordering) GroupedCards {
 	// copy
 	groups := *g
@@ -28,6 +31,7 @@ func (g *GroupedCards) ArrangeByFirst(ord Ordering) GroupedCards {
 	return groups
 }
 
+// ArrangeByMax - take largest card of each group and reorder
 func (g *GroupedCards) ArrangeByMax(ord Ordering) GroupedCards {
 	// copy
 	groups := *g
@@ -37,6 +41,7 @@ func (g *GroupedCards) ArrangeByMax(ord Ordering) GroupedCards {
 	return groups
 }
 
+// Count - map with lengths of each group
 func (g *GroupedCards) Count() map[int]GroupedCards {
 	count := map[int]GroupedCards{}
 

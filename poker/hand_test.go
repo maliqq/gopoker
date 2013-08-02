@@ -19,7 +19,7 @@ func TestHandPrintString(t *testing.T) {
 		Value: value,
 	}
 
-	for rank, _ := range hand.Ranks {
+	for rank := range hand.Ranks {
 		h.Rank = rank
 		t.Logf(h.PrintString())
 	}

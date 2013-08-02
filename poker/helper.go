@@ -9,12 +9,16 @@ import (
 	"gopoker/poker/hand"
 )
 
+// Ordering - card ordering
 type Ordering int
 
 const (
-	Ace              = card.Ace
+	// Ace - kind ace
+	Ace = card.Ace
+	// AceHigh - ace is high card
 	AceHigh Ordering = 0
-	AceLow  Ordering = 1
+	// AceLow - ace is low card
+	AceLow Ordering = 1
 )
 
 // cards with ordering (ace high/ace low)
@@ -24,6 +28,7 @@ type cardsHelper struct {
 	Low bool
 }
 
+// Qualify - filter cards by qualifier card
 func (helper *cardsHelper) Qualify(q card.Kind) {
 	qualified := Cards{}
 
@@ -36,6 +41,7 @@ func (helper *cardsHelper) Qualify(q card.Kind) {
 	helper.Cards = qualified
 }
 
+// Gaps - group cards by gaps
 func (helper *cardsHelper) Gaps() GroupedCards {
 	sorted := helper.Reverse()
 
@@ -63,6 +69,7 @@ func (helper *cardsHelper) Gaps() GroupedCards {
 	})
 }
 
+// Kickers - get kickers
 func (helper *cardsHelper) Kickers(cards Cards) Cards {
 	length := 5 - len(cards)
 
@@ -74,6 +81,7 @@ func (helper *cardsHelper) Kickers(cards Cards) Cards {
 	return result
 }
 
+// GroupByKind - group by card kinds
 func (helper *cardsHelper) GroupByKind() GroupedCards {
 	sorted := helper.Cards.Arrange(helper.Ordering)
 
@@ -86,6 +94,7 @@ func (helper *cardsHelper) GroupByKind() GroupedCards {
 	})
 }
 
+// GroupBySuit - group by card suits
 func (helper *cardsHelper) GroupBySuit() GroupedCards {
 	cards := make(Cards, len(helper.Cards))
 
@@ -102,14 +111,17 @@ func (helper *cardsHelper) GroupBySuit() GroupedCards {
 	})
 }
 
+// Arrange - sort cards by ordering
 func (helper *cardsHelper) Arrange() Cards {
 	return helper.Cards.Arrange(helper.Ordering)
 }
 
+// Reverse - reverse sort cards by ordering
 func (helper *cardsHelper) Reverse() Cards {
 	return helper.Cards.Reverse(helper.Ordering)
 }
 
+// IsLow - check if hand is low
 func (helper *cardsHelper) IsLow() (*Hand, error) {
 	uniq := Cards{}
 	for _, cards := range helper.GroupByKind() {
@@ -141,6 +153,7 @@ func (helper *cardsHelper) IsLow() (*Hand, error) {
 	return newHand, nil
 }
 
+// IsGapLow - check if hand is gapped low
 func (helper *cardsHelper) IsGapLow() (*Hand, error) {
 	high, err := isHigh(&helper.Cards)
 	if err != nil {

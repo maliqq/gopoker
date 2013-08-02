@@ -23,6 +23,7 @@ type handCards struct {
 	suited map[int]GroupedCards
 }
 
+// Hand - poker hand
 type Hand struct {
 	handCards *handCards
 
@@ -36,6 +37,7 @@ type Hand struct {
 	kicker bool
 }
 
+// NewHandCards - create indexed hand cards
 func NewHandCards(cards *Cards, ord Ordering, reversed bool) *handCards {
 	helper := cardsHelper{*cards, ord, reversed}
 
@@ -57,17 +59,19 @@ func NewHandCards(cards *Cards, ord Ordering, reversed bool) *handCards {
 	return &hc
 }
 
+// String - hand cards to string
 func (hc *handCards) String() string {
 	return fmt.Sprintf("gaps=%s paired=%s suited=%s", hc.gaps, hc.paired, hc.suited)
 }
 
 type rankFunc func(*handCards) (hand.Rank, *Hand)
 
-func (c *handCards) Detect(ranks []rankFunc) *Hand {
+// Detect - detect rank of hand cards
+func (hc *handCards) Detect(ranks []rankFunc) *Hand {
 	var result *Hand
 
 	for _, r := range ranks {
-		rank, hand := r(c)
+		rank, hand := r(hc)
 
 		if hand != nil {
 			if !hand.rank {
@@ -77,10 +81,10 @@ func (c *handCards) Detect(ranks []rankFunc) *Hand {
 				hand.High = Cards{hand.Value[0]}
 			}
 			if hand.kicker {
-				hand.Kicker = c.cardsHelper.Kickers(hand.Value)
+				hand.Kicker = hc.cardsHelper.Kickers(hand.Value)
 			}
 
-			hand.handCards = c
+			hand.handCards = hc
 
 			result = hand
 
@@ -91,14 +95,17 @@ func (c *handCards) Detect(ranks []rankFunc) *Hand {
 	return result
 }
 
+// RankName - rank name for hand, e.g. "StraghtFlush"
 func (h *Hand) RankName() string {
 	return string(h.Rank)
 }
 
+// RankTitle - rank title
 func (h *Hand) RankTitle() string {
 	return strings.Title(h.RankName())
 }
 
+// String - hand to string
 func (h *Hand) String() string {
 	return fmt.Sprintf("rank=%s high=%s value=%s kicker=%s",
 		h.Rank,
@@ -109,6 +116,7 @@ func (h *Hand) String() string {
 	)
 }
 
+// ConsoleString - hand to console string
 func (h *Hand) ConsoleString() string {
 	return fmt.Sprintf("rank=%s high=%s value=%s kicker=%s",
 		h.Rank,
@@ -119,7 +127,7 @@ func (h *Hand) ConsoleString() string {
 	)
 }
 
-// human readable string
+// PrintString - hand to human readable string
 func (h *Hand) PrintString() string {
 	switch h.Rank {
 	case hand.HighCard:
@@ -201,15 +209,16 @@ func (h *Hand) PrintString() string {
 	return ""
 }
 
-func (hand *Hand) Proto() *message.Hand {
+// Proto - protobuf representation of hand
+func (h *Hand) Proto() *message.Hand {
 	return &message.Hand{
 		Rank: message.Rank(
-			message.Rank_value[string(hand.Rank)],
+			message.Rank_value[string(h.Rank)],
 		).Enum(),
 
-		High:   hand.High.Binary(),
-		Value:  hand.Value.Binary(),
-		Kicker: hand.Kicker.Binary(),
+		High:   h.High.Binary(),
+		Value:  h.Value.Binary(),
+		Kicker: h.Kicker.Binary(),
 	}
 }
 
@@ -235,11 +244,12 @@ var compareWith = func(ord Ordering) []compareFunc {
 	}
 }
 
-func (a *Hand) Compare(b *Hand) int {
-	ord := a.handCards.Ordering
+// Compare - compare two hands by rank, high cards, value, kickers
+func (h *Hand) Compare(o *Hand) int {
+	ord := h.handCards.Ordering
 
 	for _, compare := range compareWith(ord) {
-		result := compare(a, b)
+		result := compare(h, o)
 		if result != 0 {
 			return result
 		}

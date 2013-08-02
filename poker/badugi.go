@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	BadugiRanks = []rankFunc{
+	badugiRanks = []rankFunc{
 		func(hc *handCards) (hand.Rank, *Hand) {
 			return hand.BadugiOne, hc.isBadugiOne()
 		},
@@ -201,7 +201,7 @@ func isBadugi(cards *Cards) (*Hand, error) {
 
 	hc := NewHandCards(cards, AceLow, false)
 
-	hand := hc.Detect(BadugiRanks)
+	hand := hc.Detect(badugiRanks)
 
 	return hand, nil
 }

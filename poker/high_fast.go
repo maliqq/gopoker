@@ -1,29 +1,49 @@
 package poker
 
 const (
-	HighCardFlag      = 0x100000
-	OnePairFlag       = 0x200000
-	TwoPairFlag       = 0x300000
-	ThreeKindFlag     = 0x400000
-	StraightFlag      = 0x500000
-	FlushFlag         = 0x600000
-	FullHouseFlag     = 0x700000
-	FourKindFlag      = 0x800000
+	// HighCardFlag - high card flag
+	HighCardFlag = 0x100000
+	// OnePairFlag - one pair flag
+	OnePairFlag = 0x200000
+	// TwoPairFlag - two pait flag
+	TwoPairFlag = 0x300000
+	// ThreeKindFlag - three kind flag
+	ThreeKindFlag = 0x400000
+	// StraightFlag - straight flag
+	StraightFlag = 0x500000
+	// FlushFlag - flush flag
+	FlushFlag = 0x600000
+	// FullHouseFlag - full house flag
+	FullHouseFlag = 0x700000
+	// FourKindFlag - four of a kind flag
+	FourKindFlag = 0x800000
+	// StraightFlushFlag - straight flush flag
 	StraightFlushFlag = 0x900000
 )
 
 var (
-	Flush    = make([]uint, 8129)
+	// Flush index
+	Flush = make([]uint, 8129)
+	// Straight index
 	Straight = make([]uint, 8129)
-	Top1_16  = make([]uint, 8129)
-	Top1_12  = make([]uint, 8129)
-	Top1_8   = make([]uint, 8129)
-	Top2_12  = make([]uint, 8129)
-	Top2_8   = make([]uint, 8129)
-	Top3_4   = make([]uint, 8129)
-	Top5     = make([]uint, 8129)
-	Bit1     = make([]uint, 8129)
-	Bit2     = make([]uint, 8129)
+	// Top1Of16 index
+	Top1Of16 = make([]uint, 8129)
+	// Top1Of12 index
+	Top1Of12 = make([]uint, 8129)
+	// Top1Of8 index
+	Top1Of8 = make([]uint, 8129)
+	// Top2Of12 index
+	Top2Of12 = make([]uint, 8129)
+	// Top2Of8 index
+	Top2Of8 = make([]uint, 8129)
+	// Top3Of4 index
+	Top3Of4 = make([]uint, 8129)
+	// Top5 index
+	Top5 = make([]uint, 8129)
+	// Bit1 index
+	Bit1 = make([]uint, 8129)
+	// Bit2 index
+	Bit2 = make([]uint, 8129)
 )
 
 func doRank(hand uint64) uint {
@@ -60,21 +80,22 @@ func doRank(hand uint64) uint {
 
 	if p3 == 0 { // There are pairs but no triplets
 		if Bit2[p2] == 0 {
-			return OnePairFlag | uint(Top1_16[p2]) | uint(Top3_4[p1^Bit1[p2]])
+			return OnePairFlag | uint(Top1Of16[p2]) | uint(Top3Of4[p1^Bit1[p2]])
 		}
-		return TwoPairFlag | uint(Top2_12[p2]) | uint(Top1_8[p1^Bit2[p2]])
+		return TwoPairFlag | uint(Top2Of12[p2]) | uint(Top1Of8[p1^Bit2[p2]])
 	}
 
 	if p4 == 0 { // Deal with trips/sets/boats
 		if (p2 > p3) || (p3&(p3-1) != 0) {
-			return FullHouseFlag | uint(Top1_16[p3]) | uint(Top1_12[p2^Bit1[p3]])
+			return FullHouseFlag | uint(Top1Of16[p3]) | uint(Top1Of12[p2^Bit1[p3]])
 		}
-		return ThreeKindFlag | uint(Top1_16[p3]) | uint(Top2_8[p1^Bit1[p3]])
+		return ThreeKindFlag | uint(Top1Of16[p3]) | uint(Top2Of8[p1^Bit1[p3]])
 	}
 
-	return FourKindFlag | uint(Top1_16[p4]) | uint(Top1_12[p1^p4])
+	return FourKindFlag | uint(Top1Of16[p4]) | uint(Top1Of12[p1^p4])
 }
 
+// InitFast - create indexes
 func InitFast() {
 	var i, c1, c2, c3, c4, c5, c6, c7 uint
 
@@ -128,7 +149,7 @@ func InitFast() {
 						for c6 = c5; c6 > 1; c6-- {
 							for c7 = c6; c7 > 1; c7-- {
 								i = (1 << c1) | (1 << c2) | (1 << c3) | (1 << c4) | (1 << c5) | (1 << c6) | (1 << c7)
-								Top3_4[i>>2] = (c1 << 12) | (c2 << 8) | (c3 << 4)
+								Top3Of4[i>>2] = (c1 << 12) | (c2 << 8) | (c3 << 4)
 							}
 						}
 					}
@@ -145,8 +166,8 @@ func InitFast() {
 						for c6 = c5; c6 > 1; c6-- {
 							for c7 = c6; c7 > 1; c7-- {
 								i = (1 << c1) | (1 << c2) | (1 << c3) | (1 << c4) | (1 << c5) | (1 << c6) | (1 << c7)
-								Top2_12[i>>2] = (c1 << 16) | (c2 << 12)
-								Top2_8[i>>2] = (c1 << 12) | (c2 << 8)
+								Top2Of12[i>>2] = (c1 << 16) | (c2 << 12)
+								Top2Of8[i>>2] = (c1 << 12) | (c2 << 8)
 								Bit2[i>>2] = (1 << (c1 - 2)) | (1 << (c2 - 2))
 							}
 						}
@@ -164,9 +185,9 @@ func InitFast() {
 						for c6 = c5; c6 > 1; c6-- {
 							for c7 = c6; c7 > 1; c7-- {
 								i = (1 << c1) | (1 << c2) | (1 << c3) | (1 << c4) | (1 << c5) | (1 << c6) | (1 << c7)
-								Top1_16[i>>2] = (c1 << 16)
-								Top1_12[i>>2] = (c1 << 12)
-								Top1_8[i>>2] = (c1 << 8)
+								Top1Of16[i>>2] = (c1 << 16)
+								Top1Of12[i>>2] = (c1 << 12)
+								Top1Of8[i>>2] = (c1 << 8)
 								Bit1[i>>2] = (1 << (c1 - 2))
 							}
 						}

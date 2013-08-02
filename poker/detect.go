@@ -6,6 +6,7 @@ import (
 
 type detectFunc func(*Cards) (*Hand, error)
 
+// Detect - mapping of detect functions for each ranking
 var Detect = map[hand.Ranking]detectFunc{
 	hand.High:       isHigh,
 	hand.Badugi:     isBadugi,

@@ -1,7 +1,6 @@
 package poker
 
 import (
-	_ "bytes"
 	"encoding/json"
 	"math/rand"
 	"regexp"
@@ -15,8 +14,10 @@ import (
 	"gopoker/util"
 )
 
+// Cards - set of cards
 type Cards []*Card
 
+// AllCards - 52 cards deck
 func AllCards() Cards {
 	cards := make(Cards, card.CardsNum)
 
@@ -31,18 +32,22 @@ func AllCards() Cards {
 	return cards
 }
 
+// All - 52 cards deck
 var All = AllCards()
 
+// GenerateCards - generate random deck of n cards
 func GenerateCards(n int) Cards {
 	deck := NewDeck()
 
 	return deck[0:n]
 }
 
+// NewDeck - create random 52 card deck
 func NewDeck() Cards {
 	return All.Shuffle()
 }
 
+// ParseCards - parse cards from string (format: [AKQJT0-9]{1}[shdc]{1})
 func ParseCards(s string) (Cards, error) {
 	r, _ := regexp.Compile("(?i)[akqjt2-9]{1}[schd]{1}")
 	match := r.FindAllString(s, len(s)/2+1)
@@ -62,6 +67,7 @@ func ParseCards(s string) (Cards, error) {
 	return cards, nil
 }
 
+// ParseBinary - parse cards from binary
 func ParseBinary(s []byte) (Cards, error) {
 	cards := make(Cards, len(s))
 	for i, b := range s {
@@ -75,24 +81,28 @@ func ParseBinary(s []byte) (Cards, error) {
 	return cards, nil
 }
 
+// StringCards - factory for cards from string
 func StringCards(s string) Cards {
 	cards, _ := ParseCards(s)
 	return cards
 }
 
+// BinaryCards - factory for cards from binary
 func BinaryCards(s []byte) Cards {
 	cards, _ := ParseBinary(s)
 	return cards
 }
 
+// Uint64 - uint64 representation of card
 func (c Cards) Uint64() uint64 {
-	var result uint64 = uint64(c[0].Index(AceHigh))
+	var result = uint64(c[0].Index(AceHigh))
 	for i := 1; i < len(c); i++ {
 		result |= uint64(card.Masks[c[i].Index(AceHigh)])
 	}
 	return result
 }
 
+// Binary - binary(byte) representation of card
 func (c Cards) Binary() []byte {
 	b := make([]byte, len(c))
 	for i, card := range c {
@@ -106,10 +116,12 @@ func (c Cards) Binary() []byte {
 	return b
 }
 
+// Proto - protobuf representation of card
 func (c Cards) Proto() message.Cards {
 	return c.Binary()
 }
 
+// String - string representation of cards
 func (c Cards) String() string {
 	s := ""
 	for _, card := range c {
@@ -119,10 +131,12 @@ func (c Cards) String() string {
 	return s
 }
 
+// PrintString - human readable string of cards
 func (c Cards) PrintString() string {
 	return c.String()
 }
 
+// UnicodeString - unicode string of cards
 func (c Cards) UnicodeString() string {
 	s := ""
 	for _, card := range c {
@@ -132,6 +146,7 @@ func (c Cards) UnicodeString() string {
 	return s
 }
 
+// ConsoleString - colorified string of cards
 func (c Cards) ConsoleString() string {
 	s := ""
 	for _, card := range c {
@@ -141,6 +156,7 @@ func (c Cards) ConsoleString() string {
 	return s
 }
 
+// MarshalJSON - JSON representation of card
 func (c Cards) MarshalJSON() ([]byte, error) {
 	//if len(c) == 0 {
 	//  return []byte("null"), nil
@@ -152,11 +168,12 @@ func (c Cards) MarshalJSON() ([]byte, error) {
 	return json.Marshal(c.Binary())
 }
 
-func (this Cards) Shuffle() Cards {
+// Shuffle - randomly shuffle cards
+func (c Cards) Shuffle() Cards {
 	// seed random
 	rand.Seed(time.Now().UnixNano())
 
-	cards := this
+	cards := c
 	for i := range cards {
 		j := rand.Intn(i + 1)
 		cards[i], cards[j] = cards[j], cards[i]
@@ -165,16 +182,17 @@ func (this Cards) Shuffle() Cards {
 	return cards
 }
 
-func (a Cards) Diff(b Cards) Cards {
-	result := make(Cards, len(a))
-	present := make(map[int]bool, len(b))
+// Diff - difference between two sets of cards
+func (c Cards) Diff(o Cards) Cards {
+	result := make(Cards, len(c))
+	present := make(map[int]bool, len(o))
 
-	for _, card := range b {
+	for _, card := range o {
 		present[card.Int()] = true
 	}
 
 	i := 0
-	for _, card := range a {
+	for _, card := range c {
 		if _, err := present[card.Int()]; err == false {
 			result[i] = card
 			i++
@@ -184,29 +202,31 @@ func (a Cards) Diff(b Cards) Cards {
 	return result[0:i]
 }
 
-func (a Cards) Append(b Cards) Cards {
-	c := make(Cards, len(a))
-	copy(c, a)
-	return append(c, b...)
+// Append - append sets of cards
+func (c Cards) Append(o Cards) Cards {
+	buf := make(Cards, len(c))
+	copy(buf, c)
+	return append(buf, o...)
 }
 
 type groupFunc func(card *Card, prev *Card) int
 
-func (cc Cards) Group(test groupFunc) GroupedCards {
-	length := len(cc)
+// Group - group cards by function
+func (c Cards) Group(test groupFunc) GroupedCards {
+	length := len(c)
 	groups := make(GroupedCards, length)
 	group := make(Cards, length)
 
 	j, k := 0, 0
 	for i := 0; i < length; i++ {
-		card := cc[i]
+		card := c[i]
 
 		if i == 0 {
 			group[j] = card
 			j++
 
 		} else {
-			prev := cc[i-1]
+			prev := c[i-1]
 			result := test(card, prev)
 
 			if result == 1 {
@@ -231,8 +251,9 @@ func (cc Cards) Group(test groupFunc) GroupedCards {
 	return groups[0:k]
 }
 
-func (cc Cards) Combine(m int) GroupedCards {
-	n := len(cc)
+// Combine - create combinations of cards
+func (c Cards) Combine(m int) GroupedCards {
+	n := len(c)
 
 	indexes := util.Combine(n, m)
 
@@ -241,7 +262,7 @@ func (cc Cards) Combine(m int) GroupedCards {
 	for i, index := range indexes {
 		cards := make(Cards, m)
 		for i, j := range index {
-			cards[i] = cc[j]
+			cards[i] = c[j]
 		}
 		result[i] = cards
 	}
@@ -249,13 +270,14 @@ func (cc Cards) Combine(m int) GroupedCards {
 	return result
 }
 
-func (a Cards) Equal(b Cards) bool {
-	if len(a) != len(b) {
+// Equal - check equality of cards
+func (c Cards) Equal(o Cards) bool {
+	if len(c) != len(o) {
 		return false
 	}
 
-	for i, card := range a {
-		if !card.Equal(a[i]) {
+	for i, card := range c {
+		if !card.Equal(o[i]) {
 			return false
 		}
 	}
@@ -263,10 +285,11 @@ func (a Cards) Equal(b Cards) bool {
 	return true
 }
 
-func (a Cards) Compare(b Cards, ord Ordering) int {
-	if len(a) == len(b) {
-		for i, left := range a {
-			right := b[i]
+// Compare - compare cards by ordering
+func (c Cards) Compare(o Cards, ord Ordering) int {
+	if len(c) == len(o) {
+		for i, left := range c {
+			right := o[i]
 
 			result := left.Compare(right, ord)
 			if result != 0 {
@@ -275,23 +298,25 @@ func (a Cards) Compare(b Cards, ord Ordering) int {
 		}
 
 		return 0
-	} else {
-		min := len(a)
-
-		if len(b) < min {
-			min = len(b)
-		}
-
-		return a[0:min].Compare(b[0:min], ord)
 	}
+
+	min := len(c)
+
+	if len(o) < min {
+		min = len(o)
+	}
+
+	return c[0:min].Compare(o[0:min], ord)
 }
 
+// Arrange - arrange cards in ascending order
 func (c Cards) Arrange(ord Ordering) Cards {
 	sort.Sort(Arrange{ByKind{c, ord}})
 
 	return c
 }
 
+// Reverse - arrange cards in descending order
 func (c Cards) Reverse(ord Ordering) Cards {
 	sort.Sort(Reverse{ByKind{c, ord}})
 
@@ -300,6 +325,7 @@ func (c Cards) Reverse(ord Ordering) Cards {
 
 type maxFunc func(d int) bool
 
+// MaxBy - largest card by function
 func (c Cards) MaxBy(ord Ordering, f maxFunc) *Card {
 	result := c[0]
 
@@ -316,22 +342,26 @@ func (c Cards) MaxBy(ord Ordering, f maxFunc) *Card {
 	return result
 }
 
+// Min - smallest card by ordering
 func (c Cards) Min(ord Ordering) *Card {
 	return c.MaxBy(ord, func(d int) bool {
 		return d < 0
 	})
 }
 
+// Max - largest card by ordering
 func (c Cards) Max(ord Ordering) *Card {
 	return c.MaxBy(ord, func(d int) bool {
 		return d > 0
 	})
 }
 
+// IsPair - two cards with same kind
 func (c Cards) IsPair() bool {
 	return len(c) == 2 && c[0].kind == c[1].kind
 }
 
+// IsSuited - two cards with same suit
 func (c Cards) IsSuited() bool {
 	return len(c) == 2 && c[0].suit == c[1].suit
 }
