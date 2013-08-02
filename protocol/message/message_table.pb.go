@@ -13,6 +13,7 @@ var _ = proto.Marshal
 var _ = &json.SyntaxError{}
 var _ = math.Inf
 
+// MoveButton - table move button
 type MoveButton struct {
 	Pos              *int32 `protobuf:"varint,1,req" json:"Pos,omitempty"`
 	XXX_unrecognized []byte `json:"-"`
@@ -29,6 +30,7 @@ func (m *MoveButton) GetPos() int32 {
 	return 0
 }
 
+// JoinTable - player join table
 type JoinTable struct {
 	Player           *string  `protobuf:"bytes,1,req" json:"Player,omitempty"`
 	Pos              *int32   `protobuf:"varint,2,req" json:"Pos,omitempty"`
@@ -61,6 +63,7 @@ func (m *JoinTable) GetAmount() float64 {
 	return 0
 }
 
+// LeaveTable - player leave table
 type LeaveTable struct {
 	Player           *string `protobuf:"bytes,1,req" json:"Player,omitempty"`
 	XXX_unrecognized []byte  `json:"-"`
@@ -77,6 +80,7 @@ func (m *LeaveTable) GetPlayer() string {
 	return ""
 }
 
+// SitOut - player sit out
 type SitOut struct {
 	Pos              *int32 `protobuf:"varint,1,req" json:"Pos,omitempty"`
 	XXX_unrecognized []byte `json:"-"`
@@ -93,6 +97,7 @@ func (m *SitOut) GetPos() int32 {
 	return 0
 }
 
+// ComeBack - player come back
 type ComeBack struct {
 	Pos              *int32 `protobuf:"varint,1,req" json:"Pos,omitempty"`
 	XXX_unrecognized []byte `json:"-"`

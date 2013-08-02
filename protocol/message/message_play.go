@@ -4,12 +4,14 @@ import (
 	"code.google.com/p/goprotobuf/proto"
 )
 
+// NewPlayStart - notify new play start
 func NewPlayStart(play *Play) *Message {
 	return NewMessage(PlayStart{
 		Play: play,
 	})
 }
 
+// NewStreetStart - notify new street start
 func NewStreetStart(name string) *Message {
 	return NewMessage(StreetStart{
 		Name: proto.String(name),

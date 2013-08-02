@@ -1,23 +1,28 @@
 package message;
 
+// MoveButton - table move button
 message MoveButton {
   required int32 Pos = 1;
 }
 
+// JoinTable - player join table
 message JoinTable {
   required string Player = 1;
   required int32 Pos = 2;
   required double Amount = 3;
 }
 
+// LeaveTable - player leave table
 message LeaveTable {
   required string Player = 1;
 }
 
+// SitOut - player sit out
 message SitOut {
   required int32 Pos = 1;
 }
 
+// ComeBack - player come back
 message ComeBack {
   required int32 Pos = 1;
 }

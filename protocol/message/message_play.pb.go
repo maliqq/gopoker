@@ -13,6 +13,7 @@ var _ = proto.Marshal
 var _ = &json.SyntaxError{}
 var _ = math.Inf
 
+// GameType - game type
 type GameType int32
 
 const (
@@ -76,6 +77,7 @@ func (x *GameType) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// GameLimit - game limit
 type GameLimit int32
 
 const (
@@ -115,6 +117,7 @@ func (x *GameLimit) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// SeatState - seat state
 type SeatState int32
 
 const (
@@ -187,6 +190,7 @@ func (x *SeatState) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// Seat - seat info
 type Seat struct {
 	Pos              *int32     `protobuf:"varint,1,req" json:"Pos,omitempty"`
 	State            *SeatState `protobuf:"varint,2,opt,enum=message.SeatState" json:"State,omitempty"`
@@ -227,6 +231,7 @@ func (m *Seat) GetBet() float64 {
 	return 0
 }
 
+// Table - table info
 type Table struct {
 	Id               *string `protobuf:"bytes,1,req" json:"Id,omitempty"`
 	Size             *int32  `protobuf:"varint,2,req" json:"Size,omitempty"`
@@ -267,6 +272,7 @@ func (m *Table) GetSeats() []*Seat {
 	return nil
 }
 
+// Game - game info
 type Game struct {
 	Type             *GameType  `protobuf:"varint,1,req,enum=message.GameType" json:"Type,omitempty"`
 	Limit            *GameLimit `protobuf:"varint,2,req,enum=message.GameLimit" json:"Limit,omitempty"`
@@ -291,6 +297,7 @@ func (m *Game) GetLimit() GameLimit {
 	return 0
 }
 
+// Stake - stake info
 type Stake struct {
 	BigBlind         *float64 `protobuf:"fixed64,1,req" json:"BigBlind,omitempty"`
 	SmallBlind       *float64 `protobuf:"fixed64,2,opt" json:"SmallBlind,omitempty"`
@@ -331,6 +338,7 @@ func (m *Stake) GetBringIn() float64 {
 	return 0
 }
 
+// Deal - deal info
 type Deal struct {
 	Pot              *float64 `protobuf:"fixed64,1,req" json:"Pot,omitempty"`
 	Board            []int32  `protobuf:"varint,2,rep" json:"Board,omitempty"`
@@ -355,6 +363,7 @@ func (m *Deal) GetBoard() []int32 {
 	return nil
 }
 
+// Play - play info
 type Play struct {
 	Game             *Game  `protobuf:"bytes,1,req" json:"Game,omitempty"`
 	Table            *Table `protobuf:"bytes,2,req" json:"Table,omitempty"`
@@ -395,6 +404,7 @@ func (m *Play) GetDeal() *Deal {
 	return nil
 }
 
+// PlayStart - notify play start
 type PlayStart struct {
 	Play             *Play  `protobuf:"bytes,1,opt" json:"Play,omitempty"`
 	XXX_unrecognized []byte `json:"-"`
@@ -411,6 +421,7 @@ func (m *PlayStart) GetPlay() *Play {
 	return nil
 }
 
+// PlayStop - notify play stop
 type PlayStop struct {
 	Play             *Play  `protobuf:"bytes,1,opt" json:"Play,omitempty"`
 	XXX_unrecognized []byte `json:"-"`
@@ -427,6 +438,7 @@ func (m *PlayStop) GetPlay() *Play {
 	return nil
 }
 
+// StreetStart - notify street start
 type StreetStart struct {
 	Name             *string `protobuf:"bytes,1,req" json:"Name,omitempty"`
 	XXX_unrecognized []byte  `json:"-"`

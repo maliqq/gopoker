@@ -1,5 +1,6 @@
 package message;
 
+// DealType - deal type
 enum DealType {
   Board = 0;
   Hole = 1;
@@ -7,21 +8,25 @@ enum DealType {
   //Discard = 3;
 }
 
+// DealCards - deal cards
 message DealCards {
   required int32 Pos = 1;
   required bytes Cards = 2;
   required DealType Type = 3;
 }
 
+// RequireDiscard - require discard
 message RequireDiscard {
   required int32 Pos = 1;
 }
 
+// Discarded - discarded n cards
 message Discarded {
   required int32 Pos = 1;
   required int32 Num = 2;
 }
 
+// DiscardCards - deal discard cards
 message DiscardCards {
   required int32 Pos = 1;
   required bytes Cards = 2;

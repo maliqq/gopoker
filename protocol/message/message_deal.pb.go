@@ -13,6 +13,7 @@ var _ = proto.Marshal
 var _ = &json.SyntaxError{}
 var _ = math.Inf
 
+// DealType - deal type
 type DealType int32
 
 const (
@@ -52,6 +53,7 @@ func (x *DealType) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// DealCards - deal cards
 type DealCards struct {
 	Pos              *int32    `protobuf:"varint,1,req" json:"Pos,omitempty"`
 	Cards            []byte    `protobuf:"bytes,2,req" json:"Cards,omitempty"`
@@ -84,6 +86,7 @@ func (m *DealCards) GetType() DealType {
 	return 0
 }
 
+// RequireDiscard - require discard
 type RequireDiscard struct {
 	Pos              *int32 `protobuf:"varint,1,req" json:"Pos,omitempty"`
 	XXX_unrecognized []byte `json:"-"`
@@ -100,6 +103,7 @@ func (m *RequireDiscard) GetPos() int32 {
 	return 0
 }
 
+// Discarded - discarded n cards
 type Discarded struct {
 	Pos              *int32 `protobuf:"varint,1,req" json:"Pos,omitempty"`
 	Num              *int32 `protobuf:"varint,2,req" json:"Num,omitempty"`
@@ -124,6 +128,7 @@ func (m *Discarded) GetNum() int32 {
 	return 0
 }
 
+// DiscardCards - deal discard cards
 type DiscardCards struct {
 	Pos              *int32 `protobuf:"varint,1,req" json:"Pos,omitempty"`
 	Cards            []byte `protobuf:"bytes,2,req" json:"Cards,omitempty"`

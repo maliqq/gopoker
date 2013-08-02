@@ -4,11 +4,13 @@ import (
 	"gopoker/protocol/message"
 )
 
+// Notification - message with route
 type Notification struct {
 	*message.Message
 	*Notify
 }
 
+// Broadcast - broadcast hub
 type Broadcast struct {
 	*Broker
 	All    MessageChannel
@@ -16,10 +18,12 @@ type Broadcast struct {
 	Route  chan *Notification
 }
 
+// Actor - message receiver
 type Actor interface {
 	RouteKey() string
 }
 
+// NewBroadcast - create new broadcast hub
 func NewBroadcast() *Broadcast {
 	broadcast := &Broadcast{
 		Broker: NewBroker(),
@@ -59,12 +63,14 @@ func (bcast *Broadcast) route(notify *Notify) MessageChannel {
 	return channel
 }
 
+// One - route to one receiver
 func (bcast *Broadcast) One(actor Actor) MessageChannel {
 	notify := &Notify{One: actor.RouteKey()}
 
 	return bcast.route(notify)
 }
 
+// Except - route to all except
 func (bcast *Broadcast) Except(actors ...Actor) MessageChannel {
 	keys := make([]string, len(actors))
 	for i, a := range actors {
@@ -76,6 +82,7 @@ func (bcast *Broadcast) Except(actors ...Actor) MessageChannel {
 	return bcast.route(notify)
 }
 
+// Only - route to only
 func (bcast *Broadcast) Only(actors ...Actor) MessageChannel {
 	keys := make([]string, len(actors))
 	for i, a := range actors {
@@ -87,10 +94,12 @@ func (bcast *Broadcast) Only(actors ...Actor) MessageChannel {
 	return bcast.route(notify)
 }
 
+// Bind - bind receiver to hub
 func (bcast *Broadcast) Bind(actor Actor, ch *MessageChannel) {
 	bcast.Broker.BindUser(actor.RouteKey(), ch)
 }
 
+// Unbind - unbind receiver from hub
 func (bcast *Broadcast) Unbind(actor Actor) {
 	bcast.Broker.UnbindUser(actor.RouteKey())
 }

@@ -1,5 +1,6 @@
 package message;
 
+// GameType - game type
 enum GameType {
   Texas = 0;
   Omaha = 1;
@@ -14,12 +15,14 @@ enum GameType {
   Badugi = 14;
 }
 
+// GameLimit - game limit
 enum GameLimit {
   NoLimit = 0;
   PotLimit = 1;
   FixedLimit = 2;
 }
 
+// SeatState - seat state
 enum SeatState {
   Empty = 0;
   Reserved = 1;
@@ -41,6 +44,7 @@ enum SeatState {
   Disconnected = 13;
 }
 
+// Seat - seat info
 message Seat {
   required int32 Pos = 1;
   optional SeatState State = 2;
@@ -48,6 +52,7 @@ message Seat {
   optional double Bet = 4;
 }
 
+// Table - table info
 message Table {
   required string Id = 1;
   required int32 Size = 2;
@@ -55,11 +60,13 @@ message Table {
   repeated Seat Seats = 4;
 }
 
+// Game - game info
 message Game {
   required GameType Type = 1;
   required GameLimit Limit = 2;
 }
 
+// Stake - stake info
 message Stake {
   required double BigBlind = 1;
   optional double SmallBlind = 2;
@@ -67,11 +74,13 @@ message Stake {
   optional double BringIn = 4;
 }
 
+// Deal - deal info
 message Deal {
   required double Pot = 1;
   repeated int32 Board = 2;
 }
 
+// Play - play info
 message Play {
   required Game Game = 1;
   required Table Table = 2;
@@ -79,14 +88,17 @@ message Play {
   required Deal Deal = 4;
 }
 
+// PlayStart - notify play start
 message PlayStart {
   optional Play Play = 1;
 }
 
+// PlayStop - notify play stop
 message PlayStop {
   optional Play Play = 1;
 }
 
+// StreetStart - notify street start
 message StreetStart {
   required string Name = 1;
 }

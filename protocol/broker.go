@@ -15,15 +15,16 @@ import (
 	"gopoker/util/console"
 )
 
+// MessageChannel - channel of messages
 type MessageChannel chan *message.Message
 
-// pubsub
+// Broker - pubsub broker
 type Broker struct {
 	User   map[string]*MessageChannel
 	System map[string]*MessageChannel
 }
 
-// route
+// Notify - route
 type Notify struct {
 	All    bool
 	None   bool
@@ -32,12 +33,15 @@ type Notify struct {
 	Except []string
 }
 
+// System - system receiver
 type System string
 
+// RouteKey - route key for system
 func (s System) RouteKey() string {
 	return string(s)
 }
 
+// NewBroker - create new broker
 func NewBroker() *Broker {
 	return &Broker{
 		User:   map[string]*MessageChannel{},
@@ -45,22 +49,27 @@ func NewBroker() *Broker {
 	}
 }
 
+// BindUser - bind user receiver
 func (broker *Broker) BindUser(key string, channel *MessageChannel) {
 	broker.User[key] = channel
 }
 
+// UnbindUser - unbind user receiver
 func (broker *Broker) UnbindUser(key string) {
 	delete(broker.User, key)
 }
 
+// BindSystem - bind privileged user
 func (broker *Broker) BindSystem(key string, channel *MessageChannel) {
 	broker.System[key] = channel
 }
 
+// UnbindSystem - unbind privileged user
 func (broker *Broker) UnbindSystem(key string) {
 	delete(broker.System, key)
 }
 
+// RouteType - route type to string
 func (n *Notify) RouteType() string {
 	if n.All {
 		return "all"
@@ -81,6 +90,7 @@ func (n *Notify) RouteType() string {
 	return ""
 }
 
+// String - route to string
 func (n *Notify) String() string {
 	s := fmt.Sprintf("[notify] %s", n.RouteType())
 
@@ -117,6 +127,7 @@ func (broker *Broker) sendSystem(msg *message.Message) {
 	}
 }
 
+// Dispatch - dispatch message
 func (broker *Broker) Dispatch(n *Notify, msg *message.Message) {
 	log.Println(console.Color(console.Cyan, fmt.Sprintf("%s %s", n, msg)))
 
@@ -132,7 +143,7 @@ func (broker *Broker) Dispatch(n *Notify, msg *message.Message) {
 		return
 	}
 
-	for key, _ := range broker.User {
+	for key := range broker.User {
 		if !n.All {
 			var skip bool
 

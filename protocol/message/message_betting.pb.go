@@ -13,6 +13,7 @@ var _ = proto.Marshal
 var _ = &json.SyntaxError{}
 var _ = math.Inf
 
+// BetType - bet type
 type BetType int32
 
 const (
@@ -85,6 +86,7 @@ func (x *BetType) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// Bet - bet
 type Bet struct {
 	Type             *BetType `protobuf:"varint,1,req,enum=message.BetType" json:"Type,omitempty"`
 	Amount           *float64 `protobuf:"fixed64,2,opt" json:"Amount,omitempty"`
@@ -109,6 +111,7 @@ func (m *Bet) GetAmount() float64 {
 	return 0
 }
 
+// BetRange - bet range
 type BetRange struct {
 	Call             *float64 `protobuf:"fixed64,1,req" json:"Call,omitempty"`
 	Min              *float64 `protobuf:"fixed64,2,req" json:"Min,omitempty"`
@@ -141,6 +144,7 @@ func (m *BetRange) GetMax() float64 {
 	return 0
 }
 
+// RequireBet - require bet
 type RequireBet struct {
 	Pos              *int32    `protobuf:"varint,1,req" json:"Pos,omitempty"`
 	BetRange         *BetRange `protobuf:"bytes,2,req" json:"BetRange,omitempty"`
@@ -165,6 +169,7 @@ func (m *RequireBet) GetBetRange() *BetRange {
 	return nil
 }
 
+// AddBet - add bet
 type AddBet struct {
 	Pos              *int32 `protobuf:"varint,1,req" json:"Pos,omitempty"`
 	Bet              *Bet   `protobuf:"bytes,2,req" json:"Bet,omitempty"`
@@ -189,6 +194,7 @@ func (m *AddBet) GetBet() *Bet {
 	return nil
 }
 
+// BettingComplete - betting complete
 type BettingComplete struct {
 	Pot              *float64 `protobuf:"fixed64,1,req" json:"Pot,omitempty"`
 	Rake             *float64 `protobuf:"fixed64,2,req" json:"Rake,omitempty"`

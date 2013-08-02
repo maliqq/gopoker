@@ -13,6 +13,7 @@ var _ = proto.Marshal
 var _ = &json.SyntaxError{}
 var _ = math.Inf
 
+// ErrorMessage - notify error
 type ErrorMessage struct {
 	Message          *string `protobuf:"bytes,1,req" json:"Message,omitempty"`
 	XXX_unrecognized []byte  `json:"-"`
@@ -29,6 +30,7 @@ func (m *ErrorMessage) GetMessage() string {
 	return ""
 }
 
+// ChatMessage - notify chat message
 type ChatMessage struct {
 	Pos              *int32  `protobuf:"varint,1,req,name=pos" json:"pos,omitempty"`
 	Message          *string `protobuf:"bytes,2,req" json:"Message,omitempty"`
@@ -53,6 +55,7 @@ func (m *ChatMessage) GetMessage() string {
 	return ""
 }
 
+// DealerMessage - notify dealer message
 type DealerMessage struct {
 	Message          *string `protobuf:"bytes,1,req" json:"Message,omitempty"`
 	XXX_unrecognized []byte  `json:"-"`
@@ -69,6 +72,7 @@ func (m *DealerMessage) GetMessage() string {
 	return ""
 }
 
+// Envelope - different message types container
 type Envelope struct {
 	ErrorMessage  *ErrorMessage  `protobuf:"bytes,1,opt" json:"ErrorMessage,omitempty"`
 	ChatMessage   *ChatMessage   `protobuf:"bytes,2,opt" json:"ChatMessage,omitempty"`
@@ -250,6 +254,7 @@ func (m *Envelope) GetWinner() *Winner {
 	return nil
 }
 
+// Message - enveloper wrapper
 type Message struct {
 	Type      *string `protobuf:"bytes,1,req" json:"Type,omitempty"`
 	Timestamp *int64  `protobuf:"varint,2,req" json:"Timestamp,omitempty"`

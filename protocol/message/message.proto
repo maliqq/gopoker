@@ -5,19 +5,23 @@ import "protocol/message/message_play.proto";
 import "protocol/message/message_showdown.proto";
 import "protocol/message/message_table.proto";
 
+// ErrorMessage - notify error
 message ErrorMessage {
   required string Message = 1;
 }
 
+// ChatMessage - notify chat message
 message ChatMessage {
   required int32 pos = 1;
   required string Message = 2;
 }
 
+// DealerMessage - notify dealer message
 message DealerMessage {
   required string Message = 1;
 }
 
+// Envelope - different message types container
 message Envelope {
   optional ErrorMessage ErrorMessage = 1;
   optional ChatMessage ChatMessage = 2;
@@ -60,6 +64,7 @@ message Envelope {
   repeated string Except = 5;
 }*/
 
+// Message - enveloper wrapper
 message Message {
   required string Type = 1;
   required int64 Timestamp = 2;

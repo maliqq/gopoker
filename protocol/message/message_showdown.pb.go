@@ -13,6 +13,7 @@ var _ = proto.Marshal
 var _ = &json.SyntaxError{}
 var _ = math.Inf
 
+// Rank - hand rank
 type Rank int32
 
 const (
@@ -88,6 +89,7 @@ func (x *Rank) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// Hand - hand info
 type Hand struct {
 	Rank             *Rank  `protobuf:"varint,1,req,enum=message.Rank" json:"Rank,omitempty"`
 	Value            []byte `protobuf:"bytes,2,req" json:"Value,omitempty"`
@@ -128,6 +130,7 @@ func (m *Hand) GetKicker() []byte {
 	return nil
 }
 
+// ShowHand - notify show hand
 type ShowHand struct {
 	Pos              *int32  `protobuf:"varint,1,req" json:"Pos,omitempty"`
 	Player           *string `protobuf:"bytes,2,req" json:"Player,omitempty"`
@@ -176,6 +179,7 @@ func (m *ShowHand) GetHandString() string {
 	return ""
 }
 
+// ShowCards - notify show cards
 type ShowCards struct {
 	Pos              *int32  `protobuf:"varint,1,req" json:"Pos,omitempty"`
 	Player           *string `protobuf:"bytes,2,req" json:"Player,omitempty"`
@@ -218,6 +222,7 @@ func (m *ShowCards) GetMuck() bool {
 	return Default_ShowCards_Muck
 }
 
+// Winner - notify winner
 type Winner struct {
 	Pos              *int32   `protobuf:"varint,1,req" json:"Pos,omitempty"`
 	Player           *string  `protobuf:"bytes,2,req" json:"Player,omitempty"`

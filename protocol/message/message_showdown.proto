@@ -1,5 +1,6 @@
 package message;
 
+// Rank - hand rank
 enum Rank {
   StraightFlush = 0;
   FourKind = 1;
@@ -20,6 +21,7 @@ enum Rank {
   IncompleteLow = 14;
 }
 
+// Hand - hand info
 message Hand {
   required Rank Rank = 1;
   required bytes Value = 2;
@@ -27,6 +29,7 @@ message Hand {
   required bytes Kicker = 4;
 }
 
+// ShowHand - notify show hand
 message ShowHand {
   required int32 Pos = 1;
   required string Player = 2;
@@ -35,6 +38,7 @@ message ShowHand {
   required string HandString = 5;
 }
 
+// ShowCards - notify show cards
 message ShowCards {
   required int32 Pos = 1;
   required string Player = 2;
@@ -42,6 +46,7 @@ message ShowCards {
   required bool Muck = 4 [default = false];
 }
 
+// Winner - notify winner
 message Winner {
   required int32 Pos = 1;
   required string Player = 2;

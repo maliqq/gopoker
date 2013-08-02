@@ -4,8 +4,10 @@ import (
 	"code.google.com/p/goprotobuf/proto"
 )
 
+// Cards - byte array
 type Cards []byte
 
+// NewShowHand - notify show hand
 func NewShowHand(pos int, player *string, cards Cards, hand *Hand, handStr string) *Message {
 	return NewMessage(ShowHand{
 		Pos:        proto.Int32(int32(pos)),
@@ -16,6 +18,7 @@ func NewShowHand(pos int, player *string, cards Cards, hand *Hand, handStr strin
 	})
 }
 
+// NewShowCards - notify show cards
 func NewShowCards(pos int, player *string, cards Cards) *Message {
 	return NewMessage(ShowCards{
 		Pos:    proto.Int32(int32(pos)),
@@ -24,6 +27,7 @@ func NewShowCards(pos int, player *string, cards Cards) *Message {
 	})
 }
 
+// NewMuckCards - notify muck cards
 func NewMuckCards(pos int, player *string, cards Cards) *Message {
 	return NewMessage(ShowCards{
 		Pos:    proto.Int32(int32(pos)),
@@ -33,6 +37,7 @@ func NewMuckCards(pos int, player *string, cards Cards) *Message {
 	})
 }
 
+// NewWinner - notify new winner
 func NewWinner(pos int, player *string, amount float64) *Message {
 	return NewMessage(Winner{
 		Pos:    proto.Int32(int32(pos)),

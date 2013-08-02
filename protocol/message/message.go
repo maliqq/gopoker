@@ -13,11 +13,14 @@ import (
 )
 
 const (
+	// UseIndent - pretty json
 	UseIndent = false
 )
 
+// Payload - message data
 type Payload interface{}
 
+// NewMessage - create new message with payload
 func NewMessage(payload Payload) *Message {
 	payloadType := reflect.TypeOf(payload)
 	typeName := payloadType.Name()
@@ -103,6 +106,7 @@ func NewMessage(payload Payload) *Message {
 	}
 }
 
+// MarshalJSON - message to JSON
 func (msg *Message) MarshalJSON() ([]byte, error) {
 	data := map[string]interface{}{}
 	data["Type"] = msg.GetType()
@@ -116,6 +120,7 @@ func (msg *Message) MarshalJSON() ([]byte, error) {
 	return json.Marshal(data)
 }
 
+// Payload - get message payload
 func (msg *Message) Payload() Payload {
 	value := reflect.ValueOf(msg.Envelope)
 	method := value.MethodByName("Get" + msg.GetType())
@@ -130,6 +135,7 @@ func (msg *Message) Payload() Payload {
 	return nil
 }
 
+// PrintString - message to print string
 func (msg *Message) PrintString() string {
 	var err error
 	var s []byte
@@ -149,12 +155,14 @@ func (msg *Message) PrintString() string {
 	return string(s)
 }
 
+// NewErrorMessage - create new error message
 func NewErrorMessage(err error) *Message {
 	return NewMessage(ErrorMessage{
 		Message: proto.String(err.Error()),
 	})
 }
 
+// NewChatMessage - create new chat message
 func NewChatMessage(body string) *Message {
 	return NewMessage(ChatMessage{
 		Message: proto.String(body),
