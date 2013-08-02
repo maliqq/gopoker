@@ -20,7 +20,7 @@ func (this *GamePlay) StartBettingRound() Transition {
 	for current := range nextPos {
 		for _, pos := range this.Table.AllSeats().InPlay() {
 			seat := this.Table.Seat(pos)
-			if !seat.Calls(this.Betting.Required.Call) {
+			if !seat.Calls(this.Betting.BetRange.Call) {
 				seat.State = seatState.Play
 			}
 		}
@@ -50,7 +50,7 @@ func (this *GamePlay) StartBettingRound() Transition {
 }
 
 func (this *GamePlay) ResetBetting() {
-	this.Betting.Clear()
+	this.Betting.Clear(this.Table.Button)
 
 	for _, pos := range this.Table.AllSeats().InPlay() {
 		seat := this.Table.Seat(pos)

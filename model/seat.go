@@ -128,6 +128,10 @@ func (this *Seat) SetStack(amount float64) {
 	}
 }
 
+func (this *Seat) AdvanceStack(amount float64) {
+	this.Stack += amount
+}
+
 func (this *Seat) Proto() *message.Seat {
 	return &message.Seat{
 		State: message.SeatState(

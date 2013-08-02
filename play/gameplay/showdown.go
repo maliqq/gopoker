@@ -77,6 +77,8 @@ func (this *GamePlay) Winners(highHands ShowdownHands, lowHands ShowdownHands) {
 
 		for winner, amount := range winners {
 			pos, _ := this.Table.Pos(winner)
+			seat := this.Table.Seat(pos)
+			seat.AdvanceStack(amount)
 			this.Broadcast.All <- message.NewWinner(pos, winner.Proto(), amount)
 		}
 	}

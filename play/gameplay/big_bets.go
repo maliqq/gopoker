@@ -1,7 +1,7 @@
 package gameplay
 
 func (this *GamePlay) BigBets() Transition {
-	this.Betting.BigBets = true
+	this.Betting.BigBets()
 
 	return Next
 }

@@ -18,13 +18,13 @@ type ErrorMessage struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (this *ErrorMessage) Reset()         { *this = ErrorMessage{} }
-func (this *ErrorMessage) String() string { return proto.CompactTextString(this) }
-func (*ErrorMessage) ProtoMessage()       {}
+func (m *ErrorMessage) Reset()         { *m = ErrorMessage{} }
+func (m *ErrorMessage) String() string { return proto.CompactTextString(m) }
+func (*ErrorMessage) ProtoMessage()    {}
 
-func (this *ErrorMessage) GetMessage() string {
-	if this != nil && this.Message != nil {
-		return *this.Message
+func (m *ErrorMessage) GetMessage() string {
+	if m != nil && m.Message != nil {
+		return *m.Message
 	}
 	return ""
 }
@@ -35,20 +35,20 @@ type ChatMessage struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (this *ChatMessage) Reset()         { *this = ChatMessage{} }
-func (this *ChatMessage) String() string { return proto.CompactTextString(this) }
-func (*ChatMessage) ProtoMessage()       {}
+func (m *ChatMessage) Reset()         { *m = ChatMessage{} }
+func (m *ChatMessage) String() string { return proto.CompactTextString(m) }
+func (*ChatMessage) ProtoMessage()    {}
 
-func (this *ChatMessage) GetPos() int32 {
-	if this != nil && this.Pos != nil {
-		return *this.Pos
+func (m *ChatMessage) GetPos() int32 {
+	if m != nil && m.Pos != nil {
+		return *m.Pos
 	}
 	return 0
 }
 
-func (this *ChatMessage) GetMessage() string {
-	if this != nil && this.Message != nil {
-		return *this.Message
+func (m *ChatMessage) GetMessage() string {
+	if m != nil && m.Message != nil {
+		return *m.Message
 	}
 	return ""
 }
@@ -58,13 +58,13 @@ type DealerMessage struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (this *DealerMessage) Reset()         { *this = DealerMessage{} }
-func (this *DealerMessage) String() string { return proto.CompactTextString(this) }
-func (*DealerMessage) ProtoMessage()       {}
+func (m *DealerMessage) Reset()         { *m = DealerMessage{} }
+func (m *DealerMessage) String() string { return proto.CompactTextString(m) }
+func (*DealerMessage) ProtoMessage()    {}
 
-func (this *DealerMessage) GetMessage() string {
-	if this != nil && this.Message != nil {
-		return *this.Message
+func (m *DealerMessage) GetMessage() string {
+	if m != nil && m.Message != nil {
+		return *m.Message
 	}
 	return ""
 }
@@ -94,153 +94,153 @@ type Envelope struct {
 	XXX_unrecognized []byte           `json:"-"`
 }
 
-func (this *Envelope) Reset()         { *this = Envelope{} }
-func (this *Envelope) String() string { return proto.CompactTextString(this) }
-func (*Envelope) ProtoMessage()       {}
+func (m *Envelope) Reset()         { *m = Envelope{} }
+func (m *Envelope) String() string { return proto.CompactTextString(m) }
+func (*Envelope) ProtoMessage()    {}
 
-func (this *Envelope) GetErrorMessage() *ErrorMessage {
-	if this != nil {
-		return this.ErrorMessage
+func (m *Envelope) GetErrorMessage() *ErrorMessage {
+	if m != nil {
+		return m.ErrorMessage
 	}
 	return nil
 }
 
-func (this *Envelope) GetChatMessage() *ChatMessage {
-	if this != nil {
-		return this.ChatMessage
+func (m *Envelope) GetChatMessage() *ChatMessage {
+	if m != nil {
+		return m.ChatMessage
 	}
 	return nil
 }
 
-func (this *Envelope) GetDealerMessage() *DealerMessage {
-	if this != nil {
-		return this.DealerMessage
+func (m *Envelope) GetDealerMessage() *DealerMessage {
+	if m != nil {
+		return m.DealerMessage
 	}
 	return nil
 }
 
-func (this *Envelope) GetPlayStart() *PlayStart {
-	if this != nil {
-		return this.PlayStart
+func (m *Envelope) GetPlayStart() *PlayStart {
+	if m != nil {
+		return m.PlayStart
 	}
 	return nil
 }
 
-func (this *Envelope) GetPlayStop() *PlayStop {
-	if this != nil {
-		return this.PlayStop
+func (m *Envelope) GetPlayStop() *PlayStop {
+	if m != nil {
+		return m.PlayStop
 	}
 	return nil
 }
 
-func (this *Envelope) GetStreetStart() *StreetStart {
-	if this != nil {
-		return this.StreetStart
+func (m *Envelope) GetStreetStart() *StreetStart {
+	if m != nil {
+		return m.StreetStart
 	}
 	return nil
 }
 
-func (this *Envelope) GetBettingComplete() *BettingComplete {
-	if this != nil {
-		return this.BettingComplete
+func (m *Envelope) GetBettingComplete() *BettingComplete {
+	if m != nil {
+		return m.BettingComplete
 	}
 	return nil
 }
 
-func (this *Envelope) GetJoinTable() *JoinTable {
-	if this != nil {
-		return this.JoinTable
+func (m *Envelope) GetJoinTable() *JoinTable {
+	if m != nil {
+		return m.JoinTable
 	}
 	return nil
 }
 
-func (this *Envelope) GetLeaveTable() *LeaveTable {
-	if this != nil {
-		return this.LeaveTable
+func (m *Envelope) GetLeaveTable() *LeaveTable {
+	if m != nil {
+		return m.LeaveTable
 	}
 	return nil
 }
 
-func (this *Envelope) GetSitOut() *SitOut {
-	if this != nil {
-		return this.SitOut
+func (m *Envelope) GetSitOut() *SitOut {
+	if m != nil {
+		return m.SitOut
 	}
 	return nil
 }
 
-func (this *Envelope) GetComeBack() *ComeBack {
-	if this != nil {
-		return this.ComeBack
+func (m *Envelope) GetComeBack() *ComeBack {
+	if m != nil {
+		return m.ComeBack
 	}
 	return nil
 }
 
-func (this *Envelope) GetMoveButton() *MoveButton {
-	if this != nil {
-		return this.MoveButton
+func (m *Envelope) GetMoveButton() *MoveButton {
+	if m != nil {
+		return m.MoveButton
 	}
 	return nil
 }
 
-func (this *Envelope) GetRequireBet() *RequireBet {
-	if this != nil {
-		return this.RequireBet
+func (m *Envelope) GetRequireBet() *RequireBet {
+	if m != nil {
+		return m.RequireBet
 	}
 	return nil
 }
 
-func (this *Envelope) GetAddBet() *AddBet {
-	if this != nil {
-		return this.AddBet
+func (m *Envelope) GetAddBet() *AddBet {
+	if m != nil {
+		return m.AddBet
 	}
 	return nil
 }
 
-func (this *Envelope) GetDealCards() *DealCards {
-	if this != nil {
-		return this.DealCards
+func (m *Envelope) GetDealCards() *DealCards {
+	if m != nil {
+		return m.DealCards
 	}
 	return nil
 }
 
-func (this *Envelope) GetRequireDiscard() *RequireDiscard {
-	if this != nil {
-		return this.RequireDiscard
+func (m *Envelope) GetRequireDiscard() *RequireDiscard {
+	if m != nil {
+		return m.RequireDiscard
 	}
 	return nil
 }
 
-func (this *Envelope) GetDiscarded() *Discarded {
-	if this != nil {
-		return this.Discarded
+func (m *Envelope) GetDiscarded() *Discarded {
+	if m != nil {
+		return m.Discarded
 	}
 	return nil
 }
 
-func (this *Envelope) GetDiscardCards() *DiscardCards {
-	if this != nil {
-		return this.DiscardCards
+func (m *Envelope) GetDiscardCards() *DiscardCards {
+	if m != nil {
+		return m.DiscardCards
 	}
 	return nil
 }
 
-func (this *Envelope) GetShowHand() *ShowHand {
-	if this != nil {
-		return this.ShowHand
+func (m *Envelope) GetShowHand() *ShowHand {
+	if m != nil {
+		return m.ShowHand
 	}
 	return nil
 }
 
-func (this *Envelope) GetShowCards() *ShowCards {
-	if this != nil {
-		return this.ShowCards
+func (m *Envelope) GetShowCards() *ShowCards {
+	if m != nil {
+		return m.ShowCards
 	}
 	return nil
 }
 
-func (this *Envelope) GetWinner() *Winner {
-	if this != nil {
-		return this.Winner
+func (m *Envelope) GetWinner() *Winner {
+	if m != nil {
+		return m.Winner
 	}
 	return nil
 }
@@ -252,27 +252,27 @@ type Message struct {
 	XXX_unrecognized []byte    `json:"-"`
 }
 
-func (this *Message) Reset()         { *this = Message{} }
-func (this *Message) String() string { return proto.CompactTextString(this) }
-func (*Message) ProtoMessage()       {}
+func (m *Message) Reset()         { *m = Message{} }
+func (m *Message) String() string { return proto.CompactTextString(m) }
+func (*Message) ProtoMessage()    {}
 
-func (this *Message) GetType() string {
-	if this != nil && this.Type != nil {
-		return *this.Type
+func (m *Message) GetType() string {
+	if m != nil && m.Type != nil {
+		return *m.Type
 	}
 	return ""
 }
 
-func (this *Message) GetTimestamp() int64 {
-	if this != nil && this.Timestamp != nil {
-		return *this.Timestamp
+func (m *Message) GetTimestamp() int64 {
+	if m != nil && m.Timestamp != nil {
+		return *m.Timestamp
 	}
 	return 0
 }
 
-func (this *Message) GetEnvelope() *Envelope {
-	if this != nil {
-		return this.Envelope
+func (m *Message) GetEnvelope() *Envelope {
+	if m != nil {
+		return m.Envelope
 	}
 	return nil
 }

@@ -10,6 +10,7 @@ import (
 	"math/rand"
 	"net/rpc"
 	"net/rpc/jsonrpc"
+	"time"
 )
 
 import (
@@ -38,6 +39,7 @@ var (
 
 func main() {
 	flag.Parse()
+	rand.Seed(time.Now().UnixNano())
 	model.LoadGames(*ConfigDir)
 
 	client, err := jsonrpc.Dial("tcp", "localhost:8081")
