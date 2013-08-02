@@ -1,4 +1,4 @@
-package zeromq_client
+package zmq
 
 import (
 	"encoding/json"
@@ -13,6 +13,7 @@ import (
 	"gopoker/protocol"
 )
 
+// Connection - 0mq connection
 type Connection struct {
 	Context *zmq.Context
 	Socket  *zmq.Socket
@@ -20,6 +21,7 @@ type Connection struct {
 	Recv    protocol.MessageChannel
 }
 
+// NewConnection - create new connection
 func NewConnection(addr string) *Connection {
 	context, _ := zmq.NewContext()
 	socket, _ := context.NewSocket(zmq.PAIR)
@@ -37,6 +39,7 @@ func NewConnection(addr string) *Connection {
 	return conn
 }
 
+// Start - start loop
 func (conn *Connection) Start() {
 	go func() {
 		for {

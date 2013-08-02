@@ -1,4 +1,4 @@
-package console_client
+package cli
 
 import (
 	"bufio"
@@ -21,14 +21,17 @@ import (
 	"gopoker/play"
 )
 
+// Connection - console connection
 type Connection struct {
 	Server *play.Play
 }
 
+// Reply - reply to play
 func (c *Connection) Reply(msg *message.Message) {
 	c.Server.Recv <- msg
 }
 
+// Handle - handle protocol message
 func (c *Connection) Handle(msg *message.Message) {
 	log.Println(console.Color(console.Green, fmt.Sprintf("[receive] %s", msg)))
 
