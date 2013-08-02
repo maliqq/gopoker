@@ -4,16 +4,19 @@ import (
 	"fmt"
 )
 
+// SidePot - side pot
 type SidePot struct {
 	Barrier float64
 	Members map[Player]float64
 }
 
+// Pot - pot
 type Pot struct {
 	Main *SidePot
 	Side []*SidePot
 }
 
+// NewSidePot - create side pot with barrier amount
 func NewSidePot(amount float64) *SidePot {
 	return &SidePot{
 		Barrier: amount,
@@ -21,6 +24,7 @@ func NewSidePot(amount float64) *SidePot {
 	}
 }
 
+// NewPot - create new pot
 func NewPot() *Pot {
 	return &Pot{
 		Main: NewSidePot(0.),
@@ -28,6 +32,7 @@ func NewPot() *Pot {
 	}
 }
 
+// Total - get side pot total
 func (pot *SidePot) Total() float64 {
 	sum := 0.
 	for _, amount := range pot.Members {
@@ -37,6 +42,7 @@ func (pot *SidePot) Total() float64 {
 	return sum
 }
 
+// Total - get pot total
 func (pot *Pot) Total() float64 {
 	sum := 0.
 	for _, sidePot := range pot.SidePots() {
@@ -46,10 +52,12 @@ func (pot *Pot) Total() float64 {
 	return sum
 }
 
+// IsActive - check if side pot is active
 func (pot *SidePot) IsActive() bool {
 	return len(pot.Members) > 0 && pot.Total() > 0.
 }
 
+// Add - add amount to side pot
 func (pot *SidePot) Add(member Player, amount float64) float64 {
 	if amount > 0. {
 		value, exists := pot.Members[member]
@@ -73,6 +81,7 @@ func (pot *SidePot) Add(member Player, amount float64) float64 {
 	return amount
 }
 
+// String - side pot to string
 func (pot *SidePot) String() string {
 	s := "SIDE POT\n"
 	for member, value := range pot.Members {
@@ -82,6 +91,7 @@ func (pot *SidePot) String() string {
 	return s
 }
 
+// String - pot to string
 func (pot *Pot) String() string {
 	s := "\n"
 	for _, pot := range pot.SidePots() {
@@ -90,6 +100,7 @@ func (pot *Pot) String() string {
 	return s
 }
 
+// SidePots - all side pots
 func (pot *Pot) SidePots() []*SidePot {
 	//return append(pot.Side, pot.Main)
 	pots := []*SidePot{}
@@ -107,6 +118,7 @@ func (pot *Pot) SidePots() []*SidePot {
 	return pots
 }
 
+// Split - split side pot by barrier
 func (pot *SidePot) Split(member Player, remain float64) (*SidePot, *SidePot) {
 	pot.Members[member] += remain
 
@@ -129,12 +141,14 @@ func (pot *SidePot) Split(member Player, remain float64) (*SidePot, *SidePot) {
 	return main, side
 }
 
+// Split - split pot by barrier
 func (pot *Pot) Split(member Player, amount float64) {
 	main, side := pot.Main.Split(member, amount)
 	pot.Side = append(pot.Side, side)
 	pot.Main = main
 }
 
+// Add - add amount to pot
 func (pot *Pot) Add(member Player, amount float64, allin bool) {
 	remain := amount
 	for _, side := range pot.Side {

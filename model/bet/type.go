@@ -1,24 +1,39 @@
 package bet
 
+// Type - bet type
 type Type string
 
 const (
-	Ante       Type = "Ante"
-	BringIn    Type = "BringIn"
+	// Ante - ante bet
+	Ante Type = "Ante"
+	// BringIn - bring in forced bet
+	BringIn Type = "BringIn"
+	// SmallBlind - small blind forced bet
 	SmallBlind Type = "SmallBlind"
-	BigBlind   Type = "BigBlind"
+	// BigBlind - big blind forced bet
+	BigBlind Type = "BigBlind"
+	// GuestBlind - guest blind forced bet
 	GuestBlind Type = "GuestBlind"
-	Straddle   Type = "Straddle"
+	// Straddle - straddle forced bet
+	Straddle Type = "Straddle"
 
+	// Raise - raise active bet
 	Raise Type = "Raise"
-	Call  Type = "Call"
+	// Call - call active bet
+	Call Type = "Call"
 
+	// Check - check passive bet
 	Check Type = "Check"
-	Fold  Type = "Fold"
+	// Fold - fold passive bet
+	Fold Type = "Fold"
 
-	Discard  Type = "Discard"
+	// Discard - discard cards
+	Discard Type = "Discard"
+	// StandPat - stand pat
 	StandPat Type = "StandPat"
 
+	// Show - show cards
 	Show Type = "Show"
+	// Muck - muck cards
 	Muck Type = "Muck"
 )

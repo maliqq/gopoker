@@ -1,14 +1,11 @@
 package model
 
 import (
-	_ "fmt"
-)
-
-import (
 	"gopoker/poker"
 	"gopoker/poker/hand"
 )
 
+// Deal - wrapper around dealer
 type Deal struct {
 	dealer *Dealer
 	// pocket cards
@@ -17,6 +14,7 @@ type Deal struct {
 	Board poker.Cards
 }
 
+// NewDeal initialize deal
 func NewDeal() *Deal {
 	return &Deal{
 		dealer:  NewDealer(),
@@ -25,6 +23,7 @@ func NewDeal() *Deal {
 	}
 }
 
+// Pocket - get dealt pocket cards for player
 func (deal *Deal) Pocket(player Player) poker.Cards {
 	cards, found := deal.Pockets[player]
 
@@ -36,6 +35,7 @@ func (deal *Deal) Pocket(player Player) poker.Cards {
 	return cards
 }
 
+// DealBoard - deal shared cards
 func (deal *Deal) DealBoard(cardsNum int) poker.Cards {
 	cards := deal.dealer.Share(cardsNum)
 
@@ -44,6 +44,7 @@ func (deal *Deal) DealBoard(cardsNum int) poker.Cards {
 	return cards
 }
 
+// DealPocket - deal private cards
 func (deal *Deal) DealPocket(player Player, cardsNum int) poker.Cards {
 	pocket := deal.Pocket(player)
 
@@ -53,6 +54,7 @@ func (deal *Deal) DealPocket(player Player, cardsNum int) poker.Cards {
 	return cards
 }
 
+// Discard - return cards to dealer
 func (deal *Deal) Discard(player Player, cards poker.Cards) poker.Cards {
 	pocket := deal.Pocket(player)
 	newCards := deal.dealer.Discard(cards)
@@ -62,6 +64,7 @@ func (deal *Deal) Discard(player Player, cards poker.Cards) poker.Cards {
 	return newCards
 }
 
+// Rank - rank cards for player
 func (deal *Deal) Rank(player Player, ranking hand.Ranking, hasBoard bool) (poker.Cards, *poker.Hand) {
 	pocket := deal.Pocket(player)
 

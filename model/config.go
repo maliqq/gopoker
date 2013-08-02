@@ -7,6 +7,7 @@ import (
 	"path"
 )
 
+// ReadConfig - read config file
 func ReadConfig(configDir, filename string, result interface{}) {
 	filepath := path.Join(configDir, filename)
 	f, err := os.Open(filepath)

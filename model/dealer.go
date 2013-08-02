@@ -8,6 +8,7 @@ import (
 	"gopoker/poker"
 )
 
+// Dealer - cards dealer
 type Dealer struct {
 	Deck      poker.Cards
 	burned    poker.Cards
@@ -16,6 +17,7 @@ type Dealer struct {
 	dealt     poker.Cards
 }
 
+// NewDealerWithDeck - create dealer with deck
 func NewDealerWithDeck(deck poker.Cards) *Dealer {
 	return &Dealer{
 		Deck:      deck,
@@ -26,6 +28,7 @@ func NewDealerWithDeck(deck poker.Cards) *Dealer {
 	}
 }
 
+// NewDealer - create dealer with random deck
 func NewDealer() *Dealer {
 	return NewDealerWithDeck(poker.NewDeck())
 }
@@ -48,11 +51,13 @@ func (dealer *Dealer) burn(n int) {
 	dealer.burned = append(dealer.burned, cards...)
 }
 
+// Burn - burn cards
 func (dealer *Dealer) Burn(cards poker.Cards) {
 	dealer.Deck = dealer.Deck.Diff(cards)
 	dealer.burned = append(dealer.burned, cards...)
 }
 
+// Discard - discard cards
 func (dealer *Dealer) Discard(cards poker.Cards) poker.Cards {
 	n := len(cards)
 	if n > len(dealer.Deck) {
@@ -68,6 +73,7 @@ func (dealer *Dealer) Discard(cards poker.Cards) poker.Cards {
 	return dealt
 }
 
+// Share - share cards
 func (dealer *Dealer) Share(n int) poker.Cards {
 	dealer.burn(1)
 
@@ -78,6 +84,7 @@ func (dealer *Dealer) Share(n int) poker.Cards {
 	return cards
 }
 
+// Deal - deal cards
 func (dealer *Dealer) Deal(n int) poker.Cards {
 	cards, _ := dealer.give(n)
 
@@ -93,6 +100,7 @@ func (dealer *Dealer) reshuffle() {
 	dealer.burned = poker.Cards{}
 }
 
+// String - dealer to string
 func (dealer *Dealer) String() string {
 	return fmt.Sprintf("dealer: deck=%s dealt=%s burned=%s", dealer.Deck, dealer.dealt, dealer.burned)
 }

@@ -6,19 +6,17 @@ import (
 )
 
 import (
-	_ "code.google.com/p/goprotobuf/proto"
-)
-
-import (
 	"gopoker/model/game"
 	"gopoker/poker/hand"
 	"gopoker/protocol/message"
 )
 
 const (
+	// MixedGameMaxTableSize - table size for mixed game
 	MixedGameMaxTableSize = 8
 )
 
+// GameOptions - game options
 type GameOptions struct {
 	Group game.Group
 
@@ -41,26 +39,31 @@ type GameOptions struct {
 	DefaultLimit game.Limit
 }
 
+// MixOptions - mix options
 type MixOptions struct {
 	Type game.LimitedGame
 	game.Limit
 }
 
+// Game - game
 type Game struct {
 	Type game.LimitedGame
 	game.Limit
 	*GameOptions `json:"-"`
 }
 
+// Mix - mix
 type Mix struct {
 	Type  game.MixedGame
 	Games []*Game `json:"-"`
 }
 
+// Variation - union of Game and Mix
 type Variation interface {
 	IsMixed() bool
 }
 
+// NewGame - create game
 func NewGame(g game.Type, limit game.Limit) *Game {
 	limitedGame, success := g.(game.LimitedGame)
 
@@ -77,6 +80,7 @@ func NewGame(g game.Type, limit game.Limit) *Game {
 	return game.WithDefaults()
 }
 
+// WithDefaults - load default options for game
 func (game *Game) WithDefaults() *Game {
 	var success bool
 	game.GameOptions, success = Games[game.Type]
@@ -92,14 +96,17 @@ func (game *Game) WithDefaults() *Game {
 	return game
 }
 
+// IsMixed - false
 func (game *Game) IsMixed() bool {
 	return false
 }
 
+// String - game to string
 func (game *Game) String() string {
 	return fmt.Sprintf("%s %s", game.Type, game.Limit)
 }
 
+// Proto - game to proto
 func (game *Game) Proto() *message.Game {
 	return &message.Game{
 		Type: message.GameType(
@@ -112,6 +119,7 @@ func (game *Game) Proto() *message.Game {
 	}
 }
 
+// NewMix - create mix
 func NewMix(g game.Type) *Mix {
 	mixedGame, success := g.(game.MixedGame)
 
@@ -128,6 +136,7 @@ func NewMix(g game.Type) *Mix {
 	return mix.WithDefaults()
 }
 
+// WithDefaults - load default options for mix
 func (mix *Mix) WithDefaults() *Mix {
 	options, success := Mixes[mix.Type]
 	if !success {
@@ -144,10 +153,12 @@ func (mix *Mix) WithDefaults() *Mix {
 	return mix
 }
 
+// String - mix to string
 func (mix *Mix) String() string {
 	return fmt.Sprintf("%s", mix.Type)
 }
 
+// IsMixed - false
 func (mix *Mix) IsMixed() bool {
 	return true
 }

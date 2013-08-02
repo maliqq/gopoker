@@ -14,6 +14,7 @@ import (
 	"gopoker/protocol/message"
 )
 
+// Stake - bet sizing
 type Stake struct {
 	Size float64
 
@@ -28,11 +29,16 @@ type Stake struct {
 }
 
 const (
-	BigBetAmount     = 2.
-	BigBlindAmount   = 1.
+	// BigBetAmount - big bet amount rate
+	BigBetAmount = 2.
+	// BigBlindAmount - big blind amount rate
+	BigBlindAmount = 1.
+	// SmallBlindAmount - small blind amount rate
 	SmallBlindAmount = 0.5
-	AnteAmount       = 0.25
-	BringInAmount    = 0.125
+	// AnteAmount - ante amount rate
+	AnteAmount = 0.25
+	// BringInAmount - bring in amount rate
+	BringInAmount = 0.125
 )
 
 var betAmounts = map[bet.Type]float64{
@@ -44,10 +50,12 @@ var betAmounts = map[bet.Type]float64{
 	bet.Straddle:   BigBetAmount,
 }
 
+// NewStake - create new stake
 func NewStake(size float64) *Stake {
 	return &Stake{Size: size}
 }
 
+// Amount - bet sizing for bet type
 func (stake *Stake) Amount(betType bet.Type) float64 {
 	switch betType {
 	case bet.Ante:
@@ -76,38 +84,47 @@ func (stake *Stake) Amount(betType bet.Type) float64 {
 	return k * stake.Size
 }
 
+// BigBetAmount - amount for big bets
 func (stake *Stake) BigBetAmount() float64 {
 	return stake.Size * BigBetAmount
 }
 
+// Blinds - return small blind and big blind amounts
 func (stake *Stake) Blinds() (float64, float64) {
 	return stake.SmallBlindAmount(), stake.BigBlindAmount()
 }
 
+// BigBlindAmount - return big blind amount
 func (stake *Stake) BigBlindAmount() float64 {
 	return stake.Amount(bet.BigBlind)
 }
 
+// SmallBlindAmount - return small blind amount
 func (stake *Stake) SmallBlindAmount() float64 {
 	return stake.Amount(bet.SmallBlind)
 }
 
+// AnteAmount - return ante amount
 func (stake *Stake) AnteAmount() float64 {
 	return stake.Amount(bet.Ante)
 }
 
+// BringInAmount - return bring in amount
 func (stake *Stake) BringInAmount() float64 {
 	return stake.Amount(bet.BringIn)
 }
 
+// HasAnte - check for ante
 func (stake *Stake) HasAnte() bool {
 	return stake.WithAnte || stake.Ante != 0.
 }
 
+// HasBringIn - check for bring in
 func (stake *Stake) HasBringIn() bool {
 	return stake.WithBringIn || stake.BringIn != 0.
 }
 
+// String - stake to string
 func (stake *Stake) String() string {
 	s := fmt.Sprintf("%.2f/%.2f", stake.SmallBlindAmount(), stake.BigBlindAmount())
 
@@ -122,6 +139,7 @@ func (stake *Stake) String() string {
 	return s
 }
 
+// MarshalJSON - stake to JSON
 func (stake *Stake) MarshalJSON() ([]byte, error) {
 	data := map[string]float64{
 		"SmallBlind": stake.SmallBlindAmount(),
@@ -136,6 +154,7 @@ func (stake *Stake) MarshalJSON() ([]byte, error) {
 	return json.Marshal(data)
 }
 
+// Proto - stake to protobuf
 func (stake *Stake) Proto() *message.Stake {
 	return &message.Stake{
 		BigBlind:   proto.Float64(stake.BigBlindAmount()),

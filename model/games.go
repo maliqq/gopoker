@@ -10,10 +10,13 @@ import (
 )
 
 const (
+	// GamesConfigFile - default games config filename
 	GamesConfigFile = "games.json"
+	// MixesConfigFile - default mixes config filename
 	MixesConfigFile = "mixes.json"
 )
 
+// Games - game options
 var Games = map[game.LimitedGame]*GameOptions{
 	game.Texas: &GameOptions{
 		Group:        game.Holdem,
@@ -139,6 +142,7 @@ var Games = map[game.LimitedGame]*GameOptions{
 	},
 }
 
+// Mixes - mix options
 var Mixes = map[game.MixedGame][]MixOptions{
 	game.Horse: []MixOptions{
 		MixOptions{Type: game.Texas, Limit: game.FixedLimit},
@@ -160,6 +164,7 @@ var Mixes = map[game.MixedGame][]MixOptions{
 	},
 }
 
+// LoadGames - load games from config dir
 func LoadGames(configDir string) {
 	ReadConfig(configDir, GamesConfigFile, &Games)
 	log.Printf("games loaded: %d", len(Games))
