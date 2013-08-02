@@ -29,13 +29,15 @@ func (g MixedGame) Game() Game {
 
 // limited games
 const (
-	Texas    LimitedGame = "Texas"    // Texas - texas holdem
-	Omaha    LimitedGame = "Omaha"    // Omaha - omaha holdem
-	Omaha8   LimitedGame = "Omaha8"   // Omaha8 - omaha holdem hi/lo
-	Stud     LimitedGame = "Stud"     // Stud - seven card stud
-	Stud8    LimitedGame = "Stud8"    // Stud8 - seven card stud hi/lo
-	Razz     LimitedGame = "Razz"     // Razz - Ace to Five lowball stud
-	London   LimitedGame = "London"   // London - Ace to Six lowball stud
+	Texas  LimitedGame = "Texas"  // Texas - texas holdem
+	Omaha  LimitedGame = "Omaha"  // Omaha - omaha holdem
+	Omaha8 LimitedGame = "Omaha8" // Omaha8 - omaha holdem hi/lo
+
+	Stud   LimitedGame = "Stud"   // Stud - seven card stud
+	Stud8  LimitedGame = "Stud8"  // Stud8 - seven card stud hi/lo
+	Razz   LimitedGame = "Razz"   // Razz - Ace to Five lowball stud
+	London LimitedGame = "London" // London - Ace to Six lowball stud
+
 	FiveCard LimitedGame = "FiveCard" // FiveCard - five card draw poker
 	Single27 LimitedGame = "Single27" // Single27 - 2-7 lowball draw poker
 	Triple27 LimitedGame = "Triple27" // Triple27 - 2-7 lowball poker with 3 draws

@@ -145,22 +145,61 @@ var Games = map[game.LimitedGame]*GameOptions{
 // Mixes - mix options
 var Mixes = map[game.MixedGame][]MixOptions{
 	game.Horse: []MixOptions{
-		MixOptions{Type: game.Texas, Limit: game.FixedLimit},
-		MixOptions{Type: game.Omaha8, Limit: game.FixedLimit},
-		MixOptions{Type: game.Razz, Limit: game.FixedLimit},
-		MixOptions{Type: game.Stud, Limit: game.FixedLimit},
-		MixOptions{Type: game.Stud8, Limit: game.FixedLimit},
+		MixOptions{
+			Type:  game.Texas,
+			Limit: game.FixedLimit,
+		},
+		MixOptions{
+			Type:  game.Omaha8,
+			Limit: game.FixedLimit,
+		},
+		MixOptions{
+			Type:  game.Razz,
+			Limit: game.FixedLimit,
+		},
+		MixOptions{
+			Type:  game.Stud,
+			Limit: game.FixedLimit,
+		},
+		MixOptions{
+			Type:  game.Stud8,
+			Limit: game.FixedLimit,
+		},
 	},
 
 	game.Eight: []MixOptions{
-		MixOptions{Type: game.Triple27, Limit: game.FixedLimit},
-		MixOptions{Type: game.Texas, Limit: game.FixedLimit},
-		MixOptions{Type: game.Omaha8, Limit: game.FixedLimit},
-		MixOptions{Type: game.Razz, Limit: game.FixedLimit},
-		MixOptions{Type: game.Stud, Limit: game.FixedLimit},
-		MixOptions{Type: game.Stud8, Limit: game.FixedLimit},
-		MixOptions{Type: game.Texas, Limit: game.NoLimit},
-		MixOptions{Type: game.Omaha, Limit: game.PotLimit},
+		MixOptions{
+			Type:  game.Triple27,
+			Limit: game.FixedLimit,
+		},
+		MixOptions{
+			Type:  game.Texas,
+			Limit: game.FixedLimit,
+		},
+		MixOptions{
+			Type:  game.Omaha8,
+			Limit: game.FixedLimit,
+		},
+		MixOptions{
+			Type:  game.Razz,
+			Limit: game.FixedLimit,
+		},
+		MixOptions{
+			Type:  game.Stud,
+			Limit: game.FixedLimit,
+		},
+		MixOptions{
+			Type:  game.Stud8,
+			Limit: game.FixedLimit,
+		},
+		MixOptions{
+			Type:  game.Texas,
+			Limit: game.NoLimit,
+		},
+		MixOptions{
+			Type:  game.Omaha,
+			Limit: game.PotLimit,
+		},
 	},
 }
 
