@@ -5,6 +5,7 @@ import (
 	"gopoker/protocol/message"
 )
 
+// BringIn - post bring in
 func (gp *GamePlay) BringIn() Transition {
 	minPos := 0
 	var card *poker.Card

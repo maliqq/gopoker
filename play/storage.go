@@ -11,12 +11,14 @@ import (
 	"gopoker/storage"
 )
 
+// Storage - storage for play data
 type Storage struct {
 	*storage.PlayStore
 	Current *storage.Play
 	Recv    protocol.MessageChannel
 }
 
+// NewStorage - create new storage
 func NewStorage(ps *storage.PlayStore) *Storage {
 	storage := &Storage{
 		PlayStore: ps,
@@ -38,7 +40,7 @@ func (stor *Storage) receive() {
 func (stor *Storage) handle(msg *message.Message) {
 	switch msg.Payload().(type) {
 	case *message.PlayStart:
-		stor.Current = stor.NewPlay()
+		stor.Current = storage.NewPlay()
 		stor.Current.Play = msg.Envelope.PlayStart.Play
 
 	case *message.PlayStop:
@@ -58,14 +60,5 @@ func (stor *Storage) handle(msg *message.Message) {
 
 	default:
 		log.Printf("[storage] got %s", msg)
-	}
-}
-
-func (stor *Storage) NewPlay() *storage.Play {
-	return &storage.Play{
-		Id:         storage.NewObjectId(),
-		Start:      time.Now(),
-		Winners:    map[string]float64{},
-		KnownCards: map[string]message.Cards{},
 	}
 }

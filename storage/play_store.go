@@ -15,18 +15,21 @@ import (
 	"gopoker/protocol/message"
 )
 
+// PlayStoreConfig - MongoDB store config
 type PlayStoreConfig struct {
 	Host     string
 	Database string
 }
 
+// PlayStore - MongoDB store
 type PlayStore struct {
 	Session *mgo.Session
 	Config  *PlayStoreConfig
 }
 
+// Play - play data dump
 type Play struct {
-	Id         bson.ObjectId `bson:"_id"`
+	ID         bson.ObjectId `bson:"_id"`
 	Start      time.Time
 	Stop       time.Time
 	Play       *message.Play `bson:"play"`
@@ -37,12 +40,25 @@ type Play struct {
 	Log        []*message.Message
 }
 
-func NewObjectId() bson.ObjectId {
+// NewPlay - create new play
+func NewPlay() *Play {
+	return &Play{
+		ID:         NewObjectID(),
+		Start:      time.Now(),
+		Winners:    map[string]float64{},
+		KnownCards: map[string]message.Cards{},
+	}
+}
+
+// NewObjectID - create new object id
+func NewObjectID() bson.ObjectId {
 	return bson.NewObjectId()
 }
 
+// Debug - debug mode
 var Debug = false
 
+// OpenPlayStore - open MongoDB
 func OpenPlayStore(config *PlayStoreConfig) (*PlayStore, error) {
 	session, err := mgo.Dial(config.Host)
 	if err != nil {
@@ -63,19 +79,23 @@ func OpenPlayStore(config *PlayStoreConfig) (*PlayStore, error) {
 	return store, nil
 }
 
+// Close - close MongoDB
 func (ps *PlayStore) Close() {
 	ps.Session.Close()
 }
 
+// Database - get database
 func (ps *PlayStore) Database() *mgo.Database {
 	return ps.Session.DB(ps.Config.Database)
 }
 
+// Collection - get collection by name
 func (ps *PlayStore) Collection(collection string) *mgo.Collection {
 	return ps.Database().C(collection)
 }
 
-func (ps *PlayStore) FindPlayById(id string) (*Play, error) {
+// FindPlayByID - find play data by id
+func (ps *PlayStore) FindPlayByID(id string) (*Play, error) {
 	var play Play
 
 	plays := ps.Collection("plays")

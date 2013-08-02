@@ -4,6 +4,7 @@ import (
 	"gopoker/model"
 )
 
+// GameRotation - game rotation context
 type GameRotation struct {
 	*model.Mix
 	every   int
@@ -12,9 +13,11 @@ type GameRotation struct {
 }
 
 const (
+	// RotateEvery - number of games to play for switch
 	RotateEvery = 8
 )
 
+// NewGameRotation - create rotation context
 func NewGameRotation(mix *model.Mix, every int) *GameRotation {
 	if every == 0 {
 		every = RotateEvery
@@ -25,6 +28,7 @@ func NewGameRotation(mix *model.Mix, every int) *GameRotation {
 	}
 }
 
+// Next - get next rotated game
 func (rotation *GameRotation) Next() *model.Game {
 	if rotation.counter >= rotation.every {
 		rotation.counter = 0
@@ -43,6 +47,7 @@ func (rotation *GameRotation) rotate() {
 	}
 }
 
+// Current - get current game in rotation
 func (rotation *GameRotation) Current() *model.Game {
 	return rotation.Mix.Games[rotation.index]
 }

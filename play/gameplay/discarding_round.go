@@ -7,6 +7,7 @@ import (
 	"gopoker/protocol/message"
 )
 
+// StartDiscardingRound - start discarding round
 func (gp *GamePlay) StartDiscardingRound() Transition {
 	discarding := gp.Discarding
 

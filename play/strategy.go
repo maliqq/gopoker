@@ -5,8 +5,10 @@ import (
 	"gopoker/play/street"
 )
 
+// Strategy - list of stages
 type Strategy []Stage
 
+// ByStreet - strategies by street
 var ByStreet = map[street.Type]Strategy{
 	// holdem poker
 	street.Preflop: Strategy{

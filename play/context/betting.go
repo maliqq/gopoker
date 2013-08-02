@@ -13,10 +13,11 @@ import (
 )
 
 const (
+	// MaxRaises - maximum raise count
 	MaxRaises = 8 // TODO into game options
 )
 
-// betting context
+// Betting - betting context
 type Betting struct {
 	raiseCount int
 	bigBets    bool
@@ -31,16 +32,19 @@ type Betting struct {
 	stop chan int     `json:"-"`
 }
 
+// Action - seat bet
 type Action struct {
 	Seat *model.Seat
 	Bet  *model.Bet
 }
 
+// Required - action required
 type Required struct {
 	Pos      int
 	BetRange bet.Range
 }
 
+// NewBetting - create new betting context
 func NewBetting() *Betting {
 	return &Betting{
 		Pot: model.NewPot(),
@@ -53,15 +57,18 @@ func NewBetting() *Betting {
 	}
 }
 
+// Clear - clear betting context
 func (betting *Betting) Clear(startPos int) {
 	betting.Pos = startPos // start from button
 	betting.BetRange.Call, betting.BetRange.Min, betting.BetRange.Max, betting.raiseCount = 0., 0., 0., 0
 }
 
+// BigBets - increase bets
 func (betting *Betting) BigBets() {
 	betting.bigBets = true
 }
 
+// String - betting to string
 func (betting *Betting) String() string {
 	return fmt.Sprintf("Required %s raiseCount: %d bigBets: %t pot total: %.2f",
 		betting.Required,
@@ -71,6 +78,7 @@ func (betting *Betting) String() string {
 	)
 }
 
+// Start - start betting
 func (betting *Betting) Start(pos *chan int) {
 	log.Println("[betting] start")
 
@@ -98,14 +106,17 @@ Loop:
 	}
 }
 
+// IsActive - check if betting is active
 func (betting *Betting) IsActive() bool {
 	return betting.active
 }
 
+// Stop - stop betting
 func (betting *Betting) Stop() {
 	betting.stop <- 1
 }
 
+// RaiseRange - bet range for seat
 func (betting *Betting) RaiseRange(stackAvailable float64, g *model.Game, stake *model.Stake) (float64, float64) {
 	_, bb := stake.Blinds()
 
@@ -126,6 +137,7 @@ func (betting *Betting) RaiseRange(stackAvailable float64, g *model.Game, stake 
 	return 0., 0.
 }
 
+// ForceBet - force action
 func (betting *Betting) ForceBet(pos int, betType bet.Type, stake *model.Stake) *model.Bet {
 	amount := stake.Amount(betType)
 
@@ -135,6 +147,7 @@ func (betting *Betting) ForceBet(pos int, betType bet.Type, stake *model.Stake) 
 	return model.NewBet(betType, amount)
 }
 
+// RequireBet - require action
 func (betting *Betting) RequireBet(pos int, stackAvailable float64, game *model.Game, stake *model.Stake) *message.Message {
 	betting.Pos = pos
 
@@ -163,6 +176,7 @@ func (betting *Betting) RequireBet(pos int, stackAvailable float64, game *model.
 	return message.NewRequireBet(betting.Pos, betting.BetRange.Proto())
 }
 
+// AddBet - add action
 func (betting *Betting) AddBet(seat *model.Seat, newBet *model.Bet) error {
 	log.Printf("[betting] Player %s %s\n", seat.Player, newBet.String())
 

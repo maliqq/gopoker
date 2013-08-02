@@ -6,9 +6,11 @@ import (
 )
 
 const (
+	// DefaultTimer - default timeout for action
 	DefaultTimer = 30
 )
 
+// StartBettingRound - start betting round
 func (gp *GamePlay) StartBettingRound() Transition {
 	//gp.Broadcast.All <- message.NewBettingStart(gp.Betting)
 	nextPos := make(chan int)
@@ -49,6 +51,7 @@ func (gp *GamePlay) StartBettingRound() Transition {
 	return next
 }
 
+// ResetBetting - complete betting round
 func (gp *GamePlay) ResetBetting() {
 	gp.Betting.Clear(gp.Table.Button)
 

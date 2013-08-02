@@ -10,13 +10,16 @@ import (
 	"gopoker/protocol"
 )
 
+// Transition for stage
 type Transition string
 
+// Transitions
 const (
 	Stop Transition = "stop"
 	Next Transition = "next"
 )
 
+// GamePlay - gameplay context
 type GamePlay struct {
 	// dealt cards context
 	Deal *model.Deal
@@ -43,6 +46,7 @@ type GamePlay struct {
 	Exit     chan int                `json:"-"`
 }
 
+// NewGamePlay - create gameplay context
 func NewGamePlay() *GamePlay {
 	return &GamePlay{
 		Broadcast: protocol.NewBroadcast(),

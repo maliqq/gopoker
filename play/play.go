@@ -18,6 +18,7 @@ import (
 	"gopoker/util/console"
 )
 
+// Play - play
 type Play struct {
 	// players action context
 	*gameplay.GamePlay
@@ -28,6 +29,7 @@ type Play struct {
 	Recv protocol.MessageChannel `json:"-"`
 }
 
+// NewPlay - create new play
 func NewPlay(variation model.Variation, stake *model.Stake, table *model.Table) *Play {
 	gp := gameplay.NewGamePlay()
 	gp.Table = table
@@ -57,6 +59,7 @@ func NewPlay(variation model.Variation, stake *model.Stake, table *model.Table) 
 	return play
 }
 
+// String - play to string
 func (play *Play) String() string {
 	return fmt.Sprintf("Game: %s\nTable: %s\n", play.Game, play.Table)
 }
@@ -168,6 +171,7 @@ func (play *Play) scheduleNextDeal() {
 	play.NextDeal <- time.After(5 * time.Second)
 }
 
+// Proto - play to protobuf
 func (play *Play) Proto() *message.Play {
 	return &message.Play{
 		Table: play.Table.Proto(),

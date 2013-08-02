@@ -9,6 +9,7 @@ import (
 	"gopoker/protocol/message"
 )
 
+// MoveButton - move table button
 func (gp *GamePlay) MoveButton() {
 	gp.Table.MoveButton()
 
@@ -39,6 +40,7 @@ func (gp *GamePlay) postBigBlind(pos int) {
 	gp.Broadcast.All <- message.NewAddBet(pos, newBet.Proto())
 }
 
+// PostBlinds - post blinds
 func (gp *GamePlay) PostBlinds() {
 	t := gp.Table
 

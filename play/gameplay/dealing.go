@@ -5,6 +5,7 @@ import (
 	"gopoker/protocol/message"
 )
 
+// DealHole - deal hole cards
 func (gp *GamePlay) DealHole(cardsNum int) {
 	for _, pos := range gp.Table.AllSeats().InPlay() {
 		player := gp.Table.Player(pos)
@@ -15,6 +16,7 @@ func (gp *GamePlay) DealHole(cardsNum int) {
 	}
 }
 
+// DealDoor - deal door cards
 func (gp *GamePlay) DealDoor(cardsNum int) {
 	for _, pos := range gp.Table.AllSeats().InPlay() {
 		player := gp.Table.Player(pos)
@@ -25,6 +27,7 @@ func (gp *GamePlay) DealDoor(cardsNum int) {
 	}
 }
 
+// DealBoard - deal board cards
 func (gp *GamePlay) DealBoard(cardsNum int) {
 	cards := gp.Deal.DealBoard(cardsNum)
 

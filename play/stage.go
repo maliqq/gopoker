@@ -9,33 +9,35 @@ import (
 	"gopoker/play/gameplay"
 )
 
-/*
-Strategy invoking
-*/
+// Stage - strategy invoking
 type Stage struct {
 	Name   string
 	Invoke func(*Play) gameplay.Transition
 }
 
 var (
+	// BringIn - bring in stage
 	BringIn = Stage{"bring-in", func(play *Play) gameplay.Transition {
 		log.Println("[play] bring in")
 
 		return play.GamePlay.BringIn()
 	}}
 
+	// Betting - betting stage
 	Betting = Stage{"betting", func(play *Play) gameplay.Transition {
 		//log.Println("[play] betting")
 
 		return play.GamePlay.StartBettingRound()
 	}}
 
+	// Discarding - discarding stage
 	Discarding = Stage{"discarding", func(play *Play) gameplay.Transition {
 		log.Println("[play] discarding")
 
 		return play.GamePlay.StartDiscardingRound()
 	}}
 
+	// BigBets - big bets stage
 	BigBets = Stage{"big-bets", func(play *Play) gameplay.Transition {
 		log.Println("[play] big bets")
 
@@ -48,7 +50,7 @@ type dealing struct {
 	n int
 }
 
-func (d dealing) Stage(play *Play) gameplay.Transition {
+func (d dealing) stage(play *Play) gameplay.Transition {
 	n := d.n
 	if d.n == 0 && d.Type == deal.Hole {
 		n = play.Game.PocketSize
@@ -69,6 +71,7 @@ func (d dealing) Stage(play *Play) gameplay.Transition {
 	return gameplay.Next
 }
 
+// Dealing - dealing stage
 func Dealing(t deal.Type, n int) Stage {
-	return Stage{"dealing", dealing{t, n}.Stage}
+	return Stage{"dealing", dealing{t, n}.stage}
 }

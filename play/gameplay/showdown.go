@@ -7,14 +7,16 @@ import (
 	"gopoker/protocol/message"
 )
 
+// ShowdownHands - map player and hand
 type ShowdownHands map[model.Player]*poker.Hand
 
+// ShowHands - show hands for players in pot
 func (gp *GamePlay) ShowHands(ranking hand.Ranking, withBoard bool) ShowdownHands {
 	d := gp.Deal
 
 	hands := ShowdownHands{}
 
-	for _, pos := range gp.Table.AllSeats().InPot() {
+	for pos := range gp.Table.AllSeats().InPot() {
 		player := gp.Table.Player(pos)
 		if pocket, hand := d.Rank(player, ranking, withBoard); hand != nil {
 			hands[player] = hand
@@ -30,7 +32,7 @@ func best(sidePot *model.SidePot, hands ShowdownHands) (model.Player, *poker.Han
 	var winner model.Player
 	var best *poker.Hand
 
-	for member, _ := range sidePot.Members {
+	for member := range sidePot.Members {
 		hand, hasHand := hands[member]
 
 		if hasHand && (best == nil || hand.Compare(best) > 0) {
@@ -42,6 +44,7 @@ func best(sidePot *model.SidePot, hands ShowdownHands) (model.Player, *poker.Han
 	return winner, best
 }
 
+// Winners - show pot winners
 func (gp *GamePlay) Winners(highHands ShowdownHands, lowHands ShowdownHands) {
 	hi := highHands != nil
 	lo := lowHands != nil

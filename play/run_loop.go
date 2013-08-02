@@ -17,6 +17,7 @@ import (
 	"gopoker/protocol/message"
 )
 
+// Run - main run loop
 func (play *Play) Run() {
 	log.Printf("started run loop")
 Loop:

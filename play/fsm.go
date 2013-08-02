@@ -9,8 +9,10 @@ import (
 	"gopoker/play/street"
 )
 
+// State - play state
 type State string
 
+// States
 const (
 	Waiting State = "waiting"
 	Active  State = "active"
@@ -18,6 +20,7 @@ const (
 	Closed  State = "closed"
 )
 
+// FSM - finite state machine
 type FSM struct {
 	// current state
 	State       State
@@ -34,18 +37,22 @@ type FSM struct {
 	Street street.Type
 }
 
+// Start - start play
 func (play *Play) Start() {
 	play.stateChange <- Active
 }
 
+// Pause - pause play
 func (play *Play) Pause() {
 	play.stateChange <- Paused
 }
 
+// Resume - resume play
 func (play *Play) Resume() {
 	play.stateChange <- Active
 }
 
+// Close - close play
 func (play *Play) Close() {
 	play.stateChange <- Closed
 }

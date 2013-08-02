@@ -14,11 +14,13 @@ import (
 	"gopoker/protocol/message"
 )
 
+// Logger - play file logger
 type Logger struct {
 	*log.Logger
 	Recv protocol.MessageChannel
 }
 
+// NewLogger - create new logger
 func NewLogger(writer io.Writer) *Logger {
 	logger := &Logger{
 		Logger: log.New(writer, "", log.LstdFlags),

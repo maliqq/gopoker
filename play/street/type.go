@@ -4,8 +4,10 @@ import (
 	"gopoker/model/game"
 )
 
+// Type - street type
 type Type string
 
+// Streets
 const (
 	Preflop Type = "preflop"
 	Flop    Type = "flop"
@@ -26,6 +28,7 @@ const (
 	ThirdDraw  Type = "third-draw"
 )
 
+// ByGameGroup - streets by game group
 var ByGameGroup = map[game.Group][]Type{
 	game.Holdem: []Type{
 		Preflop, Flop, Turn, River,
@@ -44,6 +47,7 @@ var ByGameGroup = map[game.Group][]Type{
 	},
 }
 
+// Get - get streets for game group
 func Get(group game.Group) []Type {
 	return ByGameGroup[group]
 }

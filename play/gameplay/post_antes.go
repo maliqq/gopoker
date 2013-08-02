@@ -5,6 +5,7 @@ import (
 	"gopoker/protocol/message"
 )
 
+// PostAntes - post antes
 func (gp *GamePlay) PostAntes() {
 	for _, pos := range gp.Table.AllSeats().Active() {
 		seat := gp.Table.Seat(pos)
