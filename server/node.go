@@ -10,28 +10,31 @@ import (
 	"gopoker/storage"
 )
 
-type HttpConfig struct {
+// HTTPConfig - http config
+type HTTPConfig struct {
 	Addr          string
-	ApiPath       string
-	RpcPath       string
+	APIPath       string
+	RPCPath       string
 	WebSocketPath string
 	ZmqAddr       string
 }
 
-type RpcConfig struct {
+// RPCConfig - RPC config
+type RPCConfig struct {
 	Addr    string
 	Timeout time.Duration
 }
 
-// NodeConfig
+// Config - node config
 type Config struct {
 	Logdir    string
-	Http      *HttpConfig
-	Rpc       *RpcConfig
+	HTTP      *HTTPConfig
+	RPC       *RPCConfig
 	Store     *storage.StoreConfig
 	PlayStore *storage.PlayStoreConfig
 }
 
+// Node - node
 type Node struct {
 	Name string
 
@@ -41,10 +44,12 @@ type Node struct {
 	PlayStore *storage.PlayStore
 }
 
+// Defaults
 const (
 	NodeConfigFile = "node.json"
 )
 
+// NewNode - create new node
 func NewNode(name string, configDir string) *Node {
 	var config *Config
 	model.ReadConfig(configDir, NodeConfigFile, &config)
@@ -80,12 +85,14 @@ func (n *Node) connectPlayStore() {
 	log.Print("[store] connected to %s", n.Config.PlayStore)
 }
 
+// Room - get room
 func (n *Node) Room(id string) *Room {
 	room, _ := n.Rooms[id]
 
 	return room
 }
 
+// AddRoom - add room
 func (n *Node) AddRoom(room *Room) bool {
 	n.Rooms[room.Id] = room
 
@@ -95,17 +102,19 @@ func (n *Node) AddRoom(room *Room) bool {
 	return true
 }
 
+// RemoveRoom - remove room
 func (n *Node) RemoveRoom(room *Room) bool {
 	delete(n.Rooms, room.Id)
 	return true
 }
 
+// Start - start room
 func (n *Node) Start() {
 	go n.StartRPC()
 	n.StartHTTP()
 }
 
-func (httpConfig *HttpConfig) ApiPathOr(defaultPath string) string {
+func (httpConfig *HttpConfig) apiPathOr(defaultPath string) string {
 	apiPath := httpConfig.ApiPath
 	if apiPath == "" {
 		return defaultPath
@@ -113,7 +122,7 @@ func (httpConfig *HttpConfig) ApiPathOr(defaultPath string) string {
 	return apiPath
 }
 
-func (httpConfig *HttpConfig) WebSocketPathOr(defaultPath string) string {
+func (httpConfig *HttpConfig) webSocketPathOr(defaultPath string) string {
 	webSocketPath := httpConfig.WebSocketPath
 	if webSocketPath == "" {
 		return defaultPath
@@ -121,7 +130,7 @@ func (httpConfig *HttpConfig) WebSocketPathOr(defaultPath string) string {
 	return webSocketPath
 }
 
-func (httpConfig *HttpConfig) RpcPathOr(defaultPath string) string {
+func (httpConfig *HttpConfig) rpcPathOr(defaultPath string) string {
 	rpcPath := httpConfig.RpcPath
 	if rpcPath == "" {
 		return defaultPath

@@ -7,17 +7,19 @@ import (
 	"net/rpc/jsonrpc"
 )
 
+// NodeRPC - node RPC service
 type NodeRPC struct {
 	Node *Node
 }
 
+// StartRPC - start listening on TCP socket
 func (n *Node) StartRPC() {
 	nodeRPC := &NodeRPC{n}
 
 	server := rpc.NewServer()
 	server.Register(nodeRPC)
 
-	l := listen(n.Rpc.Addr)
+	l := listen(n.RPC.Addr)
 	for {
 		c, err := l.Accept()
 		if err != nil {

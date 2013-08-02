@@ -15,16 +15,17 @@ import (
 	"gopoker/model"
 	"gopoker/poker"
 	"gopoker/poker/hand"
-	"gopoker/server/http_service"
-	_ "gopoker/storage"
+	http_service "gopoker/server/nodehttp"
 )
 
+// Rooms - GET /rooms
 func (nodeHTTP *NodeHTTP) Rooms(resp http.ResponseWriter, req *http.Request) {
 	rooms := nodeHTTP.Node.Rooms
 
 	nodeHTTP.RespondJSON(resp, rooms)
 }
 
+// Room - GET /room/{id}
 func (nodeHTTP *NodeHTTP) Room(resp http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
 	id := vars["id"]
@@ -33,6 +34,7 @@ func (nodeHTTP *NodeHTTP) Room(resp http.ResponseWriter, req *http.Request) {
 	nodeHTTP.RespondJSON(resp, room)
 }
 
+// DetectHand - GET /hand/detect?ranking=...&cards=...
 func (nodeHTTP *NodeHTTP) DetectHand(resp http.ResponseWriter, req *http.Request) {
 	q := req.URL.Query()
 
@@ -61,6 +63,7 @@ func (nodeHTTP *NodeHTTP) DetectHand(resp http.ResponseWriter, req *http.Request
 	}
 }
 
+// CompareHands - GET /hand/compare?a=...&b=...
 func (nodeHTTP *NodeHTTP) CompareHands(resp http.ResponseWriter, req *http.Request) {
 	q := req.URL.Query()
 
@@ -86,6 +89,7 @@ func (nodeHTTP *NodeHTTP) CompareHands(resp http.ResponseWriter, req *http.Reque
 	resp.Write([]byte(s))
 }
 
+// CalculateOdds - GET /hand/odds?a=...&b=...
 func (nodeHTTP *NodeHTTP) CalculateOdds(resp http.ResponseWriter, req *http.Request) {
 	q := req.URL.Query()
 
@@ -107,6 +111,7 @@ func (nodeHTTP *NodeHTTP) CalculateOdds(resp http.ResponseWriter, req *http.Requ
 	nodeHTTP.RespondJSON(resp, result)
 }
 
+// RandomHand - GET /hand/random
 func (nodeHTTP *NodeHTTP) RandomHand(resp http.ResponseWriter, req *http.Request) {
 	dealer := model.NewDealer()
 	board := dealer.Share(5)
@@ -130,11 +135,13 @@ func (nodeHTTP *NodeHTTP) RandomHand(resp http.ResponseWriter, req *http.Request
 	nodeHTTP.RespondJSON(resp, deal)
 }
 
+// GenerateDeck - GET /deck/generate
 func (nodeHTTP *NodeHTTP) GenerateDeck(resp http.ResponseWriter, req *http.Request) {
 	s, _ := json.Marshal(model.NewDealer())
 	resp.Write([]byte(s))
 }
 
+// Play - GET /play/{id}
 func (nodeHTTP *NodeHTTP) Play(resp http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
 	id := vars["id"]
@@ -150,6 +157,7 @@ func (nodeHTTP *NodeHTTP) Play(resp http.ResponseWriter, req *http.Request) {
 	}
 }
 
+// Winners - GET /play/{id}/winners
 func (nodeHTTP *NodeHTTP) Winners(resp http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
 	id := vars["id"]
@@ -165,6 +173,7 @@ func (nodeHTTP *NodeHTTP) Winners(resp http.ResponseWriter, req *http.Request) {
 	}
 }
 
+// KnownCards - GET /play/id/known_cards
 func (nodeHTTP *NodeHTTP) KnownCards(resp http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
 	id := vars["id"]
@@ -180,50 +189,62 @@ func (nodeHTTP *NodeHTTP) KnownCards(resp http.ResponseWriter, req *http.Request
 	}
 }
 
+// Bet - bet via HTTP
 func (nodeHTTP *NodeHTTP) Bet(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
+// Discard - discard via HTTP
 func (nodeHTTP *NodeHTTP) Discard(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
+// Muck - muck via HTTP
 func (nodeHTTP *NodeHTTP) Muck(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
+// Pot - get play pot
 func (nodeHTTP *NodeHTTP) Pot(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
+// Stage - get play stage
 func (nodeHTTP *NodeHTTP) Stage(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
+// Join - join table via HTTP
 func (nodeHTTP *NodeHTTP) Join(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
+// Leave - leave table via HTTP
 func (nodeHTTP *NodeHTTP) Leave(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
+// Rebuy - rebuy to table via HTTP
 func (nodeHTTP *NodeHTTP) Rebuy(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
+// AddOn - addon to table via HTTP
 func (nodeHTTP *NodeHTTP) AddOn(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
+// Seating - get table seating
 func (nodeHTTP *NodeHTTP) Seating(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
+// Wait - join waiting queue
 func (nodeHTTP *NodeHTTP) Wait(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }
 
+// Stats - get table stats
 func (nodeHTTP *NodeHTTP) Stats(resp http.ResponseWriter, req *http.Request) {
 	resp.Write([]byte("Hello, world!"))
 }

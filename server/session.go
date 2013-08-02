@@ -10,36 +10,40 @@ import (
 	"gopoker/protocol/message"
 )
 
+// Connection - client connection
 type Connection interface {
 	Close() error
 	Receive(interface{}) error
 	Send(interface{}) error
 }
 
+// Session - client session
 type Session struct {
-	Id         string
+	ID         string
 	Connection Connection
 	Recv       protocol.MessageChannel
 	Send       *protocol.MessageChannel
 }
 
+// NewSession - create new session
 func NewSession(id string, connection Connection) *Session {
 	return &Session{
-		Id:         id,
+		ID:         id,
 		Recv:       make(protocol.MessageChannel),
 		Connection: connection,
 	}
 }
 
+// Start - start session
 func (session *Session) Start() {
 	log.Printf("[session] start connection: %#v", session.Connection)
 
-	go session.Read()
+	go session.read()
 
-	session.Write()
+	session.write()
 }
 
-func (session *Session) Read() {
+func (session *Session) read() {
 Loop:
 	for {
 		var message message.Message
@@ -62,7 +66,7 @@ Loop:
 	}
 }
 
-func (session *Session) Write() {
+func (session *Session) write() {
 	for message := range session.Recv {
 		err := session.Connection.Send(message)
 		if err != nil {
@@ -73,6 +77,7 @@ func (session *Session) Write() {
 	}
 }
 
+// Close session
 func (session *Session) Close() {
 	close(session.Recv)
 

@@ -9,26 +9,27 @@ import (
 )
 
 import (
-	"gopoker/client/websocket_client"
+	"gopoker/client/ws"
 	"gopoker/protocol/message"
 	"gopoker/util"
 )
 
+// WebSocketHandler - websocket connection handler
 func (nodeHTTP *NodeHTTP) WebSocketHandler(conn *websocket.Conn) {
 	node := nodeHTTP.Node
 	q := conn.Request().URL.Query()
-	roomId := q.Get("room_id")
-	room, found := node.Rooms[roomId]
+	roomID := q.Get("room_id")
+	room, found := node.Rooms[roomID]
 
 	if !found {
-		errMsg := message.NewErrorMessage(fmt.Errorf("room with id=%s not found", roomId))
+		errMsg := message.NewErrorMessage(fmt.Errorf("room with id=%s not found", roomID))
 		websocket.JSON.Send(conn, errMsg)
 		conn.Close()
 		return
 	}
 
 	id := util.RandomUuid()
-	connection := &websocket_client.Connection{Conn: conn}
+	connection := &ws.Connection{Conn: conn}
 	session := NewSession(id, connection)
 	session.Send = &room.Recv
 

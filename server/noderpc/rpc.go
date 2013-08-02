@@ -1,4 +1,4 @@
-package rpc_service
+package noderpc
 
 import (
 	"gopoker/model"
@@ -6,29 +6,34 @@ import (
 	"gopoker/protocol/message"
 )
 
+// CallResult - RPC call result
 type CallResult struct {
 	Status  string
 	Message string
 }
 
+// CreateRoom - create room request
 type CreateRoom struct {
-	Id        string
+	ID        string
 	TableSize int
 	BetSize   float64
 	Game      *model.Game
 	Mix       *model.Mix
 }
 
+// RequestRoom - get room by id
 type RequestRoom struct {
-	Id string
+	ID string
 }
 
+// StartRoom - start room by id
 type StartRoom struct {
-	Id   string
+	ID   string
 	Mode mode.Type
 }
 
+// NotifyRoom - send protocol message
 type NotifyRoom struct {
-	Id      string
+	ID      string
 	Message *message.Message
 }

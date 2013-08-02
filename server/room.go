@@ -9,17 +9,19 @@ import (
 import (
 	"gopoker/model"
 	"gopoker/play"
-	"gopoker/server/rpc_service"
+	rpc_service "gopoker/server/noderpc"
 	"gopoker/storage"
 )
 
+// Room - play wrapper
 type Room struct {
-	Id string
+	ID string
 	*play.Play
 	Waiting  map[string]*Session
 	Watchers map[string]*Session
 }
 
+// NewRoom - create new room
 func NewRoom(createRoom *rpc_service.CreateRoom) *Room {
 	var variation model.Variation
 	if createRoom.Game != nil {
@@ -47,7 +49,7 @@ func NewRoom(createRoom *rpc_service.CreateRoom) *Room {
 	newPlay := play.NewPlay(variation, stake, table)
 
 	room := &Room{
-		Id:       createRoom.Id,
+		ID:       createRoom.ID,
 		Play:     newPlay,
 		Waiting:  map[string]*Session{},
 		Watchers: map[string]*Session{},
@@ -57,7 +59,7 @@ func NewRoom(createRoom *rpc_service.CreateRoom) *Room {
 }
 
 func (r *Room) createLogger(dir string) {
-	f, err := os.OpenFile(path.Join(dir, r.Id+".log"), os.O_CREATE|os.O_RDWR|os.O_APPEND, 0755)
+	f, err := os.OpenFile(path.Join(dir, r.ID+".log"), os.O_CREATE|os.O_RDWR|os.O_APPEND, 0755)
 	if err != nil {
 		log.Fatal("cant open logger file", err)
 	}
