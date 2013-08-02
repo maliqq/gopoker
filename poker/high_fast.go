@@ -1,49 +1,49 @@
 package poker
 
+// Flags
 const (
-	// HighCardFlag - high card flag
-	HighCardFlag = 0x100000
-	// OnePairFlag - one pair flag
-	OnePairFlag = 0x200000
-	// TwoPairFlag - two pait flag
-	TwoPairFlag = 0x300000
-	// ThreeKindFlag - three kind flag
-	ThreeKindFlag = 0x400000
-	// StraightFlag - straight flag
-	StraightFlag = 0x500000
-	// FlushFlag - flush flag
-	FlushFlag = 0x600000
-	// FullHouseFlag - full house flag
-	FullHouseFlag = 0x700000
-	// FourKindFlag - four of a kind flag
-	FourKindFlag = 0x800000
-	// StraightFlushFlag - straight flush flag
-	StraightFlushFlag = 0x900000
+	HighCardFlag = 0x100000 // HighCardFlag - high card flag
+
+	OnePairFlag = 0x200000 // OnePairFlag - one pair flag
+
+	TwoPairFlag = 0x300000 // TwoPairFlag - two pair flag
+
+	ThreeKindFlag = 0x400000 // ThreeKindFlag - three kind flag
+
+	StraightFlag = 0x500000 // StraightFlag - straight flag
+
+	FlushFlag = 0x600000 // FlushFlag - flush flag
+
+	FullHouseFlag = 0x700000 // FullHouseFlag - full house flag
+
+	FourKindFlag = 0x800000 // FourKindFlag - four of a kind flag
+
+	StraightFlushFlag = 0x900000 // StraightFlushFlag - straight flush flag
 )
 
+// Indexes
 var (
-	// Flush index
-	Flush = make([]uint, 8129)
-	// Straight index
-	Straight = make([]uint, 8129)
-	// Top1Of16 index
-	Top1Of16 = make([]uint, 8129)
-	// Top1Of12 index
-	Top1Of12 = make([]uint, 8129)
-	// Top1Of8 index
-	Top1Of8 = make([]uint, 8129)
-	// Top2Of12 index
-	Top2Of12 = make([]uint, 8129)
-	// Top2Of8 index
-	Top2Of8 = make([]uint, 8129)
-	// Top3Of4 index
-	Top3Of4 = make([]uint, 8129)
-	// Top5 index
-	Top5 = make([]uint, 8129)
-	// Bit1 index
-	Bit1 = make([]uint, 8129)
-	// Bit2 index
-	Bit2 = make([]uint, 8129)
+	Flush = make([]uint, 8129) // Flush index
+
+	Straight = make([]uint, 8129) // Straight index
+
+	Top1Of16 = make([]uint, 8129) // Top1Of16 index
+
+	Top1Of12 = make([]uint, 8129) // Top1Of12 index
+
+	Top1Of8 = make([]uint, 8129) // Top1Of8 index
+
+	Top2Of12 = make([]uint, 8129) // Top2Of12 index
+
+	Top2Of8 = make([]uint, 8129) // Top2Of8 index
+
+	Top3Of4 = make([]uint, 8129) // Top3Of4 index
+
+	Top5 = make([]uint, 8129) // Top5 index
+
+	Bit1 = make([]uint, 8129) // Bit1 index
+
+	Bit2 = make([]uint, 8129) // Bit2 index
 )
 
 func doRank(hand uint64) uint {

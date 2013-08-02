@@ -3,37 +3,32 @@ package bet
 // Type - bet type
 type Type string
 
+// Bet types
 const (
-	// Ante - ante bet
-	Ante Type = "Ante"
-	// BringIn - bring in forced bet
-	BringIn Type = "BringIn"
-	// SmallBlind - small blind forced bet
-	SmallBlind Type = "SmallBlind"
-	// BigBlind - big blind forced bet
-	BigBlind Type = "BigBlind"
-	// GuestBlind - guest blind forced bet
-	GuestBlind Type = "GuestBlind"
-	// Straddle - straddle forced bet
-	Straddle Type = "Straddle"
+	Ante    Type = "Ante"    // Ante - ante bet
+	BringIn Type = "BringIn" // BringIn - bring in forced bet
 
-	// Raise - raise active bet
-	Raise Type = "Raise"
-	// Call - call active bet
-	Call Type = "Call"
+	SmallBlind Type = "SmallBlind" // SmallBlind - small blind forced bet
 
-	// Check - check passive bet
-	Check Type = "Check"
-	// Fold - fold passive bet
-	Fold Type = "Fold"
+	BigBlind Type = "BigBlind" // BigBlind - big blind forced bet
 
-	// Discard - discard cards
-	Discard Type = "Discard"
-	// StandPat - stand pat
-	StandPat Type = "StandPat"
+	GuestBlind Type = "GuestBlind" // GuestBlind - guest blind forced bet
 
-	// Show - show cards
-	Show Type = "Show"
-	// Muck - muck cards
-	Muck Type = "Muck"
+	Straddle Type = "Straddle" // Straddle - straddle forced bet
+
+	Raise Type = "Raise" // Raise - raise active bet
+
+	Call Type = "Call" // Call - call active bet
+
+	Check Type = "Check" // Check - check passive bet
+
+	Fold Type = "Fold" // Fold - fold passive bet
+
+	Discard Type = "Discard" // Discard - discard cards
+
+	StandPat Type = "StandPat" // StandPat - stand pat
+
+	Show Type = "Show" // Show - show cards
+
+	Muck Type = "Muck" // Muck - muck cards
 )

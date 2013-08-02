@@ -3,37 +3,37 @@ package hand
 // Rank - cards poker rank
 type Rank string
 
+// Ranks
 const (
-	// StraightFlush - straight flush rank
-	StraightFlush Rank = "StraightFlush"
-	// FourKind - four of a kind rank
-	FourKind Rank = "FourKind"
-	// FullHouse - full house rank
-	FullHouse Rank = "FullHouse"
-	// Flush - flush rank
-	Flush Rank = "Flush"
-	// Straight - straight rank
-	Straight Rank = "Straight"
-	// ThreeKind - three of a kind rank
-	ThreeKind Rank = "ThreeKind"
-	// TwoPair - two pair rank
-	TwoPair Rank = "TwoPair"
-	// OnePair - one pair rank
-	OnePair Rank = "OnePair"
-	// HighCard - high card rank
-	HighCard Rank = "HighCard"
-	// BadugiFour - badugi four cards rank
-	BadugiFour Rank = "BadugiFour"
-	// BadugiThree - badugi three cards rank
-	BadugiThree Rank = "BadugiThree"
-	// BadugiTwo - badugi two cards rank
-	BadugiTwo Rank = "BadugiTwo"
-	// BadugiOne - badugi one card rank
-	BadugiOne Rank = "BadugiOne"
-	// CompleteLow - complete low rank
-	CompleteLow Rank = "CompleteLow"
-	// IncompleteLow - incomplete low rank
-	IncompleteLow Rank = "IncompleteLow"
+	StraightFlush Rank = "StraightFlush" // StraightFlush - straight flush rank
+
+	FourKind Rank = "FourKind" // FourKind - four of a kind rank
+
+	FullHouse Rank = "FullHouse" // FullHouse - full house rank
+
+	Flush Rank = "Flush" // Flush - flush rank
+
+	Straight Rank = "Straight" // Straight - straight rank
+
+	ThreeKind Rank = "ThreeKind" // ThreeKind - three of a kind rank
+
+	TwoPair Rank = "TwoPair" // TwoPair - two pair rank
+
+	OnePair Rank = "OnePair" // OnePair - one pair rank
+
+	HighCard Rank = "HighCard" // HighCard - high card rank
+
+	BadugiFour Rank = "BadugiFour" // BadugiFour - badugi four cards rank
+
+	BadugiThree Rank = "BadugiThree" // BadugiThree - badugi three cards rank
+
+	BadugiTwo Rank = "BadugiTwo" // BadugiTwo - badugi two cards rank
+
+	BadugiOne Rank = "BadugiOne" // BadugiOne - badugi one card rank
+
+	CompleteLow Rank = "CompleteLow" // CompleteLow - complete low rank
+
+	IncompleteLow Rank = "IncompleteLow" // IncompleteLow - incomplete low rank
 )
 
 var ranks = map[Rank]int{

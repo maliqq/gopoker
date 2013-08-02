@@ -3,13 +3,13 @@ package game
 // Limit - game limit type
 type Limit string
 
+// Limits
 const (
-	// FixedLimit - fixed limit
-	FixedLimit Limit = "FixedLimit"
-	// PotLimit - pot limit
-	PotLimit Limit = "PotLimit"
-	// NoLimit - no limit
-	NoLimit Limit = "NoLimit"
+	FixedLimit Limit = "FixedLimit" // FixedLimit - fixed limit
+
+	PotLimit Limit = "PotLimit" // PotLimit - pot limit
+
+	NoLimit Limit = "NoLimit" // NoLimit - no limit
 )
 
 var (

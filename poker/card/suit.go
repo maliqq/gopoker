@@ -11,22 +11,22 @@ import (
 // Suit - 0..3 integer value of suit
 type Suit byte
 
+// Suits
 const (
-	// Spade - spades
-	Spade Suit = iota
-	// Heart - heart
-	Heart
-	// Diamond - diamond
-	Diamond
-	// Club - club
-	Club
+	Spade Suit = iota // Spade - spades
+
+	Heart // Heart - heart
+
+	Diamond // Diamond - diamond
+
+	Club // Club - club
 )
 
+// Consts
 const (
-	// Suits - all suits
-	Suits = "shdc"
-	// SuitsNum - 4
-	SuitsNum = len(Suits)
+	Suits = "shdc" // Suits - all suits
+
+	SuitsNum = len(Suits) // SuitsNum - 4
 )
 
 var (

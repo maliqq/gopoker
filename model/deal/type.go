@@ -3,15 +3,15 @@ package deal
 // Type - deal type
 type Type string
 
+// Deal types
 const (
-	// Hole - deal hole cards
-	Hole Type = "Hole"
-	// Door - deal door cards
-	Door Type = "Door"
-	// Board - deal board cards
-	Board Type = "Board"
-	// Discard - deal discarded cards
-	Discard Type = "Discard"
+	Hole Type = "Hole" // Hole - deal hole cards
+
+	Door Type = "Door" // Door - deal door cards
+
+	Board Type = "Board" // Board - deal board cards
+
+	Discard Type = "Discard" // Discard - deal discarded cards
 )
 
 // IsBoard - check we're dealing board cards

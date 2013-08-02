@@ -12,13 +12,13 @@ import (
 // Ordering - card ordering
 type Ordering int
 
+// Orderings
 const (
-	// Ace - kind ace
-	Ace = card.Ace
-	// AceHigh - ace is high card
-	AceHigh Ordering = 0
-	// AceLow - ace is low card
-	AceLow Ordering = 1
+	Ace = card.Ace // Ace - kind ace
+
+	AceHigh Ordering = 0 // AceHigh - ace is high card
+
+	AceLow Ordering = 1 // AceLow - ace is low card
 )
 
 // cards with ordering (ace high/ace low)

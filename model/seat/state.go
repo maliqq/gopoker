@@ -3,35 +3,31 @@ package seat
 // State - seat state
 type State string
 
+// Seat states
 const (
-	// Empty - empty seat
-	Empty State = "Empty"
-	// Taken - reserved seat
-	Taken State = "Taken"
-	// Ready - ready to play seat
-	Ready State = "Ready"
+	Empty State = "Empty" // Empty - empty seat
 
-	// WaitBB - waiting big blind
-	WaitBB State = "WaitBB"
-	// PostBB - posting big blind after waiting
-	PostBB State = "PostBB"
+	Taken State = "Taken" // Taken - reserved seat
 
-	// Play - active seat
-	Play State = "Play"
-	// Bet - have bet in current betting
-	Bet State = "Bet"
-	// AllIn - gone all-in in current betting
-	AllIn State = "AllIn"
-	// Fold - folded in current betting
-	Fold State = "Fold"
+	Ready State = "Ready" // Ready - ready to play seat
 
-	// Auto - autoplay (check/fold strategy)
-	Auto State = "Auto"
-	// Kick - kicked out seat
-	Kick State = "Kick"
+	WaitBB State = "WaitBB" // WaitBB - waiting big blind
 
-	// Away - gone away
-	Away State = "Away"
-	// Idle - idle seat
-	Idle State = "Idle"
+	PostBB State = "PostBB" // PostBB - posting big blind after waiting
+
+	Play State = "Play" // Play - active seat
+
+	Bet State = "Bet" // Bet - have bet in current betting
+
+	AllIn State = "AllIn" // AllIn - gone all-in in current betting
+
+	Fold State = "Fold" // Fold - folded in current betting
+
+	Auto State = "Auto" // Auto - autoplay (check/fold strategy)
+
+	Kick State = "Kick" // Kick - kicked out seat
+
+	Away State = "Away" // Away - gone away
+
+	Idle State = "Idle" // Idle - idle seat
 )

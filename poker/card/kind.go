@@ -7,40 +7,40 @@ import (
 // Kind - 0..12 integer value of card
 type Kind byte
 
+// Kinds
 const (
-	// Deuce - "2"
-	Deuce Kind = iota
-	// Three - "3"
-	Three
-	// Four - "4"
-	Four
-	// Five - "5"
-	Five
-	// Six - "6"
-	Six
-	// Seven - "7"
-	Seven
-	// Eight - "8"
-	Eight
-	// Nine - "9"
-	Nine
-	// Ten - "T"
-	Ten
-	// Jack - "J"
-	Jack
-	// Queen - "Q"
-	Queen
-	// King - "K"
-	King
-	// Ace - "A"
-	Ace
+	Deuce Kind = iota // Deuce - "2"
+
+	Three // Three - "3"
+
+	Four // Four - "4"
+
+	Five // Five - "5"
+
+	Six // Six - "6"
+
+	Seven // Seven - "7"
+
+	Eight // Eight - "8"
+
+	Nine // Nine - "9"
+
+	Ten // Ten - "T"
+
+	Jack // Jack - "J"
+
+	Queen // Queen - "Q"
+
+	King // King - "K"
+
+	Ace // Ace - "A"
 )
 
+// Consts
 const (
-	// Kinds - all kinds
-	Kinds = "23456789TJQKA"
-	// KindsNum - 13
-	KindsNum = len(Kinds)
+	Kinds = "23456789TJQKA" // Kinds - all kinds
+
+	KindsNum = len(Kinds) // KindsNum - 13
 )
 
 var (

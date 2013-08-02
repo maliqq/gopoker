@@ -28,17 +28,17 @@ type Stake struct {
 	SmallBlind float64
 }
 
+// Amount rates
 const (
-	// BigBetAmount - big bet amount rate
-	BigBetAmount = 2.
-	// BigBlindAmount - big blind amount rate
-	BigBlindAmount = 1.
-	// SmallBlindAmount - small blind amount rate
-	SmallBlindAmount = 0.5
-	// AnteAmount - ante amount rate
-	AnteAmount = 0.25
-	// BringInAmount - bring in amount rate
-	BringInAmount = 0.125
+	BigBetAmount = 2. // BigBetAmount - big bet amount rate
+
+	BigBlindAmount = 1. // BigBlindAmount - big blind amount rate
+
+	SmallBlindAmount = 0.5 // SmallBlindAmount - small blind amount rate
+
+	AnteAmount = 0.25 // AnteAmount - ante amount rate
+
+	BringInAmount = 0.125 // BringInAmount - bring in amount rate
 )
 
 var betAmounts = map[bet.Type]float64{
