@@ -17,7 +17,7 @@ import (
 	"gopoker/model"
 	"gopoker/model/game"
 
-	"gopoker/client/console_client"
+	"gopoker/client/cli"
 	"gopoker/play"
 )
 
@@ -57,7 +57,7 @@ func main() {
 
 	play.Start()
 
-	conn := &console_client.Connection{
+	conn := &cli.Connection{
 		Server: play,
 	}
 
