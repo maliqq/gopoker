@@ -25,45 +25,45 @@ func NewDeal() *Deal {
 	}
 }
 
-func (this *Deal) Pocket(player Player) poker.Cards {
-	cards, found := this.Pockets[player]
+func (deal *Deal) Pocket(player Player) poker.Cards {
+	cards, found := deal.Pockets[player]
 
 	if !found {
 		cards = poker.Cards{}
-		this.Pockets[player] = cards
+		deal.Pockets[player] = cards
 	}
 
 	return cards
 }
 
-func (this *Deal) DealBoard(cardsNum int) poker.Cards {
-	cards := this.dealer.Share(cardsNum)
+func (deal *Deal) DealBoard(cardsNum int) poker.Cards {
+	cards := deal.dealer.Share(cardsNum)
 
-	this.Board = append(this.Board, cards...)
-
-	return cards
-}
-
-func (this *Deal) DealPocket(player Player, cardsNum int) poker.Cards {
-	pocket := this.Pocket(player)
-
-	cards := this.dealer.Deal(cardsNum)
-	this.Pockets[player] = append(pocket, cards...)
+	deal.Board = append(deal.Board, cards...)
 
 	return cards
 }
 
-func (this *Deal) Discard(player Player, cards poker.Cards) poker.Cards {
-	pocket := this.Pocket(player)
-	newCards := this.dealer.Discard(cards)
+func (deal *Deal) DealPocket(player Player, cardsNum int) poker.Cards {
+	pocket := deal.Pocket(player)
+
+	cards := deal.dealer.Deal(cardsNum)
+	deal.Pockets[player] = append(pocket, cards...)
+
+	return cards
+}
+
+func (deal *Deal) Discard(player Player, cards poker.Cards) poker.Cards {
+	pocket := deal.Pocket(player)
+	newCards := deal.dealer.Discard(cards)
 
 	pocket = append(pocket.Diff(cards), newCards...)
 
 	return newCards
 }
 
-func (this *Deal) Rank(player Player, ranking hand.Ranking, hasBoard bool) (poker.Cards, *poker.Hand) {
-	pocket := this.Pocket(player)
+func (deal *Deal) Rank(player Player, ranking hand.Ranking, hasBoard bool) (poker.Cards, *poker.Hand) {
+	pocket := deal.Pocket(player)
 
 	if !hasBoard {
 		hand, _ := poker.Detect[ranking](&pocket)
@@ -74,7 +74,7 @@ func (this *Deal) Rank(player Player, ranking hand.Ranking, hasBoard bool) (poke
 	var bestHand *poker.Hand
 
 	for _, pair := range pocket.Combine(2) {
-		for _, board := range this.Board.Combine(3) {
+		for _, board := range deal.Board.Combine(3) {
 			handCards := append(pair, board...)
 
 			hand, _ := poker.Detect[ranking](&handCards)

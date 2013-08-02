@@ -5,6 +5,7 @@ import (
 	"os"
 )
 
+// RandomUuid generate random uuid from /dev/urandom
 func RandomUuid() string {
 	f, _ := os.Open("/dev/urandom")
 	defer f.Close()

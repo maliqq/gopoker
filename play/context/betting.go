@@ -53,60 +53,60 @@ func NewBetting() *Betting {
 	}
 }
 
-func (this *Betting) Clear(startPos int) {
-	this.Pos = startPos // start from button
-	this.BetRange.Call, this.BetRange.Min, this.BetRange.Max, this.raiseCount = 0., 0., 0., 0
+func (betting *Betting) Clear(startPos int) {
+	betting.Pos = startPos // start from button
+	betting.BetRange.Call, betting.BetRange.Min, betting.BetRange.Max, betting.raiseCount = 0., 0., 0., 0
 }
 
-func (this *Betting) BigBets() {
-	this.bigBets = true
+func (betting *Betting) BigBets() {
+	betting.bigBets = true
 }
 
-func (this *Betting) String() string {
+func (betting *Betting) String() string {
 	return fmt.Sprintf("Required %s raiseCount: %d bigBets: %t pot total: %.2f",
-		this.Required,
-		this.raiseCount,
-		this.bigBets,
-		this.Pot.Total(),
+		betting.Required,
+		betting.raiseCount,
+		betting.bigBets,
+		betting.Pot.Total(),
 	)
 }
 
-func (this *Betting) Start(pos *chan int) {
+func (betting *Betting) Start(pos *chan int) {
 	log.Println("[betting] start")
 
-	this.active = true
+	betting.active = true
 
-	*pos <- this.Pos
+	*pos <- betting.Pos
 
 Loop:
 	for {
 		select {
-		case <-this.stop:
+		case <-betting.stop:
 			log.Println("[betting] stop")
-			this.active = false
+			betting.active = false
 			break Loop
 
-		case action := <-this.Bet:
-			err := this.AddBet(action.Seat, action.Bet)
+		case action := <-betting.Bet:
+			err := betting.AddBet(action.Seat, action.Bet)
 
 			if err != nil {
 				log.Printf("[betting] %s", err)
 			}
 
-			*pos <- this.Pos
+			*pos <- betting.Pos
 		}
 	}
 }
 
-func (this *Betting) IsActive() bool {
-	return this.active
+func (betting *Betting) IsActive() bool {
+	return betting.active
 }
 
-func (this *Betting) Stop() {
-	this.stop <- 1
+func (betting *Betting) Stop() {
+	betting.stop <- 1
 }
 
-func (this *Betting) RaiseRange(stackAvailable float64, g *model.Game, stake *model.Stake) (float64, float64) {
+func (betting *Betting) RaiseRange(stackAvailable float64, g *model.Game, stake *model.Stake) (float64, float64) {
 	_, bb := stake.Blinds()
 
 	switch g.Limit {
@@ -114,10 +114,10 @@ func (this *Betting) RaiseRange(stackAvailable float64, g *model.Game, stake *mo
 		return bb, stackAvailable
 
 	case game.PotLimit:
-		return bb, this.Pot.Total()
+		return bb, betting.Pot.Total()
 
 	case game.FixedLimit:
-		if this.bigBets {
+		if betting.bigBets {
 			return bb * 2, bb * 2
 		}
 		return bb, bb
@@ -126,23 +126,23 @@ func (this *Betting) RaiseRange(stackAvailable float64, g *model.Game, stake *mo
 	return 0., 0.
 }
 
-func (this *Betting) ForceBet(pos int, betType bet.Type, stake *model.Stake) *model.Bet {
+func (betting *Betting) ForceBet(pos int, betType bet.Type, stake *model.Stake) *model.Bet {
 	amount := stake.Amount(betType)
 
-	this.Pos = pos
-	this.BetRange.Call = amount
+	betting.Pos = pos
+	betting.BetRange.Call = amount
 
 	return model.NewBet(betType, amount)
 }
 
-func (this *Betting) RequireBet(pos int, stackAvailable float64, game *model.Game, stake *model.Stake) *message.Message {
-	this.Pos = pos
+func (betting *Betting) RequireBet(pos int, stackAvailable float64, game *model.Game, stake *model.Stake) *message.Message {
+	betting.Pos = pos
 
-	if this.raiseCount >= MaxRaises {
-		this.BetRange.Min, this.BetRange.Max = 0., 0.
+	if betting.raiseCount >= MaxRaises {
+		betting.BetRange.Min, betting.BetRange.Max = 0., 0.
 	} else {
-		call := this.BetRange.Call
-		min, max := this.RaiseRange(stackAvailable, game, stake)
+		call := betting.BetRange.Call
+		min, max := betting.RaiseRange(stackAvailable, game, stake)
 		minRaise, maxRaise := call+min, call+max
 
 		// FIXME
@@ -157,16 +157,16 @@ func (this *Betting) RequireBet(pos int, stackAvailable float64, game *model.Gam
 			}
 		}
 
-		this.BetRange.Min, this.BetRange.Max = minRaise, maxRaise
+		betting.BetRange.Min, betting.BetRange.Max = minRaise, maxRaise
 	}
 
-	return message.NewRequireBet(this.Pos, this.BetRange.Proto())
+	return message.NewRequireBet(betting.Pos, betting.BetRange.Proto())
 }
 
-func (this *Betting) AddBet(seat *model.Seat, newBet *model.Bet) error {
+func (betting *Betting) AddBet(seat *model.Seat, newBet *model.Bet) error {
 	log.Printf("[betting] Player %s %s\n", seat.Player, newBet.String())
 
-	err := newBet.Validate(seat, this.BetRange)
+	err := newBet.Validate(seat, betting.BetRange)
 
 	if err != nil {
 		seat.Fold()
@@ -176,14 +176,14 @@ func (this *Betting) AddBet(seat *model.Seat, newBet *model.Bet) error {
 		amount := newBet.Amount
 		if amount > 0 {
 			if newBet.Type != bet.Call {
-				this.BetRange.Call = amount
+				betting.BetRange.Call = amount
 			}
 
 			if newBet.Type == bet.Raise {
-				this.raiseCount++
+				betting.raiseCount++
 			}
 
-			this.Pot.Add(seat.Player, putAmount, isAllIn)
+			betting.Pot.Add(seat.Player, putAmount, isAllIn)
 		}
 	}
 

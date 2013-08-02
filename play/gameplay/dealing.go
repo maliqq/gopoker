@@ -5,28 +5,28 @@ import (
 	"gopoker/protocol/message"
 )
 
-func (this *GamePlay) DealHole(cardsNum int) {
-	for _, pos := range this.Table.AllSeats().InPlay() {
-		player := this.Table.Player(pos)
+func (gp *GamePlay) DealHole(cardsNum int) {
+	for _, pos := range gp.Table.AllSeats().InPlay() {
+		player := gp.Table.Player(pos)
 
-		cards := this.Deal.DealPocket(player, cardsNum)
+		cards := gp.Deal.DealPocket(player, cardsNum)
 
-		this.Broadcast.One(player) <- message.NewDealPocket(pos, cards.Proto(), deal.Hole)
+		gp.Broadcast.One(player) <- message.NewDealPocket(pos, cards.Proto(), deal.Hole)
 	}
 }
 
-func (this *GamePlay) DealDoor(cardsNum int) {
-	for _, pos := range this.Table.AllSeats().InPlay() {
-		player := this.Table.Player(pos)
+func (gp *GamePlay) DealDoor(cardsNum int) {
+	for _, pos := range gp.Table.AllSeats().InPlay() {
+		player := gp.Table.Player(pos)
 
-		cards := this.Deal.DealPocket(player, cardsNum)
+		cards := gp.Deal.DealPocket(player, cardsNum)
 
-		this.Broadcast.All <- message.NewDealPocket(pos, cards.Proto(), deal.Door)
+		gp.Broadcast.All <- message.NewDealPocket(pos, cards.Proto(), deal.Door)
 	}
 }
 
-func (this *GamePlay) DealBoard(cardsNum int) {
-	cards := this.Deal.DealBoard(cardsNum)
+func (gp *GamePlay) DealBoard(cardsNum int) {
+	cards := gp.Deal.DealBoard(cardsNum)
 
-	this.Broadcast.All <- message.NewDealShared(cards.Proto(), deal.Board)
+	gp.Broadcast.All <- message.NewDealShared(cards.Proto(), deal.Board)
 }

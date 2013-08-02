@@ -9,52 +9,52 @@ import (
 	"gopoker/protocol/message"
 )
 
-func (this *GamePlay) MoveButton() {
-	this.Table.MoveButton()
+func (gp *GamePlay) MoveButton() {
+	gp.Table.MoveButton()
 
-	this.Broadcast.All <- message.NewMoveButton(this.Table.Button)
+	gp.Broadcast.All <- message.NewMoveButton(gp.Table.Button)
 }
 
-func (this *GamePlay) postSmallBlind(pos int) {
-	t := this.Table
-	newBet := this.Betting.ForceBet(pos, bet.SmallBlind, this.Stake)
+func (gp *GamePlay) postSmallBlind(pos int) {
+	t := gp.Table
+	newBet := gp.Betting.ForceBet(pos, bet.SmallBlind, gp.Stake)
 
-	err := this.Betting.AddBet(t.Seat(pos), newBet)
+	err := gp.Betting.AddBet(t.Seat(pos), newBet)
 	if err != nil {
 		log.Fatalf("Error adding small blind for %d: %s", pos, err)
 	}
 
-	this.Broadcast.All <- message.NewAddBet(pos, newBet.Proto())
+	gp.Broadcast.All <- message.NewAddBet(pos, newBet.Proto())
 }
 
-func (this *GamePlay) postBigBlind(pos int) {
-	t := this.Table
-	newBet := this.Betting.ForceBet(pos, bet.BigBlind, this.Stake)
+func (gp *GamePlay) postBigBlind(pos int) {
+	t := gp.Table
+	newBet := gp.Betting.ForceBet(pos, bet.BigBlind, gp.Stake)
 
-	err := this.Betting.AddBet(t.Seat(pos), newBet)
+	err := gp.Betting.AddBet(t.Seat(pos), newBet)
 	if err != nil {
 		log.Fatalf("Error adding big blind for %d: %s", pos, err)
 	}
 
-	this.Broadcast.All <- message.NewAddBet(pos, newBet.Proto())
+	gp.Broadcast.All <- message.NewAddBet(pos, newBet.Proto())
 }
 
-func (this *GamePlay) PostBlinds() {
-	t := this.Table
+func (gp *GamePlay) PostBlinds() {
+	t := gp.Table
 
 	active := t.AllSeats().Active()
 	waiting := t.AllSeats().Waiting()
 
 	if len(active)+len(waiting) < 2 {
-		log.Println("[this.stage.blinds] none waiting")
+		log.Println("[gp.stage.blinds] none waiting")
 
 		return
 	}
 	//headsUp := len(active) == 2 && len(waiting) == 0 || len(active) == 1 && len(waiting) == 1
 
 	sb := active[0]
-	this.postSmallBlind(sb)
+	gp.postSmallBlind(sb)
 
 	bb := active[1]
-	this.postBigBlind(bb)
+	gp.postBigBlind(bb)
 }

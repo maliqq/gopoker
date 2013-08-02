@@ -28,18 +28,18 @@ func NewDiscarding(d *model.Deal) *Discarding {
 	}
 }
 
-func (this *Discarding) RequireDiscard(pos int, seat *model.Seat) *message.Message {
-	this.Seat = seat
-	this.Required.Pos = proto.Int32(int32(pos))
-	return message.NewRequireDiscard(this.Required)
+func (discarding *Discarding) RequireDiscard(pos int, seat *model.Seat) *message.Message {
+	discarding.Seat = seat
+	discarding.Required.Pos = proto.Int32(int32(pos))
+	return message.NewRequireDiscard(discarding.Required)
 }
 
-func (this *Discarding) Start() {
+func (discarding *Discarding) Start() {
 	for {
 		select {
-		case msg := <-this.Discard:
+		case msg := <-discarding.Discard:
 			payload := msg.Envelope.DiscardCards
-			seat := this.Seat
+			seat := discarding.Seat
 			cards := payload.Cards
 
 			if len(cards) == 0 {

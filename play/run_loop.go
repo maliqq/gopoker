@@ -17,25 +17,25 @@ import (
 	"gopoker/protocol/message"
 )
 
-func (this *Play) Run() {
+func (play *Play) Run() {
 	log.Printf("started run loop")
 Loop:
 	for {
 		select {
-		case timeout := <-this.NextDeal:
+		case timeout := <-play.NextDeal:
 			<-timeout
-			go this.run()
-		case <-this.Exit:
+			go play.run()
+		case <-play.Exit:
 			break Loop
 		}
 	}
 }
 
-func (this *Play) run() {
+func (play *Play) run() {
 	// prepare seats
 	log.Println("[play] prepare seats")
 
-	for _, s := range this.Table.Seats {
+	for _, s := range play.Table.Seats {
 		switch s.State {
 		case seat.Ready, seat.Play, seat.Fold:
 			s.Play()
@@ -45,54 +45,54 @@ func (this *Play) run() {
 	// start new deal
 	log.Println("[play] start new deal")
 
-	this.Deal = model.NewDeal()
-	this.Betting = context.NewBetting()
-	if this.Game.Discards {
-		this.Discarding = context.NewDiscarding(this.Deal)
+	play.Deal = model.NewDeal()
+	play.Betting = context.NewBetting()
+	if play.Game.Discards {
+		play.Discarding = context.NewDiscarding(play.Deal)
 	}
 
 	// notify about play start
-	this.Broadcast.System <- message.NewPlayStart(this.Proto())
+	play.Broadcast.System <- message.NewPlayStart(play.Proto())
 
 	// rotate game
-	if this.Mix != nil {
+	if play.Mix != nil {
 		log.Println("[play] rotate game")
 
-		if nextGame := this.GameRotation.Next(); nextGame != nil {
-			this.Game = nextGame
+		if nextGame := play.GameRotation.Next(); nextGame != nil {
+			play.Game = nextGame
 		}
 	}
 
 	// post antes
-	if this.Game.HasAnte || this.Stake.HasAnte() {
+	if play.Game.HasAnte || play.Stake.HasAnte() {
 		log.Println("[play] post antes")
 
-		this.GamePlay.PostAntes()
-		this.GamePlay.ResetBetting()
+		play.GamePlay.PostAntes()
+		play.GamePlay.ResetBetting()
 	}
 
 	// post blinds
-	if this.Game.HasBlinds {
+	if play.Game.HasBlinds {
 		log.Println("[play] post blinds")
 
-		this.GamePlay.MoveButton()
-		this.GamePlay.PostBlinds()
+		play.GamePlay.MoveButton()
+		play.GamePlay.PostBlinds()
 	}
 
 	// run streets
 Streets:
-	for _, street := range street.Get(this.Game.Group) {
+	for _, street := range street.Get(play.Game.Group) {
 		log.Printf("[play] street %s\n", street)
-		this.Broadcast.All <- message.NewStreetStart(string(street))
+		play.Broadcast.All <- message.NewStreetStart(string(street))
 
-		this.Street = street
+		play.Street = street
 
 		for _, stage := range ByStreet[street] {
-			this.Stage = stage.Name
+			play.Stage = stage.Name
 
 			log.Printf("[play] stage %s\n", stage.Name)
 
-			switch stage.Invoke(this) {
+			switch stage.Invoke(play) {
 			case gameplay.Next:
 				continue
 			case gameplay.Stop:
@@ -106,19 +106,19 @@ Streets:
 
 	var highHands, lowHands gameplay.ShowdownHands
 
-	if this.Game.Lo != "" {
-		lowHands = this.GamePlay.ShowHands(this.Game.Lo, this.Game.HasBoard)
+	if play.Game.Lo != "" {
+		lowHands = play.GamePlay.ShowHands(play.Game.Lo, play.Game.HasBoard)
 	}
 
-	if this.Game.Hi != "" {
-		highHands = this.GamePlay.ShowHands(this.Game.Hi, this.Game.HasBoard)
+	if play.Game.Hi != "" {
+		highHands = play.GamePlay.ShowHands(play.Game.Hi, play.Game.HasBoard)
 	}
 
-	this.GamePlay.Winners(highHands, lowHands)
+	play.GamePlay.Winners(highHands, lowHands)
 
 	// deal stop
 	log.Println("[play] deal stop")
-	this.Broadcast.All <- message.NewMessage(message.PlayStop{})
+	play.Broadcast.All <- message.NewMessage(message.PlayStop{})
 
-	this.scheduleNextDeal()
+	play.scheduleNextDeal()
 }

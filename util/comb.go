@@ -1,5 +1,6 @@
 package util
 
+// Fact - factorial of n
 func Fact(n int) int {
 	fact := 1
 	for i := 1; i <= n; i++ {
@@ -9,11 +10,12 @@ func Fact(n int) int {
 	return fact
 }
 
+// Combinations - number of combinations of n with m
 func Combinations(n, m int) int {
 	return Fact(n) / Fact(n-m) / Fact(m)
 }
 
-// abc(2) = ab, ac, bc
+// Combine abc(2) = ab, ac, bc
 func Combine(n, m int) [][]int {
 	if n < m {
 		return [][]int{}

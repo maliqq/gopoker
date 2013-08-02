@@ -192,21 +192,21 @@ func (a Cards) Append(b Cards) Cards {
 
 type groupFunc func(card *Card, prev *Card) int
 
-func (this Cards) Group(test groupFunc) GroupedCards {
-	length := len(this)
+func (cc Cards) Group(test groupFunc) GroupedCards {
+	length := len(cc)
 	groups := make(GroupedCards, length)
 	group := make(Cards, length)
 
 	j, k := 0, 0
 	for i := 0; i < length; i++ {
-		card := this[i]
+		card := cc[i]
 
 		if i == 0 {
 			group[j] = card
 			j++
 
 		} else {
-			prev := this[i-1]
+			prev := cc[i-1]
 			result := test(card, prev)
 
 			if result == 1 {
@@ -231,8 +231,8 @@ func (this Cards) Group(test groupFunc) GroupedCards {
 	return groups[0:k]
 }
 
-func (this Cards) Combine(m int) GroupedCards {
-	n := len(this)
+func (cc Cards) Combine(m int) GroupedCards {
+	n := len(cc)
 
 	indexes := util.Combine(n, m)
 
@@ -241,7 +241,7 @@ func (this Cards) Combine(m int) GroupedCards {
 	for i, index := range indexes {
 		cards := make(Cards, m)
 		for i, j := range index {
-			cards[i] = this[j]
+			cards[i] = cc[j]
 		}
 		result[i] = cards
 	}

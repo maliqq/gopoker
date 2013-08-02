@@ -10,136 +10,136 @@ import (
 
 import (
 	"gopoker/model/bet"
-	"gopoker/model/seat"
+	seatState "gopoker/model/seat"
 	"gopoker/protocol/message"
 )
 
 type Seat struct {
 	Player Player
 
-	State seat.State
+	State seatState.State
 	Stack float64
 
 	Bet float64
 }
 
 func NewSeat() *Seat {
-	return &Seat{State: seat.Empty}
+	return &Seat{State: seatState.Empty}
 }
 
-func (this *Seat) String() string {
+func (seat *Seat) String() string {
 	return fmt.Sprintf("state=%s player=%s stack=%.2f bet=%.2f",
-		this.State,
-		this.Player,
-		this.Stack,
-		this.Bet,
+		seat.State,
+		seat.Player,
+		seat.Stack,
+		seat.Bet,
 	)
 }
 
-func (this *Seat) Clear() {
-	this.State = seat.Empty
-	this.Player = ""
-	this.Stack = 0.
-	this.Bet = 0.
+func (seat *Seat) Clear() {
+	seat.State = seatState.Empty
+	seat.Player = ""
+	seat.Stack = 0.
+	seat.Bet = 0.
 }
 
-func (this *Seat) Play() {
-	this.Bet = 0.
-	this.State = seat.Play
+func (seat *Seat) Play() {
+	seat.Bet = 0.
+	seat.State = seatState.Play
 }
 
-func (this *Seat) Check() {
-	this.State = seat.Bet
+func (seat *Seat) Check() {
+	seat.State = seatState.Bet
 }
 
-func (this *Seat) Fold() {
-	this.Bet = 0.
-	this.State = seat.Fold
+func (seat *Seat) Fold() {
+	seat.Bet = 0.
+	seat.State = seatState.Fold
 }
 
-func (this *Seat) Calls(amount float64) bool {
-	return this.Bet >= amount || this.State == seat.AllIn
+func (seat *Seat) Calls(amount float64) bool {
+	return seat.Bet >= amount || seat.State == seatState.AllIn
 }
 
-func (this *Seat) SetBet(amount float64) {
-	this.Stack += (this.Bet - amount)
-	this.Bet = amount
+func (seat *Seat) SetBet(amount float64) {
+	seat.Stack += (seat.Bet - amount)
+	seat.Bet = amount
 
-	if this.Stack == 0. {
-		this.State = seat.AllIn
+	if seat.Stack == 0. {
+		seat.State = seatState.AllIn
 	} else {
-		this.State = seat.Bet
+		seat.State = seatState.Bet
 	}
 }
 
-func (this *Seat) ForceBet(amount float64) {
-	this.Stack -= amount
-	this.Bet = amount
+func (seat *Seat) ForceBet(amount float64) {
+	seat.Stack -= amount
+	seat.Bet = amount
 
-	if this.Stack == 0. {
-		this.State = seat.AllIn
+	if seat.Stack == 0. {
+		seat.State = seatState.AllIn
 	} else {
-		this.State = seat.Play
+		seat.State = seatState.Play
 	}
 }
 
-func (this *Seat) AddBet(b *Bet) (float64, bool) {
+func (seat *Seat) AddBet(b *Bet) (float64, bool) {
 	var put float64
 
 	switch b.Type {
 	case bet.Fold:
 		put = 0
-		this.Fold()
+		seat.Fold()
 
 	case bet.Check:
 		put = 0
-		this.Check()
+		seat.Check()
 
 	case bet.Call, bet.Raise:
-		put = b.Amount - this.Bet
-		this.SetBet(b.Amount)
+		put = b.Amount - seat.Bet
+		seat.SetBet(b.Amount)
 
 	default:
-		put = b.Amount - this.Bet
+		put = b.Amount - seat.Bet
 		if b.IsForced() {
-			this.ForceBet(b.Amount)
+			seat.ForceBet(b.Amount)
 		}
 	}
 
-	return put, this.State == seat.AllIn
+	return put, seat.State == seatState.AllIn
 }
 
-func (this *Seat) SetPlayer(player Player) error {
-	if this.State != seat.Empty {
+func (seat *Seat) SetPlayer(player Player) error {
+	if seat.State != seatState.Empty {
 		return fmt.Errorf("Seat is not empty.")
 	}
 
-	this.Player = player
-	this.State = seat.Taken
+	seat.Player = player
+	seat.State = seatState.Taken
 
 	return nil
 }
 
-func (this *Seat) SetStack(amount float64) {
-	this.Stack = amount
+func (seat *Seat) SetStack(amount float64) {
+	seat.Stack = amount
 
-	if this.State == seat.Taken {
-		this.State = seat.Ready
+	if seat.State == seatState.Taken {
+		seat.State = seatState.Ready
 	}
 }
 
-func (this *Seat) AdvanceStack(amount float64) {
-	this.Stack += amount
+func (seat *Seat) AdvanceStack(amount float64) {
+	seat.Stack += amount
 }
 
-func (this *Seat) Proto() *message.Seat {
+func (seat *Seat) Proto() *message.Seat {
 	return &message.Seat{
 		State: message.SeatState(
-			message.SeatState_value[string(this.State)],
+			message.SeatState_value[string(seat.State)],
 		).Enum(),
 
-		Stack: proto.Float64(this.Stack),
+		Stack: proto.Float64(seat.Stack),
 
-		Bet: proto.Float64(this.Bet),
+		Bet: proto.Float64(seat.Bet),
 	}
 }

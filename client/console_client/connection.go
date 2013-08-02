@@ -30,7 +30,7 @@ func (c *Connection) Reply(msg *message.Message) {
 }
 
 func (c *Connection) Handle(msg *message.Message) {
-	log.Println(console.Color(console.GREEN, fmt.Sprintf("[receive] %s", msg)))
+	log.Println(console.Color(console.Green, fmt.Sprintf("[receive] %s", msg)))
 
 	switch msg.Payload().(type) {
 	case *message.RequireBet:

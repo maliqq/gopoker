@@ -7,28 +7,28 @@ import (
 	"gopoker/protocol/message"
 )
 
-func (this *GamePlay) StartDiscardingRound() Transition {
-	discarding := this.Discarding
+func (gp *GamePlay) StartDiscardingRound() Transition {
+	discarding := gp.Discarding
 
-	for _, pos := range this.Table.AllSeats().InPlay() {
-		seat := this.Table.Seat(pos)
+	for _, pos := range gp.Table.AllSeats().InPlay() {
+		seat := gp.Table.Seat(pos)
 
-		this.Broadcast.One(seat.Player) <- discarding.RequireDiscard(pos, seat)
+		gp.Broadcast.One(seat.Player) <- discarding.RequireDiscard(pos, seat)
 	}
 
 	return Next
 }
 
-func (this *GamePlay) discard(p model.Player, cards poker.Cards) {
-	pos, _ := this.Table.Pos(p)
+func (gp *GamePlay) discard(p model.Player, cards poker.Cards) {
+	pos, _ := gp.Table.Pos(p)
 
 	cardsNum := len(cards)
 
-	this.Broadcast.All <- message.NewDiscarded(pos, cardsNum)
+	gp.Broadcast.All <- message.NewDiscarded(pos, cardsNum)
 
 	if cardsNum > 0 {
-		newCards := this.Deal.Discard(p, cards)
+		newCards := gp.Deal.Discard(p, cards)
 
-		this.Broadcast.One(p) <- message.NewDealPocket(pos, newCards.Proto(), deal.Discard)
+		gp.Broadcast.One(p) <- message.NewDealPocket(pos, newCards.Proto(), deal.Discard)
 	}
 }

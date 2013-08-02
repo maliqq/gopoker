@@ -26,10 +26,10 @@ var (
 	SuitsUnicode = []string{"♠", "♥", "♦", "♣"}
 
 	Colors = map[Suit]string{
-		Spade:   console.YELLOW,
-		Heart:   console.RED,
-		Diamond: console.CYAN,
-		Club:    console.GREEN,
+		Spade:   console.Yellow,
+		Heart:   console.Red,
+		Diamond: console.Cyan,
+		Club:    console.Green,
 	}
 )
 

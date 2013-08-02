@@ -9,17 +9,17 @@ import (
 
 type ShowdownHands map[model.Player]*poker.Hand
 
-func (this *GamePlay) ShowHands(ranking hand.Ranking, withBoard bool) ShowdownHands {
-	d := this.Deal
+func (gp *GamePlay) ShowHands(ranking hand.Ranking, withBoard bool) ShowdownHands {
+	d := gp.Deal
 
 	hands := ShowdownHands{}
 
-	for _, pos := range this.Table.AllSeats().InPot() {
-		player := this.Table.Player(pos)
+	for _, pos := range gp.Table.AllSeats().InPot() {
+		player := gp.Table.Player(pos)
 		if pocket, hand := d.Rank(player, ranking, withBoard); hand != nil {
 			hands[player] = hand
 
-			this.Broadcast.All <- message.NewShowHand(pos, player.Proto(), pocket.Proto(), hand.Proto(), hand.PrintString())
+			gp.Broadcast.All <- message.NewShowHand(pos, player.Proto(), pocket.Proto(), hand.Proto(), hand.PrintString())
 		}
 	}
 
@@ -42,13 +42,13 @@ func best(sidePot *model.SidePot, hands ShowdownHands) (model.Player, *poker.Han
 	return winner, best
 }
 
-func (this *GamePlay) Winners(highHands ShowdownHands, lowHands ShowdownHands) {
+func (gp *GamePlay) Winners(highHands ShowdownHands, lowHands ShowdownHands) {
 	hi := highHands != nil
 	lo := lowHands != nil
 
 	split := hi && lo
 
-	for _, sidePot := range this.Betting.Pot.SidePots() {
+	for _, sidePot := range gp.Betting.Pot.SidePots() {
 		total := sidePot.Total()
 
 		var winnerLow, winnerHigh model.Player
@@ -76,10 +76,10 @@ func (this *GamePlay) Winners(highHands ShowdownHands, lowHands ShowdownHands) {
 		}
 
 		for winner, amount := range winners {
-			pos, _ := this.Table.Pos(winner)
-			seat := this.Table.Seat(pos)
+			pos, _ := gp.Table.Pos(winner)
+			seat := gp.Table.Seat(pos)
 			seat.AdvanceStack(amount)
-			this.Broadcast.All <- message.NewWinner(pos, winner.Proto(), amount)
+			gp.Broadcast.All <- message.NewWinner(pos, winner.Proto(), amount)
 		}
 	}
 }

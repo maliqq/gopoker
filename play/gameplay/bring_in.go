@@ -5,14 +5,14 @@ import (
 	"gopoker/protocol/message"
 )
 
-func (this *GamePlay) BringIn() Transition {
+func (gp *GamePlay) BringIn() Transition {
 	minPos := 0
 	var card *poker.Card
 
-	for _, pos := range this.Table.AllSeats().Active() {
-		s := this.Table.Seat(pos)
+	for _, pos := range gp.Table.AllSeats().Active() {
+		s := gp.Table.Seat(pos)
 
-		pocketCards := this.Deal.Pocket(s.Player)
+		pocketCards := gp.Deal.Pocket(s.Player)
 
 		lastCard := pocketCards[len(pocketCards)-1]
 		if pos == 0 {
@@ -25,11 +25,11 @@ func (this *GamePlay) BringIn() Transition {
 		}
 	}
 
-	this.Table.SetButton(minPos)
-	this.Broadcast.All <- message.NewMoveButton(minPos)
+	gp.Table.SetButton(minPos)
+	gp.Broadcast.All <- message.NewMoveButton(minPos)
 
-	seat := this.Table.Seat(minPos)
-	this.Broadcast.One(seat.Player) <- this.Betting.RequireBet(minPos, seat.Stack, this.Game, this.Stake)
+	seat := gp.Table.Seat(minPos)
+	gp.Broadcast.One(seat.Player) <- gp.Betting.RequireBet(minPos, seat.Stack, gp.Game, gp.Stake)
 
 	return Next
 }

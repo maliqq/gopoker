@@ -70,28 +70,33 @@ func (m *DealerMessage) GetMessage() string {
 }
 
 type Envelope struct {
-	ErrorMessage     *ErrorMessage    `protobuf:"bytes,1,opt" json:"ErrorMessage,omitempty"`
-	ChatMessage      *ChatMessage     `protobuf:"bytes,2,opt" json:"ChatMessage,omitempty"`
-	DealerMessage    *DealerMessage   `protobuf:"bytes,3,opt" json:"DealerMessage,omitempty"`
-	PlayStart        *PlayStart       `protobuf:"bytes,4,opt" json:"PlayStart,omitempty"`
-	PlayStop         *PlayStop        `protobuf:"bytes,5,opt" json:"PlayStop,omitempty"`
-	StreetStart      *StreetStart     `protobuf:"bytes,6,opt" json:"StreetStart,omitempty"`
-	BettingComplete  *BettingComplete `protobuf:"bytes,7,opt" json:"BettingComplete,omitempty"`
-	JoinTable        *JoinTable       `protobuf:"bytes,8,opt" json:"JoinTable,omitempty"`
-	LeaveTable       *LeaveTable      `protobuf:"bytes,9,opt" json:"LeaveTable,omitempty"`
-	SitOut           *SitOut          `protobuf:"bytes,10,opt" json:"SitOut,omitempty"`
-	ComeBack         *ComeBack        `protobuf:"bytes,11,opt" json:"ComeBack,omitempty"`
-	MoveButton       *MoveButton      `protobuf:"bytes,12,opt" json:"MoveButton,omitempty"`
-	RequireBet       *RequireBet      `protobuf:"bytes,13,opt" json:"RequireBet,omitempty"`
-	AddBet           *AddBet          `protobuf:"bytes,14,opt" json:"AddBet,omitempty"`
-	DealCards        *DealCards       `protobuf:"bytes,15,opt" json:"DealCards,omitempty"`
-	RequireDiscard   *RequireDiscard  `protobuf:"bytes,16,opt" json:"RequireDiscard,omitempty"`
-	Discarded        *Discarded       `protobuf:"bytes,17,opt" json:"Discarded,omitempty"`
-	DiscardCards     *DiscardCards    `protobuf:"bytes,18,opt" json:"DiscardCards,omitempty"`
-	ShowHand         *ShowHand        `protobuf:"bytes,19,opt" json:"ShowHand,omitempty"`
-	ShowCards        *ShowCards       `protobuf:"bytes,20,opt" json:"ShowCards,omitempty"`
-	Winner           *Winner          `protobuf:"bytes,21,opt" json:"Winner,omitempty"`
-	XXX_unrecognized []byte           `json:"-"`
+	ErrorMessage  *ErrorMessage  `protobuf:"bytes,1,opt" json:"ErrorMessage,omitempty"`
+	ChatMessage   *ChatMessage   `protobuf:"bytes,2,opt" json:"ChatMessage,omitempty"`
+	DealerMessage *DealerMessage `protobuf:"bytes,3,opt" json:"DealerMessage,omitempty"`
+	// gameplay
+	PlayStart       *PlayStart       `protobuf:"bytes,4,opt" json:"PlayStart,omitempty"`
+	PlayStop        *PlayStop        `protobuf:"bytes,5,opt" json:"PlayStop,omitempty"`
+	StreetStart     *StreetStart     `protobuf:"bytes,6,opt" json:"StreetStart,omitempty"`
+	BettingComplete *BettingComplete `protobuf:"bytes,7,opt" json:"BettingComplete,omitempty"`
+	// table
+	JoinTable  *JoinTable  `protobuf:"bytes,8,opt" json:"JoinTable,omitempty"`
+	LeaveTable *LeaveTable `protobuf:"bytes,9,opt" json:"LeaveTable,omitempty"`
+	SitOut     *SitOut     `protobuf:"bytes,10,opt" json:"SitOut,omitempty"`
+	ComeBack   *ComeBack   `protobuf:"bytes,11,opt" json:"ComeBack,omitempty"`
+	MoveButton *MoveButton `protobuf:"bytes,12,opt" json:"MoveButton,omitempty"`
+	// betting
+	RequireBet *RequireBet `protobuf:"bytes,13,opt" json:"RequireBet,omitempty"`
+	AddBet     *AddBet     `protobuf:"bytes,14,opt" json:"AddBet,omitempty"`
+	// dealing
+	DealCards      *DealCards      `protobuf:"bytes,15,opt" json:"DealCards,omitempty"`
+	RequireDiscard *RequireDiscard `protobuf:"bytes,16,opt" json:"RequireDiscard,omitempty"`
+	Discarded      *Discarded      `protobuf:"bytes,17,opt" json:"Discarded,omitempty"`
+	DiscardCards   *DiscardCards   `protobuf:"bytes,18,opt" json:"DiscardCards,omitempty"`
+	// showdown
+	ShowHand         *ShowHand  `protobuf:"bytes,19,opt" json:"ShowHand,omitempty"`
+	ShowCards        *ShowCards `protobuf:"bytes,20,opt" json:"ShowCards,omitempty"`
+	Winner           *Winner    `protobuf:"bytes,21,opt" json:"Winner,omitempty"`
+	XXX_unrecognized []byte     `json:"-"`
 }
 
 func (m *Envelope) Reset()         { *m = Envelope{} }
@@ -246,8 +251,9 @@ func (m *Envelope) GetWinner() *Winner {
 }
 
 type Message struct {
-	Type             *string   `protobuf:"bytes,1,req" json:"Type,omitempty"`
-	Timestamp        *int64    `protobuf:"varint,2,req" json:"Timestamp,omitempty"`
+	Type      *string `protobuf:"bytes,1,req" json:"Type,omitempty"`
+	Timestamp *int64  `protobuf:"varint,2,req" json:"Timestamp,omitempty"`
+	// optional Notify Notify = 3;
 	Envelope         *Envelope `protobuf:"bytes,4,req" json:"Envelope,omitempty"`
 	XXX_unrecognized []byte    `json:"-"`
 }

@@ -28,17 +28,17 @@ type ChancesAgainstN struct {
 	SamplesNum   int
 }
 
-func (this *Chances) Compare(c1, c2 poker.Cards) {
+func (c *Chances) Compare(c1, c2 poker.Cards) {
 	h1, _ := poker.Detect[hand.High](&c1)
 	h2, _ := poker.Detect[hand.High](&c2)
 
 	switch h1.Compare(h2) {
 	case -1:
-		this.Loses++
+		c.Loses++
 	case 1:
-		this.Wins++
+		c.Wins++
 	case 0:
-		this.Ties++
+		c.Ties++
 	}
 }
 

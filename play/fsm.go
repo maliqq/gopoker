@@ -34,18 +34,18 @@ type FSM struct {
 	Street street.Type
 }
 
-func (this *Play) Start() {
-	this.stateChange <- Active
+func (play *Play) Start() {
+	play.stateChange <- Active
 }
 
-func (this *Play) Pause() {
-	this.stateChange <- Paused
+func (play *Play) Pause() {
+	play.stateChange <- Paused
 }
 
-func (this *Play) Resume() {
-	this.stateChange <- Active
+func (play *Play) Resume() {
+	play.stateChange <- Active
 }
 
-func (this *Play) Close() {
-	this.stateChange <- Closed
+func (play *Play) Close() {
+	play.stateChange <- Closed
 }

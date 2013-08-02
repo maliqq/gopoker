@@ -28,40 +28,40 @@ func NewStorage(ps *storage.PlayStore) *Storage {
 	return storage
 }
 
-func (this *Storage) receive() {
+func (stor *Storage) receive() {
 	for {
-		msg := <-this.Recv
-		this.handle(msg)
+		msg := <-stor.Recv
+		stor.handle(msg)
 	}
 }
 
-func (this *Storage) handle(msg *message.Message) {
+func (stor *Storage) handle(msg *message.Message) {
 	switch msg.Payload().(type) {
 	case *message.PlayStart:
-		this.Current = this.NewPlay()
-		this.Current.Play = msg.Envelope.PlayStart.Play
+		stor.Current = stor.NewPlay()
+		stor.Current.Play = msg.Envelope.PlayStart.Play
 
 	case *message.PlayStop:
-		this.Current.Stop = time.Now()
+		stor.Current.Stop = time.Now()
 
-		log.Printf("[storage] saving %+v", this.Current)
+		log.Printf("[storage] saving %+v", stor.Current)
 
-		this.PlayStore.Collection("plays").Insert(this.Current)
+		stor.PlayStore.Collection("plays").Insert(stor.Current)
 
 	case *message.ShowHand:
 		show := msg.Envelope.ShowHand
-		this.Current.KnownCards[show.GetPlayer()] = show.GetCards()
+		stor.Current.KnownCards[show.GetPlayer()] = show.GetCards()
 
 	case *message.Winner:
 		winner := msg.Envelope.Winner
-		this.Current.Winners[winner.GetPlayer()] = winner.GetAmount()
+		stor.Current.Winners[winner.GetPlayer()] = winner.GetAmount()
 
 	default:
 		log.Printf("[storage] got %s", msg)
 	}
 }
 
-func (this *Storage) NewPlay() *storage.Play {
+func (stor *Storage) NewPlay() *storage.Play {
 	return &storage.Play{
 		Id:         storage.NewObjectId(),
 		Start:      time.Now(),

@@ -5,14 +5,14 @@ import (
 	"gopoker/protocol/message"
 )
 
-func (this *GamePlay) PostAntes() {
-	for _, pos := range this.Table.AllSeats().Active() {
-		seat := this.Table.Seat(pos)
+func (gp *GamePlay) PostAntes() {
+	for _, pos := range gp.Table.AllSeats().Active() {
+		seat := gp.Table.Seat(pos)
 
-		newBet := this.Betting.ForceBet(pos, bet.Ante, this.Stake)
+		newBet := gp.Betting.ForceBet(pos, bet.Ante, gp.Stake)
 
-		this.Betting.AddBet(seat, newBet)
+		gp.Betting.AddBet(seat, newBet)
 
-		this.Broadcast.All <- message.NewAddBet(pos, newBet.Proto())
+		gp.Broadcast.All <- message.NewAddBet(pos, newBet.Proto())
 	}
 }

@@ -57,24 +57,24 @@ func NewPlay(variation model.Variation, stake *model.Stake, table *model.Table) 
 	return play
 }
 
-func (this *Play) String() string {
-	return fmt.Sprintf("Game: %s\nTable: %s\n", this.Game, this.Table)
+func (play *Play) String() string {
+	return fmt.Sprintf("Game: %s\nTable: %s\n", play.Game, play.Table)
 }
 
-func (this *Play) receive() {
+func (play *Play) receive() {
 	for {
 		select {
-		case msg := <-this.Recv:
-			this.handleMessage(msg)
+		case msg := <-play.Recv:
+			play.handleMessage(msg)
 
-		case newState := <-this.stateChange:
-			this.handleStateChange(newState)
+		case newState := <-play.stateChange:
+			play.handleStateChange(newState)
 		}
 	}
 }
 
-func (this *Play) handleMessage(msg *message.Message) {
-	log.Printf(console.Color(console.YELLOW, msg.String()))
+func (play *Play) handleMessage(msg *message.Message) {
+	log.Printf(console.Color(console.Yellow, msg.String()))
 
 	payload := msg.Payload() // FIXME
 	if payload == nil {
@@ -88,90 +88,90 @@ func (this *Play) handleMessage(msg *message.Message) {
 		pos := int(join.GetPos())
 		amount := join.GetAmount()
 
-		_, err := this.Table.AddPlayer(player, pos, amount)
+		_, err := play.Table.AddPlayer(player, pos, amount)
 		if err == nil {
 			// start next deal
 		} else {
 			log.Printf("[protocol] error: %s", err)
 		}
 		// retranslate
-		this.Broadcast.All <- msg
+		play.Broadcast.All <- msg
 
 	case *message.LeaveTable:
 		leave := msg.Envelope.LeaveTable
 		player := model.Player(leave.GetPlayer())
 
-		this.Table.RemovePlayer(player)
-		this.Broadcast.All <- msg
+		play.Table.RemovePlayer(player)
+		play.Broadcast.All <- msg
 		// TODO: fold & autoplay
 
 	case *message.SitOut:
 		sitOut := msg.Envelope.SitOut
 		pos := int(sitOut.GetPos())
 
-		this.Table.Seat(pos).State = seat.Idle
+		play.Table.Seat(pos).State = seat.Idle
 		// TODO: fold
 
 	case *message.ComeBack:
 		comeBack := msg.Envelope.ComeBack
 		pos := int(comeBack.GetPos())
 
-		this.Table.Seat(pos).State = seat.Ready
+		play.Table.Seat(pos).State = seat.Ready
 
 	case *message.ChatMessage:
-		this.Broadcast.All <- msg
+		play.Broadcast.All <- msg
 
 	case *message.AddBet:
-		if !this.Betting.IsActive() {
+		if !play.Betting.IsActive() {
 			return
 		}
 
 		add := msg.Envelope.AddBet
 
 		pos := int(add.GetPos())
-		seat := this.Table.Seat(pos)
+		seat := play.Table.Seat(pos)
 
 		betType := bet.Type(add.Bet.GetType().String())
 		amount := add.Bet.GetAmount()
 		newBet := model.NewBet(betType, amount)
 
-		this.Betting.Bet <- &context.Action{Seat: seat, Bet: newBet}
-		this.Broadcast.All <- msg
+		play.Betting.Bet <- &context.Action{Seat: seat, Bet: newBet}
+		play.Broadcast.All <- msg
 
 	case *message.DiscardCards:
-		this.Discarding.Discard <- msg
+		play.Discarding.Discard <- msg
 
 	default:
 		log.Printf("Unknown message: %#v", msg.Payload())
 	}
 }
 
-func (this *Play) handleStateChange(newState State) {
+func (play *Play) handleStateChange(newState State) {
 	log.Printf("[play] state %s", newState)
 
-	oldState := this.State
+	oldState := play.State
 	if oldState != newState {
-		this.stateLock.Lock()
-		defer this.stateLock.Unlock()
+		play.stateLock.Lock()
+		defer play.stateLock.Unlock()
 
-		this.State = newState
+		play.State = newState
 		if newState == Active {
-			go this.Run()
-			this.scheduleNextDeal()
+			go play.Run()
+			play.scheduleNextDeal()
 		}
 	}
 }
 
-func (this *Play) scheduleNextDeal() {
+func (play *Play) scheduleNextDeal() {
 	log.Printf("[play] scheduling next deal in %d seconds", 5)
 
-	this.NextDeal <- time.After(5 * time.Second)
+	play.NextDeal <- time.After(5 * time.Second)
 }
 
-func (this *Play) Proto() *message.Play {
+func (play *Play) Proto() *message.Play {
 	return &message.Play{
-		Table: this.Table.Proto(),
-		Game:  this.Game.Proto(),
-		Stake: this.Stake.Proto(),
+		Table: play.Table.Proto(),
+		Game:  play.Game.Proto(),
+		Stake: play.Stake.Proto(),
 	}
 }

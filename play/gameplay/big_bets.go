@@ -1,7 +1,7 @@
 package gameplay
 
-func (this *GamePlay) BigBets() Transition {
-	this.Betting.BigBets()
+func (gp *GamePlay) BigBets() Transition {
+	gp.Betting.BigBets()
 
 	return Next
 }
