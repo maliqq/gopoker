@@ -10,37 +10,24 @@ type Kind byte
 // Kinds
 const (
 	Deuce Kind = iota // Deuce - "2"
-
-	Three // Three - "3"
-
-	Four // Four - "4"
-
-	Five // Five - "5"
-
-	Six // Six - "6"
-
-	Seven // Seven - "7"
-
-	Eight // Eight - "8"
-
-	Nine // Nine - "9"
-
-	Ten // Ten - "T"
-
-	Jack // Jack - "J"
-
-	Queen // Queen - "Q"
-
-	King // King - "K"
-
-	Ace // Ace - "A"
+	Three             // Three - "3"
+	Four              // Four - "4"
+	Five              // Five - "5"
+	Six               // Six - "6"
+	Seven             // Seven - "7"
+	Eight             // Eight - "8"
+	Nine              // Nine - "9"
+	Ten               // Ten - "T"
+	Jack              // Jack - "J"
+	Queen             // Queen - "Q"
+	King              // King - "K"
+	Ace               // Ace - "A"
 )
 
 // Consts
 const (
-	Kinds = "23456789TJQKA" // Kinds - all kinds
-
-	KindsNum = len(Kinds) // KindsNum - 13
+	Kinds    = "23456789TJQKA" // Kinds - all kinds
+	KindsNum = len(Kinds)      // KindsNum - 13
 )
 
 var (

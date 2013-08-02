@@ -27,47 +27,33 @@ func (g MixedGame) Game() Game {
 	return Game(g)
 }
 
+// limited games
 const (
-	// Texas - texas holdem
-	Texas LimitedGame = "Texas"
-	// Omaha - omaha holdem
-	Omaha LimitedGame = "Omaha"
-	// Omaha8 - omaha holdem hi/lo
-	Omaha8 LimitedGame = "Omaha8"
-	// Stud - seven card stud
-	Stud LimitedGame = "Stud"
-	// Stud8 - seven card stud hi/lo
-	Stud8 LimitedGame = "Stud8"
-	// Razz - Ace to Five lowball stud
-	Razz LimitedGame = "Razz"
-	// London - Ace to Six lowball stud
-	London LimitedGame = "London"
-	// FiveCard - five card draw poker
-	FiveCard LimitedGame = "FiveCard"
-	// Single27 - 2-7 lowball draw poker
-	Single27 LimitedGame = "Single27"
-	// Triple27 - 2-7 lowball poker with 3 draws
-	Triple27 LimitedGame = "Triple27"
-	// Badugi - badugi poker
-	Badugi LimitedGame = "Badugi"
+	Texas    LimitedGame = "Texas"    // Texas - texas holdem
+	Omaha    LimitedGame = "Omaha"    // Omaha - omaha holdem
+	Omaha8   LimitedGame = "Omaha8"   // Omaha8 - omaha holdem hi/lo
+	Stud     LimitedGame = "Stud"     // Stud - seven card stud
+	Stud8    LimitedGame = "Stud8"    // Stud8 - seven card stud hi/lo
+	Razz     LimitedGame = "Razz"     // Razz - Ace to Five lowball stud
+	London   LimitedGame = "London"   // London - Ace to Six lowball stud
+	FiveCard LimitedGame = "FiveCard" // FiveCard - five card draw poker
+	Single27 LimitedGame = "Single27" // Single27 - 2-7 lowball draw poker
+	Triple27 LimitedGame = "Triple27" // Triple27 - 2-7 lowball poker with 3 draws
+	Badugi   LimitedGame = "Badugi"   // Badugi - badugi poker
+)
 
-	// mixes
+// mixed games
+const (
+	Horse MixedGame = "Horse" // Horse - H.O.R.S.E.
+	Eight MixedGame = "Eight" // Eight - 8-game
+)
 
-	// Horse - H.O.R.S.E.
-	Horse MixedGame = "Horse"
-	// Eight - 8-game
-	Eight MixedGame = "Eight"
-
-	// groups
-
-	// Holdem - holdem poker
-	Holdem Group = "Holdem"
-	// SevenCard - 7-card poker
-	SevenCard Group = "SevenCard"
-	// SingleDraw - single draw poker
-	SingleDraw Group = "SingleDraw"
-	// TripleDraw - triple draw poker
-	TripleDraw Group = "TripleDraw"
+// groups
+const (
+	Holdem     Group = "Holdem"     // Holdem - holdem poker
+	SevenCard  Group = "SevenCard"  // SevenCard - 7-card poker
+	SingleDraw Group = "SingleDraw" // SingleDraw - single draw poker
+	TripleDraw Group = "TripleDraw" // TripleDraw - triple draw poker
 )
 
 var (

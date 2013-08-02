@@ -6,10 +6,8 @@ type Limit string
 // Limits
 const (
 	FixedLimit Limit = "FixedLimit" // FixedLimit - fixed limit
-
-	PotLimit Limit = "PotLimit" // PotLimit - pot limit
-
-	NoLimit Limit = "NoLimit" // NoLimit - no limit
+	PotLimit   Limit = "PotLimit"   // PotLimit - pot limit
+	NoLimit    Limit = "NoLimit"    // NoLimit - no limit
 )
 
 var (

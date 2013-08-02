@@ -6,33 +6,21 @@ type Rank string
 // Ranks
 const (
 	StraightFlush Rank = "StraightFlush" // StraightFlush - straight flush rank
+	FourKind      Rank = "FourKind"      // FourKind - four of a kind rank
+	FullHouse     Rank = "FullHouse"     // FullHouse - full house rank
+	Flush         Rank = "Flush"         // Flush - flush rank
+	Straight      Rank = "Straight"      // Straight - straight rank
+	ThreeKind     Rank = "ThreeKind"     // ThreeKind - three of a kind rank
+	TwoPair       Rank = "TwoPair"       // TwoPair - two pair rank
+	OnePair       Rank = "OnePair"       // OnePair - one pair rank
+	HighCard      Rank = "HighCard"      // HighCard - high card rank
 
-	FourKind Rank = "FourKind" // FourKind - four of a kind rank
-
-	FullHouse Rank = "FullHouse" // FullHouse - full house rank
-
-	Flush Rank = "Flush" // Flush - flush rank
-
-	Straight Rank = "Straight" // Straight - straight rank
-
-	ThreeKind Rank = "ThreeKind" // ThreeKind - three of a kind rank
-
-	TwoPair Rank = "TwoPair" // TwoPair - two pair rank
-
-	OnePair Rank = "OnePair" // OnePair - one pair rank
-
-	HighCard Rank = "HighCard" // HighCard - high card rank
-
-	BadugiFour Rank = "BadugiFour" // BadugiFour - badugi four cards rank
-
+	BadugiFour  Rank = "BadugiFour"  // BadugiFour - badugi four cards rank
 	BadugiThree Rank = "BadugiThree" // BadugiThree - badugi three cards rank
+	BadugiTwo   Rank = "BadugiTwo"   // BadugiTwo - badugi two cards rank
+	BadugiOne   Rank = "BadugiOne"   // BadugiOne - badugi one card rank
 
-	BadugiTwo Rank = "BadugiTwo" // BadugiTwo - badugi two cards rank
-
-	BadugiOne Rank = "BadugiOne" // BadugiOne - badugi one card rank
-
-	CompleteLow Rank = "CompleteLow" // CompleteLow - complete low rank
-
+	CompleteLow   Rank = "CompleteLow"   // CompleteLow - complete low rank
 	IncompleteLow Rank = "IncompleteLow" // IncompleteLow - incomplete low rank
 )
 

@@ -5,12 +5,9 @@ type Type string
 
 // Deal types
 const (
-	Hole Type = "Hole" // Hole - deal hole cards
-
-	Door Type = "Door" // Door - deal door cards
-
-	Board Type = "Board" // Board - deal board cards
-
+	Hole    Type = "Hole"    // Hole - deal hole cards
+	Door    Type = "Door"    // Door - deal door cards
+	Board   Type = "Board"   // Board - deal board cards
 	Discard Type = "Discard" // Discard - deal discarded cards
 )
 

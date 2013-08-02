@@ -14,11 +14,9 @@ type Ordering int
 
 // Orderings
 const (
-	Ace = card.Ace // Ace - kind ace
-
-	AceHigh Ordering = 0 // AceHigh - ace is high card
-
-	AceLow Ordering = 1 // AceLow - ace is low card
+	Ace              = card.Ace // Ace - kind ace
+	AceHigh Ordering = 0        // AceHigh - ace is high card
+	AceLow  Ordering = 1        // AceLow - ace is low card
 )
 
 // cards with ordering (ace high/ace low)

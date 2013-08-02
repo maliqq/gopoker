@@ -8,25 +8,23 @@ import (
 	"gopoker/poker/hand"
 )
 
-var (
-	badugiRanks = []rankFunc{
-		func(hc *handCards) (hand.Rank, *Hand) {
-			return hand.BadugiOne, hc.isBadugiOne()
-		},
+var badugiRanks = []rankFunc{
+	func(hc *handCards) (hand.Rank, *Hand) {
+		return hand.BadugiOne, hc.isBadugiOne()
+	},
 
-		func(hc *handCards) (hand.Rank, *Hand) {
-			return hand.BadugiFour, hc.isBadugiFour()
-		},
+	func(hc *handCards) (hand.Rank, *Hand) {
+		return hand.BadugiFour, hc.isBadugiFour()
+	},
 
-		func(hc *handCards) (hand.Rank, *Hand) {
-			return hand.BadugiThree, hc.isBadugiThree()
-		},
+	func(hc *handCards) (hand.Rank, *Hand) {
+		return hand.BadugiThree, hc.isBadugiThree()
+	},
 
-		func(hc *handCards) (hand.Rank, *Hand) {
-			return hand.BadugiTwo, hc.isBadugiTwo()
-		},
-	}
-)
+	func(hc *handCards) (hand.Rank, *Hand) {
+		return hand.BadugiTwo, hc.isBadugiTwo()
+	},
+}
 
 func (hc *handCards) isBadugiOne() *Hand {
 	if len(hc.groupKind) == 1 {

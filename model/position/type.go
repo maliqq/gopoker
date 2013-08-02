@@ -5,24 +5,15 @@ type Position string
 
 // Positions
 const (
-	SB Position = "SB" // SB - small blind
-
-	BB Position = "BB" // BB - big blind
-
-	BU Position = "BU" // BU - button
-
-	CO Position = "CO" // CO - cutoff
-
-	MP1 Position = "MP1" // MP1 - middle player 1
-
-	MP2 Position = "MP2" // MP2 - middle player 2
-
-	MP3 Position = "MP3" // MP3 - middle player 3
-
+	SB   Position = "SB"   // SB - small blind
+	BB   Position = "BB"   // BB - big blind
+	BU   Position = "BU"   // BU - button
+	CO   Position = "CO"   // CO - cutoff
+	MP1  Position = "MP1"  // MP1 - middle player 1
+	MP2  Position = "MP2"  // MP2 - middle player 2
+	MP3  Position = "MP3"  // MP3 - middle player 3
 	UTG1 Position = "UTG1" // UTG1 - under the gun 1
-
 	UTG2 Position = "UTG2" // UTG2 - under the gun 2
-
 	UTG3 Position = "UTG3" // UTG3 - under the gun 3
 )
 

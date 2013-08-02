@@ -13,19 +13,15 @@ type Suit byte
 
 // Suits
 const (
-	Spade Suit = iota // Spade - spades
-
-	Heart // Heart - heart
-
-	Diamond // Diamond - diamond
-
-	Club // Club - club
+	Spade   Suit = iota // Spade - spades
+	Heart               // Heart - heart
+	Diamond             // Diamond - diamond
+	Club                // Club - club
 )
 
 // Consts
 const (
-	Suits = "shdc" // Suits - all suits
-
+	Suits    = "shdc"     // Suits - all suits
 	SuitsNum = len(Suits) // SuitsNum - 4
 )
 
