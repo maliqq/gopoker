@@ -14,18 +14,18 @@ import (
 )
 
 const (
-	DefaultConfigDir = "/etc/gopoker"
+	defaultConfigDir = "/etc/gopoker"
 )
 
 var (
-	ConfigDir = flag.String("config-dir", DefaultConfigDir, "Config dir")
+	configDir = flag.String("config-dir", defaultConfigDir, "Config dir")
 )
 
 func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 
 	flag.Parse()
-	model.LoadGames(*ConfigDir)
+	model.LoadGames(*configDir)
 
 	node := server.NewNode("localhost", *ConfigDir)
 	node.Start()

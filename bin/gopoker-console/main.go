@@ -29,16 +29,16 @@ var (
 )
 
 const (
-	DefaultConfigDir = "/etc/gopoker"
+	defaultConfigDir = "/etc/gopoker"
 )
 
 var (
-	ConfigDir = flag.String("config-dir", DefaultConfigDir, "Config dir")
+	configDir = flag.String("config-dir", defaultConfigDir, "Config dir")
 )
 
 func main() {
 	flag.Parse()
-	model.LoadGames(*ConfigDir)
+	model.LoadGames(*configDir)
 
 	if *logfile != "" {
 		w, err := os.Create(*logfile)
