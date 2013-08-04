@@ -88,4 +88,6 @@ Loop:
 			break Loop
 		}
 	}
+
+	room.Broadcast.UnbindUser(playerID)
 }
