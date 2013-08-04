@@ -1,25 +1,29 @@
 package ai
 
 import (
-	"log"
 	"fmt"
+	"log"
 	"net/rpc"
 	"net/rpc/jsonrpc"
 )
 
 import (
 	zeromq_client "gopoker/client/zmq"
+	"gopoker/model"
+	"gopoker/poker"
 	"gopoker/protocol/message"
 	rpc_service "gopoker/server/noderpc"
 	"gopoker/util"
-	"gopoker/model"
 )
 
 // Bot - bot
 type Bot struct {
 	ID      string
-	roomID string
-	pos int
+	roomID  string
+	pos     int
+	game    *model.Game
+	cards   poker.Cards
+	board   poker.Cards
 	client  *rpc.Client
 	zmqConn *zeromq_client.Connection
 }
