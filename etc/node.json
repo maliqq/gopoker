@@ -8,7 +8,7 @@
     "RPC": {
         "Addr": "localhost:8081"
     },
-    "Zmq": {},
+    "ZMQ": "tcp://localhost:5555",
     "Logdir": "/var/log/gopoker",
     "Store": {
         "Driver": "postgres",

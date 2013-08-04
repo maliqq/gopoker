@@ -28,6 +28,7 @@ var (
 	limitedGame = flag.String("game", "Texas", "Game to play")
 	mixedGame   = flag.String("mix", "", "Mix to play")
 	roomID      = flag.String("roomid", "0", "Set Room ID")
+	createPlayers = flag.Bool("create", false, "Create players")
 )
 
 const (
@@ -62,13 +63,15 @@ func main() {
 
 	call(client, "NodeRPC.CreateRoom", args)
 
-	for pos := 0; pos < *tableSize; pos++ {
-		player := fmt.Sprintf("player-%d", pos)
-		amount := float64(rand.Intn(1000) + 1000)
-		call(client, "NodeRPC.NotifyRoom", &rpc_service.NotifyRoom{
-			ID:      *roomID,
-			Message: message.NewJoinTable(player, pos, amount),
-		})
+	if *createPlayers {
+		for pos := 0; pos < *tableSize; pos++ {
+			player := fmt.Sprintf("player-%d", pos)
+			amount := float64(rand.Intn(1000) + 1000)
+			call(client, "NodeRPC.NotifyRoom", &rpc_service.NotifyRoom{
+				ID:      *roomID,
+				Message: message.NewJoinTable(player, pos, amount),
+			})
+		}
 	}
 
 	call(client, "NodeRPC.StartRoom", &rpc_service.StartRoom{

@@ -1,38 +1,37 @@
 package zmq
 
 import (
-	"encoding/json"
 	"log"
 )
 
 import (
 	zmq "github.com/alecthomas/gozmq"
+	"code.google.com/p/goprotobuf/proto"
 )
 
 import (
 	"gopoker/protocol"
+	"gopoker/protocol/message"
 )
 
 // Connection - 0mq connection
 type Connection struct {
 	Context *zmq.Context
 	Socket  *zmq.Socket
-	Send    protocol.MessageChannel
 	Recv    protocol.MessageChannel
 }
 
 // NewConnection - create new connection
-func NewConnection(addr string) *Connection {
+func NewConnection(addr string, topic string) *Connection {
 	context, _ := zmq.NewContext()
-	socket, _ := context.NewSocket(zmq.PAIR)
+	socket, _ := context.NewSocket(zmq.SUB)
 
 	socket.Connect(addr)
-	socket.SetSubscribe("")
+	socket.SetSubscribe(topic)
 
 	conn := &Connection{
 		Context: context,
 		Socket:  socket,
-		Send:    make(protocol.MessageChannel),
 		Recv:    make(protocol.MessageChannel),
 	}
 
@@ -41,22 +40,15 @@ func NewConnection(addr string) *Connection {
 
 // Start - start loop
 func (conn *Connection) Start() {
-	go func() {
-		for {
-			repl, _ := conn.Socket.Recv(0)
-			var msg *protocol.Message
+	for {
+		repl, _ := conn.Socket.Recv(0)
+		var msg *message.Message
 
-			err := json.Unmarshal(repl, &msg)
-			if err != nil {
-				log.Fatalf("unmarshal error: %s", err)
-			}
-
-			conn.Recv <- msg
+		err := proto.Unmarshal(repl, msg)
+		if err != nil {
+			log.Fatalf("unmarshal error: %s", err)
 		}
-	}()
 
-	for msg := range conn.Send {
-		req, _ := json.Marshal(msg)
-		conn.Socket.Send(req, 0)
+		conn.Recv <- msg
 	}
 }

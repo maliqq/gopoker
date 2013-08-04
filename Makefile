@@ -11,6 +11,7 @@ get-deps:
 
 build-all:
 	protoc --go_out=. protocol/message/*.proto
+	go build gopoker/bin/gopoker-bot
 	go build gopoker/bin/gopoker-cli
 	go build gopoker/bin/gopoker-ctrl
 	go build gopoker/bin/gopoker-server
@@ -22,6 +23,7 @@ test-all:
 	go test gopoker/play/context
 
 install-all:
+	go install gopoker/bin/gopoker-bot
 	go install gopoker/bin/gopoker-cli
 	go install gopoker/bin/gopoker-ctrl
 	go install gopoker/bin/gopoker-server
