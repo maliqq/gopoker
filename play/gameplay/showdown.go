@@ -16,8 +16,9 @@ func (gp *GamePlay) ShowHands(ranking hand.Ranking, withBoard bool) ShowdownHand
 
 	hands := ShowdownHands{}
 
-	for pos := range gp.Table.AllSeats().InPot() {
+	for _, pos := range gp.Table.AllSeats().InPot() {
 		player := gp.Table.Player(pos)
+
 		if pocket, hand := d.Rank(player, ranking, withBoard); hand != nil {
 			hands[player] = hand
 
@@ -32,7 +33,7 @@ func best(sidePot *model.SidePot, hands ShowdownHands) (model.Player, *poker.Han
 	var winner model.Player
 	var best *poker.Hand
 
-	for member := range sidePot.Members {
+	for member, _ := range sidePot.Members {
 		hand, hasHand := hands[member]
 
 		if hasHand && (best == nil || hand.Compare(best) > 0) {
@@ -84,5 +85,17 @@ func (gp *GamePlay) Winners(highHands ShowdownHands, lowHands ShowdownHands) {
 			seat.AdvanceStack(amount)
 			gp.Broadcast.All <- message.NewWinner(pos, winner.Proto(), amount)
 		}
+	}
+}
+
+func (gp *GamePlay) Winner(pos int) {
+	for _, sidePot := range gp.Betting.Pot.SidePots() {
+		amount := sidePot.Total()
+
+		seat := gp.Table.Seat(pos)
+		seat.AdvanceStack(amount)
+
+		winner := seat.Player
+		gp.Broadcast.All <- message.NewWinner(pos, winner.Proto(), amount)
 	}
 }

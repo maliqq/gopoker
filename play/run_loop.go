@@ -102,21 +102,26 @@ Streets:
 		}
 	}
 
-	// showdown
-	log.Println("[play] showdown")
+	inPot := play.Table.AllSeats().InPot()
+	if len(inPot) == 1 {
+		// last player left
+		play.GamePlay.Winner(inPot[0])
+	} else {
+		// showdown
+		log.Println("[play] showdown")
 
-	var highHands, lowHands gameplay.ShowdownHands
+		var highHands, lowHands gameplay.ShowdownHands
 
-	if play.Game.Lo != "" {
-		lowHands = play.GamePlay.ShowHands(play.Game.Lo, play.Game.HasBoard)
+		if play.Game.Lo != "" {
+			lowHands = play.GamePlay.ShowHands(play.Game.Lo, play.Game.HasBoard)
+		}
+
+		if play.Game.Hi != "" {
+			highHands = play.GamePlay.ShowHands(play.Game.Hi, play.Game.HasBoard)
+		}
+
+		play.GamePlay.Winners(highHands, lowHands)
 	}
-
-	if play.Game.Hi != "" {
-		highHands = play.GamePlay.ShowHands(play.Game.Hi, play.Game.HasBoard)
-	}
-
-	play.GamePlay.Winners(highHands, lowHands)
-
 	// deal stop
 	log.Println("[play] deal stop")
 	play.Broadcast.All <- message.NewMessage(message.PlayStop{})
