@@ -39,10 +39,10 @@ type Node struct {
 	Name string
 
 	*Config
-	Rooms     map[string]*Room
+	Rooms      map[string]*Room
 	ZMQGateway *NodeZMQ
-	Store     *storage.Store
-	PlayStore *storage.PlayStore
+	Store      *storage.Store
+	PlayStore  *storage.PlayStore
 }
 
 // Defaults

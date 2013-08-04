@@ -5,8 +5,8 @@ import (
 )
 
 import (
-	zmq "github.com/alecthomas/gozmq"
 	"code.google.com/p/goprotobuf/proto"
+	zmq "github.com/alecthomas/gozmq"
 )
 
 import (

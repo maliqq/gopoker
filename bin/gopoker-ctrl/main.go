@@ -22,12 +22,12 @@ import (
 )
 
 var (
-	tableSize   = flag.Int("tablesize", 9, "Table size")
-	betSize     = flag.Float64("betsize", 20., "Bet size")
-	limit       = flag.String("limit", "FixedLimit", "Limit to play")
-	limitedGame = flag.String("game", "Texas", "Game to play")
-	mixedGame   = flag.String("mix", "", "Mix to play")
-	roomID      = flag.String("roomid", "0", "Set Room ID")
+	tableSize     = flag.Int("tablesize", 9, "Table size")
+	betSize       = flag.Float64("betsize", 20., "Bet size")
+	limit         = flag.String("limit", "FixedLimit", "Limit to play")
+	limitedGame   = flag.String("game", "Texas", "Game to play")
+	mixedGame     = flag.String("mix", "", "Mix to play")
+	roomID        = flag.String("roomid", "0", "Set Room ID")
 	createPlayers = flag.Bool("create", false, "Create players")
 )
 

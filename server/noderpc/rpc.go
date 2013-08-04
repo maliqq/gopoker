@@ -39,7 +39,7 @@ type NotifyRoom struct {
 }
 
 type ConnectGateway struct {
-	RoomID string
+	RoomID   string
 	PlayerID string
 }
 
