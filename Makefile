@@ -27,3 +27,7 @@ install-all:
 	go install gopoker/bin/gopoker-cli
 	go install gopoker/bin/gopoker-ctrl
 	go install gopoker/bin/gopoker-server
+
+clean-all:
+	rm protocol/message/*.pb.go
+	rm gopoker-*
