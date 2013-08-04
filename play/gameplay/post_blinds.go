@@ -12,15 +12,16 @@ import (
 // MoveButton - move table button
 func (gp *GamePlay) MoveButton() {
 	gp.Table.MoveButton()
+	gp.Betting.Pos = gp.Table.Button
 
 	gp.Broadcast.All <- message.NewMoveButton(gp.Table.Button)
 }
 
 func (gp *GamePlay) postSmallBlind(pos int) {
 	t := gp.Table
-	newBet := gp.Betting.ForceBet(pos, bet.SmallBlind, gp.Stake)
+	newBet := gp.Betting.ForceBet(pos, t.Seat(pos), bet.SmallBlind, gp.Stake)
 
-	err := gp.Betting.AddBet(t.Seat(pos), newBet)
+	err := gp.Betting.AddBet(newBet)
 	if err != nil {
 		log.Fatalf("Error adding small blind for %d: %s", pos, err)
 	}
@@ -30,9 +31,9 @@ func (gp *GamePlay) postSmallBlind(pos int) {
 
 func (gp *GamePlay) postBigBlind(pos int) {
 	t := gp.Table
-	newBet := gp.Betting.ForceBet(pos, bet.BigBlind, gp.Stake)
+	newBet := gp.Betting.ForceBet(pos, t.Seat(pos), bet.BigBlind, gp.Stake)
 
-	err := gp.Betting.AddBet(t.Seat(pos), newBet)
+	err := gp.Betting.AddBet(newBet)
 	if err != nil {
 		log.Fatalf("Error adding big blind for %d: %s", pos, err)
 	}

@@ -86,7 +86,7 @@ func NewCall(amount float64) *Bet {
 }
 
 // Validate - validate seat bet according to bet range
-func (b *Bet) Validate(seat *Seat, betRange bet.Range) error {
+func (b *Bet) Validate(seat *Seat, betRange *bet.Range) error {
 	switch b.Type {
 	case bet.Fold:
 		// no error

@@ -13,36 +13,38 @@ const (
 // StartBettingRound - start betting round
 func (gp *GamePlay) StartBettingRound() Transition {
 	//gp.Broadcast.All <- message.NewBettingStart(gp.Betting)
-	nextPos := make(chan int)
-	defer close(nextPos)
-
-	go gp.Betting.Start(&nextPos)
+	go gp.Betting.Start()
 
 	var next Transition
-	for current := range nextPos {
-		for _, pos := range gp.Table.AllSeats().InPlay() {
-			seat := gp.Table.Seat(pos)
-			if !seat.Calls(gp.Betting.BetRange.Call) {
-				seat.State = seatState.Play
+Loop:
+	for {
+		select {
+		case <-gp.Betting.Next:
+			for _, pos := range gp.Table.AllSeats().InPlay() {
+				seat := gp.Table.Seat(pos)
+				if !seat.Calls(gp.Betting.BetRange.Call) {
+					seat.State = seatState.Play
+				}
 			}
+
+			current := gp.Betting.Pos
+			active := gp.Table.Seats.From(current).Playing()
+			inPot := gp.Table.Seats.From(current).InPot()
+
+			if len(inPot) < 2 {
+				next = Stop
+				break Loop
+			} else if len(active) > 0 {
+				pos := active[0]
+				seat := gp.Table.Seat(pos)
+
+				gp.Broadcast.One(seat.Player) <- gp.Betting.RequireBet(pos, seat, gp.Game.Limit, gp.Stake)
+
+				continue Loop
+			}
+			next = Next
+			break Loop
 		}
-		active := gp.Table.Seats.From(current).Playing()
-		inPot := gp.Table.Seats.From(current).InPot()
-
-		if len(inPot) < 2 {
-			next = Stop
-			break
-		} else if len(active) > 0 {
-			pos := active[0]
-			seat := gp.Table.Seat(pos)
-
-			gp.Broadcast.One(seat.Player) <- gp.Betting.RequireBet(pos, seat.Stack, gp.Game, gp.Stake)
-
-			continue
-		}
-
-		next = Next
-		break
 	}
 
 	gp.Betting.Stop()

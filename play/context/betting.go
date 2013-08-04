@@ -22,26 +22,16 @@ type Betting struct {
 	raiseCount int
 	bigBets    bool
 
-	Pot *model.Pot `json:"-"`
+	Seat *model.Seat `json:"-"`
+	Pot  *model.Pot  `json:"-"`
 
-	active bool
-	*Required
-
-	Bet  chan *Action `json:"-"`
-	Next chan int     `json:"-"`
-	stop chan int     `json:"-"`
-}
-
-// Action - seat bet
-type Action struct {
-	Seat *model.Seat
-	Bet  *model.Bet
-}
-
-// Required - action required
-type Required struct {
+	active   bool
 	Pos      int
-	BetRange bet.Range
+	BetRange *bet.Range
+
+	Bet  chan *model.Bet `json:"-"`
+	Next chan int        `json:"-"`
+	stop chan int        `json:"-"`
 }
 
 // NewBetting - create new betting context
@@ -49,18 +39,19 @@ func NewBetting() *Betting {
 	return &Betting{
 		Pot: model.NewPot(),
 
-		Required: &Required{},
+		BetRange: &bet.Range{},
 
-		Bet: make(chan *Action),
-
+		Bet:  make(chan *model.Bet),
+		Next: make(chan int),
 		stop: make(chan int),
 	}
 }
 
 // Clear - clear betting context
-func (betting *Betting) Clear(startPos int) {
-	betting.Pos = startPos // start from button
-	betting.BetRange.Call, betting.BetRange.Min, betting.BetRange.Max, betting.raiseCount = 0., 0., 0., 0
+func (betting *Betting) Clear(button int) {
+	betting.Pos = button // start from button
+	betting.raiseCount = 0.
+	betting.BetRange.Reset()
 }
 
 // BigBets - increase bets
@@ -70,8 +61,9 @@ func (betting *Betting) BigBets() {
 
 // String - betting to string
 func (betting *Betting) String() string {
-	return fmt.Sprintf("Required %s raiseCount: %d bigBets: %t pot total: %.2f",
-		betting.Required,
+	return fmt.Sprintf("Pos %d BetRange %s raiseCount: %d bigBets: %t pot total: %.2f",
+		betting.Pos,
+		betting.BetRange,
 		betting.raiseCount,
 		betting.bigBets,
 		betting.Pot.Total(),
@@ -79,12 +71,11 @@ func (betting *Betting) String() string {
 }
 
 // Start - start betting
-func (betting *Betting) Start(pos *chan int) {
+func (betting *Betting) Start() {
 	log.Println("[betting] start")
 
 	betting.active = true
-
-	*pos <- betting.Pos
+	betting.Next <- 1
 
 Loop:
 	for {
@@ -94,14 +85,14 @@ Loop:
 			betting.active = false
 			break Loop
 
-		case action := <-betting.Bet:
-			err := betting.AddBet(action.Seat, action.Bet)
+		case newBet := <-betting.Bet:
+			err := betting.AddBet(newBet)
 
 			if err != nil {
 				log.Printf("[betting] %s", err)
 			}
 
-			*pos <- betting.Pos
+			betting.Next <- 1
 		}
 	}
 }
@@ -117,67 +108,57 @@ func (betting *Betting) Stop() {
 }
 
 // RaiseRange - bet range for seat
-func (betting *Betting) RaiseRange(stackAvailable float64, g *model.Game, stake *model.Stake) (float64, float64) {
-	_, bb := stake.Blinds()
+func (betting *Betting) RaiseRange(limit game.Limit, stake *model.Stake) (float64, float64) {
+	bb := stake.BigBlindAmount()
 
-	switch g.Limit {
+	var min, max float64
+	switch limit {
 	case game.NoLimit:
-		return bb, stackAvailable
+		min, max = bb, betting.Seat.Stack
 
 	case game.PotLimit:
-		return bb, betting.Pot.Total()
+		min, max = bb, betting.Pot.Total()
 
 	case game.FixedLimit:
 		if betting.bigBets {
-			return bb * 2, bb * 2
+			min, max = bb*2, bb*2
+		} else {
+			min, max = bb, bb
 		}
-		return bb, bb
 	}
 
-	return 0., 0.
+	return min, max
 }
 
 // ForceBet - force action
-func (betting *Betting) ForceBet(pos int, betType bet.Type, stake *model.Stake) *model.Bet {
+func (betting *Betting) ForceBet(pos int, seat *model.Seat, betType bet.Type, stake *model.Stake) *model.Bet {
 	amount := stake.Amount(betType)
 
 	betting.Pos = pos
+	betting.Seat = seat
 	betting.BetRange.Call = amount
 
 	return model.NewBet(betType, amount)
 }
 
 // RequireBet - require action
-func (betting *Betting) RequireBet(pos int, stackAvailable float64, game *model.Game, stake *model.Stake) *message.Message {
+func (betting *Betting) RequireBet(pos int, seat *model.Seat, limit game.Limit, stake *model.Stake) *message.Message {
 	betting.Pos = pos
+	betting.Seat = seat
 
 	if betting.raiseCount >= MaxRaises {
-		betting.BetRange.Min, betting.BetRange.Max = 0., 0.
+		betting.BetRange.ResetRaise()
 	} else {
-		call := betting.BetRange.Call
-		min, max := betting.RaiseRange(stackAvailable, game, stake)
-		minRaise, maxRaise := call+min, call+max
-
-		// FIXME
-		//log.Printf("------\nstackAvailable=%.2f; call=%.2f; minRaise=%.2f; maxRaise=%.2f\n", stackAvailable, call, minRaise, maxRaise)
-		if stackAvailable < maxRaise {
-			if stackAvailable < call {
-				minRaise, maxRaise = 0., 0.
-			} else if stackAvailable < minRaise {
-				minRaise, maxRaise = stackAvailable, stackAvailable
-			} else {
-				maxRaise = stackAvailable
-			}
-		}
-
-		betting.BetRange.Min, betting.BetRange.Max = minRaise, maxRaise
+		min, max := betting.RaiseRange(limit, stake)
+		betting.BetRange.SetRaise(seat.Stack, min, max)
 	}
 
 	return message.NewRequireBet(betting.Pos, betting.BetRange.Proto())
 }
 
 // AddBet - add action
-func (betting *Betting) AddBet(seat *model.Seat, newBet *model.Bet) error {
+func (betting *Betting) AddBet(newBet *model.Bet) error {
+	seat := betting.Seat
 	log.Printf("[betting] Player %s %s\n", seat.Player, newBet.String())
 
 	err := newBet.Validate(seat, betting.BetRange)

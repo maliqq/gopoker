@@ -48,7 +48,7 @@ func (c *Connection) Handle(msg *message.Message) {
 		seat := c.Server.Table.Seat(pos)
 
 		for newBet == nil {
-			betRange := bet.Range{
+			betRange := &bet.Range{
 				Call: r.BetRange.GetCall(),
 				Min:  r.BetRange.GetMin(),
 				Max:  r.BetRange.GetMax(),

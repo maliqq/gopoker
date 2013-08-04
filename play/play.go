@@ -132,13 +132,15 @@ func (play *Play) handleMessage(msg *message.Message) {
 		add := msg.Envelope.AddBet
 
 		pos := int(add.GetPos())
-		seat := play.Table.Seat(pos)
+		if pos != play.Betting.Pos {
+			return
+		}
+		//seat := play.Table.Seat(pos)
 
 		betType := bet.Type(add.Bet.GetType().String())
 		amount := add.Bet.GetAmount()
-		newBet := model.NewBet(betType, amount)
 
-		play.Betting.Bet <- &context.Action{Seat: seat, Bet: newBet}
+		play.Betting.Bet <- model.NewBet(betType, amount)
 		play.Broadcast.All <- msg
 
 	case *message.DiscardCards:

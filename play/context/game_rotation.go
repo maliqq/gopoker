@@ -22,6 +22,7 @@ func NewGameRotation(mix *model.Mix, every int) *GameRotation {
 	if every == 0 {
 		every = RotateEvery
 	}
+
 	return &GameRotation{
 		Mix:   mix,
 		every: every,

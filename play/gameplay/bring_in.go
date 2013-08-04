@@ -30,7 +30,7 @@ func (gp *GamePlay) BringIn() Transition {
 	gp.Broadcast.All <- message.NewMoveButton(minPos)
 
 	seat := gp.Table.Seat(minPos)
-	gp.Broadcast.One(seat.Player) <- gp.Betting.RequireBet(minPos, seat.Stack, gp.Game, gp.Stake)
+	gp.Broadcast.One(seat.Player) <- gp.Betting.RequireBet(minPos, seat, gp.Game.Limit, gp.Stake)
 
 	return Next
 }
