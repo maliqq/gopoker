@@ -16,8 +16,8 @@ import (
 
 // Connection - 0mq connection
 type Connection struct {
-	Context *zmq.Context
-	Socket  *zmq.Socket
+	context *zmq.Context
+	socket  *zmq.Socket
 	Recv    protocol.MessageChannel
 }
 
@@ -26,26 +26,39 @@ func NewConnection(addr string, topic string) *Connection {
 	context, _ := zmq.NewContext()
 	socket, _ := context.NewSocket(zmq.SUB)
 
-	socket.Connect(addr)
-	socket.SetSubscribe(topic)
+	if socket.Connect(addr) == nil {
+		log.Printf("connected to %s", addr)
+	}
+
+	if socket.SetSubscribe(topic) == nil {
+		log.Printf("subscribed to %s", topic)
+	}
 
 	conn := &Connection{
-		Context: context,
-		Socket:  socket,
+		context: context,
+		socket:  socket,
 		Recv:    make(protocol.MessageChannel),
 	}
+
+	go conn.receive()
 
 	return conn
 }
 
 // Start - start loop
-func (conn *Connection) Start() {
+func (conn *Connection) receive() {
 	for {
-		repl, _ := conn.Socket.Recv(0)
-		var msg *message.Message
-
-		err := proto.Unmarshal(repl, msg)
+		// receive topic
+		topic, _ := conn.socket.Recv(0)
+		repl, err := conn.socket.Recv(0)
 		if err != nil {
+			log.Fatal("receive error:", err)
+		}
+
+		log.Printf("received %d bytes for %s", len(repl), topic)
+
+		msg := &message.Message{}
+		if err = proto.Unmarshal(repl, msg); err != nil {
 			log.Fatalf("unmarshal error: %s", err)
 		}
 

@@ -1,6 +1,10 @@
 package server
 
 import (
+	"log"
+)
+
+import (
 	"code.google.com/p/goprotobuf/proto"
 	zmq "github.com/alecthomas/gozmq"
 )
@@ -23,6 +27,7 @@ type NodeZMQ struct {
 // StartZMQ - start zeromq service
 func (n *Node) StartZMQ() {
 	addr := n.Config.ZMQ
+	log.Printf("[zmq] starting service at %s", addr)
 
 	context, _ := zmq.NewContext()
 	defer context.Close()
@@ -33,9 +38,12 @@ func (n *Node) StartZMQ() {
 	socket.Bind(addr)
 
 	nodeZMQ := &NodeZMQ{
-		Node:    n,
-		context: context,
-		socket:  socket,
+		Node:        n,
+		context:     context,
+		socket:      socket,
+		connect:     make(chan rpc_service.ConnectGateway),
+		disconnect:  make(chan rpc_service.DisconnectGateway),
+		connections: map[string]chan int{},
 	}
 
 	n.ZMQGateway = nodeZMQ
@@ -43,11 +51,13 @@ func (n *Node) StartZMQ() {
 	for {
 		select {
 		case req := <-nodeZMQ.connect:
+			log.Printf("[zmq] connect request: %+v", req)
 			stop := make(chan int)
 			nodeZMQ.connections[req.PlayerID] = stop
 			go nodeZMQ.startConnection(req.PlayerID, req.RoomID, &stop)
 
 		case req := <-nodeZMQ.disconnect:
+			log.Printf("[zmq] disconnect request: %+v", req)
 			stop, ok := nodeZMQ.connections[req.PlayerID]
 			if ok {
 				stop <- 1
@@ -67,11 +77,14 @@ Loop:
 	for {
 		select {
 		case msg := <-recv:
-			data, err := proto.Marshal(msg)
-			if err != nil {
-				nodeZMQ.socket.Send(data, 0)
+			if data, err := proto.Marshal(msg); err == nil {
+				log.Printf("[zmq] sending %s to %s", msg, playerID)
+				nodeZMQ.socket.SendMultipart([][]byte{[]byte(playerID), data}, 0)
 			}
+
 		case <-*stop:
+			log.Printf("[zmq] stop connection for %s", playerID)
+
 			break Loop
 		}
 	}

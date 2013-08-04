@@ -21,8 +21,10 @@ type Bot struct {
 }
 
 // NewBot - create new bot
-func NewBot(rpcAddr, sockAddr string) *Bot {
-	id := util.RandomUuid()
+func NewBot(id, rpcAddr, sockAddr string) *Bot {
+	if id == "" {
+		id = util.RandomUuid()
+	}
 
 	client, err := jsonrpc.Dial("tcp", rpcAddr)
 	if err != nil {
@@ -39,13 +41,24 @@ func NewBot(rpcAddr, sockAddr string) *Bot {
 func (b *Bot) Join(roomID string, pos int, amount float64) {
 	var result rpc_service.CallResult
 
+	log.Printf("joining table...")
 	err := b.client.Call("NodeRPC.NotifyRoom", rpc_service.NotifyRoom{
 		ID:      roomID,
 		Message: message.NewJoinTable(b.ID, pos, amount),
 	}, &result)
 
 	if err != nil {
-		log.Fatal("rpc error: ", err)
+		log.Fatal("rpc call error: ", err)
+	}
+
+	log.Printf("connecting gateway...")
+	b.client.Call("NodeRPC.ConnectGateway", rpc_service.ConnectGateway{
+		RoomID:   roomID,
+		PlayerID: b.ID,
+	}, &result)
+
+	if err != nil {
+		log.Fatal("rpc call error: ", err)
 	}
 }
 
