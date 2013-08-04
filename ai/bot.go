@@ -2,6 +2,7 @@ package ai
 
 import (
 	"log"
+	"fmt"
 	"net/rpc"
 	"net/rpc/jsonrpc"
 )
@@ -11,11 +12,14 @@ import (
 	"gopoker/protocol/message"
 	rpc_service "gopoker/server/noderpc"
 	"gopoker/util"
+	"gopoker/model"
 )
 
 // Bot - bot
 type Bot struct {
 	ID      string
+	roomID string
+	pos int
 	client  *rpc.Client
 	zmqConn *zeromq_client.Connection
 }
@@ -39,27 +43,17 @@ func NewBot(id, rpcAddr, sockAddr string) *Bot {
 }
 
 func (b *Bot) Join(roomID string, pos int, amount float64) {
-	var result rpc_service.CallResult
+	b.roomID = roomID
+	b.pos = pos
 
 	log.Printf("joining table...")
-	err := b.client.Call("NodeRPC.NotifyRoom", rpc_service.NotifyRoom{
-		ID:      roomID,
-		Message: message.NewJoinTable(b.ID, pos, amount),
-	}, &result)
-
-	if err != nil {
-		log.Fatal("rpc call error: ", err)
-	}
+	b.notifyRoom(message.NewJoinTable(b.ID, pos, amount))
 
 	log.Printf("connecting gateway...")
-	b.client.Call("NodeRPC.ConnectGateway", rpc_service.ConnectGateway{
+	b.call("ConnectGateway", rpc_service.ConnectGateway{
 		RoomID:   roomID,
 		PlayerID: b.ID,
-	}, &result)
-
-	if err != nil {
-		log.Fatal("rpc call error: ", err)
-	}
+	})
 }
 
 func (b *Bot) Play() {
@@ -70,5 +64,43 @@ func (b *Bot) Play() {
 		case *message.RequireBet:
 		case *message.AddBet:
 		}
+	}
+}
+
+func (b *Bot) Check() {
+	b.addBet(model.NewCheck())
+}
+
+func (b *Bot) Fold() {
+	b.addBet(model.NewFold())
+}
+
+func (b *Bot) Raise(amount float64) {
+	b.addBet(model.NewRaise(amount))
+}
+
+func (b *Bot) Call(amount float64) {
+	b.addBet(model.NewCall(amount))
+}
+
+func (b *Bot) addBet(newBet *model.Bet) {
+	msg := message.NewAddBet(b.pos, newBet.Proto())
+	b.notifyRoom(msg)
+}
+
+func (b *Bot) notifyRoom(msg *message.Message) {
+	b.call("NotifyRoom", rpc_service.NotifyRoom{
+		ID:      b.roomID,
+		Message: msg,
+	})
+}
+
+func (b *Bot) call(method string, args interface{}) {
+	var result rpc_service.CallResult
+
+	err := b.client.Call(fmt.Sprintf("NodeRPC.%s", method), args, &result)
+
+	if err != nil {
+		log.Fatal("rpc call error: ", err)
 	}
 }
