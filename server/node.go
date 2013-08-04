@@ -16,7 +16,6 @@ type HTTPConfig struct {
 	APIPath       string
 	RPCPath       string
 	WebSocketPath string
-	ZmqAddr       string
 }
 
 // RPCConfig - RPC config
@@ -30,6 +29,7 @@ type Config struct {
 	Logdir    string
 	HTTP      *HTTPConfig
 	RPC       *RPCConfig
+	ZMQ       string
 	Store     *storage.StoreConfig
 	PlayStore *storage.PlayStoreConfig
 }
@@ -40,6 +40,7 @@ type Node struct {
 
 	*Config
 	Rooms     map[string]*Room
+	ZMQGateway *NodeZMQ
 	Store     *storage.Store
 	PlayStore *storage.PlayStore
 }
@@ -111,6 +112,7 @@ func (n *Node) RemoveRoom(room *Room) bool {
 // Start - start room
 func (n *Node) Start() {
 	go n.StartRPC()
+	go n.StartZMQ()
 	n.StartHTTP()
 }
 

@@ -37,3 +37,12 @@ type NotifyRoom struct {
 	ID      string
 	Message *message.Message
 }
+
+type ConnectGateway struct {
+	RoomID string
+	PlayerID string
+}
+
+type DisconnectGateway struct {
+	PlayerID string
+}
