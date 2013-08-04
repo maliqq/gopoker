@@ -19,9 +19,10 @@ override_dh_auto_install:
   # /usr/lib/gocode containing the package we want to install and the
   # /usr/lib/gocode of the system we are building on. It should
   # specifically NOT contain the user’s local ~/gocode.
-  GOPATH=${TMPGOPATH}:/usr/lib/gocode go install -v ${GOPKG}/client
-  GOPATH=${TMPGOPATH}:/usr/lib/gocode go install -v ${GOPKG}/control
-  GOPATH=${TMPGOPATH}:/usr/lib/gocode go install -v ${GOPKG}/main
+  GOPATH=${TMPGOPATH}:/usr/lib/gocode go install -v ${GOPKG}/bin/gopoker-bot
+  GOPATH=${TMPGOPATH}:/usr/lib/gocode go install -v ${GOPKG}/bin/gopoker-cli
+  GOPATH=${TMPGOPATH}:/usr/lib/gocode go install -v ${GOPKG}/bin/gopoker-ctrl
+  GOPATH=${TMPGOPATH}:/usr/lib/gocode go install -v ${GOPKG}/bin/gopoker-server
 
 %:
   dh $@ --parallel

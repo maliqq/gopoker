@@ -6,20 +6,26 @@ Build-Depends: debhelper (>= 8.0.0), golang-go
 Standards-Version: 3.9.4
 Homepage: http://pokerno.de
 
-Package: main
+Package: gopoker-bot
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Poker server
- Poker HTTP and RPC server
+Description: Poker bot
+ Poker bot with simple AI
 
-Package: control
+Package: gopoker-cli
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Poker console client
+ Poker command line client
+
+Package: gopoker-ctrl
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Poker console control
  Poker command line control
 
-Package: client
+Package: gopoker-server
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Poker console client
- Poker command line client
+Description: Poker server
+ Poker HTTP and RPC server
