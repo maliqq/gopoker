@@ -8,6 +8,7 @@ import (
 )
 
 import (
+	"gopoker/calc"
 	zeromq_client "gopoker/client/zmq"
 	"gopoker/model"
 	"gopoker/poker"
@@ -106,5 +107,26 @@ func (b *Bot) call(method string, args interface{}) {
 
 	if err != nil {
 		log.Fatal("rpc call error: ", err)
+	}
+}
+
+func (b *Bot) preflop() {
+	group := calc.SklanskyMalmuthGroup(b.cards[0], b.cards[1])
+	switch group {
+	case 9:
+		// fold
+	case 7, 8:
+		// call BB
+	case 5, 6:
+		// raise BB..BB*4
+		// raiseChance = 0.2
+	case 3, 4:
+		// raise stack+bet
+		// raiseChance = 0.5
+		// allInChance = 0.1
+	case 1, 2:
+		// raise stack+bet
+		// raiseChance = 0.5
+		// allInChance = 0.1
 	}
 }

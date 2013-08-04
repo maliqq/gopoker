@@ -22,6 +22,14 @@ func (c Card) String() string {
 	return c.kind.String() + c.suit.String()
 }
 
+func (c Card) Kind() card.Kind {
+	return c.kind
+}
+
+func (c Card) Suit() card.Suit {
+	return c.suit
+}
+
 // KindName - e.g. "eight"
 func (c Card) KindName() string {
 	return c.kind.Name()
