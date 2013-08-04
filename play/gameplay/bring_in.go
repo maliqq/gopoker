@@ -10,13 +10,13 @@ func (gp *GamePlay) BringIn() Transition {
 	minPos := 0
 	var card *poker.Card
 
-	for _, pos := range gp.Table.AllSeats().Active() {
+	for i, pos := range gp.Table.AllSeats().Active() {
 		s := gp.Table.Seat(pos)
 
 		pocketCards := gp.Deal.Pocket(s.Player)
 
 		lastCard := pocketCards[len(pocketCards)-1]
-		if pos == 0 {
+		if i == 0 {
 			card = lastCard
 		} else {
 			if lastCard.Compare(card, poker.AceHigh) > 0 {
