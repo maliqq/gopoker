@@ -191,14 +191,14 @@ func (b *Bot) decideBoard(cards, board poker.Cards) {
 		// raise stack+bet
 		// raiseChance = 0.5
 		// allInChance = 0.5
-	} else if chances.Wins() > tightness / 2 {
+	} else if chances.Wins() > tightness/2 {
 		// raise (stack+bet)/3
 		// raiseChance = 0.2
-	} else if(chances.Ties() > 0.8) {
+	} else if chances.Ties() > 0.8 {
 		// raise stack+bet
 		// raiseChance = 0
 		// allInChance = 0
-  } else {
-    // check/fold
-  }
+	} else {
+		// check/fold
+	}
 }
