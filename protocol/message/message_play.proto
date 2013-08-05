@@ -64,6 +64,7 @@ message Table {
 message Game {
   required GameType Type = 1;
   required GameLimit Limit = 2;
+  required int32 TableSize = 3;
 }
 
 // Stake - stake info
