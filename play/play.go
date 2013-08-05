@@ -30,9 +30,8 @@ type Play struct {
 }
 
 // NewPlay - create new play
-func NewPlay(variation model.Variation, stake *model.Stake, table *model.Table) *Play {
+func NewPlay(variation model.Variation, stake *model.Stake) *Play {
 	gp := gameplay.NewGamePlay()
-	gp.Table = table
 	gp.Stake = stake
 
 	play := &Play{
@@ -45,6 +44,7 @@ func NewPlay(variation model.Variation, stake *model.Stake, table *model.Table) 
 		Recv: make(chan *message.Message),
 	}
 
+	// game
 	if variation.IsMixed() {
 		mix := variation.(*model.Mix)
 		play.Mix = mix
@@ -53,6 +53,8 @@ func NewPlay(variation model.Variation, stake *model.Stake, table *model.Table) 
 	} else {
 		play.Game = variation.(*model.Game)
 	}
+	// create table
+	play.Table = model.NewTable(play.Game.TableSize)
 
 	go play.receive()
 
