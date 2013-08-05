@@ -79,7 +79,8 @@ Loop:
 		case msg := <-recv:
 			if data, err := proto.Marshal(msg); err == nil {
 				log.Printf("[zmq] sending %s to %s", msg, playerID)
-				nodeZMQ.socket.SendMultipart([][]byte{[]byte(playerID), data}, 0)
+				nodeZMQ.socket.Send([]byte(playerID), zmq.SNDMORE)
+				nodeZMQ.socket.Send(data, 0)
 			}
 
 		case <-*stop:
