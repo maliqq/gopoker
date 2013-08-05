@@ -23,6 +23,8 @@ type Bot struct {
 	roomID  string
 	pos     int
 	game    *model.Game
+	street  string
+	pot float64
 	cards   poker.Cards
 	board   poker.Cards
 	client  *rpc.Client
@@ -44,6 +46,8 @@ func NewBot(id, rpcAddr, sockAddr string) *Bot {
 		ID:      id,
 		client:  client,
 		zmqConn: zeromq_client.NewConnection(sockAddr, id),
+		cards:   poker.Cards{},
+		board:   poker.Cards{},
 	}
 }
 
@@ -68,7 +72,34 @@ func (b *Bot) Play() {
 		log.Printf("received msg: %s", msg)
 
 		switch msg.Payload().(type) {
+		case message.PlayStart:
+			b.cards = poker.Cards{}
+			b.board = poker.Cards{}
+
+		case message.StreetStart:
+			b.street = msg.Envelope.StreetStart.GetName()
+
+		case message.BettingComplete:
+			b.pot = msg.Envelope.BettingComplete.GetPot()
+
+		case *message.DealCards:
+			deal := msg.Envelope.DealCards
+			switch deal.GetType() {
+			case message.DealType_Board:
+				b.board = append(b.board, poker.BinaryCards(deal.Cards)...)
+			case message.DealType_Hole:
+				b.cards = append(b.cards, poker.BinaryCards(deal.Cards)...)
+			}
+
 		case *message.RequireBet:
+			req := msg.Envelope.RequireBet
+			if req.GetPos() == b.pos {
+				// pause
+				<- time.After(2 * time.Second)
+				// our turn
+				b.decide(req.BetRange)
+			}
+
 		case *message.AddBet:
 		}
 	}
@@ -112,7 +143,20 @@ func (b *Bot) callRPC(method string, args interface{}) {
 	}
 }
 
-func (b *Bot) preflop() {
+func (b *Bot) decide(betRange *message.BetRange) {
+	switch b.street {
+	case "preflop":
+		b.decidePreflop()
+	case "flop":
+		b.decideFlop()
+	case "turn":
+		b.decideTurn()
+	case "river":
+		b.decideRiver()
+	}
+}
+
+func (b *Bot) decidePreflop() {
 	group := calc.SklanskyMalmuthGroup(b.cards[0], b.cards[1])
 	switch group {
 	case 9:
@@ -131,4 +175,16 @@ func (b *Bot) preflop() {
 		// raiseChance = 0.5
 		// allInChance = 0.1
 	}
+}
+
+func (b *Bot) decideFlop() {
+
+}
+
+func (b *Bot) decideTurn() {
+
+}
+
+func (b *Bot) decideRiver() {
+
 }
