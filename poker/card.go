@@ -22,10 +22,12 @@ func (c Card) String() string {
 	return c.kind.String() + c.suit.String()
 }
 
+// Kind - card kind
 func (c Card) Kind() card.Kind {
 	return c.kind
 }
 
+// Suit - card suit
 func (c Card) Suit() card.Suit {
 	return c.suit
 }

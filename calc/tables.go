@@ -36,6 +36,7 @@ var evTable = []float64{
 	-0.15, -0.14, -0.13, -0.13, -0.12, -0.12, -0.12, -0.12, -0.12, -0.12, -0.12, -0.14, -0.09,
 }
 
+// SklanskyMalmuthGroup - Sklansky-Malmuth group for 2 cards
 func SklanskyMalmuthGroup(card1, card2 *poker.Card) int {
 	index1 := 14 - int(card1.Kind())
 	index2 := 14 - int(card2.Kind())
@@ -45,6 +46,7 @@ func SklanskyMalmuthGroup(card1, card2 *poker.Card) int {
 	return sklanskyMalmuthTable[i]
 }
 
+// RealPlayStatisticsEV - real play statistics EV
 func RealPlayStatisticsEV(card1, card2 *poker.Card) float64 {
 	index1 := 14 - int(card1.Kind())
 	index2 := 14 - int(card2.Kind())

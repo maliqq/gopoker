@@ -38,11 +38,13 @@ type NotifyRoom struct {
 	Message *message.Message
 }
 
+// ConnectGateway - connect node ZMQ gateway
 type ConnectGateway struct {
 	RoomID   string
 	PlayerID string
 }
 
+// DisconnectGateway - disconnect node ZMQ gateway
 type DisconnectGateway struct {
 	PlayerID string
 }

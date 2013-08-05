@@ -33,7 +33,7 @@ func best(sidePot *model.SidePot, hands ShowdownHands) (model.Player, *poker.Han
 	var winner model.Player
 	var best *poker.Hand
 
-	for member, _ := range sidePot.Members {
+	for member := range sidePot.Members {
 		hand, hasHand := hands[member]
 
 		if hasHand && (best == nil || hand.Compare(best) > 0) {
@@ -88,6 +88,7 @@ func (gp *GamePlay) Winners(highHands ShowdownHands, lowHands ShowdownHands) {
 	}
 }
 
+// Winner - single winner
 func (gp *GamePlay) Winner(pos int) {
 	for _, sidePot := range gp.Betting.Pot.SidePots() {
 		amount := sidePot.Total()

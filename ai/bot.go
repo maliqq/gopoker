@@ -47,6 +47,7 @@ func NewBot(id, rpcAddr, sockAddr string) *Bot {
 	}
 }
 
+// Join - join player
 func (b *Bot) Join(roomID string, pos int, amount float64) {
 	b.roomID = roomID
 	b.pos = pos
@@ -61,6 +62,7 @@ func (b *Bot) Join(roomID string, pos int, amount float64) {
 	})
 }
 
+// Play - start bot
 func (b *Bot) Play() {
 	for msg := range b.zmqConn.Recv {
 		log.Printf("received msg: %s", msg)
@@ -72,19 +74,19 @@ func (b *Bot) Play() {
 	}
 }
 
-func (b *Bot) Check() {
+func (b *Bot) check() {
 	b.addBet(model.NewCheck())
 }
 
-func (b *Bot) Fold() {
+func (b *Bot) fold() {
 	b.addBet(model.NewFold())
 }
 
-func (b *Bot) Raise(amount float64) {
+func (b *Bot) raise(amount float64) {
 	b.addBet(model.NewRaise(amount))
 }
 
-func (b *Bot) Call(amount float64) {
+func (b *Bot) call(amount float64) {
 	b.addBet(model.NewCall(amount))
 }
 
