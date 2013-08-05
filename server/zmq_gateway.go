@@ -37,7 +37,7 @@ func (n *Node) StartZMQ() {
 
 	socket.Bind(addr)
 
-	nodeZMQ := &NodeZMQ{
+	gw := &NodeZMQ{
 		Node:        n,
 		context:     context,
 		socket:      socket,
@@ -46,31 +46,31 @@ func (n *Node) StartZMQ() {
 		connections: map[string]chan int{},
 	}
 
-	n.ZMQGateway = nodeZMQ
+	n.ZMQGateway = gw
 
 	for {
 		select {
-		case req := <-nodeZMQ.connect:
+		case req := <-gw.connect:
 			log.Printf("[zmq] connect request: %+v", req)
 			stop := make(chan int)
-			nodeZMQ.connections[req.PlayerID] = stop
-			go nodeZMQ.startConnection(req.PlayerID, req.RoomID, &stop)
+			gw.connections[req.PlayerID] = stop
+			go gw.startConnection(req.PlayerID, req.RoomID, &stop)
 
-		case req := <-nodeZMQ.disconnect:
+		case req := <-gw.disconnect:
 			log.Printf("[zmq] disconnect request: %+v", req)
-			stop, ok := nodeZMQ.connections[req.PlayerID]
+			stop, ok := gw.connections[req.PlayerID]
 			if ok {
 				stop <- 1
-				delete(nodeZMQ.connections, req.PlayerID)
+				delete(gw.connections, req.PlayerID)
 			}
 		}
 	}
 }
 
-func (nodeZMQ *NodeZMQ) startConnection(playerID string, roomID string, stop *chan int) {
+func (gw *NodeZMQ) startConnection(playerID string, roomID string, stop *chan int) {
 	recv := make(protocol.MessageChannel)
 
-	room := nodeZMQ.Node.Rooms[roomID]
+	room := gw.Node.Rooms[roomID]
 	room.Broadcast.BindUser(playerID, &recv)
 
 Loop:
@@ -79,8 +79,8 @@ Loop:
 		case msg := <-recv:
 			if data, err := proto.Marshal(msg); err == nil {
 				log.Printf("[zmq] sending %s to %s", msg, playerID)
-				nodeZMQ.socket.Send([]byte(playerID), zmq.SNDMORE)
-				nodeZMQ.socket.Send(data, 0)
+				gw.socket.Send([]byte(playerID), zmq.SNDMORE)
+				gw.socket.Send(data, 0)
 			}
 
 		case <-*stop:

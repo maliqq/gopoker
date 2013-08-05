@@ -30,7 +30,7 @@ func NewRoom(createRoom *rpc_service.CreateRoom) *Room {
 	} else {
 		variation = createRoom.Game
 	}
-	
+
 	stake := model.NewStake(createRoom.BetSize)
 	newPlay := play.NewPlay(variation, stake)
 
