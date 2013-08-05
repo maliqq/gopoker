@@ -18,9 +18,11 @@ build-all:
 	gofmt -w .
 
 test-all:
+	go test gopoker/ai
 	go test gopoker/model
 	go test gopoker/play
 	go test gopoker/play/context
+	go test gopoker/protocol/message
 
 install-all:
 	go install gopoker/bin/gopoker-bot

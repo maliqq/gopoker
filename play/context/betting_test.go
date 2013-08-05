@@ -9,7 +9,7 @@ import (
 func TestBetting(t *testing.T) {
 	b := NewBetting()
 
-	player := model.NewPlayer("A")
+	player := model.Player("A")
 	seat := &model.Seat{
 		Player: player,
 		Stack:  200.,
@@ -20,8 +20,8 @@ func TestBetting(t *testing.T) {
 	// no limit
 	g := model.NewGame(game.Texas, game.NoLimit)
 
-	b.RequireBet(0, seat, g, stake)
-	req := b.Required
+	b.RequireBet(0, seat, g.Limit, stake)
+	req := b.BetRange
 
 	t.Logf("Required: %s", req)
 
@@ -40,8 +40,8 @@ func TestBetting(t *testing.T) {
 	// fixed limit
 	g = model.NewGame(game.Texas, game.FixedLimit)
 
-	b.RequireBet(0, seat, g, stake)
-	req = b.Required
+	b.RequireBet(0, seat, g.Limit, stake)
+	req = b.BetRange
 
 	t.Logf("Required: %s", req)
 
@@ -60,8 +60,8 @@ func TestBetting(t *testing.T) {
 	// pot limit
 	g = model.NewGame(game.Omaha, game.PotLimit)
 
-	b.RequireBet(0, seat, g, stake)
-	req = b.Required
+	b.RequireBet(0, seat, g.Limit, stake)
+	req = b.BetRange
 
 	t.Logf("Required: %s", req)
 

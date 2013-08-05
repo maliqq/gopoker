@@ -15,6 +15,7 @@ import (
 
 const (
 	defaultConfigDir = "/etc/gopoker"
+	nodeConfigFile   = "node.json"
 )
 
 var (
@@ -27,6 +28,9 @@ func main() {
 	flag.Parse()
 	model.LoadGames(*configDir)
 
-	node := server.NewNode("localhost", *configDir)
+	var config *server.Config
+	model.ReadConfig(*configDir, nodeConfigFile, &config)
+
+	node := server.NewNode("localhost", config)
 	node.Start()
 }

@@ -56,7 +56,7 @@ func (b *Bot) Join(roomID string, pos int, amount float64) {
 	b.notifyRoom(message.NewJoinTable(b.ID, pos, amount))
 
 	log.Printf("connecting gateway...")
-	b.call("ConnectGateway", rpc_service.ConnectGateway{
+	b.callRPC("ConnectGateway", rpc_service.ConnectGateway{
 		RoomID:   roomID,
 		PlayerID: b.ID,
 	})
@@ -96,13 +96,13 @@ func (b *Bot) addBet(newBet *model.Bet) {
 }
 
 func (b *Bot) notifyRoom(msg *message.Message) {
-	b.call("NotifyRoom", rpc_service.NotifyRoom{
+	b.callRPC("NotifyRoom", rpc_service.NotifyRoom{
 		ID:      b.roomID,
 		Message: msg,
 	})
 }
 
-func (b *Bot) call(method string, args interface{}) {
+func (b *Bot) callRPC(method string, args interface{}) {
 	var result rpc_service.CallResult
 
 	err := b.client.Call(fmt.Sprintf("NodeRPC.%s", method), args, &result)

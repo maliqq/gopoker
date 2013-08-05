@@ -6,7 +6,6 @@ import (
 )
 
 import (
-	"gopoker/model"
 	"gopoker/storage"
 )
 
@@ -45,24 +44,20 @@ type Node struct {
 	PlayStore  *storage.PlayStore
 }
 
-// Defaults
-const (
-	NodeConfigFile = "node.json"
-)
-
 // NewNode - create new node
-func NewNode(name string, configDir string) *Node {
-	var config *Config
-	model.ReadConfig(configDir, NodeConfigFile, &config)
-
+func NewNode(name string, config *Config) *Node {
 	node := &Node{
 		Name:   name,
 		Config: config,
 		Rooms:  map[string]*Room{},
 	}
 
-	node.connectStore()
-	node.connectPlayStore()
+	if config.Store != nil {
+		node.connectStore()
+	}
+	if config.PlayStore != nil {
+		node.connectPlayStore()
+	}
 
 	return node
 }

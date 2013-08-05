@@ -1,27 +1,39 @@
 package ai
 
 import (
-	"net/rpc"
+	"fmt"
+	"net/rpc/jsonrpc"
 	"testing"
+	"time"
 )
 
 import (
 	"gopoker/model"
 	"gopoker/model/game"
 	"gopoker/server"
-	"gopoker/server/rpc_service"
+	rpc_service "gopoker/server/noderpc"
 	"gopoker/util"
 )
 
 func TestBot(t *testing.T) {
 	rpcAddr := "localhost:8081"
-	node := server.NewNode("bots_test", "", rpcAddr)
+	zmqAddr := "tcp://127.0.0.1:5555"
+
+	node := server.NewNode("bots_test", &server.Config{
+		RPC: &server.RPCConfig{
+			Addr: rpcAddr,
+		},
+		ZMQ: zmqAddr,
+	})
 	roomID := util.RandomUuid()
 	tableSize := 9
 
-	node.StartRPC()
+	go node.StartRPC()
+	go node.StartZMQ()
 
-	client, err := rpc.DialHTTP("tcp", rpcAddr)
+	<-time.After(1 * time.Second)
+
+	client, err := jsonrpc.Dial("tcp", rpcAddr)
 	if err != nil {
 		t.Fatal("dialing error: ", err)
 	}
@@ -43,7 +55,7 @@ func TestBot(t *testing.T) {
 
 	bots := make([]*Bot, tableSize)
 	for i := 0; i < tableSize; i++ {
-		bot := NewBot(rpcAddr)
+		bot := NewBot(fmt.Sprintf("bot-%d", i), rpcAddr, zmqAddr)
 		bots[i] = bot
 	}
 	t.Logf("bots=%#v", bots)
