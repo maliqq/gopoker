@@ -6,7 +6,7 @@ get-deps:
 	go get code.google.com/p/go.net/websocket
 	go get code.google.com/p/goprotobuf/proto
 	go get code.google.com/p/goprotobuf/protoc-gen-go
-	go get -tags zmq_3_x github.com/alecthomas/gozmq
+	go get -tags zmq_2_x github.com/alecthomas/gozmq
 	go get labix.org/v2/mgo
 
 build-all:
