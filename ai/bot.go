@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/rpc"
 	"net/rpc/jsonrpc"
+	"time"
 )
 
 import (
@@ -22,9 +23,11 @@ type Bot struct {
 	ID      string
 	roomID  string
 	pos     int
+	players []model.Player
 	game    *model.Game
 	street  string
-	pot float64
+	bet     float64
+	pot     float64
 	cards   poker.Cards
 	board   poker.Cards
 	client  *rpc.Client
@@ -93,14 +96,17 @@ func (b *Bot) Play() {
 
 		case *message.RequireBet:
 			req := msg.Envelope.RequireBet
-			if req.GetPos() == b.pos {
+			if int(req.GetPos()) == b.pos {
 				// pause
-				<- time.After(2 * time.Second)
+				<-time.After(2 * time.Second)
 				// our turn
 				b.decide(req.BetRange)
 			}
 
 		case *message.AddBet:
+
+		default:
+			log.Printf("got %s", msg)
 		}
 	}
 }
@@ -146,18 +152,17 @@ func (b *Bot) callRPC(method string, args interface{}) {
 func (b *Bot) decide(betRange *message.BetRange) {
 	switch b.street {
 	case "preflop":
-		b.decidePreflop()
-	case "flop":
-		b.decideFlop()
-	case "turn":
-		b.decideTurn()
-	case "river":
-		b.decideRiver()
+		b.decidePreflop(b.cards)
+	case "flop", "turn", "river":
+		b.decideBoard(b.cards, b.board)
 	}
 }
 
-func (b *Bot) decidePreflop() {
-	group := calc.SklanskyMalmuthGroup(b.cards[0], b.cards[1])
+func (b *Bot) decidePreflop(cards poker.Cards) {
+	group := calc.SklanskyMalmuthGroup(cards[0], cards[1])
+
+	log.Printf("group=%d", group)
+
 	switch group {
 	case 9:
 		// fold
@@ -177,14 +182,23 @@ func (b *Bot) decidePreflop() {
 	}
 }
 
-func (b *Bot) decideFlop() {
+func (b *Bot) decideBoard(cards, board poker.Cards) {
+	opponentsNum := len(b.players) - 1
+	chances := calc.ChancesAgainstN{OpponentsNum: opponentsNum}.WithBoard(cards, board)
 
-}
-
-func (b *Bot) decideTurn() {
-
-}
-
-func (b *Bot) decideRiver() {
-
+	tightness := 0.
+	if chances.Wins() > tightness {
+		// raise stack+bet
+		// raiseChance = 0.5
+		// allInChance = 0.5
+	} else if chances.Wins() > tightness / 2 {
+		// raise (stack+bet)/3
+		// raiseChance = 0.2
+	} else if(chances.Ties() > 0.8) {
+		// raise stack+bet
+		// raiseChance = 0
+		// allInChance = 0
+  } else {
+    // check/fold
+  }
 }

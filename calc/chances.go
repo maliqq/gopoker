@@ -15,10 +15,22 @@ const (
 
 // Chances - chances
 type Chances struct {
-	Total int
-	Wins  int
-	Ties  int
-	Loses int
+	total int
+	wins  int
+	ties  int
+	loses int
+}
+
+func (c Chances) Wins() float64 {
+	return float64(c.wins) / float64(c.total)
+}
+
+func (c Chances) Ties() float64 {
+	return float64(c.ties) / float64(c.total)
+}
+
+func (c Chances) Loses() float64 {
+	return float64(c.loses) / float64(c.total)
 }
 
 // ChancesAgainstOne - chances against one player
@@ -39,11 +51,11 @@ func (c *Chances) Compare(c1, c2 poker.Cards) {
 
 	switch h1.Compare(h2) {
 	case -1:
-		c.Loses++
+		c.loses++
 	case 1:
-		c.Wins++
+		c.wins++
 	case 0:
-		c.Ties++
+		c.ties++
 	}
 }
 
@@ -115,7 +127,7 @@ func (c ChancesAgainstOne) WithBoard(hole, board poker.Cards) Chances {
 }
 
 // Equity - hand equity
-func (c ChancesAgainstN) Equity(hole poker.Cards, board poker.Cards) float64 {
+func (c ChancesAgainstN) Equity(hole, board poker.Cards) float64 {
 	var chances Chances
 	if len(board) == 0 {
 		chances = c.Preflop(hole)
@@ -123,8 +135,8 @@ func (c ChancesAgainstN) Equity(hole poker.Cards, board poker.Cards) float64 {
 		chances = c.WithBoard(hole, board)
 	}
 
-	e := float64(chances.Wins) / float64(c.SamplesNum)
-	e += float64(chances.Ties) / float64(c.OpponentsNum)
+	e := float64(chances.wins) / float64(c.SamplesNum)
+	e += float64(chances.ties) / float64(c.OpponentsNum)
 
 	return e
 }
