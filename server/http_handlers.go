@@ -103,9 +103,9 @@ func (nodeHTTP *NodeHTTP) CalculateOdds(resp http.ResponseWriter, req *http.Requ
 		A:     a,
 		B:     b,
 		Total: total,
-		Wins:  float64(chances.Wins) / float64(total),
-		Ties:  float64(chances.Ties) / float64(total),
-		Loses: float64(chances.Loses) / float64(total),
+		Wins:  chances.Wins(),
+		Ties:  chances.Ties(),
+		Loses: chances.Loses(),
 	}
 
 	nodeHTTP.RespondJSON(resp, result)
