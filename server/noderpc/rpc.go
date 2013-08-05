@@ -14,10 +14,10 @@ type CallResult struct {
 
 // CreateRoom - create room request
 type CreateRoom struct {
-	ID        string
-	BetSize   float64
-	Game      *model.Game
-	Mix       *model.Mix
+	ID      string
+	BetSize float64
+	Game    *model.Game
+	Mix     *model.Mix
 }
 
 // RequestRoom - get room by id

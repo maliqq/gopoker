@@ -68,18 +68,17 @@ func main() {
 
 func createPlay(me *protocol.MessageChannel) *play.Play {
 	size := 3
-	table := model.NewTable(size)
 	stake := model.NewStake(*betsize)
 	//stake.WithAnte = true
 
 	var variation model.Variation
 	if *mixedGame != "" {
-		variation = model.NewMix(game.MixedGame(*mixedGame))
+		variation = model.NewMix(game.MixedGame(*mixedGame), size)
 	} else {
-		variation = model.NewGame(game.LimitedGame(*limitedGame), game.FixedLimit)
+		variation = model.NewGame(game.LimitedGame(*limitedGame), game.FixedLimit, size)
 	}
 
-	play := play.NewPlay(variation, stake, table)
+	play := play.NewPlay(variation, stake)
 
 	players := []model.Player{"A", "B", "C", "D", "E", "F", "G", "H", "I"}
 	stack := 1500.

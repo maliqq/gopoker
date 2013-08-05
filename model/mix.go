@@ -1,9 +1,9 @@
 package model
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
-	"encoding/json"
 )
 
 import (
@@ -50,7 +50,7 @@ func NewMix(gameType game.Type, tableSize int) *Mix {
 	}
 
 	mix := &Mix{
-		Type: mixedGame,
+		Type:  mixedGame,
 		Games: games,
 	}
 
@@ -77,10 +77,9 @@ func (mix *Mix) IsMixed() bool {
 	return true
 }
 
-
 func (mix *Mix) UnmarshalJSON(data []byte) error {
 	var result struct {
-		Type string
+		Type      string
 		TableSize int
 	}
 

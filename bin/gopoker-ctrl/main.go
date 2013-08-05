@@ -50,15 +50,14 @@ func main() {
 	}
 
 	args := &rpc_service.CreateRoom{
-		ID:        *roomID,
-		TableSize: *tableSize,
-		BetSize:   *betSize,
+		ID:      *roomID,
+		BetSize: *betSize,
 	}
 
 	if *mixedGame != "" {
-		args.Mix = model.NewMix(game.MixedGame(*mixedGame))
+		args.Mix = model.NewMix(game.MixedGame(*mixedGame), *tableSize)
 	} else {
-		args.Game = model.NewGame(game.LimitedGame(*limitedGame), game.Limit(*limit))
+		args.Game = model.NewGame(game.LimitedGame(*limitedGame), game.Limit(*limit), *tableSize)
 	}
 
 	call(client, "NodeRPC.CreateRoom", args)

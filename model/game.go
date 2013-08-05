@@ -1,9 +1,9 @@
 package model
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
-	"encoding/json"
 )
 
 import (
@@ -39,7 +39,7 @@ type GameOptions struct {
 type Game struct {
 	Type game.LimitedGame
 	game.Limit
-	TableSize int
+	TableSize    int
 	*GameOptions `json:"-"`
 }
 
@@ -69,9 +69,9 @@ func NewGame(gameType game.Type, limit game.Limit, tableSize int) *Game {
 	}
 
 	game := &Game{
-		Type:  limitedGame,
-		Limit: limit,
-		TableSize: tableSize,
+		Type:        limitedGame,
+		Limit:       limit,
+		TableSize:   tableSize,
 		GameOptions: options,
 	}
 
@@ -113,8 +113,8 @@ func (game *Game) Proto() *message.Game {
 
 func (g *Game) UnmarshalJSON(data []byte) error {
 	var result struct {
-		Type string
-		Limit string
+		Type      string
+		Limit     string
 		TableSize int
 	}
 
