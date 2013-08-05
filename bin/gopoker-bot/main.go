@@ -4,7 +4,9 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"math/rand"
 	"os"
+	"time"
 )
 
 import (
@@ -23,6 +25,7 @@ var stdout = true
 
 func main() {
 	flag.Parse()
+	rand.Seed(time.Now().UnixNano())
 
 	// logs
 	if !stdout {
