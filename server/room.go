@@ -24,29 +24,15 @@ type Room struct {
 // NewRoom - create new room
 func NewRoom(createRoom *rpc_service.CreateRoom) *Room {
 	var variation model.Variation
-	if createRoom.Game != nil {
-		variation = createRoom.Game.WithDefaults()
-	}
 
 	if createRoom.Mix != nil {
-		variation = createRoom.Mix.WithDefaults()
-	}
-
-	tableSize := createRoom.TableSize
-
-	var maxTableSize int
-	if variation.IsMixed() {
-		maxTableSize = model.MixedGameMaxTableSize
+		variation = createRoom.Mix
 	} else {
-		maxTableSize = variation.(*model.Game).MaxTableSize
+		variation = createRoom.Game
 	}
-	if tableSize == 0 || tableSize > maxTableSize {
-		tableSize = maxTableSize
-	}
-
-	table := model.NewTable(tableSize)
+	
 	stake := model.NewStake(createRoom.BetSize)
-	newPlay := play.NewPlay(variation, stake, table)
+	newPlay := play.NewPlay(variation, stake)
 
 	room := &Room{
 		ID:       createRoom.ID,

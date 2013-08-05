@@ -15,7 +15,6 @@ type CallResult struct {
 // CreateRoom - create room request
 type CreateRoom struct {
 	ID        string
-	TableSize int
 	BetSize   float64
 	Game      *model.Game
 	Mix       *model.Mix

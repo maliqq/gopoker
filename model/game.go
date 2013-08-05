@@ -3,6 +3,7 @@ package model
 import (
 	"fmt"
 	"log"
+	"encoding/json"
 )
 
 import (
@@ -38,6 +39,7 @@ type GameOptions struct {
 type Game struct {
 	Type game.LimitedGame
 	game.Limit
+	TableSize int
 	*GameOptions `json:"-"`
 }
 
@@ -47,36 +49,43 @@ type Variation interface {
 }
 
 // NewGame - create game
-func NewGame(g game.Type, limit game.Limit) *Game {
-	limitedGame, success := g.(game.LimitedGame)
+func NewGame(gameType game.Type, limit game.Limit, tableSize int) *Game {
+	limitedGame, success := gameType.(game.LimitedGame)
 
 	if !success {
-		log.Printf("got: %#v", g)
+		log.Printf("got: %#v", gameType)
 		panic("can't create game")
+	}
+
+	options := gameOptions(limitedGame)
+
+	maxTableSize := options.MaxTableSize
+	if tableSize == 0 || tableSize > maxTableSize {
+		tableSize = maxTableSize
+	}
+
+	if limit == "" {
+		limit = options.DefaultLimit
 	}
 
 	game := &Game{
 		Type:  limitedGame,
 		Limit: limit,
-	}
-
-	return game.WithDefaults()
-}
-
-// WithDefaults - load default options for game
-func (game *Game) WithDefaults() *Game {
-	var success bool
-	game.GameOptions, success = Games[game.Type]
-	if !success {
-		log.Printf("got: %#v", game)
-		panic("can't populate game with options")
-	}
-
-	if game.Limit == "" {
-		game.Limit = game.GameOptions.DefaultLimit
+		TableSize: tableSize,
+		GameOptions: options,
 	}
 
 	return game
+}
+
+func gameOptions(limitedGame game.LimitedGame) *GameOptions {
+	gameOptions, success := Games[limitedGame]
+	if !success {
+		log.Printf("got: %#v", limitedGame)
+		panic("can't find options")
+	}
+
+	return gameOptions
 }
 
 // IsMixed - false
@@ -100,4 +109,22 @@ func (game *Game) Proto() *message.Game {
 			message.GameLimit_value[string(game.Limit)],
 		).Enum(),
 	}
+}
+
+func (g *Game) UnmarshalJSON(data []byte) error {
+	var result struct {
+		Type string
+		Limit string
+		TableSize int
+	}
+
+	err := json.Unmarshal(data, &result)
+
+	if err != nil {
+		return err
+	}
+
+	*g = *NewGame(game.LimitedGame(result.Type), game.Limit(result.Limit), result.TableSize)
+
+	return nil
 }
