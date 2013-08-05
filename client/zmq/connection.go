@@ -49,19 +49,20 @@ func NewConnection(addr string, topic string) *Connection {
 func (conn *Connection) receive() {
 	for {
 		// receive topic
-		topic, _ := conn.socket.Recv(0)
-		repl, err := conn.socket.Recv(0)
+		parts, err := conn.socket.RecvMultipart(0)
 		if err != nil {
 			log.Fatal("receive error:", err)
 		}
 
+		topic := parts[0]
+		repl := parts[1]
 		log.Printf("received %d bytes for %s", len(repl), topic)
 
 		msg := &message.Message{}
 		if err = proto.Unmarshal(repl, msg); err != nil {
-			log.Fatalf("unmarshal error: %s", err)
+			log.Printf("unmarshal error: %s", err)
+		} else {
+			conn.Recv <- msg
 		}
-
-		conn.Recv <- msg
 	}
 }
