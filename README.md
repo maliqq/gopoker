@@ -16,9 +16,9 @@
 #### HTTP server
 default port is 8080
 
-* /_api - REST API 
-* /_ws - websockets
-* /_rpc - JSON RPC
+* `/_api` - REST API
+* `/_ws` - websockets
+* `/_rpc` - JSON RPC
 
 Sample node config:
 
@@ -43,20 +43,20 @@ Sample node config:
 * JSON RPC via TCP socket, default port is 8081
 
 #### Tools
-* gopoker-cli - REPL-style gameplay
-* gopoker-ctrl - command line interface to RPC service
-* gopoker-bot - configurable bot with simple AI
+* `gopoker-cli` - REPL-style gameplay
+* `gopoker-ctrl` - command line interface to RPC service
+* `gopoker-bot` - configurable bot with simple AI
 * web client - see https://github.com/maliqq/poker-js
 
 ### Architecture
-* ai/ - bot AI with decision making logic
-* calc/ - poker related math
-* client/ - client related code
-* model/ - poker domain
-* play/ - gameplay
-* poker/ - poker rules
-* protocol/ - poker events exchange
-* protocol/message - poker protocol
-* server/ - server with topology (node, cluster, balancer) and services
-* storage/ - persistence to PostgreSQL for critical data and MongoDB for temporary data
-* util/ - utility functions
+* `ai/` - bot AI with decision making logic
+* `calc/` - poker related math
+* `client/` - client related code
+* `model/` - poker domain
+* `play/` - gameplay
+* `poker/` - poker rules
+* `protocol/` - poker events exchange
+* `protocol/message` - poker protocol
+* `server/` - server with topology (node, cluster, balancer) and services
+* `storage/` - persistence to PostgreSQL for critical data and MongoDB for temporary data
+* `util/` - utility functions
