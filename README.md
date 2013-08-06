@@ -43,9 +43,9 @@ Sample node config:
 * JSON RPC via TCP socket, default port is 8081
 
 #### Tools
-* `gopoker-cli` - REPL-style gameplay
-* `gopoker-ctrl` - command line interface to RPC service
-* `gopoker-bot` - configurable bot with simple AI
+* `bin/gopoker-cli` - REPL-style gameplay
+* `bin/gopoker-ctrl` - command line interface to RPC service
+* `bin/gopoker-bot` - configurable bot with simple AI
 * web client - see https://github.com/maliqq/poker-js
 
 ### Architecture
