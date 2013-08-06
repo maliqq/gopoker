@@ -163,3 +163,8 @@ func (stake *Stake) Proto() *message.Stake {
 		BringIn:    proto.Float64(stake.BringInAmount()),
 	}
 }
+
+func (stake *Stake) UnmarshalProto(protoStake *message.Stake) {
+	// FIXME
+	*stake = Stake{}
+}

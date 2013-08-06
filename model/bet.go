@@ -40,6 +40,14 @@ func (b Bet) Proto() *message.Bet {
 	}
 }
 
+func (b *Bet) UnmarshalProto(protoBet *message.Bet) {
+	newBet := Bet{
+		Type: bet.Type(protoBet.GetType()),
+		Amount: protoBet.GetAmount(),
+	}
+	*b = newBet
+}
+
 // IsActive - check active bet (raise or call)
 func (b Bet) IsActive() bool {
 	switch b.Type {

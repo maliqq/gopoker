@@ -158,3 +158,8 @@ func (seat *Seat) Proto() *message.Seat {
 		Bet: proto.Float64(seat.Bet),
 	}
 }
+
+func (seat *Seat) UnmarshalProto(protoSeat *message.Seat) {
+	// FIXME
+	*seat = Seat{}
+}

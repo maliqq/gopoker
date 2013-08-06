@@ -117,6 +117,15 @@ func (game *Game) Proto() *message.Game {
 	}
 }
 
+func (g *Game) UnmarshalProto(protoGame *message.Game) {
+	newGame := NewGame(
+		game.LimitedGame(protoGame.GetType().String()),
+		game.Limit(protoGame.GetLimit().String()),
+		int(protoGame.GetTableSize()),
+	)
+	*g = *newGame
+}
+
 func (g *Game) UnmarshalJSON(data []byte) error {
 	var result struct {
 		Type      string

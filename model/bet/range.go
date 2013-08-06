@@ -51,3 +51,12 @@ func (r *Range) Proto() *message.BetRange {
 		Max:  proto.Float64(r.Max),
 	}
 }
+
+func (r *Range) UnmarshalProto(protoRange *message.BetRange) {
+	newRange := Range{
+		Call: protoRange.GetCall(),
+		Min: protoRange.GetMin(),
+		Max: protoRange.GetMax(),
+	}
+	*r = newRange
+}
