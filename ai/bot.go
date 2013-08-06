@@ -23,8 +23,8 @@ import (
 type context struct {
 	opponentsNum int
 	game         *model.Game
+	stake        *model.Stake
 	street       string
-	bb           float64
 	bet          float64
 	pot          float64
 	cards        poker.Cards
@@ -49,6 +49,7 @@ func NewBot(id, rpcAddr, sockAddr string) *Bot {
 	if id == "" {
 		id = util.RandomUuid()
 	}
+	log.SetPrefix(fmt.Sprintf("[bot#%s]", id))
 
 	client, err := jsonrpc.Dial("tcp", rpcAddr)
 	if err != nil {
@@ -89,10 +90,13 @@ func (b *Bot) Play() {
 
 		switch msg.Payload().(type) {
 		case *message.PlayStart:
+			start := msg.Envelope.PlayStart
+
 			b.cards = poker.Cards{}
 			b.board = poker.Cards{}
 			b.pot = 0.
 			b.opponentsNum = 3
+			b.stake = model.NewStake(start.Play.Stake.GetBigBlind())
 
 		case *message.StreetStart:
 			b.street = msg.Envelope.StreetStart.GetName()
@@ -202,17 +206,18 @@ func (b *Bot) decidePreflop(cards poker.Cards) decision {
 
 	log.Printf("group=%d", group)
 
+	bb := b.stake.BigBlindAmount()
 	switch group {
 	case 9:
 		return decision{maxBet: 0.}
 
 	case 7, 8:
-		return decision{maxBet: b.bb}
+		return decision{maxBet: bb}
 
 	case 5, 6:
 		return decision{
-			minBet:      b.bb,
-			maxBet:      b.bb * 4,
+			minBet:      bb,
+			maxBet:      bb * 4,
 			raiseChance: 0.2,
 		}
 
@@ -263,6 +268,17 @@ func (b *Bot) decideBoard(cards, board poker.Cards) decision {
 	return decision{}
 }
 
+type action int
+
+const (
+	fold action = iota
+	check
+	checkFold
+	checkCall
+	raise
+	allIn
+)
+
 func (b *Bot) invoke(decision decision, betRange *message.BetRange) {
 	call, minRaise, maxRaise := betRange.GetCall(), betRange.GetMin(), betRange.GetMax()
 
@@ -274,41 +290,61 @@ func (b *Bot) invoke(decision decision, betRange *message.BetRange) {
 	}
 	max := decision.maxBet
 
+	var action action
 	if min > max {
-		// check/fold
+		action = checkFold
+	} else {
+		if rand.Float64() < decision.raiseChance {
+			action = raise
+		} else if rand.Float64() < decision.allInChance {
+			action = allIn
+		} else {
+			action = checkCall
+		}
+	}
+
+	switch action {
+	case fold:
+		b.fold()
+
+	case check:
+		b.check()
+
+	case checkFold:
 		if call == b.bet {
 			b.check()
 		} else {
 			b.fold()
 		}
-	} else {
-		if rand.Float64() < decision.raiseChance {
-			if minRaise == maxRaise {
-				// raise fixed limit
-				b.raise(maxRaise)
-			} else {
-				// raise no limit/pot limit
-				d := maxRaise - minRaise
-				amount := minRaise + d*rand.Float64()
-				amount = math.Floor(amount/b.bb) * b.bb // FIXME
-				b.raise(amount)
-			}
-		} else if rand.Float64() < decision.allInChance {
-			// all in
-			if minRaise == maxRaise {
-				// raise fixed limit
-				b.raise(maxRaise)
-			} else {
-				// raise fixed limit
-				b.raise(b.stack + b.bet)
-			}
+
+	case checkCall:
+		if call == b.bet || call == 0. {
+			b.check()
+		} else if call > 0. {
+			b.call(call)
+		}
+
+	case raise:
+		if minRaise == maxRaise {
+			// raise fixed limit
+			b.raise(maxRaise)
 		} else {
-			// check/call
-			if call == b.bet || call == 0. {
-				b.check()
-			} else if call > 0. {
-				b.call(call)
-			}
+			// raise no limit/pot limit
+			d := maxRaise - minRaise
+			bb := b.stake.BigBlindAmount()
+			amount := minRaise + d*rand.Float64()
+			amount = math.Floor(amount/bb) * bb // FIXME
+			b.raise(amount)
+		}
+
+	case allIn:
+		// all in
+		if minRaise == maxRaise {
+			// raise fixed limit
+			b.raise(maxRaise)
+		} else {
+			// raise fixed limit
+			b.raise(b.stack + b.bet)
 		}
 	}
 }
