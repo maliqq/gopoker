@@ -1,4 +1,7 @@
 ## gopoker
+>Golang poker server 
+
+>http://pokerno.de/
 
 ### Features
 
