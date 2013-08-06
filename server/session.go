@@ -82,6 +82,6 @@ func (session *Session) Close() {
 	close(session.Recv)
 
 	if err := session.Connection.Close(); err != nil {
-		log.Fatalf("[session] close error: %s", err)
+		log.Printf("[session] close error: %s", err)
 	}
 }
