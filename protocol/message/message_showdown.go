@@ -7,8 +7,8 @@ import (
 // Cards - byte array
 type Cards []byte
 
-// NewShowHand - notify show hand
-func NewShowHand(pos int, player *string, cards Cards, hand *Hand, handStr string) *Message {
+// NotifyShowHand - notify show hand
+func NotifyShowHand(pos int, player *string, cards Cards, hand *Hand, handStr string) *Message {
 	return NewMessage(ShowHand{
 		Pos:        proto.Int32(int32(pos)),
 		Player:     player,
@@ -18,8 +18,8 @@ func NewShowHand(pos int, player *string, cards Cards, hand *Hand, handStr strin
 	})
 }
 
-// NewShowCards - notify show cards
-func NewShowCards(pos int, player *string, cards Cards) *Message {
+// NotifyShowCards - notify show cards
+func NotifyShowCards(pos int, player *string, cards Cards) *Message {
 	return NewMessage(ShowCards{
 		Pos:    proto.Int32(int32(pos)),
 		Player: player,
@@ -27,8 +27,8 @@ func NewShowCards(pos int, player *string, cards Cards) *Message {
 	})
 }
 
-// NewMuckCards - notify muck cards
-func NewMuckCards(pos int, player *string, cards Cards) *Message {
+// NotifyMuckCards - notify muck cards
+func NotifyMuckCards(pos int, player *string, cards Cards) *Message {
 	return NewMessage(ShowCards{
 		Pos:    proto.Int32(int32(pos)),
 		Player: player,
@@ -37,8 +37,8 @@ func NewMuckCards(pos int, player *string, cards Cards) *Message {
 	})
 }
 
-// NewWinner - notify new winner
-func NewWinner(pos int, player *string, amount float64) *Message {
+// NotifyWinner - notify new winner
+func NotifyWinner(pos int, player *string, amount float64) *Message {
 	return NewMessage(Winner{
 		Pos:    proto.Int32(int32(pos)),
 		Player: player,

@@ -153,7 +153,7 @@ func (betting *Betting) RequireBet(pos int, seat *model.Seat, limit game.Limit, 
 		betting.BetRange.SetRaise(seat.Stack, min, max)
 	}
 
-	return message.NewRequireBet(betting.Pos, betting.BetRange.Proto())
+	return message.NotifyRequireBet(betting.Pos, betting.BetRange.Proto())
 }
 
 // AddBet - add action

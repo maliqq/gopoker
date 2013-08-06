@@ -64,7 +64,7 @@ func (c *Connection) Handle(msg *message.Message) {
 
 		if newBet != nil {
 			pos := int(r.GetPos())
-			c.Reply(message.NewAddBet(pos, newBet.Proto()))
+			c.Reply(message.NotifyAddBet(pos, newBet.Proto()))
 		}
 
 	case *message.RequireDiscard:
@@ -81,7 +81,7 @@ func (c *Connection) Handle(msg *message.Message) {
 			cards = readCards()
 		}
 
-		c.Reply(message.NewDiscardCards(pos, cards.Proto()))
+		c.Reply(message.NotifyDiscardCards(pos, cards.Proto()))
 
 	case *message.DealCards:
 

@@ -86,7 +86,7 @@ func createPlay(me *protocol.MessageChannel) *play.Play {
 	for i, player := range players {
 		if i < size {
 			play.Broadcast.Bind(player, me)
-			play.Recv <- message.NewJoinTable(string(player), i, stack)
+			play.Recv <- message.NotifyJoinTable(string(player), i, stack)
 		}
 	}
 

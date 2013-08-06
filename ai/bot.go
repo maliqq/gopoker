@@ -73,7 +73,7 @@ func (b *Bot) Join(roomID string, pos int, amount float64) {
 	b.stack = amount
 
 	log.Printf("joining table...")
-	b.notifyRoom(message.NewJoinTable(b.ID, pos, amount))
+	b.notifyRoom(message.NotifyJoinTable(b.ID, pos, amount))
 
 	log.Printf("connecting gateway...")
 	b.callRPC("ConnectGateway", rpc_service.ConnectGateway{
@@ -151,7 +151,7 @@ func (b *Bot) call(amount float64) {
 
 func (b *Bot) addBet(newBet *model.Bet) {
 	log.Printf("=== %s", newBet)
-	msg := message.NewAddBet(b.pos, newBet.Proto())
+	msg := message.NotifyAddBet(b.pos, newBet.Proto())
 	b.notifyRoom(msg)
 }
 

@@ -12,7 +12,7 @@ const (
 
 // StartBettingRound - start betting round
 func (gp *GamePlay) StartBettingRound() Transition {
-	//gp.Broadcast.All <- message.NewBettingStart(gp.Betting)
+	//gp.Broadcast.All <- message.NotifyBettingStart(gp.Betting)
 	go gp.Betting.Start()
 
 	var next Transition
@@ -63,5 +63,5 @@ func (gp *GamePlay) ResetBetting() {
 	}
 
 	total := gp.Betting.Pot.Total()
-	gp.Broadcast.All <- message.NewBettingComplete(total)
+	gp.Broadcast.All <- message.NotifyBettingComplete(total)
 }

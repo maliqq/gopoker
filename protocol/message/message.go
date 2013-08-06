@@ -155,15 +155,15 @@ func (msg *Message) PrintString() string {
 	return string(s)
 }
 
-// NewErrorMessage - create new error message
-func NewErrorMessage(err error) *Message {
+// NotifyErrorMessage - create new error message
+func NotifyErrorMessage(err error) *Message {
 	return NewMessage(ErrorMessage{
 		Message: proto.String(err.Error()),
 	})
 }
 
-// NewChatMessage - create new chat message
-func NewChatMessage(body string) *Message {
+// NotifyChatMessage - create new chat message
+func NotifyChatMessage(body string) *Message {
 	return NewMessage(ChatMessage{
 		Message: proto.String(body),
 	})

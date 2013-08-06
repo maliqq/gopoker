@@ -68,7 +68,7 @@ func main() {
 			amount := float64(rand.Intn(1000) + 1000)
 			call(client, "NodeRPC.NotifyRoom", &rpc_service.NotifyRoom{
 				ID:      *roomID,
-				Message: message.NewJoinTable(player, pos, amount),
+				Message: message.NotifyJoinTable(player, pos, amount),
 			})
 		}
 	}
