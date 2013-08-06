@@ -99,7 +99,7 @@ func (gw *NodeZMQ) send(msg *message.Message, playerID string) {
 		log.Printf("[zmq] marshal error: %s", err)
 	} else {
 		gw.sendlock.Lock()
+		defer gw.sendlock.Unlock()
 		gw.socket.SendMultipart([][]byte{[]byte(playerID), data}, 0)
-		gw.sendlock.Unlock()
 	}
 }
