@@ -5,6 +5,7 @@ features
 * start next deal
 * websocket client
 * storage
+* watchers
 
 refactoring:
 * embed structs
