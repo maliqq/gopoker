@@ -37,7 +37,7 @@ type Config struct {
 type Node struct {
 	Name string
 
-	*Config
+	Config     *Config
 	Rooms      map[string]*Room
 	ZMQGateway *NodeZMQ
 	Store      *storage.Store
@@ -92,8 +92,12 @@ func (n *Node) Room(id string) *Room {
 func (n *Node) AddRoom(room *Room) bool {
 	n.Rooms[room.ID] = room
 
-	room.createLogger(n.Logdir)
-	room.createStorage(n.PlayStore)
+	if n.Config.Logdir != "" {
+		room.createLogger(n.Config.Logdir)
+	}
+	if n.PlayStore != nil {
+		room.createStorage(n.PlayStore)
+	}
 
 	return true
 }

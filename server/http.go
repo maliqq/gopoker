@@ -35,9 +35,10 @@ func (n *Node) StartHTTP() {
 	router := gorilla_mux.NewRouter()
 	n.drawRoutes(router)
 
-	log.Printf("[http] starting service at %s", n.HTTP.Addr)
-	if err := http.ListenAndServe(n.HTTP.Addr, router); err != nil {
-		log.Fatalf("[http] can't start at %s", n.HTTP.Addr)
+	addr := n.Config.HTTP.Addr
+	log.Printf("[http] starting service at %s", addr)
+	if err := http.ListenAndServe(addr, router); err != nil {
+		log.Fatalf("[http] can't start at %s", addr)
 	}
 }
 

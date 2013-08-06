@@ -103,6 +103,7 @@ func (b *Bot) Play() {
 
 		case *message.BettingComplete:
 			b.pot = msg.Envelope.BettingComplete.GetPot()
+			b.bet = 0.
 
 		case *message.DealCards:
 			deal := msg.Envelope.DealCards
@@ -272,7 +273,6 @@ type action int
 
 const (
 	fold action = iota
-	check
 	checkFold
 	checkCall
 	raise
@@ -291,7 +291,9 @@ func (b *Bot) invoke(decision decision, betRange *message.BetRange) {
 	max := decision.maxBet
 
 	var action action
-	if min > max {
+	if minRaise == 0. && maxRaise == 0. {
+		action = checkCall
+	} else if min > max {
 		action = checkFold
 	} else {
 		if rand.Float64() < decision.raiseChance {
@@ -306,9 +308,6 @@ func (b *Bot) invoke(decision decision, betRange *message.BetRange) {
 	switch action {
 	case fold:
 		b.fold()
-
-	case check:
-		b.check()
 
 	case checkFold:
 		if call == b.bet {
