@@ -25,7 +25,6 @@ type context struct {
 	game         *model.Game
 	street       string
 	bb           float64
-	stack        float64
 	bet          float64
 	pot          float64
 	cards        poker.Cards
@@ -37,6 +36,7 @@ type Bot struct {
 	ID     string
 	roomID string
 	pos    int
+	stack  float64
 
 	*context
 
@@ -70,6 +70,7 @@ func NewBot(id, rpcAddr, sockAddr string) *Bot {
 func (b *Bot) Join(roomID string, pos int, amount float64) {
 	b.roomID = roomID
 	b.pos = pos
+	b.stack = amount
 
 	log.Printf("joining table...")
 	b.notifyRoom(message.NewJoinTable(b.ID, pos, amount))
@@ -119,6 +120,10 @@ func (b *Bot) Play() {
 			}
 
 		case *message.AddBet:
+			bet := msg.Envelope.AddBet
+			if int(bet.GetPos()) == b.pos {
+				b.bet = bet.Bet.GetAmount()
+			}
 		}
 	}
 }
@@ -177,6 +182,12 @@ type decision struct {
 func (b *Bot) decide(betRange *message.BetRange) {
 	var decision decision
 
+	if len(b.cards) != 2 {
+		log.Printf("*** can't decide with cards=%s", b.cards)
+		b.fold()
+		return
+	}
+
 	if len(b.board) == 0 {
 		decision = b.decidePreflop(b.cards)
 	} else {
@@ -228,7 +239,7 @@ func (b *Bot) decideBoard(cards, board poker.Cards) decision {
 
 	log.Printf("chances=%s", chances)
 
-	tightness := 0.7
+	tightness := 0.5
 	if chances.Wins() > tightness {
 		return decision{
 			maxBet:      b.stack + b.bet,
@@ -255,6 +266,8 @@ func (b *Bot) decideBoard(cards, board poker.Cards) decision {
 func (b *Bot) invoke(decision decision, betRange *message.BetRange) {
 	call, minRaise, maxRaise := betRange.GetCall(), betRange.GetMin(), betRange.GetMax()
 
+	log.Printf("decision=%#v call=%.2f minRaise=%.2f maxRaise=%.2f", decision, call, minRaise, maxRaise)
+
 	min := call
 	if min > b.stack+b.bet {
 		min = b.stack + b.bet
@@ -263,10 +276,10 @@ func (b *Bot) invoke(decision decision, betRange *message.BetRange) {
 
 	if min > max {
 		// check/fold
-		if call > 0. {
-			b.fold()
-		} else {
+		if call == b.bet {
 			b.check()
+		} else {
+			b.fold()
 		}
 	} else {
 		if rand.Float64() < decision.raiseChance {
@@ -282,13 +295,19 @@ func (b *Bot) invoke(decision decision, betRange *message.BetRange) {
 			}
 		} else if rand.Float64() < decision.allInChance {
 			// all in
-			b.raise(b.stack + b.bet)
-		} else {
-			// call
-			if call > 0. {
-				b.call(call)
+			if minRaise == maxRaise {
+				// raise fixed limit
+				b.raise(maxRaise)
 			} else {
+				// raise fixed limit
+				b.raise(b.stack + b.bet)
+			}
+		} else {
+			// check/call
+			if call == b.bet || call == 0. {
 				b.check()
+			} else if call > 0. {
+				b.call(call)
 			}
 		}
 	}
