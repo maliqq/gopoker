@@ -95,7 +95,7 @@ func (b *Bot) Play() {
 			b.cards = poker.Cards{}
 			b.board = poker.Cards{}
 			b.pot = 0.
-			b.opponentsNum = 3
+			b.opponentsNum = 6
 			b.stake = model.NewStake(start.Play.Stake.GetBigBlind())
 
 		case *message.StreetStart:
