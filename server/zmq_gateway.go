@@ -2,6 +2,7 @@ package server
 
 import (
 	"log"
+	"sync"
 )
 
 import (
@@ -11,6 +12,7 @@ import (
 
 import (
 	"gopoker/protocol"
+	"gopoker/protocol/message"
 	rpc_service "gopoker/server/noderpc"
 )
 
@@ -19,6 +21,7 @@ type NodeZMQ struct {
 	*Node
 	context     *zmq.Context
 	socket      *zmq.Socket
+	sendlock    sync.Mutex
 	connect     chan rpc_service.ConnectGateway
 	disconnect  chan rpc_service.DisconnectGateway
 	connections map[string]chan int
@@ -68,7 +71,7 @@ func (n *Node) StartZMQ() {
 }
 
 func (gw *NodeZMQ) startConnection(playerID string, roomID string, stop *chan int) {
-	recv := make(protocol.MessageChannel)
+	recv := make(protocol.MessageChannel, 100)
 
 	room := gw.Node.Rooms[roomID]
 	room.Broadcast.BindUser(playerID, &recv)
@@ -77,10 +80,8 @@ Loop:
 	for {
 		select {
 		case msg := <-recv:
-			if data, err := proto.Marshal(msg); err == nil {
-				log.Printf("[zmq] sending %s to %s", msg, playerID)
-				gw.socket.SendMultipart([][]byte{[]byte(playerID), data}, 0)
-			}
+			//log.Printf("[zmq] sending %s to %s", msg, playerID)
+			go gw.send(msg, playerID)
 
 		case <-*stop:
 			log.Printf("[zmq] stop connection for %s", playerID)
@@ -90,4 +91,15 @@ Loop:
 	}
 
 	room.Broadcast.UnbindUser(playerID)
+}
+
+func (gw *NodeZMQ) send(msg *message.Message, playerID string) {
+	data, err := proto.Marshal(msg)
+	if err != nil {
+		log.Printf("[zmq] marshal error: %s", err)
+	} else {
+		gw.sendlock.Lock()
+		gw.socket.SendMultipart([][]byte{[]byte(playerID), data}, 0)
+		gw.sendlock.Unlock()
+	}
 }
