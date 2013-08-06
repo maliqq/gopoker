@@ -5,12 +5,11 @@ import (
 	"log"
 	"math"
 	"math/rand"
-	"net/rpc"
-	"net/rpc/jsonrpc"
 	"time"
 )
 
 import (
+	rpc_client "gopoker/client/rpc"
 	zeromq_client "gopoker/client/zmq"
 	"gopoker/model"
 	"gopoker/poker"
@@ -39,7 +38,7 @@ type Bot struct {
 
 	*context
 
-	client  *rpc.Client
+	rpcConn *rpc_client.Connection
 	zmqConn *zeromq_client.Connection
 }
 
@@ -50,14 +49,9 @@ func NewBot(id, rpcAddr, sockAddr string) *Bot {
 	}
 	log.SetPrefix(fmt.Sprintf("[bot#%s]", id))
 
-	client, err := jsonrpc.Dial("tcp", rpcAddr)
-	if err != nil {
-		log.Fatal("dialing error: ", err)
-	}
-
 	return &Bot{
 		ID:      id,
-		client:  client,
+		rpcConn: rpc_client.NewConnection(rpcAddr),
 		zmqConn: zeromq_client.NewConnection(sockAddr, id),
 		context: &context{
 			cards: poker.Cards{},
@@ -76,7 +70,7 @@ func (b *Bot) Join(roomID string, pos int, amount float64) {
 	b.notifyRoom(message.NotifyJoinTable(b.ID, pos, amount))
 
 	log.Printf("connecting gateway...")
-	b.callRPC("ConnectGateway", rpc_service.ConnectGateway{
+	b.rpcConn.Call("ConnectGateway", rpc_service.ConnectGateway{
 		RoomID:   roomID,
 		PlayerID: b.ID,
 	})
@@ -160,20 +154,10 @@ func (b *Bot) addBet(newBet *model.Bet) {
 }
 
 func (b *Bot) notifyRoom(msg *message.Message) {
-	b.callRPC("NotifyRoom", rpc_service.NotifyRoom{
+	b.rpcConn.Call("NotifyRoom", rpc_service.NotifyRoom{
 		ID:      b.roomID,
 		Message: msg,
 	})
-}
-
-func (b *Bot) callRPC(method string, args interface{}) {
-	var result rpc_service.CallResult
-
-	err := b.client.Call(fmt.Sprintf("NodeRPC.%s", method), args, &result)
-
-	if err != nil {
-		log.Fatal("rpc call error: ", err)
-	}
 }
 
 func (b *Bot) decide(betRange *message.BetRange) {
