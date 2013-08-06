@@ -30,3 +30,16 @@ default port is 8080
 * gopoker-ctrl - command line interface to RPC service
 * gopoker-bot - configurable bot with simple AI
 * web client - see https://github.com/maliqq/poker-js
+
+### Architecture
+* ai/ - bot AI with decision making logic
+* calc/ - poker related math
+* client/ - client related code
+* model/ - poker domain
+* play/ - gameplay
+* poker/ - poker rules
+* protocol/ - poker events exchange
+* protocol/message - poker protocol
+* server/ - server with topology (node, cluster, balancer) and services
+* storage/ - persistence to PostgreSQL for critical data and MongoDB for temporary data
+* util/ - utility functions
