@@ -9,7 +9,7 @@
 * [**Holdem poker**](http://en.wikipedia.org/wiki/Community_card_poker): Texas, Omaha, Omaha Hi/Lo
 * [**7-card poker**](http://en.wikipedia.org/wiki/Stud_poker): Stud, Stud Hi/Lo, Razz, London lowball
 * [**Draw poker**](http://en.wikipedia.org/wiki/Draw_poker): 5-card draw, 2-7 single and triple draw, [Badugi](http://en.wikipedia.org/wiki/Badugi)
-* **Mixed games**: [H.O.R.S.E.](en.wikipedia.org/wiki/HORSE), 8-game
+* **Mixed games**: [H.O.R.S.E.](http://en.wikipedia.org/wiki/HORSE), 8-game
 
 #### Limits
 * Fixed Limit
@@ -23,7 +23,7 @@ default port is 8080
 * `/_ws` - websockets
 * `/_rpc` - JSON RPC
 
-Sample node config:
+Sample node config ([`node.json`](etc/node.json)):
 
 ```json
 {
@@ -52,14 +52,14 @@ Sample node config:
 * web client - see https://github.com/maliqq/poker-js
 
 ### Architecture
-* `ai/` - bot AI with decision making logic
-* `calc/` - poker related math
-* `client/` - client related code
-* `model/` - poker domain
-* `play/` - gameplay
-* `poker/` - poker rules
-* `protocol/` - poker events exchange
-* `protocol/message` - poker protocol
-* `server/` - server with topology (node, cluster, balancer) and services
-* `storage/` - persistence to PostgreSQL for critical data and MongoDB for temporary data
-* `util/` - utility functions
+* [`ai/`](ai/) - bot AI with decision making logic
+* [`calc/`](calc/) - poker related math
+* [`client/`](client/) - client related code
+* [`model/`](model/) - poker domain
+* [`play/`](play/) - gameplay
+* [`poker/`](poker/) - poker rules
+* [`protocol/`](protocol/) - poker events exchange
+ * [`protocol/message/`](protocol/message/) - poker protocol
+* [`server/`](server/) - server with topology (node, cluster, balancer) and services
+* [`storage/`](storage/) - persistence to PostgreSQL for critical data and MongoDB for temporary data
+* [`util/`](util/) - utility functions
