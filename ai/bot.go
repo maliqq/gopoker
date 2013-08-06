@@ -178,12 +178,10 @@ type decision struct {
 func (b *Bot) decide(betRange *message.BetRange) {
 	var decision decision
 
-	switch b.street {
-	case "preflop":
+	if len(b.board) == 0 {
 		decision = b.decidePreflop(b.cards)
-
-	case "flop", "turn", "river":
-		b.decideBoard(b.cards, b.board)
+	} else {
+		decision = b.decideBoard(b.cards, b.board)
 	}
 
 	b.invoke(decision, betRange)
