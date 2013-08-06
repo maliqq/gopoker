@@ -49,5 +49,5 @@ message AddBet {
 // BettingComplete - betting complete
 message BettingComplete {
   required double Pot = 1;
-  required double Rake = 2;
+  optional double Rake = 2;
 }

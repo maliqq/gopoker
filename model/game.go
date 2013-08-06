@@ -7,6 +7,10 @@ import (
 )
 
 import (
+	"code.google.com/p/goprotobuf/proto"
+)
+
+import (
 	"gopoker/model/game"
 	"gopoker/poker/hand"
 	"gopoker/protocol/message"
@@ -108,6 +112,8 @@ func (game *Game) Proto() *message.Game {
 		Limit: message.GameLimit(
 			message.GameLimit_value[string(game.Limit)],
 		).Enum(),
+
+		TableSize: proto.Int32(int32(game.TableSize)),
 	}
 }
 

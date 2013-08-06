@@ -53,7 +53,7 @@ func (play *Play) run() {
 	}
 
 	// notify about play start
-	play.Broadcast.System <- message.NewPlayStart(play.Proto())
+	play.Broadcast.All <- message.NewPlayStart(play.Proto())
 
 	// rotate game
 	if play.Mix != nil {

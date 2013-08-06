@@ -46,7 +46,7 @@ enum SeatState {
 
 // Seat - seat info
 message Seat {
-  required int32 Pos = 1;
+  //required int32 Pos = 1;
   optional SeatState State = 2;
   optional double Stack = 3;
   optional double Bet = 4;
@@ -54,7 +54,7 @@ message Seat {
 
 // Table - table info
 message Table {
-  required string Id = 1;
+  //required string Id = 1;
   required int32 Size = 2;
   required int32 Button = 3;
   repeated Seat Seats = 4;
@@ -86,7 +86,7 @@ message Play {
   required Game Game = 1;
   required Table Table = 2;
   required Stake Stake = 3;
-  required Deal Deal = 4;
+//  optional Deal Deal = 4;
 }
 
 // PlayStart - notify play start

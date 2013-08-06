@@ -21,15 +21,15 @@ import (
 )
 
 type context struct {
-	players []model.Player
-	game    *model.Game
-	street  string
-	bb      float64
-	stack   float64
-	bet     float64
-	pot     float64
-	cards   poker.Cards
-	board   poker.Cards
+	opponentsNum int
+	game         *model.Game
+	street       string
+	bb           float64
+	stack        float64
+	bet          float64
+	pot          float64
+	cards        poker.Cards
+	board        poker.Cards
 }
 
 // Bot - bot
@@ -84,42 +84,41 @@ func (b *Bot) Join(roomID string, pos int, amount float64) {
 // Play - start bot
 func (b *Bot) Play() {
 	for msg := range b.zmqConn.Recv {
-		log.Printf("received msg: %s", msg)
+		//log.Printf("received msg: %s", msg)
 
 		switch msg.Payload().(type) {
-		case message.PlayStart:
+		case *message.PlayStart:
 			b.cards = poker.Cards{}
 			b.board = poker.Cards{}
 			b.pot = 0.
+			b.opponentsNum = 3
 
-		case message.StreetStart:
+		case *message.StreetStart:
 			b.street = msg.Envelope.StreetStart.GetName()
 
-		case message.BettingComplete:
+		case *message.BettingComplete:
 			b.pot = msg.Envelope.BettingComplete.GetPot()
 
 		case *message.DealCards:
 			deal := msg.Envelope.DealCards
 			switch deal.GetType() {
 			case message.DealType_Board:
-				b.board = append(b.board, poker.BinaryCards(deal.Cards)...)
+				b.board = b.board.Append(poker.BinaryCards(deal.Cards))
+
 			case message.DealType_Hole:
-				b.cards = append(b.cards, poker.BinaryCards(deal.Cards)...)
+				b.cards = b.cards.Append(poker.BinaryCards(deal.Cards))
 			}
 
 		case *message.RequireBet:
 			req := msg.Envelope.RequireBet
 			if int(req.GetPos()) == b.pos {
 				// pause
-				<-time.After(2 * time.Second)
+				<-time.After(1 * time.Second)
 				// our turn
 				b.decide(req.BetRange)
 			}
 
 		case *message.AddBet:
-
-		default:
-			log.Printf("got %s", msg)
 		}
 	}
 }
@@ -225,8 +224,9 @@ func (b *Bot) decidePreflop(cards poker.Cards) decision {
 }
 
 func (b *Bot) decideBoard(cards, board poker.Cards) decision {
-	opponentsNum := len(b.players) - 1
-	chances := calc.ChancesAgainstN{OpponentsNum: opponentsNum}.WithBoard(cards, board)
+	chances := calc.ChancesAgainstN{OpponentsNum: b.opponentsNum}.WithBoard(cards, board)
+
+	log.Printf("chances=%s", chances)
 
 	tightness := 0.7
 	if chances.Wins() > tightness {
@@ -277,7 +277,7 @@ func (b *Bot) invoke(decision decision, betRange *message.BetRange) {
 				// raise no limit/pot limit
 				d := maxRaise - minRaise
 				amount := minRaise + d*rand.Float64()
-				amount = math.Floor(amount/b.bb) * b.bb
+				amount = math.Floor(amount/b.bb) * b.bb // FIXME
 				b.raise(amount)
 			}
 		} else if rand.Float64() < decision.allInChance {

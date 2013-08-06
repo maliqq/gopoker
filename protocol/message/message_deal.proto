@@ -10,7 +10,7 @@ enum DealType {
 
 // DealCards - deal cards
 message DealCards {
-  required int32 Pos = 1;
+  optional int32 Pos = 1;
   required bytes Cards = 2;
   required DealType Type = 3;
 }

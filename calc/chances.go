@@ -1,6 +1,10 @@
 package calc
 
 import (
+	"fmt"
+)
+
+import (
 	"gopoker/model"
 	"gopoker/poker"
 	"gopoker/poker/hand"
@@ -21,6 +25,10 @@ type Chances struct {
 	loses int
 }
 
+func (c Chances) Total() int {
+	return c.total
+}
+
 func (c Chances) Wins() float64 {
 	return float64(c.wins) / float64(c.total)
 }
@@ -31,6 +39,10 @@ func (c Chances) Ties() float64 {
 
 func (c Chances) Loses() float64 {
 	return float64(c.loses) / float64(c.total)
+}
+
+func (c Chances) String() string {
+	return fmt.Sprintf("wins=%.2f ties=%.2f loses=%.2f", c.Wins(), c.Ties(), c.Loses())
 }
 
 // ChancesAgainstOne - chances against one player
@@ -49,6 +61,7 @@ func (c *Chances) Compare(c1, c2 poker.Cards) {
 	h1, _ := poker.Detect[hand.High](&c1)
 	h2, _ := poker.Detect[hand.High](&c2)
 
+	c.total++
 	switch h1.Compare(h2) {
 	case -1:
 		c.loses++
@@ -169,6 +182,9 @@ func (c ChancesAgainstN) WithBoard(hole, board poker.Cards) Chances {
 
 	opponentsNum := c.OpponentsNum
 	samplesNum := c.SamplesNum
+	if samplesNum == 0 {
+		samplesNum = DefaultSamplesCount
+	}
 	holeCardsNum := len(hole)
 	cardsNumToCompleteBoard := FullBoardLen - len(board)
 
