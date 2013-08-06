@@ -1,60 +1,60 @@
 package server
 
 import (
-  "time"
+	"time"
 )
 
 import (
-  "gopoker/storage"
+	"gopoker/storage"
 )
 
 // HTTPConfig - http config
 type HTTPConfig struct {
-  Addr          string
-  APIPath       string
-  RPCPath       string
-  WebSocketPath string
+	Addr          string
+	APIPath       string
+	RPCPath       string
+	WebSocketPath string
 }
 
 // RPCConfig - RPC config
 type RPCConfig struct {
-  Addr    string
-  Timeout time.Duration
+	Addr    string
+	Timeout time.Duration
 }
 
 // Config - node config
 type Config struct {
-  Logdir    string
-  HTTP      *HTTPConfig
-  RPC       *RPCConfig
-  ZMQ       string
-  Store     *storage.StoreConfig
-  PlayStore *storage.PlayStoreConfig
+	Logdir    string
+	HTTP      *HTTPConfig
+	RPC       *RPCConfig
+	ZMQ       string
+	Store     *storage.StoreConfig
+	PlayStore *storage.PlayStoreConfig
 }
 
 // APIPathOr - API path or default
 func (httpConfig *HTTPConfig) APIPathOr(defaultPath string) string {
-  apiPath := httpConfig.APIPath
-  if apiPath == "" {
-    return defaultPath
-  }
-  return apiPath
+	apiPath := httpConfig.APIPath
+	if apiPath == "" {
+		return defaultPath
+	}
+	return apiPath
 }
 
 // WebSocketPathOr - websocket path or default
 func (httpConfig *HTTPConfig) WebSocketPathOr(defaultPath string) string {
-  webSocketPath := httpConfig.WebSocketPath
-  if webSocketPath == "" {
-    return defaultPath
-  }
-  return webSocketPath
+	webSocketPath := httpConfig.WebSocketPath
+	if webSocketPath == "" {
+		return defaultPath
+	}
+	return webSocketPath
 }
 
 // RPCPathOr - RPC path or default
 func (httpConfig *HTTPConfig) RPCPathOr(defaultPath string) string {
-  rpcPath := httpConfig.RPCPath
-  if rpcPath == "" {
-    return defaultPath
-  }
-  return rpcPath
+	rpcPath := httpConfig.RPCPath
+	if rpcPath == "" {
+		return defaultPath
+	}
+	return rpcPath
 }
