@@ -245,7 +245,7 @@ func (b *Bot) decideBoard(cards, board poker.Cards) decision {
 
 	log.Printf("chances=%s", chances)
 
-	tightness := 0.5
+	tightness := 0.7
 	if chances.Wins() > tightness {
 		return decision{
 			maxBet:      b.stack + b.bet,
