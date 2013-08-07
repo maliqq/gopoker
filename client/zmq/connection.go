@@ -65,3 +65,8 @@ func (conn *Connection) receive() {
 		}
 	}
 }
+
+func (conn *Connection) Close() {
+	conn.context.Close()
+	conn.socket.Close()
+}
