@@ -41,9 +41,11 @@ Sample node config ([`node.json`](etc/node.json)):
 }
 ```
 
-#### IPC
-* pubsub via 0mq sockets using binary protocol (Google protobuf), default port is 5555
-* JSON RPC via TCP socket, default port is 8081
+#### Protocols
+* pubsub service via 0mq socket+Google protobuf, default port is 5555
+* JSON RPC service, default port is 8081
+* TODO: STOMP
+* TODO: BOSH
 
 #### Tools
 * `bin/gopoker-cli` - REPL-style gameplay
