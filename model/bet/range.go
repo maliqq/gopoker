@@ -55,8 +55,8 @@ func (r *Range) Proto() *message.BetRange {
 func (r *Range) UnmarshalProto(protoRange *message.BetRange) {
 	newRange := Range{
 		Call: protoRange.GetCall(),
-		Min: protoRange.GetMin(),
-		Max: protoRange.GetMax(),
+		Min:  protoRange.GetMin(),
+		Max:  protoRange.GetMax(),
 	}
 	*r = newRange
 }
