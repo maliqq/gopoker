@@ -26,9 +26,13 @@ func (r *Range) ResetRaise() {
 	r.Min, r.Max = 0., 0.
 }
 
-// SetRaise - set raise range according to available stack
-func (r *Range) SetRaise(available float64, min float64, max float64) {
-	minRaise, maxRaise := r.Call+min, r.Call+max
+func (r *Range) SetRaise(min, max float64) {
+	r.Min, r.Max = r.Call+min, r.Call+max
+}
+
+// AdjustByAvailable - set raise range according to available stack
+func (r *Range) AdjustByAvailable(available float64) {
+	minRaise, maxRaise := r.Min, r.Max
 
 	if available < maxRaise {
 		if available < r.Call {

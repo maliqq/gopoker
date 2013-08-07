@@ -150,7 +150,8 @@ func (betting *Betting) RequireBet(pos int, seat *model.Seat, limit game.Limit, 
 		betting.BetRange.ResetRaise()
 	} else {
 		min, max := betting.RaiseRange(limit, stake)
-		betting.BetRange.SetRaise(seat.Stack, min, max)
+		betting.BetRange.SetRaise(min, max)
+		betting.BetRange.AdjustByAvailable(seat.Stack)
 	}
 
 	return message.NotifyRequireBet(betting.Pos, betting.BetRange.Proto())
