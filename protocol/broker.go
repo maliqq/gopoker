@@ -18,73 +18,69 @@ import (
 // MessageChannel - channel of messages
 type MessageChannel chan *message.Message
 
+type Group string
+
+const (
+	Observer Group = "observer"
+	Watcher  Group = "watcher"
+	Player   Group = "player"
+)
+
 // Broker - pubsub broker
 type Broker struct {
-	User   map[string]*MessageChannel
-	System map[string]*MessageChannel
+	exchange map[Group]map[string]*MessageChannel
 }
 
 // Notify - route
 type Notify struct {
 	All    bool
 	None   bool
+	Group  Group
 	One    string
 	Only   []string
 	Except []string
 }
 
-// System - system receiver
-type System string
-
-// RouteKey - route key for system
-func (s System) RouteKey() string {
-	return string(s)
-}
-
 // NewBroker - create new broker
 func NewBroker() *Broker {
 	return &Broker{
-		User:   map[string]*MessageChannel{},
-		System: map[string]*MessageChannel{},
+		exchange: map[Group]map[string]*MessageChannel{
+			Observer: map[string]*MessageChannel{},
+			Watcher:  map[string]*MessageChannel{},
+			Player:   map[string]*MessageChannel{},
+		},
 	}
 }
 
-// BindUser - bind user receiver
-func (broker *Broker) BindUser(key string, channel *MessageChannel) {
-	broker.User[key] = channel
+// Bind - bind receiver
+func (broker *Broker) Bind(group Group, key string, receiver *MessageChannel) {
+	broker.exchange[group][key] = receiver
 }
 
-// UnbindUser - unbind user receiver
-func (broker *Broker) UnbindUser(key string) {
-	delete(broker.User, key)
-}
-
-// BindSystem - bind privileged user
-func (broker *Broker) BindSystem(key string, channel *MessageChannel) {
-	broker.System[key] = channel
-}
-
-// UnbindSystem - unbind privileged user
-func (broker *Broker) UnbindSystem(key string) {
-	delete(broker.System, key)
+// Unbind - unbind receiver
+func (broker *Broker) Unbind(group Group, key string) {
+	delete(broker.exchange[group], key)
 }
 
 // RouteType - route type to string
 func (n *Notify) RouteType() string {
-	if n.All {
-		return "all"
-	}
 	if n.None {
 		return "none"
 	}
 	if n.One != "" {
 		return "one"
 	}
+	if n.Group != "" {
+		return string(n.Group)
+	}
 	if len(n.Except) != 0 {
 		return "except"
 	}
 	if len(n.Only) != 0 {
 		return "only"
+	}
+	if n.All {
+		return "all"
 	}
 
 	return ""
@@ -109,21 +105,14 @@ func (n *Notify) String() string {
 	return s
 }
 
-func (broker *Broker) sendUser(key string, msg *message.Message) {
-	// sign message with timestamp
-	if msg.GetTimestamp() == 0 {
-		msg.Timestamp = proto.Int64(time.Now().Unix())
-	}
-
-	user, found := broker.User[key]
-	if found {
-		*user <- msg
-	}
-}
-
-func (broker *Broker) sendSystem(msg *message.Message) {
-	for _, system := range broker.System {
-		*system <- msg
+func (broker *Broker) send(group Group, key string, msg *message.Message) {
+	if receiver, ok := broker.exchange[group][key]; ok {
+		// sign message with timestamp
+		if msg.GetTimestamp() == 0 {
+			msg.Timestamp = proto.Int64(time.Now().Unix())
+		}
+		//
+		*receiver <- msg
 	}
 }
 
@@ -131,19 +120,34 @@ func (broker *Broker) sendSystem(msg *message.Message) {
 func (broker *Broker) Dispatch(n *Notify, msg *message.Message) {
 	log.Println(console.Color(console.Cyan, fmt.Sprintf("%s %s", n, msg)))
 
-	defer broker.sendSystem(msg)
-
+	// notify observers
+	defer broker.dispatchGroup(Observer, n, msg)
 	if n.None {
 		return
 	}
 
-	if n.One != "" {
-		broker.sendUser(n.One, msg)
+	// notify one from group
+	if n.One != "" && n.Group != "" {
+		broker.send(n.Group, n.One, msg)
+		return
+	}
+
+	// notify all group
+	if n.Group != "" {
+		broker.dispatchGroup(n.Group, n, msg)
 
 		return
 	}
 
-	for key := range broker.User {
+	// notify all
+	if n.All {
+		broker.dispatchGroup(Player, n, msg)
+		broker.dispatchGroup(Watcher, n, msg)
+	}
+}
+
+func (broker *Broker) dispatchGroup(group Group, n *Notify, msg *message.Message) {
+	for key := range broker.exchange[group] {
 		if !n.All {
 			var skip bool
 
@@ -172,6 +176,6 @@ func (broker *Broker) Dispatch(n *Notify, msg *message.Message) {
 			}
 		}
 
-		broker.sendUser(key, msg)
+		broker.send(group, key, msg)
 	}
 }

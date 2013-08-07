@@ -74,7 +74,7 @@ func (gw *NodeZMQ) startConnection(playerID string, roomID string, stop *chan in
 	recv := make(protocol.MessageChannel, 100)
 
 	room := gw.Node.Rooms[roomID]
-	room.Broadcast.BindUser(playerID, &recv)
+	room.Broadcast.Broker.Bind(protocol.Player, playerID, &recv)
 
 Loop:
 	for {
@@ -90,7 +90,7 @@ Loop:
 		}
 	}
 
-	room.Broadcast.UnbindUser(playerID)
+	room.Broadcast.Broker.Unbind(protocol.Player, playerID)
 }
 
 func (gw *NodeZMQ) send(msg *message.Message, playerID string) {

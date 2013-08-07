@@ -4,8 +4,8 @@ import (
 	"gopoker/protocol/message"
 )
 
-// Notification - message with route
-type Notification struct {
+// Route - message with route
+type Route struct {
 	*message.Message
 	*Notify
 }
@@ -13,9 +13,8 @@ type Notification struct {
 // Broadcast - broadcast hub
 type Broadcast struct {
 	*Broker
-	All    MessageChannel
-	System MessageChannel
-	Route  chan *Notification
+	All   MessageChannel
+	Route chan *Route
 }
 
 // Actor - message receiver
@@ -28,8 +27,7 @@ func NewBroadcast() *Broadcast {
 	broadcast := &Broadcast{
 		Broker: NewBroker(),
 		All:    make(MessageChannel),
-		System: make(MessageChannel),
-		Route:  make(chan *Notification),
+		Route:  make(chan *Route),
 	}
 
 	go broadcast.receive()
@@ -43,11 +41,8 @@ func (bcast *Broadcast) receive() {
 		case msg := <-bcast.All:
 			bcast.Broker.Dispatch(&Notify{All: true}, msg)
 
-		case msg := <-bcast.System:
-			bcast.Broker.Dispatch(&Notify{None: true}, msg)
-
-		case notification := <-bcast.Route:
-			bcast.Broker.Dispatch(notification.Notify, notification.Message)
+		case route := <-bcast.Route:
+			bcast.Broker.Dispatch(route.Notify, route.Message)
 		}
 	}
 }
@@ -57,7 +52,7 @@ func (bcast *Broadcast) route(notify *Notify) MessageChannel {
 
 	go func() {
 		msg := <-channel
-		bcast.Route <- &Notification{msg, notify}
+		bcast.Route <- &Route{msg, notify}
 	}()
 
 	return channel
@@ -95,11 +90,11 @@ func (bcast *Broadcast) Only(actors ...Actor) MessageChannel {
 }
 
 // Bind - bind receiver to hub
-func (bcast *Broadcast) Bind(actor Actor, ch *MessageChannel) {
-	bcast.Broker.BindUser(actor.RouteKey(), ch)
+func (bcast *Broadcast) Bind(group Group, actor Actor, ch *MessageChannel) {
+	bcast.Broker.Bind(group, actor.RouteKey(), ch)
 }
 
 // Unbind - unbind receiver from hub
-func (bcast *Broadcast) Unbind(actor Actor) {
-	bcast.Broker.UnbindUser(actor.RouteKey())
+func (bcast *Broadcast) Unbind(group Group, actor Actor) {
+	bcast.Broker.Unbind(group, actor.RouteKey())
 }

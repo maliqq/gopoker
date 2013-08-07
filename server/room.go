@@ -9,6 +9,7 @@ import (
 import (
 	"gopoker/model"
 	"gopoker/play"
+	"gopoker/protocol"
 	rpc_service "gopoker/server/noderpc"
 	"gopoker/storage"
 )
@@ -50,10 +51,10 @@ func (r *Room) createLogger(dir string) {
 		log.Fatal("cant open logger file", err)
 	}
 	logger := play.NewLogger(f)
-	r.Broadcast.Broker.BindSystem("logger", &logger.Recv)
+	r.Broadcast.Broker.Bind(protocol.Observer, "logger", &logger.Recv)
 }
 
 func (r *Room) createStorage(ps *storage.PlayStore) {
 	storage := play.NewStorage(ps)
-	r.Broadcast.Broker.BindSystem("storage", &storage.Recv)
+	r.Broadcast.Broker.Bind(protocol.Observer, "storage", &storage.Recv)
 }
