@@ -9,9 +9,9 @@ import (
 )
 
 import (
+	"gopoker/exch/message"
 	"gopoker/model/bet"
 	seatState "gopoker/model/seat"
-	"gopoker/protocol/message"
 )
 
 // Seat - table seat

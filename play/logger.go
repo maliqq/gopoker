@@ -6,25 +6,25 @@ import (
 )
 
 import (
+	"gopoker/exch"
+	"gopoker/exch/message"
 	"gopoker/model"
 	"gopoker/model/bet"
 	"gopoker/poker"
 	"gopoker/poker/hand"
-	"gopoker/protocol"
-	"gopoker/protocol/message"
 )
 
 // Logger - play file logger
 type Logger struct {
 	*log.Logger
-	Recv protocol.MessageChannel
+	Recv exch.MessageChannel
 }
 
 // NewLogger - create new logger
 func NewLogger(writer io.Writer) *Logger {
 	logger := &Logger{
 		Logger: log.New(writer, "", log.LstdFlags),
-		Recv:   make(protocol.MessageChannel),
+		Recv:   make(exch.MessageChannel),
 	}
 
 	go logger.receive()

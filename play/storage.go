@@ -6,8 +6,8 @@ import (
 )
 
 import (
-	"gopoker/protocol"
-	"gopoker/protocol/message"
+	"gopoker/exch"
+	"gopoker/exch/message"
 	"gopoker/storage"
 )
 
@@ -15,14 +15,14 @@ import (
 type Storage struct {
 	*storage.PlayStore
 	Current *storage.Play
-	Recv    protocol.MessageChannel
+	Recv    exch.MessageChannel
 }
 
 // NewStorage - create new storage
 func NewStorage(ps *storage.PlayStore) *Storage {
 	storage := &Storage{
 		PlayStore: ps,
-		Recv:      make(protocol.MessageChannel),
+		Recv:      make(exch.MessageChannel),
 	}
 
 	go storage.receive()
@@ -51,7 +51,7 @@ func (stor *Storage) handle(msg *message.Message) {
 		stor.PlayStore.Collection("plays").Insert(stor.Current)
 
 	case *message.AddBet:
-		this.Current.Log = append(this.Current.Log, msg)
+		stor.Current.Log = append(stor.Current.Log, msg)
 
 	case *message.ShowHand:
 		show := msg.Envelope.ShowHand

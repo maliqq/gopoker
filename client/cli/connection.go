@@ -10,9 +10,9 @@ import (
 )
 
 import (
+	"gopoker/exch/message"
 	"gopoker/poker"
 	"gopoker/poker/hand"
-	"gopoker/protocol/message"
 	"gopoker/util/console"
 
 	"gopoker/model"

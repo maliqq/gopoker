@@ -6,8 +6,8 @@ import (
 )
 
 import (
-	"gopoker/protocol"
-	"gopoker/protocol/message"
+	"gopoker/exch"
+	"gopoker/exch/message"
 )
 
 // Connection - client connection
@@ -21,15 +21,15 @@ type Connection interface {
 type Session struct {
 	ID         string
 	Connection Connection
-	Recv       protocol.MessageChannel
-	Send       *protocol.MessageChannel
+	Recv       exch.MessageChannel
+	Send       *exch.MessageChannel
 }
 
 // NewSession - create new session
 func NewSession(id string, connection Connection) *Session {
 	return &Session{
 		ID:         id,
-		Recv:       make(protocol.MessageChannel),
+		Recv:       make(exch.MessageChannel),
 		Connection: connection,
 	}
 }

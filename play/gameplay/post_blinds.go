@@ -5,8 +5,8 @@ import (
 )
 
 import (
+	"gopoker/exch/message"
 	"gopoker/model/bet"
-	"gopoker/protocol/message"
 )
 
 // MoveButton - move table button

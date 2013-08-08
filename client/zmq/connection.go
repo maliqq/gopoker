@@ -10,15 +10,15 @@ import (
 )
 
 import (
-	"gopoker/protocol"
-	"gopoker/protocol/message"
+	"gopoker/exch"
+	"gopoker/exch/message"
 )
 
 // Connection - 0mq connection
 type Connection struct {
 	context *zmq.Context
 	socket  *zmq.Socket
-	Recv    protocol.MessageChannel
+	Recv    exch.MessageChannel
 }
 
 // NewConnection - create new connection
@@ -37,7 +37,7 @@ func NewConnection(addr string, topic string) *Connection {
 	conn := &Connection{
 		context: context,
 		socket:  socket,
-		Recv:    make(protocol.MessageChannel),
+		Recv:    make(exch.MessageChannel),
 	}
 
 	go conn.receive()

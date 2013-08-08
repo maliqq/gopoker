@@ -9,8 +9,8 @@ import (
 )
 
 import (
+	"gopoker/exch/message"
 	"gopoker/poker/card"
-	"gopoker/protocol/message"
 	"gopoker/util"
 )
 

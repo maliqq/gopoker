@@ -9,8 +9,8 @@ import (
 )
 
 import (
+	"gopoker/exch/message"
 	"gopoker/model/position"
-	"gopoker/protocol/message"
 )
 
 // Table - players seating

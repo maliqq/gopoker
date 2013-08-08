@@ -1,8 +1,8 @@
 package gameplay
 
 import (
+	"gopoker/exch/message"
 	"gopoker/poker"
-	"gopoker/protocol/message"
 )
 
 // BringIn - post bring in

@@ -14,9 +14,9 @@ import (
 )
 
 import (
+	"gopoker/exch/message"
 	"gopoker/model"
 	"gopoker/model/game"
-	"gopoker/protocol/message"
 	rpc_service "gopoker/server/noderpc"
 	_ "gopoker/util"
 )

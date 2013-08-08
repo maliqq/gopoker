@@ -11,8 +11,8 @@ import (
 )
 
 import (
-	"gopoker/protocol"
-	"gopoker/protocol/message"
+	"gopoker/exch"
+	"gopoker/exch/message"
 	rpc_service "gopoker/server/noderpc"
 )
 
@@ -71,10 +71,10 @@ func (n *Node) StartZMQ() {
 }
 
 func (gw *NodeZMQ) startConnection(playerID string, roomID string, stop *chan int) {
-	recv := make(protocol.MessageChannel, 100)
+	recv := make(exch.MessageChannel, 100)
 
 	room := gw.Node.Rooms[roomID]
-	room.Broadcast.Broker.Bind(protocol.Player, playerID, &recv)
+	room.Broadcast.Broker.Bind(exch.Player, playerID, &recv)
 
 Loop:
 	for {
@@ -90,7 +90,7 @@ Loop:
 		}
 	}
 
-	room.Broadcast.Broker.Unbind(protocol.Player, playerID)
+	room.Broadcast.Broker.Unbind(exch.Player, playerID)
 }
 
 func (gw *NodeZMQ) send(msg *message.Message, playerID string) {

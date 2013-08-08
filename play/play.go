@@ -7,14 +7,14 @@ import (
 )
 
 import (
+	"gopoker/exch"
+	"gopoker/exch/message"
 	"gopoker/model"
 	"gopoker/model/bet"
 	"gopoker/model/seat"
 	"gopoker/play/context"
 	"gopoker/play/gameplay"
 	"gopoker/play/mode"
-	"gopoker/protocol"
-	"gopoker/protocol/message"
 	"gopoker/util/console"
 )
 
@@ -26,7 +26,7 @@ type Play struct {
 	// finite state machine
 	FSM
 	// receive protocol messages
-	Recv protocol.MessageChannel `json:"-"`
+	Recv exch.MessageChannel `json:"-"`
 }
 
 // NewPlay - create new play

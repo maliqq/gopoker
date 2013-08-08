@@ -10,8 +10,8 @@ import (
 )
 
 import (
+	"gopoker/exch/message"
 	"gopoker/model/bet"
-	"gopoker/protocol/message"
 )
 
 // Stake - bet sizing

@@ -9,8 +9,8 @@ import (
 )
 
 import (
+	"gopoker/exch/message"
 	"gopoker/model/bet"
-	"gopoker/protocol/message"
 )
 
 // Bet - type and amount

@@ -6,8 +6,8 @@ import (
 )
 
 import (
+	"gopoker/exch/message"
 	"gopoker/poker/hand"
-	"gopoker/protocol/message"
 )
 
 type handCards struct {

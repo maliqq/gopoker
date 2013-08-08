@@ -12,7 +12,7 @@ import (
 )
 
 import (
-	"gopoker/protocol/message"
+	"gopoker/exch/message"
 )
 
 // PlayStoreConfig - MongoDB store config

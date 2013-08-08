@@ -1,9 +1,9 @@
 package noderpc
 
 import (
+	"gopoker/exch/message"
 	"gopoker/model"
 	"gopoker/play/mode"
-	"gopoker/protocol/message"
 )
 
 // CallResult - RPC call result
@@ -46,4 +46,17 @@ type ConnectGateway struct {
 // DisconnectGateway - disconnect node ZMQ gateway
 type DisconnectGateway struct {
 	PlayerID string
+}
+
+type Login struct {
+	Username string
+	Password string
+}
+
+type LoginResult struct {
+	SessionID string
+}
+
+type Logout struct {
+	SessionID string
 }

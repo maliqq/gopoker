@@ -9,12 +9,12 @@ import (
 )
 
 import (
+	"gopoker/exch/message"
 	"gopoker/model"
 	"gopoker/model/seat"
 	"gopoker/play/context"
 	"gopoker/play/gameplay"
 	"gopoker/play/street"
-	"gopoker/protocol/message"
 )
 
 // Run - main run loop

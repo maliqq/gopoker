@@ -9,8 +9,8 @@ import (
 )
 
 import (
+	"gopoker/exch/message"
 	"gopoker/model"
-	"gopoker/protocol/message"
 )
 
 // Discarding - discarding context

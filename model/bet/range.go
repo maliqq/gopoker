@@ -5,7 +5,7 @@ import (
 )
 
 import (
-	"gopoker/protocol/message"
+	"gopoker/exch/message"
 )
 
 // Range - bet range, how much to call and how much to raise

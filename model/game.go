@@ -11,9 +11,9 @@ import (
 )
 
 import (
+	"gopoker/exch/message"
 	"gopoker/model/game"
 	"gopoker/poker/hand"
-	"gopoker/protocol/message"
 )
 
 // GameOptions - game options

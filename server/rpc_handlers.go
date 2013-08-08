@@ -86,6 +86,14 @@ func (n *NodeRPC) CloseRoom(requestRoom *rpc_service.RequestRoom, r *rpc_service
 	return nil
 }
 
+func (n *NodeRPC) Login(login *rpc_service.Login, r *rpc_service.CallResult) error {
+	return nil
+}
+
+func (n *NodeRPC) Logout(logout *rpc_service.Logout, r *rpc_service.CallResult) error {
+	return nil
+}
+
 // ConnectGateway - connect gateway
 func (n *NodeRPC) ConnectGateway(connectReq *rpc_service.ConnectGateway, r *rpc_service.CallResult) error {
 	n.Node.ZMQGateway.connect <- *connectReq

@@ -1,8 +1,8 @@
 package gameplay
 
 import (
+	"gopoker/exch/message"
 	seatState "gopoker/model/seat"
-	"gopoker/protocol/message"
 )
 
 const (

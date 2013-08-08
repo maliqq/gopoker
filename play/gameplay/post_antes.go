@@ -1,8 +1,8 @@
 package gameplay
 
 import (
+	"gopoker/exch/message"
 	"gopoker/model/bet"
-	"gopoker/protocol/message"
 )
 
 // PostAntes - post antes

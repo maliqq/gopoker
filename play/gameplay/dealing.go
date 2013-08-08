@@ -1,8 +1,8 @@
 package gameplay
 
 import (
+	"gopoker/exch/message"
 	"gopoker/model/deal"
-	"gopoker/protocol/message"
 )
 
 // DealHole - deal hole cards

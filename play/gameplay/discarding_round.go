@@ -1,10 +1,10 @@
 package gameplay
 
 import (
+	"gopoker/exch/message"
 	"gopoker/model"
 	"gopoker/model/deal"
 	"gopoker/poker"
-	"gopoker/protocol/message"
 )
 
 // StartDiscardingRound - start discarding round

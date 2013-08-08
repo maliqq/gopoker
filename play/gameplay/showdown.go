@@ -1,10 +1,10 @@
 package gameplay
 
 import (
+	"gopoker/exch/message"
 	"gopoker/model"
 	"gopoker/poker"
 	"gopoker/poker/hand"
-	"gopoker/protocol/message"
 )
 
 // ShowdownHands - map player and hand

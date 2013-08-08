@@ -6,10 +6,10 @@ import (
 )
 
 import (
+	"gopoker/exch/message"
 	"gopoker/model"
 	"gopoker/model/bet"
 	"gopoker/model/game"
-	"gopoker/protocol/message"
 )
 
 const (

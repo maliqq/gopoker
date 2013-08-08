@@ -37,6 +37,13 @@ func NewNode(name string, config *Config) *Node {
 	return node
 }
 
+// Start - start room
+func (n *Node) Start() {
+	go n.StartRPC()
+	go n.StartZMQ()
+	n.StartHTTP()
+}
+
 func (n *Node) connectStore() {
 	var err error
 	n.Store, err = storage.OpenStore(n.Config.Store)
@@ -81,11 +88,4 @@ func (n *Node) AddRoom(room *Room) bool {
 func (n *Node) RemoveRoom(room *Room) bool {
 	delete(n.Rooms, room.ID)
 	return true
-}
-
-// Start - start room
-func (n *Node) Start() {
-	go n.StartRPC()
-	go n.StartZMQ()
-	n.StartHTTP()
 }

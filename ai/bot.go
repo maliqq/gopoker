@@ -11,9 +11,9 @@ import (
 import (
 	rpc_client "gopoker/client/rpc"
 	zeromq_client "gopoker/client/zmq"
+	"gopoker/exch/message"
 	"gopoker/model"
 	"gopoker/poker"
-	"gopoker/protocol/message"
 	rpc_service "gopoker/server/noderpc"
 	"gopoker/util"
 )

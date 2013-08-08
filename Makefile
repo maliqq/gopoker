@@ -10,7 +10,7 @@ get-deps:
 	go get labix.org/v2/mgo
 
 build-all:
-	protoc --go_out=. protocol/message/*.proto
+	protoc --go_out=. exch/message/*.proto
 	go build gopoker/bin/gopoker-bot
 	go build gopoker/bin/gopoker-cli
 	go build gopoker/bin/gopoker-ctrl
@@ -22,7 +22,7 @@ test-all:
 	go test gopoker/model
 	go test gopoker/play
 	go test gopoker/play/context
-	go test gopoker/protocol/message
+	go test gopoker/exch/message
 
 install-all:
 	go install gopoker/bin/gopoker-bot
