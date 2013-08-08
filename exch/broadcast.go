@@ -1,7 +1,7 @@
-package protocol
+package exch
 
 import (
-	"gopoker/protocol/message"
+	"gopoker/exch/message"
 )
 
 // Route - message with route

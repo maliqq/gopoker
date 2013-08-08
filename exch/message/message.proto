@@ -1,9 +1,9 @@
 package message;
-import "protocol/message/message_betting.proto";
-import "protocol/message/message_deal.proto";
-import "protocol/message/message_play.proto";
-import "protocol/message/message_showdown.proto";
-import "protocol/message/message_table.proto";
+import "exch/message/message_betting.proto";
+import "exch/message/message_deal.proto";
+import "exch/message/message_play.proto";
+import "exch/message/message_showdown.proto";
+import "exch/message/message_table.proto";
 
 // ErrorMessage - notify error
 message ErrorMessage {

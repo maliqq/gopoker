@@ -1,4 +1,4 @@
-package protocol
+package exch
 
 import (
 	"fmt"
@@ -11,7 +11,7 @@ import (
 )
 
 import (
-	"gopoker/protocol/message"
+	"gopoker/exch/message"
 	"gopoker/util/console"
 )
 
