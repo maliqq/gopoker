@@ -31,5 +31,5 @@ install-all:
 	go install gopoker/bin/gopoker-server
 
 clean-all:
-	rm protocol/message/*.pb.go
+	rm exch/message/*.pb.go
 	rm gopoker-*
