@@ -1,4 +1,5 @@
 ## Features
+
 * [x] low hands
 * [ ] action timeouts
 * [ ] wait players
@@ -9,7 +10,13 @@
 * [ ] protocol agnostic
 
 ## Refactoring
+
 * [ ] embed structs
 * [ ] game rotation
 * [ ] limited/fixed game interface
 * [ ] deal pot
+
+## Bugs
+
+* [ ] broken pipes
+* [ ] storage BSON dump
