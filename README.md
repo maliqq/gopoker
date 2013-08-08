@@ -57,11 +57,12 @@ Sample node config ([`node.json`](etc/node.json)):
 * [`ai/`](ai/) - bot AI with decision making logic
 * [`calc/`](calc/) - poker related math
 * [`client/`](client/) - client related code
-* [`model/`](model/) - poker domain
+* [`exch/`](exch/) - events exchange
+ * [`exch/message/`](exch/message/) - message format
+ * [`exch/protocol`](exch/protocol/) - protocols
+* [`model/`](model/) - poker domain model
 * [`play/`](play/) - gameplay
 * [`poker/`](poker/) - poker rules
-* [`protocol/`](protocol/) - poker events exchange
- * [`protocol/message/`](protocol/message/) - poker protocol
 * [`server/`](server/) - server with topology (node, cluster, balancer) and services
 * [`storage/`](storage/) - persistence to PostgreSQL for critical data and MongoDB for temporary data
 * [`util/`](util/) - utility functions
