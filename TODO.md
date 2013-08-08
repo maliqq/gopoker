@@ -1,14 +1,15 @@
-features
-* low hands
-* action timeouts
-* wait players
-* start next deal
-* websocket client
-* storage
-* watchers
+## Features
+* [x] low hands
+* [ ] action timeouts
+* [ ] wait players
+* [x] start next deal
+* [x] websocket client
+* [ ] storage
+* [ ] watchers
+* [ ] protocol agnostic
 
-refactoring:
-* embed structs
-* game rotation
-* limited/fixed game interface
-* deal pot
+## Refactoring
+* [ ] embed structs
+* [ ] game rotation
+* [ ] limited/fixed game interface
+* [ ] deal pot
