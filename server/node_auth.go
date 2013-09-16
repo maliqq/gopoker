@@ -5,7 +5,7 @@ import (
 	"gopoker/storage"
 )
 
-func (node *Node) Authorize(key string) (model.Player, bool) {
+func (node *Node) Auth(key string) (model.Player, bool) {
 	result := node.SessionStore.Get(key)
 
 	var player model.Player
