@@ -1,6 +1,19 @@
 package play
 
-func (play *Play) handleMessage(msg *message.Message) {
+import (
+	"log"
+	"time"
+)
+
+import (
+	"gopoker/exch/message"
+	"gopoker/model"
+	"gopoker/model/bet"
+	"gopoker/model/seat"
+	"gopoker/util/console"
+)
+
+func (play *Play) HandleMessage(msg *message.Message) {
 	log.Printf(console.Color(console.Yellow, msg.String()))
 
 	payload := msg.Payload() // FIXME
@@ -75,7 +88,7 @@ func (play *Play) handleMessage(msg *message.Message) {
 	}
 }
 
-func (play *Play) handleStateChange(newState State) {
+func (play *Play) HandleStateChange(newState State) {
 	log.Printf("[play] state %s", newState)
 
 	oldState := play.State

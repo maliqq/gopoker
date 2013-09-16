@@ -6,7 +6,7 @@ import (
 )
 
 // Strategy - list of stages
-type Stages []Stage
+type Strategy []Stage
 
 // ByStreet - strategies by street
 var ByStreet = map[street.Type]Strategy{

@@ -2,20 +2,15 @@ package play
 
 import (
 	"fmt"
-	"log"
-	"time"
 )
 
 import (
 	"gopoker/exch"
 	"gopoker/exch/message"
 	"gopoker/model"
-	"gopoker/model/bet"
-	"gopoker/model/seat"
 	"gopoker/play/context"
 	"gopoker/play/gameplay"
 	"gopoker/play/mode"
-	"gopoker/util/console"
 )
 
 // Play - play
@@ -70,10 +65,10 @@ func (play *Play) receive() {
 	for {
 		select {
 		case msg := <-play.Recv:
-			play.handleMessage(msg)
+			play.HandleMessage(msg)
 
 		case newState := <-play.stateChange:
-			play.handleStateChange(newState)
+			play.HandleStateChange(newState)
 		}
 	}
 }

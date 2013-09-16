@@ -1,6 +1,14 @@
 package play
 
-func (l *Logger) handle(msg *message.Message) {
+import (
+	"gopoker/exch/message"
+	"gopoker/model"
+	"gopoker/model/bet"
+	"gopoker/poker"
+	"gopoker/poker/hand"
+)
+
+func (l *Logger) HandleMessage(msg *message.Message) {
 	switch msg.Payload().(type) {
 	case *message.RequireBet:
 	case *message.RequireDiscard:

@@ -1,6 +1,16 @@
 package play
 
-func (stor *Storage) handle(msg *message.Message) {
+import (
+	"log"
+	"time"
+)
+
+import (
+	"gopoker/exch/message"
+	"gopoker/storage"
+)
+
+func (stor *Storage) HandleMessage(msg *message.Message) {
 	switch msg.Payload().(type) {
 	case *message.PlayStart:
 		stor.Current = storage.NewPlay()

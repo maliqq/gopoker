@@ -50,11 +50,11 @@ func (r *Room) createLogger(dir string) {
 	if err != nil {
 		log.Fatal("cant open logger file", err)
 	}
-	logger := play.NewLogger(f)
-	r.Broadcast.Broker.Bind(exch.Observer, "logger", &logger.Recv)
+	loggerObserver := exch.NewMessageObserver(play.NewLogger(f))
+	r.Broadcast.Broker.Bind(exch.Observer, "logger", &loggerObserver.Recv)
 }
 
 func (r *Room) createStorage(ps *storage.PlayStore) {
-	storage := play.NewStorage(ps)
-	r.Broadcast.Broker.Bind(exch.Observer, "storage", &storage.Recv)
+	storageObserver := exch.NewMessageObserver(play.NewStorage(ps))
+	r.Broadcast.Broker.Bind(exch.Observer, "storage", &storageObserver.Recv)
 }
