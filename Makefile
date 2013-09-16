@@ -9,6 +9,7 @@ get-deps:
 	go get -tags zmq_2_x github.com/alecthomas/gozmq
 	go get labix.org/v2/mgo
 	go get github.com/hoisie/redis
+	go get code.google.com/p/go.crypto/bcrypt
 
 build-all:
 	protoc --go_out=. exch/message/*.proto
