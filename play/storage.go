@@ -6,13 +6,13 @@ import (
 
 // Storage - storage for play data
 type Storage struct {
-	*storage.PlayStore
-	Current *storage.Play
+	History *storage.PlayHistory
+	Current *storage.PlayHistoryEntry
 }
 
 // NewStorage - create new storage
-func NewStorage(ps *storage.PlayStore) *Storage {
+func NewStorage(history *storage.PlayHistory) *Storage {
 	return &Storage{
-		PlayStore: ps,
+		History: history,
 	}
 }

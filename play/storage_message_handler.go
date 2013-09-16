@@ -13,7 +13,7 @@ import (
 func (stor *Storage) HandleMessage(msg *message.Message) {
 	switch msg.Payload().(type) {
 	case *message.PlayStart:
-		stor.Current = storage.NewPlay()
+		stor.Current = storage.NewPlayHistoryEntry()
 		stor.Current.Play = msg.Envelope.PlayStart.Play
 
 	case *message.PlayStop:
@@ -21,7 +21,7 @@ func (stor *Storage) HandleMessage(msg *message.Message) {
 
 		log.Printf("[storage] saving %+v", stor.Current)
 
-		stor.PlayStore.Collection("plays").Insert(stor.Current)
+		stor.History.Store(stor.Current)
 
 	case *message.AddBet:
 		stor.Current.Log = append(stor.Current.Log, msg)

@@ -146,7 +146,7 @@ func (nodeHTTP *NodeHTTP) Play(resp http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
 	id := vars["id"]
 
-	play, err := nodeHTTP.Node.PlayStore.FindPlayByID(id)
+	play, err := nodeHTTP.Node.PlayHistory.Find(id)
 
 	if err != nil {
 		log.Printf("[error] %s", err)
@@ -162,7 +162,7 @@ func (nodeHTTP *NodeHTTP) Winners(resp http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
 	id := vars["id"]
 
-	play, err := nodeHTTP.Node.PlayStore.FindPlayByID(id)
+	play, err := nodeHTTP.Node.PlayHistory.Find(id)
 
 	if err != nil {
 		log.Printf("[error] %s", err)
@@ -178,7 +178,7 @@ func (nodeHTTP *NodeHTTP) KnownCards(resp http.ResponseWriter, req *http.Request
 	vars := mux.Vars(req)
 	id := vars["id"]
 
-	play, err := nodeHTTP.Node.PlayStore.FindPlayByID(id)
+	play, err := nodeHTTP.Node.PlayHistory.Find(id)
 
 	if err != nil {
 		log.Printf("[error] %s", err)

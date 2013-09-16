@@ -29,7 +29,7 @@ type Config struct {
 	RPC       *RPCConfig
 	ZMQ       string
 	Store     *storage.StoreConfig
-	PlayStore *storage.PlayStoreConfig
+	PlayHistory *storage.PlayHistoryConfig
 	SessionStore *storage.SessionStoreConfig
 }
 

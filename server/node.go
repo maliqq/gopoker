@@ -18,7 +18,7 @@ type Node struct {
 	ZMQGateway *NodeZMQ
 	
 	Store      *storage.Store
-	PlayStore  *storage.PlayStore
+	PlayHistory  *storage.PlayHistory
 	SessionStore *storage.SessionStore
 }
 
@@ -33,8 +33,8 @@ func NewNode(name string, config *Config) *Node {
 	if config.Store != nil {
 		node.connectStore()
 	}
-	if config.PlayStore != nil {
-		node.connectPlayStore()
+	if config.PlayHistory != nil {
+		node.connectPlayHistory()
 	}
 	if config.SessionStore != nil {
 		node.connectSessionStore()
@@ -60,13 +60,13 @@ func (n *Node) connectStore() {
 	log.Printf("[store] connected to %s", n.Config.Store)
 }
 
-func (n *Node) connectPlayStore() {
+func (n *Node) connectPlayHistory() {
 	var err error
-	n.PlayStore, err = storage.OpenPlayStore(n.Config.PlayStore)
+	n.PlayHistory, err = storage.OpenPlayHistory(n.Config.PlayHistory)
 	if err != nil {
-		log.Fatalf("[store] can't open %s: %s", n.Config.PlayStore.Host, err)
+		log.Fatalf("[store] can't open %s: %s", n.Config.PlayHistory.Host, err)
 	}
-	log.Printf("[store] connected to %s", n.Config.PlayStore)
+	log.Printf("[store] connected to %s", n.Config.PlayHistory)
 }
 
 func (n *Node) connectSessionStore() {
@@ -92,8 +92,8 @@ func (n *Node) AddRoom(room *Room) bool {
 	if n.Config.Logdir != "" {
 		room.createLogger(n.Config.Logdir)
 	}
-	if n.PlayStore != nil {
-		room.createStorage(n.PlayStore)
+	if n.PlayHistory != nil {
+		room.createStorage(n.PlayHistory)
 	}
 
 	return true

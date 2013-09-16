@@ -54,7 +54,7 @@ func (r *Room) createLogger(dir string) {
 	r.Broadcast.Broker.Bind(exch.Observer, "logger", &loggerObserver.Recv)
 }
 
-func (r *Room) createStorage(ps *storage.PlayStore) {
+func (r *Room) createStorage(ps *storage.PlayHistory) {
 	storageObserver := exch.NewMessageObserver(play.NewStorage(ps))
 	r.Broadcast.Broker.Bind(exch.Observer, "storage", &storageObserver.Recv)
 }

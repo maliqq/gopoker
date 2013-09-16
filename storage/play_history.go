@@ -15,20 +15,20 @@ import (
 	"gopoker/exch/message"
 )
 
-// PlayStoreConfig - MongoDB store config
-type PlayStoreConfig struct {
+// PlayHistoryConfig - MongoDB store config
+type PlayHistoryConfig struct {
 	Host     string
 	Database string
 }
 
-// PlayStore - MongoDB store
-type PlayStore struct {
+// PlayHistory - MongoDB store
+type PlayHistory struct {
 	Session *mgo.Session
-	Config  *PlayStoreConfig
+	Config  *PlayHistoryConfig
 }
 
 // Play - play data dump
-type Play struct {
+type PlayHistoryEntry struct {
 	ID         bson.ObjectId `bson:"_id"`
 	Start      time.Time
 	Stop       time.Time
@@ -41,8 +41,8 @@ type Play struct {
 }
 
 // NewPlay - create new play
-func NewPlay() *Play {
-	return &Play{
+func NewPlayHistoryEntry() *PlayHistoryEntry {
+	return &PlayHistoryEntry{
 		ID:         NewObjectID(),
 		Start:      time.Now(),
 		Winners:    map[string]float64{},
@@ -58,8 +58,8 @@ func NewObjectID() bson.ObjectId {
 // Debug - debug mode
 var Debug = false
 
-// OpenPlayStore - open MongoDB
-func OpenPlayStore(config *PlayStoreConfig) (*PlayStore, error) {
+// OpenPlayHistory - open MongoDB
+func OpenPlayHistory(config *PlayHistoryConfig) (*PlayHistory, error) {
 	session, err := mgo.Dial(config.Host)
 	if err != nil {
 		return nil, err
@@ -71,7 +71,7 @@ func OpenPlayStore(config *PlayStoreConfig) (*PlayStore, error) {
 		mgo.SetDebug(true)
 	}
 
-	store := &PlayStore{
+	store := &PlayHistory{
 		Session: session,
 		Config:  config,
 	}
@@ -80,27 +80,33 @@ func OpenPlayStore(config *PlayStoreConfig) (*PlayStore, error) {
 }
 
 // Close - close MongoDB
-func (ps *PlayStore) Close() {
-	ps.Session.Close()
+func (history *PlayHistory) Close() {
+	history.Session.Close()
 }
 
 // Database - get database
-func (ps *PlayStore) Database() *mgo.Database {
-	return ps.Session.DB(ps.Config.Database)
+func (history *PlayHistory) Database() *mgo.Database {
+	return history.Session.DB(history.Config.Database)
 }
 
 // Collection - get collection by name
-func (ps *PlayStore) Collection(collection string) *mgo.Collection {
-	return ps.Database().C(collection)
+func (history *PlayHistory) Collection(collection string) *mgo.Collection {
+	return history.Database().C(collection)
 }
 
+const CollectionName = "plays"
+
 // FindPlayByID - find play data by id
-func (ps *PlayStore) FindPlayByID(id string) (*Play, error) {
-	var play Play
+func (history *PlayHistory) Find(id string) (*PlayHistoryEntry, error) {
+	var document PlayHistoryEntry
 
-	plays := ps.Collection("plays")
-	query := plays.Find(bson.M{"_id": bson.ObjectIdHex(id)})
-	err := query.One(&play)
+	collection := history.Collection(CollectionName)
+	query := collection.Find(bson.M{"_id": bson.ObjectIdHex(id)})
+	err := query.One(&document)
 
-	return &play, err
+	return &document, err
+}
+
+func (history *PlayHistory) Store(document *PlayHistoryEntry) {
+	history.Collection(CollectionName).Insert(document)
 }
