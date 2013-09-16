@@ -12,7 +12,6 @@ import (
 	websocket_client "gopoker/client/ws"
 	"gopoker/exch"
 	"gopoker/exch/message"
-	"gopoker/util"
 )
 
 // WebSocketHandler - websocket connection handler
@@ -29,7 +28,7 @@ func (nodeHTTP *NodeHTTP) WebSocketHandler(conn *websocket.Conn) {
 		return
 	}
 
-	id := util.RandomUuid()
+	id := NewSessionID()
 	connection := &websocket_client.Connection{Conn: conn}
 	session := NewSession(id, connection)
 	session.Send = &room.Recv

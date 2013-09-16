@@ -50,8 +50,12 @@ func OpenSessionStore(config *SessionStoreConfig) (*SessionStore, error) {
   return &store, nil
 }
 
+func (store *SessionStore) Key(key string) string {
+  return store.Config.KeyPrefix + key
+}
+
 func (store *SessionStore) Get(key string) *SessionData {
-  data, found := store.redisClient.Get(store.Config.KeyPrefix + key)
+  data, found := store.redisClient.Get(store.Key(key))
 
   if found == nil {
     return nil
@@ -61,4 +65,17 @@ func (store *SessionStore) Get(key string) *SessionData {
   json.Unmarshal([]byte(data), &sessionData)
 
   return &sessionData
+}
+
+func (store *SessionStore) Set(key string, sessionData SessionData) error {
+  data, err := json.Marshal(&sessionData)
+  if err != nil {
+    store.redisClient.Set(store.Key(key), data)
+  }
+  return err
+}
+
+func (store *SessionStore) Del(key string) error {
+  store.redisClient.Del(store.Key(key))
+  return nil
 }

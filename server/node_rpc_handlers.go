@@ -86,11 +86,17 @@ func (n *NodeRPC) CloseRoom(requestRoom *rpc_service.RequestRoom, r *rpc_service
 	return nil
 }
 
-func (n *NodeRPC) Login(login *rpc_service.Login, r *rpc_service.CallResult) error {
+func (n *NodeRPC) Login(login *rpc_service.Login, r *rpc_service.LoginResult) error {
+	r.SessionID, r.Success = n.Node.Login(login.Username, login.Password)
+	log.Printf("[prc] Login username=%s", login.Username)
+
 	return nil
 }
 
 func (n *NodeRPC) Logout(logout *rpc_service.Logout, r *rpc_service.CallResult) error {
+	n.Node.Logout(logout.SessionID)
+	log.Printf("[rpc] Logout args=%+v", logout)
+
 	return nil
 }
 

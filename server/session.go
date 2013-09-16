@@ -8,6 +8,7 @@ import (
 import (
 	"gopoker/exch"
 	"gopoker/exch/message"
+	"gopoker/util"
 )
 
 // Connection - client connection
@@ -23,6 +24,10 @@ type Session struct {
 	Connection Connection
 	Recv       exch.MessageChannel
 	Send       *exch.MessageChannel
+}
+
+func NewSessionID() string {
+	return util.RandomUuid()
 }
 
 // NewSession - create new session
