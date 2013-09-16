@@ -11,12 +11,15 @@ import (
 // Node - node
 type Node struct {
 	Name string
-
 	Config     *Config
+
 	Rooms      map[string]*Room
+	
 	ZMQGateway *NodeZMQ
+	
 	Store      *storage.Store
 	PlayStore  *storage.PlayStore
+	SessionStore *storage.SessionStore
 }
 
 // NewNode - create new node
@@ -32,6 +35,9 @@ func NewNode(name string, config *Config) *Node {
 	}
 	if config.PlayStore != nil {
 		node.connectPlayStore()
+	}
+	if config.SessionStore != nil {
+		node.connectSessionStore()
 	}
 
 	return node
@@ -60,7 +66,16 @@ func (n *Node) connectPlayStore() {
 	if err != nil {
 		log.Fatalf("[store] can't open %s: %s", n.Config.PlayStore.Host, err)
 	}
-	log.Print("[store] connected to %s", n.Config.PlayStore)
+	log.Printf("[store] connected to %s", n.Config.PlayStore)
+}
+
+func (n *Node) connectSessionStore() {
+	var err error
+	n.SessionStore, err = storage.OpenSessionStore(n.Config.SessionStore)
+	if err != nil {
+		log.Fatalf("[store] can't open %#v: %s", n.Config.SessionStore, err)
+	}
+	log.Printf("[store] connected to %#v", n.Config.SessionStore)
 }
 
 // Room - get room

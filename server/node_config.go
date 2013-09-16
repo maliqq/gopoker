@@ -30,6 +30,7 @@ type Config struct {
 	ZMQ       string
 	Store     *storage.StoreConfig
 	PlayStore *storage.PlayStoreConfig
+	SessionStore *storage.SessionStoreConfig
 }
 
 // APIPathOr - API path or default

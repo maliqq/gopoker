@@ -8,6 +8,7 @@ get-deps:
 	go get code.google.com/p/goprotobuf/protoc-gen-go
 	go get -tags zmq_2_x github.com/alecthomas/gozmq
 	go get labix.org/v2/mgo
+	go get github.com/hoisie/redis
 
 build-all:
 	protoc --go_out=. exch/message/*.proto
