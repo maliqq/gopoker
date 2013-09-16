@@ -24,12 +24,12 @@ type RPCConfig struct {
 
 // Config - node config
 type Config struct {
-	Logdir    string
-	HTTP      *HTTPConfig
-	RPC       *RPCConfig
-	ZMQ       string
-	Store     *storage.StoreConfig
-	PlayHistory *storage.PlayHistoryConfig
+	Logdir       string
+	HTTP         *HTTPConfig
+	RPC          *RPCConfig
+	ZMQ          string
+	Store        *storage.StoreConfig
+	PlayHistory  *storage.PlayHistoryConfig
 	SessionStore *storage.SessionStoreConfig
 }
 

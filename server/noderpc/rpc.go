@@ -55,7 +55,7 @@ type Login struct {
 
 type LoginResult struct {
 	SessionID string
-	Success bool
+	Success   bool
 }
 
 type Logout struct {

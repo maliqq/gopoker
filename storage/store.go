@@ -1,9 +1,9 @@
 package storage
 
 import (
-	"log"
 	"database/sql"
 	_ "github.com/bmizerany/pq" // import pq sql
+	"log"
 )
 
 import (
@@ -22,10 +22,10 @@ type Store struct {
 }
 
 type User struct {
-	PlayerID string
-	Username string
+	PlayerID          string
+	Username          string
 	PasswordEncrypted string
-	PasswordSalt string
+	PasswordSalt      string
 }
 
 func (u *User) MatchPassword(password string) bool {

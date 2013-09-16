@@ -15,10 +15,13 @@ import (
 	"gopoker/exch/message"
 )
 
+const DefaultCollectionName = "play_history"
+
 // PlayHistoryConfig - MongoDB store config
 type PlayHistoryConfig struct {
-	Host     string
-	Database string
+	Host           string
+	Database       string
+	CollectionName string
 }
 
 // PlayHistory - MongoDB store
@@ -90,17 +93,19 @@ func (history *PlayHistory) Database() *mgo.Database {
 }
 
 // Collection - get collection by name
-func (history *PlayHistory) Collection(collection string) *mgo.Collection {
-	return history.Database().C(collection)
+func (history *PlayHistory) Collection() *mgo.Collection {
+	collectionName := history.Config.CollectionName
+	if collectionName == "" {
+		collectionName = DefaultCollectionName
+	}
+	return history.Database().C(collectionName)
 }
-
-const CollectionName = "plays"
 
 // FindPlayByID - find play data by id
 func (history *PlayHistory) Find(id string) (*PlayHistoryEntry, error) {
 	var document PlayHistoryEntry
 
-	collection := history.Collection(CollectionName)
+	collection := history.Collection()
 	query := collection.Find(bson.M{"_id": bson.ObjectIdHex(id)})
 	err := query.One(&document)
 
@@ -108,5 +113,5 @@ func (history *PlayHistory) Find(id string) (*PlayHistoryEntry, error) {
 }
 
 func (history *PlayHistory) Store(document *PlayHistoryEntry) {
-	history.Collection(CollectionName).Insert(document)
+	history.Collection().Insert(document)
 }

@@ -10,14 +10,14 @@ import (
 
 // Node - node
 type Node struct {
-	Name string
-	Config     *Config
+	Name   string
+	Config *Config
 
-	Rooms      map[string]*Room
-	
+	Rooms map[string]*Room
+
 	ZMQGateway *NodeZMQ
-	
-	Store      *storage.Store
+
+	Store        *storage.Store
 	PlayHistory  *storage.PlayHistory
 	SessionStore *storage.SessionStore
 }
