@@ -17,5 +17,9 @@
     "PlayStore": {
         "Host": "localhost:27017",
         "Database": "poker"
+    },
+    "SessionStore": {
+        "Address": "localhost:6379",
+        "KeyPrefix": "gopoker:auth:"
     }
 }
