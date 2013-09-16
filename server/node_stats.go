@@ -1,74 +1,74 @@
 package server
 
 import (
-  "github.com/rcrowley/go-metrics"
+	"github.com/rcrowley/go-metrics"
 )
 
 import (
-  "time"
-  "log"
+	"log"
+	"time"
 )
 
 import (
-  "gopoker/play"
+	"gopoker/play"
 )
 
 // StatsWorker - collect node stats
 type NodeStatsWorker struct {
-  *Node
+	*Node
 
-  total *metrics.StandardGauge
-  waiting *metrics.StandardGauge
-  active *metrics.StandardGauge
-  paused *metrics.StandardGauge
-  inactive *metrics.StandardGauge
+	total    *metrics.StandardGauge
+	waiting  *metrics.StandardGauge
+	active   *metrics.StandardGauge
+	paused   *metrics.StandardGauge
+	inactive *metrics.StandardGauge
 }
 
 func (w *NodeStatsWorker) Start() {
-  w.total = metrics.NewGauge()
-  metrics.Register("rooms.total", w.total)
+	w.total = metrics.NewGauge()
+	metrics.Register("rooms.total", w.total)
 
-  w.waiting = metrics.NewGauge()
-  metrics.Register("rooms.waiting", w.waiting)
+	w.waiting = metrics.NewGauge()
+	metrics.Register("rooms.waiting", w.waiting)
 
-  w.active = metrics.NewGauge()
-  metrics.Register("rooms.active", w.active)
+	w.active = metrics.NewGauge()
+	metrics.Register("rooms.active", w.active)
 
-  w.paused = metrics.NewGauge()
-  metrics.Register("rooms.active", w.active)
+	w.paused = metrics.NewGauge()
+	metrics.Register("rooms.active", w.active)
 
-  w.inactive = metrics.NewGauge()
-  metrics.Register("rooms.inactive", w.inactive)
+	w.inactive = metrics.NewGauge()
+	metrics.Register("rooms.inactive", w.inactive)
 
-  for {
-    time.After(1 * time.Second)
-    w.count()
-  }
+	for {
+		time.After(1 * time.Second)
+		w.count()
+	}
 }
 
 func (w *NodeStatsWorker) count() {
-  var total, waiting, active, paused, inactive int64
-  
-  for _, room := range w.Node.Rooms {
-    total++
-    switch room.State {
-    case play.Waiting:
-      waiting++
-    case play.Paused:
-      paused++
-    case play.Active:
-      active++
-    case play.Closed:
-      inactive++
-    }
-  }
+	var total, waiting, active, paused, inactive int64
 
-  w.total.Update(total)
-  w.waiting.Update(total)
-  w.active.Update(active)
-  w.paused.Update(paused)
-  w.inactive.Update(inactive)
+	for _, room := range w.Node.Rooms {
+		total++
+		switch room.State {
+		case play.Waiting:
+			waiting++
+		case play.Paused:
+			paused++
+		case play.Active:
+			active++
+		case play.Closed:
+			inactive++
+		}
+	}
 
-  log.Printf("[worker] [stats] %d rooms, %d waiting, %d active, %d paused, %d closed\n",
-    total, waiting, active, paused, inactive)
+	w.total.Update(total)
+	w.waiting.Update(total)
+	w.active.Update(active)
+	w.paused.Update(paused)
+	w.inactive.Update(inactive)
+
+	log.Printf("[worker] [stats] %d rooms, %d waiting, %d active, %d paused, %d closed\n",
+		total, waiting, active, paused, inactive)
 }
