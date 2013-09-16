@@ -11,6 +11,7 @@ get-deps:
 	go get github.com/hoisie/redis
 	go get code.google.com/p/go.crypto/bcrypt
 	go get github.com/rcrowley/go-metrics
+	go get github.com/jjeffery/stomp
 
 build-all:
 	protoc --go_out=. exch/message/*.proto
