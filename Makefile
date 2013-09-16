@@ -10,6 +10,7 @@ get-deps:
 	go get labix.org/v2/mgo
 	go get github.com/hoisie/redis
 	go get code.google.com/p/go.crypto/bcrypt
+	go get github.com/rcrowley/go-metrics
 
 build-all:
 	protoc --go_out=. exch/message/*.proto
