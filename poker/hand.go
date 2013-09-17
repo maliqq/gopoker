@@ -6,7 +6,7 @@ import (
 )
 
 import (
-	"gopoker/event/message/format/protobuf"
+	"gopoker/event/message/protobuf"
 	"gopoker/poker/hand"
 )
 

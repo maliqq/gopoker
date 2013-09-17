@@ -5,7 +5,7 @@ import (
 )
 
 import (
-	"gopoker/event/message/format/protobuf"
+	"gopoker/event/message/protobuf"
 )
 
 // Range - bet range, how much to call and how much to raise

@@ -1,10 +1,10 @@
 package protobuf;
 
-import "event/message/format/protobuf/message_betting.proto";
-import "event/message/format/protobuf/message_deal.proto";
-import "event/message/format/protobuf/message_play.proto";
-import "event/message/format/protobuf/message_showdown.proto";
-import "event/message/format/protobuf/message_table.proto";
+import "event/message/protobuf/message_betting.proto";
+import "event/message/protobuf/message_deal.proto";
+import "event/message/protobuf/message_play.proto";
+import "event/message/protobuf/message_showdown.proto";
+import "event/message/protobuf/message_table.proto";
 
 // ErrorMessage - notify error
 message ErrorMessage {

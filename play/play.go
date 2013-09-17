@@ -6,7 +6,7 @@ import (
 
 import (
 	"gopoker/event"
-	"gopoker/event/message/format/protobuf"
+	"gopoker/event/message/protobuf"
 	"gopoker/model"
 	"gopoker/play/context"
 	"gopoker/play/gameplay"

@@ -11,7 +11,7 @@ import (
 )
 
 import (
-	"gopoker/event/message/format/protobuf"
+	"gopoker/event/message/protobuf"
 	"gopoker/model/game"
 	"gopoker/poker/hand"
 )

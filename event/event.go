@@ -9,7 +9,7 @@ import (
 
 import (
 	"gopoker/event/message"
-	"gopoker/event/message/format/protobuf"
+	"gopoker/event/message/protobuf"
 )
 
 import (

@@ -1,7 +1,7 @@
 package message
 
 import (
-	"gopoker/event/message/format/protobuf"
+	"gopoker/event/message/protobuf"
 	"gopoker/model"
 	"gopoker/model/bet"
 	"gopoker/model/deal"
@@ -21,9 +21,6 @@ type AddBet struct {
 }
 
 func (AddBet) EventMessage() {}
-func (m AddBet) Proto() *protobuf.Message {
-	return protobuf.NewAddBet(m.Pos, m.Bet.Proto())
-}
 
 // RequireBet
 type RequireBet struct {
@@ -32,9 +29,6 @@ type RequireBet struct {
 }
 
 func (RequireBet) EventMessage() {}
-func (m RequireBet) Proto() *protobuf.Message {
-	return protobuf.NewRequireBet(m.Pos, m.Range.Proto())
-}
 
 // BettingComplete
 type BettingComplete struct {
@@ -42,9 +36,6 @@ type BettingComplete struct {
 }
 
 func (BettingComplete) EventMessage() {}
-func (m BettingComplete) Proto() *protobuf.Message {
-	return protobuf.NewBettingComplete(m.Pot)
-}
 
 // DealCards
 type DealCards struct {
@@ -54,9 +45,6 @@ type DealCards struct {
 }
 
 func (DealCards) EventMessage() {}
-func (m DealCards) Proto() *protobuf.Message {
-	return protobuf.NewDealCards(m.Pos, m.Cards.Proto(), m.Type)
-}
 
 // RequireDiscard
 type RequireDiscard struct {
@@ -64,9 +52,6 @@ type RequireDiscard struct {
 }
 
 func (RequireDiscard) EventMessage() {}
-func (m RequireDiscard) Proto() *protobuf.Message {
-	return protobuf.NewRequireDiscard(m.Pos)
-}
 
 // Discarded
 type Discarded struct {
@@ -75,9 +60,6 @@ type Discarded struct {
 }
 
 func (Discarded) EventMessage() {}
-func (m Discarded) Proto() *protobuf.Message {
-	return protobuf.NewDiscarded(m.Pos, m.Num)
-}
 
 // DiscardCards
 type DiscardCards struct {
@@ -86,9 +68,6 @@ type DiscardCards struct {
 }
 
 func (DiscardCards) EventMessage() {}
-func (m DiscardCards) Proto() *protobuf.Message {
-	return protobuf.NewDiscardCards(m.Pos, m.Cards.Proto())
-}
 
 // PlayStart
 type PlayStart struct {
@@ -98,9 +77,6 @@ type PlayStart struct {
 }
 
 func (PlayStart) EventMessage() {}
-func (m PlayStart) Proto() *protobuf.Message {
-	return protobuf.NewPlayStart(nil)
-}
 
 // StreetStart
 type StreetStart struct {
@@ -108,18 +84,12 @@ type StreetStart struct {
 }
 
 func (StreetStart) EventMessage() {}
-func (m StreetStart) Proto() *protobuf.Message {
-	return protobuf.NewStreetStart(m.Name)
-}
 
 // PlayStop
 type PlayStop struct {
 }
 
 func (PlayStop) EventMessage() {}
-func (m PlayStop) Proto() *protobuf.Message {
-	return protobuf.NewPlayStop() // FIXME
-}
 
 // ShowHand
 type ShowHand struct {
@@ -131,15 +101,6 @@ type ShowHand struct {
 }
 
 func (ShowHand) EventMessage() {}
-func (m ShowHand) Proto() *protobuf.Message {
-	return protobuf.NewShowHand(
-		m.Pos,
-		m.Player.Proto(),
-		m.Cards.Proto(),
-		m.Hand.Proto(),
-		m.HandName,
-	)
-}
 
 // ShowCards
 type ShowCards struct {
@@ -150,9 +111,6 @@ type ShowCards struct {
 }
 
 func (ShowCards) EventMessage() {}
-func (m ShowCards) Proto() *protobuf.Message {
-	return protobuf.NewShowCards(m.Pos, m.Player.Proto(), m.Cards.Proto())
-}
 
 // Winner
 type Winner struct {
@@ -162,9 +120,6 @@ type Winner struct {
 }
 
 func (Winner) EventMessage() {}
-func (m Winner) Proto() *protobuf.Message {
-	return protobuf.NewWinner(m.Pos, m.Player.Proto(), m.Amount)
-}
 
 // MoveButton
 type MoveButton struct {
@@ -172,9 +127,6 @@ type MoveButton struct {
 }
 
 func (MoveButton) EventMessage() {}
-func (m MoveButton) Proto() *protobuf.Message {
-	return protobuf.NewMoveButton(m.Pos)
-}
 
 // JoinTable
 type JoinTable struct {
@@ -184,9 +136,6 @@ type JoinTable struct {
 }
 
 func (JoinTable) EventMessage() {}
-func (m JoinTable) Proto() *protobuf.Message {
-	return protobuf.NewJoinTable(m.Player.Proto(), m.Pos, m.Amount)
-}
 
 // SitOut
 type SitOut struct {
@@ -194,9 +143,6 @@ type SitOut struct {
 }
 
 func (SitOut) EventMessage() {}
-func (m SitOut) Proto() *protobuf.Message {
-	return protobuf.NewSitOut(m.Pos)
-}
 
 // ComeBack
 type ComeBack struct {
@@ -204,9 +150,6 @@ type ComeBack struct {
 }
 
 func (ComeBack) EventMessage() {}
-func (m ComeBack) Proto() *protobuf.Message {
-	return protobuf.NewComeBack(m.Pos)
-}
 
 // LeaveTable
 type LeaveTable struct {
@@ -214,9 +157,6 @@ type LeaveTable struct {
 }
 
 func (LeaveTable) EventMessage() {}
-func (m LeaveTable) Proto() *protobuf.Message {
-	return protobuf.NewLeaveTable(m.Player.Proto())
-}
 
 // ErrorMessage
 type ErrorMessage struct {
@@ -224,9 +164,6 @@ type ErrorMessage struct {
 }
 
 func (ErrorMessage) EventMessage() {}
-func (m ErrorMessage) Proto() *protobuf.Message {
-	return protobuf.NewErrorMessage(m.Error)
-}
 
 // ChatMessage
 type ChatMessage struct {
@@ -234,6 +171,3 @@ type ChatMessage struct {
 }
 
 func (ChatMessage) EventMessage() {}
-func (m ChatMessage) Proto() *protobuf.Message {
-	return protobuf.NewChatMessage(m.Body)
-}
