@@ -1,7 +1,7 @@
 package noderpc
 
 import (
-	"gopoker/exch/message"
+	"gopoker/event/message"
 	"gopoker/model"
 	"gopoker/play/mode"
 )

@@ -6,7 +6,7 @@ import (
 )
 
 import (
-	"gopoker/exch/message"
+	"gopoker/event/message"
 	"gopoker/model"
 	"gopoker/model/bet"
 	"gopoker/model/game"
@@ -154,7 +154,7 @@ func (betting *Betting) RequireBet(pos int, seat *model.Seat, limit game.Limit, 
 		betting.BetRange.AdjustByAvailable(seat.Stack)
 	}
 
-	return message.NotifyRequireBet(betting.Pos, betting.BetRange.Proto())
+	return message.RequireBet{betting.Pos, betting.BetRange}
 }
 
 // AddBet - add action

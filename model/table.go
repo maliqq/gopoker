@@ -9,7 +9,7 @@ import (
 )
 
 import (
-	"gopoker/exch/message"
+	"gopoker/event/message/format/protobuf"
 	"gopoker/model/position"
 )
 
@@ -159,12 +159,12 @@ func (t *Table) String() string {
 }
 
 // Proto - table to protobuf
-func (t *Table) Proto() *message.Table {
-	seats := make([]*message.Seat, t.Size)
+func (t *Table) Proto() *protobuf.Table {
+	seats := make([]*protobuf.Seat, t.Size)
 	for i, seat := range t.Seats {
-		seats[i] = seat.Proto()
+		seats[i] = seat.ProtoSeat()
 	}
-	return &message.Table{
+	return &protobuf.Table{
 		Size:   proto.Int32(int32(t.Size)),
 		Button: proto.Int32(int32(t.Button)),
 		Seats:  seats,

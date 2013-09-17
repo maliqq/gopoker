@@ -1,7 +1,7 @@
 package gameplay
 
 import (
-	"gopoker/exch/message"
+	"gopoker/event/message"
 	"gopoker/model/bet"
 )
 
@@ -14,6 +14,6 @@ func (gp *GamePlay) PostAntes() {
 
 		gp.Betting.AddBet(newBet)
 
-		gp.Broadcast.All <- message.NotifyAddBet(pos, newBet.Proto())
+		gp.Broadcast.All <- message.AddBet{pos, newBet}
 	}
 }

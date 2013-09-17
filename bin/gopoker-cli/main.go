@@ -11,8 +11,8 @@ import (
 )
 
 import (
-	"gopoker/exch"
-	"gopoker/exch/message"
+	"gopoker/event"
+	"gopoker/event/message"
 
 	"gopoker/model"
 	"gopoker/model/game"
@@ -51,7 +51,7 @@ func main() {
 		log.SetOutput(w)
 	}
 
-	me := make(exch.MessageChannel, 100)
+	me := make(event.MessageChannel, 100)
 	play := createPlay(&me)
 	fmt.Printf("%s\n", play)
 
@@ -66,7 +66,7 @@ func main() {
 	}
 }
 
-func createPlay(me *exch.MessageChannel) *play.Play {
+func createPlay(me *event.MessageChannel) *play.Play {
 	size := 3
 	stake := model.NewStake(*betsize)
 	//stake.WithAnte = true
@@ -85,7 +85,7 @@ func createPlay(me *exch.MessageChannel) *play.Play {
 
 	for i, player := range players {
 		if i < size {
-			play.Broadcast.Bind(exch.Player, player, me)
+			play.Broadcast.Bind(event.Player, player, me)
 			play.Recv <- message.NotifyJoinTable(string(player), i, stack)
 		}
 	}

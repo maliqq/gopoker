@@ -9,7 +9,7 @@ import (
 )
 
 import (
-	"gopoker/exch/message"
+	"gopoker/event/message"
 	"gopoker/model"
 	"gopoker/model/seat"
 	"gopoker/play/context"
@@ -53,7 +53,7 @@ func (play *Play) run() {
 	}
 
 	// notify about play start
-	play.Broadcast.All <- message.NotifyPlayStart(play.Proto())
+	play.Broadcast.All <- message.PlayStart{play}
 
 	// rotate game
 	if play.Mix != nil {

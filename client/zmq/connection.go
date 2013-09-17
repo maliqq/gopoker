@@ -10,8 +10,8 @@ import (
 )
 
 import (
-	"gopoker/exch"
-	"gopoker/exch/message"
+	"gopoker/event"
+	"gopoker/event/message"
 )
 
 // Connection - 0mq connection
@@ -22,8 +22,8 @@ type Connection struct {
 	sender     *zmq.Socket
 	subscriber *zmq.Socket
 
-	Send exch.MessageChannel
-	Recv exch.MessageChannel
+	Send event.MessageChannel
+	Recv event.MessageChannel
 }
 
 // NewConnection - create new connection
@@ -50,8 +50,8 @@ func NewConnection(publisher, receiver string, topic string) *Connection {
 		subscriber: subscriber,
 		sender:     sender,
 
-		Send: make(exch.MessageChannel, 100),
-		Recv: make(exch.MessageChannel, 100),
+		Send: make(event.MessageChannel, 100),
+		Recv: make(event.MessageChannel, 100),
 	}
 
 	go conn.send()

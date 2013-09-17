@@ -9,7 +9,7 @@ import (
 )
 
 import (
-	"gopoker/exch/message"
+	"gopoker/event/message/format/protobuf"
 	"gopoker/model/bet"
 	seatState "gopoker/model/seat"
 )
@@ -147,10 +147,10 @@ func (seat *Seat) AdvanceStack(amount float64) {
 }
 
 // Proto - seat to protobuf
-func (seat *Seat) Proto() *message.Seat {
-	return &message.Seat{
-		State: message.SeatState(
-			message.SeatState_value[string(seat.State)],
+func (seat *Seat) ProtoSeat() *protobuf.Seat {
+	return &protobuf.Seat{
+		State: protobuf.SeatState(
+			protobuf.SeatState_value[string(seat.State)],
 		).Enum(),
 
 		Stack: proto.Float64(seat.Stack),
@@ -159,7 +159,7 @@ func (seat *Seat) Proto() *message.Seat {
 	}
 }
 
-func (seat *Seat) UnmarshalProto(protoSeat *message.Seat) {
+func (seat *Seat) UnmarshalProto(protoSeat *protobuf.Seat) {
 	// FIXME
 	*seat = Seat{}
 }

@@ -9,7 +9,7 @@ import (
 )
 
 import (
-	"gopoker/exch/message"
+	"gopoker/event/message/format/protobuf"
 	"gopoker/poker/card"
 	"gopoker/util"
 )
@@ -117,7 +117,7 @@ func (c Cards) Binary() []byte {
 }
 
 // Proto - protobuf representation of card
-func (c Cards) Proto() message.Cards {
+func (c Cards) Proto() protobuf.Cards {
 	return c.Binary()
 }
 

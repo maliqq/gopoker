@@ -9,7 +9,7 @@ import (
 )
 
 import (
-	"gopoker/exch/message"
+	"gopoker/event/message/format/protobuf"
 	"gopoker/model/bet"
 )
 
@@ -33,14 +33,14 @@ func (b Bet) PrintString() string {
 }
 
 // Proto - bet to protobuf
-func (b Bet) Proto() *message.Bet {
-	return &message.Bet{
-		Type:   message.BetType(message.BetType_value[string(b.Type)]).Enum(),
+func (b Bet) Proto() *protobuf.Bet {
+	return &protobuf.Bet{
+		Type:   protobuf.BetType(protobuf.BetType_value[string(b.Type)]).Enum(),
 		Amount: proto.Float64(b.Amount),
 	}
 }
 
-func (b *Bet) UnmarshalProto(protoBet *message.Bet) {
+func (b *Bet) UnmarshalProto(protoBet *protobuf.Bet) {
 	newBet := Bet{
 		Type:   bet.Type(protoBet.GetType()),
 		Amount: protoBet.GetAmount(),

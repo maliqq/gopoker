@@ -9,7 +9,7 @@ import (
 )
 
 import (
-	"gopoker/exch/message"
+	"gopoker/event/message"
 	"gopoker/model"
 )
 
@@ -34,7 +34,7 @@ func NewDiscarding(d *model.Deal) *Discarding {
 func (discarding *Discarding) RequireDiscard(pos int, seat *model.Seat) *message.Message {
 	discarding.Seat = seat
 	discarding.Required.Pos = proto.Int32(int32(pos))
-	return message.NotifyRequireDiscard(discarding.Required)
+	return message.RequireDiscard{discarding.Required}
 }
 
 // Start - start discarding

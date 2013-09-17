@@ -11,7 +11,7 @@ import (
 )
 
 import (
-	"gopoker/exch/message"
+	"gopoker/event/message/format/protobuf"
 	"gopoker/model/game"
 	"gopoker/poker/hand"
 )
@@ -103,21 +103,21 @@ func (game *Game) String() string {
 }
 
 // Proto - game to proto
-func (game *Game) Proto() *message.Game {
-	return &message.Game{
-		Type: message.GameType(
-			message.GameType_value[string(game.Type)],
+func (game *Game) Proto() *protobuf.Game {
+	return &protobuf.Game{
+		Type: protobuf.GameType(
+			protobuf.GameType_value[string(game.Type)],
 		).Enum(),
 
-		Limit: message.GameLimit(
-			message.GameLimit_value[string(game.Limit)],
+		Limit: protobuf.GameLimit(
+			protobuf.GameLimit_value[string(game.Limit)],
 		).Enum(),
 
 		TableSize: proto.Int32(int32(game.TableSize)),
 	}
 }
 
-func (g *Game) UnmarshalProto(protoGame *message.Game) {
+func (g *Game) UnmarshalProto(protoGame *protobuf.Game) {
 	newGame := NewGame(
 		game.LimitedGame(protoGame.GetType().String()),
 		game.Limit(protoGame.GetLimit().String()),

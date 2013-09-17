@@ -1,4 +1,4 @@
-package message;
+package protobuf;
 
 // BetType - bet type
 enum BetType {

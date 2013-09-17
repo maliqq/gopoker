@@ -1,7 +1,7 @@
 package gameplay
 
 import (
-	"gopoker/exch/message"
+	"gopoker/event/message"
 	"gopoker/model"
 	"gopoker/model/deal"
 	"gopoker/poker"
@@ -25,11 +25,11 @@ func (gp *GamePlay) discard(p model.Player, cards poker.Cards) {
 
 	cardsNum := len(cards)
 
-	gp.Broadcast.All <- message.NotifyDiscarded(pos, cardsNum)
+	gp.Broadcast.All <- message.Discarded{pos, cardsNum}
 
 	if cardsNum > 0 {
 		newCards := gp.Deal.Discard(p, cards)
 
-		gp.Broadcast.One(p) <- message.NotifyDealPocket(pos, newCards.Proto(), deal.Discard)
+		gp.Broadcast.One(p) <- message.DealPocket{pos, newCards.Proto(), deal.Discard}
 	}
 }

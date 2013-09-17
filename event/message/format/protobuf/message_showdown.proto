@@ -1,4 +1,4 @@
-package message;
+package protobuf;
 
 // Rank - hand rank
 enum Rank {

@@ -1,7 +1,7 @@
 package gameplay
 
 import (
-	"gopoker/exch/message"
+	"gopoker/event/message"
 	seatState "gopoker/model/seat"
 )
 
@@ -63,5 +63,5 @@ func (gp *GamePlay) ResetBetting() {
 	}
 
 	total := gp.Betting.Pot.Total()
-	gp.Broadcast.All <- message.NotifyBettingComplete(total)
+	gp.Broadcast.All <- message.BettingComplete{total}
 }

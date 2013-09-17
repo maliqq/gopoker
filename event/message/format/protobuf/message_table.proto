@@ -1,4 +1,4 @@
-package message;
+package protobuf;
 
 // MoveButton - table move button
 message MoveButton {

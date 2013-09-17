@@ -13,6 +13,6 @@ func (player Player) RouteKey() string {
 }
 
 // Proto - player to protobuf
-func (player Player) Proto() *string {
+func (player Player) ProtoPlayer() *string {
 	return proto.String(string(player))
 }

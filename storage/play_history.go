@@ -12,7 +12,7 @@ import (
 )
 
 import (
-	"gopoker/exch/message"
+	"gopoker/event/message"
 )
 
 const DefaultCollectionName = "play_history"

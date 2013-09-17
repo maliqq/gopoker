@@ -7,7 +7,7 @@ import (
 )
 
 import (
-	"gopoker/exch"
+	"gopoker/event"
 	"gopoker/model"
 	"gopoker/play"
 	rpc_service "gopoker/server/noderpc"
@@ -50,11 +50,11 @@ func (r *Room) createLogger(dir string) {
 	if err != nil {
 		log.Fatal("cant open logger file", err)
 	}
-	loggerObserver := exch.NewMessageObserver(play.NewLogger(f))
-	r.Broadcast.Broker.Bind(exch.Observer, "logger", &loggerObserver.Recv)
+	loggerObserver := event.NewMessageObserver(play.NewLogger(f))
+	r.Broadcast.Broker.Bind(event.Observer, "logger", &loggerObserver.Recv)
 }
 
 func (r *Room) createStorage(ps *storage.PlayHistory) {
-	storageObserver := exch.NewMessageObserver(play.NewStorage(ps))
-	r.Broadcast.Broker.Bind(exch.Observer, "storage", &storageObserver.Recv)
+	storageObserver := event.NewMessageObserver(play.NewStorage(ps))
+	r.Broadcast.Broker.Bind(event.Observer, "storage", &storageObserver.Recv)
 }

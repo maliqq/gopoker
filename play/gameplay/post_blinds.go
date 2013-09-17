@@ -5,7 +5,7 @@ import (
 )
 
 import (
-	"gopoker/exch/message"
+	"gopoker/event/message"
 	"gopoker/model/bet"
 )
 
@@ -26,7 +26,7 @@ func (gp *GamePlay) postSmallBlind(pos int) {
 		log.Fatalf("Error adding small blind for %d: %s", pos, err)
 	}
 
-	gp.Broadcast.All <- message.NotifyAddBet(pos, newBet.Proto())
+	gp.Broadcast.All <- message.NotifyAddBet(pos, newBet)
 }
 
 func (gp *GamePlay) postBigBlind(pos int) {
@@ -38,7 +38,7 @@ func (gp *GamePlay) postBigBlind(pos int) {
 		log.Fatalf("Error adding big blind for %d: %s", pos, err)
 	}
 
-	gp.Broadcast.All <- message.NotifyAddBet(pos, newBet.Proto())
+	gp.Broadcast.All <- message.NotifyAddBet(pos, newBet)
 }
 
 // PostBlinds - post blinds

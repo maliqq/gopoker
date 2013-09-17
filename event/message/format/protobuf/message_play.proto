@@ -1,4 +1,4 @@
-package message;
+package protobuf;
 
 // GameType - game type
 enum GameType {

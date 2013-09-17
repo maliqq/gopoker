@@ -1,4 +1,4 @@
-package message;
+package protobuf;
 
 // DealType - deal type
 enum DealType {

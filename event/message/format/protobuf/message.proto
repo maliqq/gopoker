@@ -1,9 +1,9 @@
-package message;
-import "exch/message/message_betting.proto";
-import "exch/message/message_deal.proto";
-import "exch/message/message_play.proto";
-import "exch/message/message_showdown.proto";
-import "exch/message/message_table.proto";
+package protobuf;
+import "event/message/format/protobuf/message_betting.proto";
+import "event/message/format/protobuf/message_deal.proto";
+import "event/message/format/protobuf/message_play.proto";
+import "event/message/format/protobuf/message_showdown.proto";
+import "event/message/format/protobuf/message_table.proto";
 
 // ErrorMessage - notify error
 message ErrorMessage {
@@ -21,8 +21,8 @@ message DealerMessage {
   required string Message = 1;
 }
 
-// Envelope - different message types container
-message Envelope {
+// Payload - different message types container
+message Payload {
   optional ErrorMessage ErrorMessage = 1;
   optional ChatMessage ChatMessage = 2;
   optional DealerMessage DealerMessage = 3;
@@ -64,10 +64,10 @@ message Envelope {
   repeated string Except = 5;
 }*/
 
-// Message - enveloper wrapper
+// Message - envelope wrapper
 message Message {
-  required string Type = 1;
+  required string Event = 1;
   required int64 Timestamp = 2;
   //optional Notify Notify = 3;
-  required Envelope Envelope = 4;
+  required Payload Payload = 4;
 }

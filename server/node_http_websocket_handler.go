@@ -10,8 +10,8 @@ import (
 
 import (
 	websocket_client "gopoker/client/ws"
-	"gopoker/exch"
-	"gopoker/exch/message"
+	"gopoker/event"
+	"gopoker/event/message"
 )
 
 // WebSocketHandler - websocket connection handler
@@ -38,9 +38,9 @@ func (nodeHTTP *NodeHTTP) WebSocketHandler(conn *websocket.Conn) {
 	//for _, player := range room.Table.AllPlayers() {
 	//	room.Broadcast.Bind(player, &session.Recv)
 	//}
-	room.Broadcast.Broker.Bind(exch.Watcher, "test", &session.Recv)
+	room.Broadcast.Broker.Bind(event.Watcher, "test", &session.Recv)
 	defer func() {
-		room.Broadcast.Broker.Unbind(exch.Watcher, "test")
+		room.Broadcast.Broker.Unbind(event.Watcher, "test")
 		session.Close()
 	}()
 

@@ -10,7 +10,7 @@ import (
 
 import (
 	zeromq_client "gopoker/client/zmq"
-	"gopoker/exch/message"
+	"gopoker/event/message"
 	"gopoker/model"
 	"gopoker/poker"
 	"gopoker/util"
@@ -29,7 +29,7 @@ type context struct {
 
 // Bot - bot
 type Bot struct {
-	ID     string
+	ID     model.Player
 	roomID string
 	pos    int
 	stack  float64
@@ -47,7 +47,7 @@ func NewBot(id, publisher, receiver string) *Bot {
 	log.SetPrefix(fmt.Sprintf("[bot#%s]", id))
 
 	return &Bot{
-		ID:      id,
+		ID:      model.Player(id),
 		zmqConn: zeromq_client.NewConnection(publisher, receiver, id),
 		context: &context{
 			cards: poker.Cards{},
@@ -63,7 +63,7 @@ func (b *Bot) Join(roomID string, pos int, amount float64) {
 	b.stack = amount
 
 	log.Printf("joining table...")
-	b.notify(message.NotifyJoinTable(b.ID, pos, amount))
+	b.zmqConn.Send <- message.JoinTable{b.ID, pos, amount}
 }
 
 // Play - start bot
@@ -139,12 +139,7 @@ func (b *Bot) call(amount float64) {
 
 func (b *Bot) addBet(newBet *model.Bet) {
 	log.Printf("=== %s", newBet)
-	msg := message.NotifyAddBet(b.pos, newBet.Proto())
-	b.notify(msg)
-}
-
-func (b *Bot) notify(msg *message.Message) {
-	b.zmqConn.Send <- msg
+	b.zmqConn.Send <- message.AddBet{b.pos, newBet}
 }
 
 func (b *Bot) decide(betRange *message.BetRange) {

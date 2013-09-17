@@ -1,4 +1,4 @@
-package exch
+package event
 
 import (
 	"fmt"
@@ -7,11 +7,11 @@ import (
 )
 
 import (
-	"code.google.com/p/goprotobuf/proto"
+	_ "code.google.com/p/goprotobuf/proto"
 )
 
 import (
-	"gopoker/exch/message"
+	"gopoker/event/message"
 	"gopoker/util/console"
 )
 
@@ -108,8 +108,8 @@ func (n *Notify) String() string {
 func (broker *Broker) send(group Group, key string, msg *message.Message) {
 	if receiver, ok := broker.exchange[group][key]; ok {
 		// sign message with timestamp
-		if msg.GetTimestamp() == 0 {
-			msg.Timestamp = proto.Int64(time.Now().Unix())
+		if msg.Timestamp == 0 {
+			msg.Timestamp = time.Now().Unix()
 		}
 		//
 		*receiver <- msg

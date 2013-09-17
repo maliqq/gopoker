@@ -6,7 +6,7 @@ import (
 )
 
 import (
-	"gopoker/exch/message"
+	"gopoker/event/message/format/protobuf"
 	"gopoker/poker/hand"
 )
 
@@ -210,10 +210,10 @@ func (h *Hand) PrintString() string {
 }
 
 // Proto - protobuf representation of hand
-func (h *Hand) Proto() *message.Hand {
-	return &message.Hand{
-		Rank: message.Rank(
-			message.Rank_value[string(h.Rank)],
+func (h *Hand) ProtoHand() *protobuf.Hand {
+	return &protobuf.Hand{
+		Rank: protobuf.Rank(
+			protobuf.Rank_value[string(h.Rank)],
 		).Enum(),
 
 		High:   h.High.Binary(),

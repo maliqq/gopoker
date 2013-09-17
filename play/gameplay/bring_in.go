@@ -1,7 +1,7 @@
 package gameplay
 
 import (
-	"gopoker/exch/message"
+	"gopoker/event/message"
 	"gopoker/poker"
 )
 
@@ -27,7 +27,7 @@ func (gp *GamePlay) BringIn() Transition {
 	}
 
 	gp.Table.SetButton(minPos)
-	gp.Broadcast.All <- message.NotifyMoveButton(minPos)
+	gp.Broadcast.All <- message.MoveButton{minPos}
 
 	seat := gp.Table.Seat(minPos)
 	gp.Broadcast.One(seat.Player) <- gp.Betting.RequireBet(minPos, seat, gp.Game.Limit, gp.Stake)

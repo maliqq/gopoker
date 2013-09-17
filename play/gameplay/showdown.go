@@ -1,7 +1,7 @@
 package gameplay
 
 import (
-	"gopoker/exch/message"
+	"gopoker/event/message"
 	"gopoker/model"
 	"gopoker/poker"
 	"gopoker/poker/hand"
@@ -22,7 +22,7 @@ func (gp *GamePlay) ShowHands(ranking hand.Ranking, withBoard bool) ShowdownHand
 		if pocket, hand := d.Rank(player, ranking, withBoard); hand != nil {
 			hands[player] = hand
 
-			gp.Broadcast.All <- message.NotifyShowHand(pos, player.Proto(), pocket.Proto(), hand.Proto(), hand.PrintString())
+			gp.Broadcast.All <- message.ShowHand{pos, player, pocket, hand, hand.PrintString()}
 		}
 	}
 
@@ -83,7 +83,7 @@ func (gp *GamePlay) Winners(highHands ShowdownHands, lowHands ShowdownHands) {
 			pos, _ := gp.Table.Pos(winner)
 			seat := gp.Table.Seat(pos)
 			seat.AdvanceStack(amount)
-			gp.Broadcast.All <- message.NotifyWinner(pos, winner.Proto(), amount)
+			gp.Broadcast.All <- message.Winner{pos, winner, amount}
 		}
 	}
 }
@@ -97,6 +97,6 @@ func (gp *GamePlay) Winner(pos int) {
 		seat.AdvanceStack(amount)
 
 		winner := seat.Player
-		gp.Broadcast.All <- message.NotifyWinner(pos, winner.Proto(), amount)
+		gp.Broadcast.All <- message.Winner{pos, winner, amount}
 	}
 }

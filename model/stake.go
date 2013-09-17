@@ -10,7 +10,7 @@ import (
 )
 
 import (
-	"gopoker/exch/message"
+	"gopoker/event/message/format/protobuf"
 	"gopoker/model/bet"
 )
 
@@ -151,8 +151,8 @@ func (stake *Stake) MarshalJSON() ([]byte, error) {
 }
 
 // Proto - stake to protobuf
-func (stake *Stake) Proto() *message.Stake {
-	return &message.Stake{
+func (stake *Stake) ProtoStake() *protobuf.Stake {
+	return &protobuf.Stake{
 		BigBlind:   proto.Float64(stake.BigBlindAmount()),
 		SmallBlind: proto.Float64(stake.SmallBlindAmount()),
 		Ante:       proto.Float64(stake.AnteAmount()),
@@ -160,7 +160,7 @@ func (stake *Stake) Proto() *message.Stake {
 	}
 }
 
-func (stake *Stake) UnmarshalProto(protoStake *message.Stake) {
+func (stake *Stake) UnmarshalProto(protoStake *protobuf.Stake) {
 	// FIXME
 	*stake = Stake{}
 }

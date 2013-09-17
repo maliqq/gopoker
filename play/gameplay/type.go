@@ -5,7 +5,7 @@ import (
 )
 
 import (
-	"gopoker/exch"
+	"gopoker/event"
 	"gopoker/model"
 	"gopoker/play/context"
 )
@@ -36,7 +36,7 @@ type GamePlay struct {
 	Table *model.Table
 
 	// broadcast protocol messages
-	Broadcast *exch.Broadcast `json:"-"`
+	Broadcast *event.Broadcast `json:"-"`
 
 	Betting             *context.Betting
 	*context.Discarding `json:"-"`
@@ -49,7 +49,7 @@ type GamePlay struct {
 // NewGamePlay - create gameplay context
 func NewGamePlay() *GamePlay {
 	return &GamePlay{
-		Broadcast: exch.NewBroadcast(),
+		Broadcast: event.NewBroadcast(),
 		NextDeal:  make(chan (<-chan time.Time)),
 		Exit:      make(chan int),
 	}

@@ -57,9 +57,9 @@ Sample node config ([`node.json`](etc/node.json)):
 * [`ai/`](ai/) - bot AI with decision making logic
 * [`calc/`](calc/) - poker related math
 * [`client/`](client/) - client related code
-* [`exch/`](exch/) - events exchange
- * [`exch/message/`](exch/message/) - message format
- * [`exch/protocol`](exch/protocol/) - protocols
+* [`event/`](event/) - events exchange
+ * [`event/message/`](event/message/) - message format
+ * [`event/protocol`](event/protocol/) - protocols
 * [`model/`](model/) - poker domain model
 * [`play/`](play/) - gameplay
 * [`poker/`](poker/) - poker rules

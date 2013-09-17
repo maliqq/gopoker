@@ -1,4 +1,4 @@
-package exch
+package event
 
 type MessageObserver struct {
 	Recv       MessageChannel

@@ -13,9 +13,10 @@ get-deps:
 	go get github.com/rcrowley/go-metrics
 	go get github.com/jjeffery/stomp
 	go get github.com/streadway/amqp
+	go get github.com/vmihailenco/msgpack
 
 build-all:
-	protoc --go_out=. exch/message/*.proto
+	protoc --go_out=. event/message/format/protobuf/*.proto
 	go build gopoker/bin/gopoker-bot
 	go build gopoker/bin/gopoker-cli
 	go build gopoker/bin/gopoker-ctrl
@@ -27,7 +28,7 @@ test-all:
 	go test gopoker/model
 	go test gopoker/play
 	go test gopoker/play/context
-	go test gopoker/exch/message
+	go test gopoker/event/message
 
 install-all:
 	go install gopoker/bin/gopoker-bot
@@ -36,5 +37,5 @@ install-all:
 	go install gopoker/bin/gopoker-server
 
 clean-all:
-	rm exch/message/*.pb.go
+	rm event/message/*.pb.go
 	rm gopoker-*

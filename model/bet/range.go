@@ -5,7 +5,7 @@ import (
 )
 
 import (
-	"gopoker/exch/message"
+	"gopoker/event/message/format/protobuf"
 )
 
 // Range - bet range, how much to call and how much to raise
@@ -48,15 +48,15 @@ func (r *Range) AdjustByAvailable(available float64) {
 }
 
 // Proto - range to protobuf
-func (r *Range) Proto() *message.BetRange {
-	return &message.BetRange{
+func (r *Range) ProtoRange() *protobuf.BetRange {
+	return &protobuf.BetRange{
 		Call: proto.Float64(r.Call),
 		Min:  proto.Float64(r.Min),
 		Max:  proto.Float64(r.Max),
 	}
 }
 
-func (r *Range) UnmarshalProto(protoRange *message.BetRange) {
+func (r *Range) UnmarshalProto(protoRange *protobuf.BetRange) {
 	newRange := Range{
 		Call: protoRange.GetCall(),
 		Min:  protoRange.GetMin(),

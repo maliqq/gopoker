@@ -5,8 +5,8 @@ import (
 )
 
 import (
-	"gopoker/exch"
-	"gopoker/exch/message"
+	"gopoker/event"
+	"gopoker/event/message"
 	"gopoker/model"
 	"gopoker/play/context"
 	"gopoker/play/gameplay"
@@ -21,7 +21,7 @@ type Play struct {
 	// finite state machine
 	FSM
 	// receive protocol messages
-	Recv exch.MessageChannel `json:"-"`
+	Recv event.MessageChannel `json:"-"`
 }
 
 // NewPlay - create new play
@@ -74,7 +74,7 @@ func (play *Play) receive() {
 }
 
 // Proto - play to protobuf
-func (play *Play) Proto() *message.Play {
+func (play *Play) ProtoPlay() *message.Play {
 	return &message.Play{
 		Table: play.Table.Proto(),
 		Game:  play.Game.Proto(),
