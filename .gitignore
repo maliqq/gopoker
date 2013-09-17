@@ -1,5 +1,4 @@
 .DS_Store
 /var/log/*.log
 /gopoker-*
-/event/message/*.pb.go
-
+*.pb.go
