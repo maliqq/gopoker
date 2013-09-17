@@ -12,6 +12,7 @@ get-deps:
 	go get code.google.com/p/go.crypto/bcrypt
 	go get github.com/rcrowley/go-metrics
 	go get github.com/jjeffery/stomp
+	go get github.com/streadway/amqp
 
 build-all:
 	protoc --go_out=. exch/message/*.proto

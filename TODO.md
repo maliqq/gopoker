@@ -20,3 +20,6 @@
 
 * [ ] broken pipes
 * [ ] storage BSON dump
+* [ ] 0mq: PUB/SUB + PUSH/PULL
+* [ ] STOMP
+* [ ] BOSH, Bayeux, AMQP
