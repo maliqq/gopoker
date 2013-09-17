@@ -88,30 +88,29 @@ func (history *PlayHistory) Close() {
 }
 
 // Database - get database
-func (history *PlayHistory) Database() *mgo.Database {
+func (history *PlayHistory) database() *mgo.Database {
 	return history.Session.DB(history.Config.Database)
 }
 
 // Collection - get collection by name
-func (history *PlayHistory) Collection() *mgo.Collection {
+func (history *PlayHistory) collection() *mgo.Collection {
 	collectionName := history.Config.CollectionName
 	if collectionName == "" {
 		collectionName = DefaultCollectionName
 	}
-	return history.Database().C(collectionName)
+	return history.database().C(collectionName)
 }
 
 // FindPlayByID - find play data by id
 func (history *PlayHistory) Find(id string) (*PlayHistoryEntry, error) {
 	var document PlayHistoryEntry
 
-	collection := history.Collection()
-	query := collection.Find(bson.M{"_id": bson.ObjectIdHex(id)})
+	query := history.collection().Find(bson.M{"_id": bson.ObjectIdHex(id)})
 	err := query.One(&document)
 
 	return &document, err
 }
 
 func (history *PlayHistory) Store(document *PlayHistoryEntry) {
-	history.Collection().Insert(document)
+	history.collection().Insert(document)
 }
