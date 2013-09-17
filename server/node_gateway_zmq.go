@@ -2,7 +2,6 @@ package server
 
 import (
 	"log"
-	"sync"
 )
 
 import (
@@ -19,9 +18,12 @@ import (
 // NodeZMQ - node zeromq service
 type NodeZMQ struct {
 	*Node
+
 	context     *zmq.Context
-	socket      *zmq.Socket
-	sendlock    sync.Mutex
+	publisher      *zmq.Socket
+
+	publish chan [][]byte
+
 	connect     chan rpc_service.ConnectGateway
 	disconnect  chan rpc_service.DisconnectGateway
 	connections map[string]chan int
@@ -35,15 +37,19 @@ func (n *Node) StartZMQ() {
 	context, _ := zmq.NewContext()
 	defer context.Close()
 
-	socket, _ := context.NewSocket(zmq.PUB)
-	defer socket.Close()
+	publisher, _ := context.NewSocket(zmq.PUB)
+	defer publisher.Close()
 
-	socket.Bind(addr)
+	publisher.Bind(addr)
 
 	gw := &NodeZMQ{
 		Node:        n,
+		
 		context:     context,
-		socket:      socket,
+		publisher:   publisher,
+
+		publish:     make(chan [][]byte, 1000),
+
 		connect:     make(chan rpc_service.ConnectGateway),
 		disconnect:  make(chan rpc_service.DisconnectGateway),
 		connections: map[string]chan int{},
@@ -51,6 +57,11 @@ func (n *Node) StartZMQ() {
 
 	n.ZMQGateway = gw
 
+	go gw.listen()
+	gw.accept()
+}
+
+func (gw *NodeZMQ) accept() {
 	for {
 		select {
 		case req := <-gw.connect:
@@ -70,6 +81,15 @@ func (n *Node) StartZMQ() {
 	}
 }
 
+func (gw *NodeZMQ) listen() {
+	for {
+		select {
+		case data := <-gw.publish:
+			gw.publisher.SendMultipart(data, 0)
+		}
+	}
+}
+
 func (gw *NodeZMQ) startConnection(playerID string, roomID string, stop *chan int) {
 	recv := make(exch.MessageChannel, 100)
 
@@ -81,7 +101,7 @@ Loop:
 		select {
 		case msg := <-recv:
 			//log.Printf("[zmq] sending %s to %s", msg, playerID)
-			go gw.send(msg, playerID)
+			gw.send(msg, playerID)
 
 		case <-*stop:
 			log.Printf("[zmq] stop connection for %s", playerID)
@@ -98,8 +118,6 @@ func (gw *NodeZMQ) send(msg *message.Message, playerID string) {
 	if err != nil {
 		log.Printf("[zmq] marshal error: %s", err)
 	} else {
-		gw.sendlock.Lock()
-		defer gw.sendlock.Unlock()
-		gw.socket.SendMultipart([][]byte{[]byte(playerID), data}, 0)
+		gw.publish <- [][]byte{[]byte(playerID), data}
 	}
 }
