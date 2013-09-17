@@ -1,23 +1,32 @@
 {
+    "Logdir": "/var/log/gopoker",
+
     "HTTP": {
         "Addr": "localhost:8080",
         "APIPath": "/_api",
         "RPCPath": "/_rpc",
         "WebSocketPath": "/_ws"
     },
+
     "RPC": {
         "Addr": "localhost:8081"
     },
-    "ZMQ": "tcp://127.0.0.1:5555",
-    "Logdir": "/var/log/gopoker",
+
+    "ZMQ": {
+        "Publisher": "tcp://127.0.0.1:5555",
+        "Receiver": "tcp://127.0.0.1:5556"
+    },
+
     "Store": {
         "Driver": "postgres",
         "ConnectionString": "user=postgres password=postgres dbname=poker sslmode=disable"
     },
+
     "PlayStore": {
         "Host": "localhost:27017",
         "Database": "poker"
     },
+    
     "SessionStore": {
         "Address": "localhost:6379",
         "KeyPrefix": "gopoker:auth:"

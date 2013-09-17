@@ -22,6 +22,11 @@ type RPCConfig struct {
 	Timeout time.Duration
 }
 
+type ZMQConfig struct {
+	Publisher string
+	Receiver  string
+}
+
 // Config - node config
 type Config struct {
 	Logdir string
@@ -29,7 +34,7 @@ type Config struct {
 	HTTP *HTTPConfig
 	RPC  *RPCConfig
 
-	ZMQ   string
+	ZMQ   *ZMQConfig
 	Stomp string
 
 	Store        *storage.StoreConfig

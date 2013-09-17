@@ -2,6 +2,7 @@ package server
 
 import (
 	"log"
+	"time"
 )
 
 import (
@@ -19,8 +20,9 @@ import (
 type NodeZMQ struct {
 	*Node
 
-	context     *zmq.Context
-	publisher      *zmq.Socket
+	context   *zmq.Context
+	publisher *zmq.Socket
+	receiver  *zmq.Socket
 
 	publish chan [][]byte
 
@@ -31,24 +33,28 @@ type NodeZMQ struct {
 
 // StartZMQ - start zeromq service
 func (n *Node) StartZMQ() {
-	addr := n.Config.ZMQ
-	log.Printf("[zmq] starting service at %s", addr)
+	config := n.Config.ZMQ
+	log.Printf("[zmq] starting service")
 
 	context, _ := zmq.NewContext()
 	defer context.Close()
 
 	publisher, _ := context.NewSocket(zmq.PUB)
 	defer publisher.Close()
+	publisher.Bind(config.Publisher)
 
-	publisher.Bind(addr)
+	receiver, _ := context.NewSocket(zmq.PULL)
+	defer receiver.Close()
+	receiver.Bind(config.Receiver)
 
 	gw := &NodeZMQ{
-		Node:        n,
-		
-		context:     context,
-		publisher:   publisher,
+		Node: n,
 
-		publish:     make(chan [][]byte, 1000),
+		context:   context,
+		publisher: publisher,
+		receiver:  receiver,
+
+		publish: make(chan [][]byte, 1000),
 
 		connect:     make(chan rpc_service.ConnectGateway),
 		disconnect:  make(chan rpc_service.DisconnectGateway),
@@ -58,6 +64,7 @@ func (n *Node) StartZMQ() {
 	n.ZMQGateway = gw
 
 	go gw.listen()
+	go gw.receive()
 	gw.accept()
 }
 
@@ -90,11 +97,32 @@ func (gw *NodeZMQ) listen() {
 	}
 }
 
+func (gw *NodeZMQ) receive() {
+	for {
+		for data, _ := gw.receiver.RecvMultipart(zmq.NOBLOCK); data != nil; {
+			msg := &message.Message{}
+
+			roomID := string(data[0])
+
+			err := proto.Unmarshal(data[1], msg)
+			if err != nil {
+				log.Printf("[zmq] unmarshal error: %s", err)
+			} else {
+				room := gw.Node.Rooms[roomID]
+				room.Recv <- msg
+			}
+		}
+		time.Sleep(1e6)
+	}
+}
+
 func (gw *NodeZMQ) startConnection(playerID string, roomID string, stop *chan int) {
 	recv := make(exch.MessageChannel, 100)
 
 	room := gw.Node.Rooms[roomID]
+
 	room.Broadcast.Broker.Bind(exch.Player, playerID, &recv)
+	defer room.Broadcast.Broker.Unbind(exch.Player, playerID)
 
 Loop:
 	for {
@@ -109,8 +137,6 @@ Loop:
 			break Loop
 		}
 	}
-
-	room.Broadcast.Broker.Unbind(exch.Player, playerID)
 }
 
 func (gw *NodeZMQ) send(msg *message.Message, playerID string) {

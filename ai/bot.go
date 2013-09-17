@@ -9,12 +9,10 @@ import (
 )
 
 import (
-	rpc_client "gopoker/client/rpc"
 	zeromq_client "gopoker/client/zmq"
 	"gopoker/exch/message"
 	"gopoker/model"
 	"gopoker/poker"
-	rpc_service "gopoker/server/noderpc"
 	"gopoker/util"
 )
 
@@ -38,12 +36,11 @@ type Bot struct {
 
 	*context
 
-	rpcConn *rpc_client.Connection
 	zmqConn *zeromq_client.Connection
 }
 
 // NewBot - create new bot
-func NewBot(id, rpcAddr, sockAddr string) *Bot {
+func NewBot(id, publisher, receiver string) *Bot {
 	if id == "" {
 		id = util.RandomUuid()
 	}
@@ -51,8 +48,7 @@ func NewBot(id, rpcAddr, sockAddr string) *Bot {
 
 	return &Bot{
 		ID:      id,
-		rpcConn: rpc_client.NewConnection(rpcAddr),
-		zmqConn: zeromq_client.NewConnection(sockAddr, id),
+		zmqConn: zeromq_client.NewConnection(publisher, receiver, id),
 		context: &context{
 			cards: poker.Cards{},
 			board: poker.Cards{},
@@ -67,13 +63,7 @@ func (b *Bot) Join(roomID string, pos int, amount float64) {
 	b.stack = amount
 
 	log.Printf("joining table...")
-	b.notifyRoom(message.NotifyJoinTable(b.ID, pos, amount))
-
-	log.Printf("connecting gateway...")
-	b.rpcConn.Call("ConnectGateway", rpc_service.ConnectGateway{
-		RoomID:   roomID,
-		PlayerID: b.ID,
-	})
+	b.notify(message.NotifyJoinTable(b.ID, pos, amount))
 }
 
 // Play - start bot
@@ -150,14 +140,11 @@ func (b *Bot) call(amount float64) {
 func (b *Bot) addBet(newBet *model.Bet) {
 	log.Printf("=== %s", newBet)
 	msg := message.NotifyAddBet(b.pos, newBet.Proto())
-	b.notifyRoom(msg)
+	b.notify(msg)
 }
 
-func (b *Bot) notifyRoom(msg *message.Message) {
-	b.rpcConn.Call("NotifyRoom", rpc_service.NotifyRoom{
-		ID:      b.roomID,
-		Message: msg,
-	})
+func (b *Bot) notify(msg *message.Message) {
+	b.zmqConn.Send <- msg
 }
 
 func (b *Bot) decide(betRange *message.BetRange) {
