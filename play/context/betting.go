@@ -142,7 +142,7 @@ func (betting *Betting) ForceBet(pos int, seat *model.Seat, betType bet.Type, st
 }
 
 // RequireBet - require action
-func (betting *Betting) RequireBet(pos int, seat *model.Seat, limit game.Limit, stake *model.Stake) *message.Message {
+func (betting *Betting) RequireBet(pos int, seat *model.Seat, limit game.Limit, stake *model.Stake) message.RequireBet {
 	betting.Pos = pos
 	betting.Seat = seat
 

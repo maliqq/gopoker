@@ -22,7 +22,7 @@ type Store struct {
 }
 
 type User struct {
-	PlayerID          string
+	Player            string
 	Username          string
 	PasswordEncrypted string
 	PasswordSalt      string
@@ -64,7 +64,7 @@ func (store *Store) FindUserByUsername(username string) *User {
 	}
 
 	var passwordEncrypted, passwordSalt sql.NullString
-	if err := row.Scan(&user.PlayerID, &passwordEncrypted, &passwordSalt); err != nil {
+	if err := row.Scan(&user.Player, &passwordEncrypted, &passwordSalt); err != nil {
 		if err != sql.ErrNoRows {
 			log.Printf("[store] error querying user: %s", err)
 		}

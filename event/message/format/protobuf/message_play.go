@@ -7,10 +7,8 @@ import (
 // NotifyPlayStart - notify new play start
 func NewPlayStart(play *Play) *Message {
 	return &Message{
-		Payload: &Payload{
-			PlayStart: &PlayStart{
-				Play: play,
-			},
+		PlayStart: &PlayStart{
+			Play: play,
 		},
 	}
 }
@@ -18,10 +16,8 @@ func NewPlayStart(play *Play) *Message {
 // NotifyStreetStart - notify new street start
 func NewStreetStart(name string) *Message {
 	return &Message{
-		Payload: &Payload{
-			StreetStart: &StreetStart{
-				Name: proto.String(name),
-			},
+		StreetStart: &StreetStart{
+			Name: proto.String(name),
 		},
 	}
 }
@@ -29,9 +25,7 @@ func NewStreetStart(name string) *Message {
 // NotifyPlayStop - notify play stop
 func NewPlayStop() *Message {
 	return &Message{
-		Payload: &Payload{
-			PlayStop: &PlayStop{},
-		},
+		PlayStop: &PlayStop{},
 	}
 }
 

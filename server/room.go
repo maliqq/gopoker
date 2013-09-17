@@ -16,7 +16,7 @@ import (
 
 // Room - play wrapper
 type Room struct {
-	ID string
+	Guid model.Guid
 	*play.Play
 	Waiting  map[string]*Session
 	Watchers map[string]*Session
@@ -36,7 +36,7 @@ func NewRoom(createRoom *rpc_service.CreateRoom) *Room {
 	newPlay := play.NewPlay(variation, stake)
 
 	room := &Room{
-		ID:       createRoom.ID,
+		Guid:     createRoom.Guid,
 		Play:     newPlay,
 		Waiting:  map[string]*Session{},
 		Watchers: map[string]*Session{},
@@ -46,15 +46,23 @@ func NewRoom(createRoom *rpc_service.CreateRoom) *Room {
 }
 
 func (r *Room) createLogger(dir string) {
-	f, err := os.OpenFile(path.Join(dir, r.ID+".log"), os.O_CREATE|os.O_RDWR|os.O_APPEND, 0755)
+	f, err := os.OpenFile(path.Join(dir, string(r.Guid)+".log"), os.O_CREATE|os.O_RDWR|os.O_APPEND, 0755)
 	if err != nil {
 		log.Fatal("cant open logger file", err)
 	}
-	loggerObserver := event.NewMessageObserver(play.NewLogger(f))
-	r.Broadcast.Broker.Bind(event.Observer, "logger", &loggerObserver.Recv)
+	loggerObserver := event.NewObserver(play.NewLogger(f))
+	r.Broadcast.Broker.Bind(event.Default, event.Subscriber{
+		Role:    event.System,
+		Key:     "log",
+		Channel: &loggerObserver.Recv,
+	})
 }
 
 func (r *Room) createStorage(ps *storage.PlayHistory) {
-	storageObserver := event.NewMessageObserver(play.NewStorage(ps))
-	r.Broadcast.Broker.Bind(event.Observer, "storage", &storageObserver.Recv)
+	storageObserver := event.NewObserver(play.NewStorage(ps))
+	r.Broadcast.Broker.Bind(event.Default, event.Subscriber{
+		Role:    event.System,
+		Key:     "history",
+		Channel: &storageObserver.Recv,
+	})
 }

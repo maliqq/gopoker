@@ -6,7 +6,7 @@ import (
 
 import (
 	"gopoker/event"
-	"gopoker/event/message"
+	"gopoker/event/message/format/protobuf"
 	"gopoker/model"
 	"gopoker/play/context"
 	"gopoker/play/gameplay"
@@ -21,7 +21,7 @@ type Play struct {
 	// finite state machine
 	FSM
 	// receive protocol messages
-	Recv event.MessageChannel `json:"-"`
+	Recv event.Channel `json:"-"`
 }
 
 // NewPlay - create new play
@@ -36,7 +36,7 @@ func NewPlay(variation model.Variation, stake *model.Stake) *Play {
 			stateChange: make(chan State),
 			Mode:        mode.Cash, // FIXME
 		},
-		Recv: make(chan *message.Message),
+		Recv: make(event.Channel),
 	}
 
 	// game
@@ -64,8 +64,8 @@ func (play *Play) String() string {
 func (play *Play) receive() {
 	for {
 		select {
-		case msg := <-play.Recv:
-			play.HandleMessage(msg)
+		case event := <-play.Recv:
+			play.HandleEvent(event)
 
 		case newState := <-play.stateChange:
 			play.HandleStateChange(newState)
@@ -74,8 +74,8 @@ func (play *Play) receive() {
 }
 
 // Proto - play to protobuf
-func (play *Play) ProtoPlay() *message.Play {
-	return &message.Play{
+func (play *Play) ProtoPlay() *protobuf.Play {
+	return &protobuf.Play{
 		Table: play.Table.Proto(),
 		Game:  play.Game.Proto(),
 		Stake: play.Stake.Proto(),

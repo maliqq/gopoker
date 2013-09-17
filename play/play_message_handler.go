@@ -6,28 +6,19 @@ import (
 )
 
 import (
+	"gopoker/event"
 	"gopoker/event/message"
-	"gopoker/model"
-	"gopoker/model/bet"
 	"gopoker/model/seat"
-	"gopoker/util/console"
+	"gopoker/util"
 )
 
-func (play *Play) HandleMessage(msg *message.Message) {
-	log.Printf(console.Color(console.Yellow, msg.String()))
+func (play *Play) HandleEvent(event *event.Event) {
+	log.Printf(util.Color(util.Yellow, event.String()))
 
-	payload := msg.Payload() // FIXME
-	if payload == nil {
-		return
-	}
+	switch msg := event.Message.(type) {
+	case message.JoinTable:
 
-	switch payload.(type) {
-	case *message.JoinTable:
-		join := msg.Envelope.JoinTable
-		player := model.Player(join.GetPlayer())
-		pos := int(join.GetPos())
-		amount := join.GetAmount()
-
+		player, pos, amount := msg.Player, msg.Pos, msg.Amount
 		_, err := play.Table.AddPlayer(player, pos, amount)
 		if err == nil {
 			// start next deal
@@ -35,56 +26,52 @@ func (play *Play) HandleMessage(msg *message.Message) {
 			log.Printf("[protocol] error: %s", err)
 		}
 		// retranslate
-		play.Broadcast.All <- msg
+		play.Broadcast.Pass(event)
 
-	case *message.LeaveTable:
-		leave := msg.Envelope.LeaveTable
-		player := model.Player(leave.GetPlayer())
+	case message.LeaveTable:
 
+		player := msg.Player
 		play.Table.RemovePlayer(player)
-		play.Broadcast.All <- msg
+		play.Broadcast.Pass(event)
 		// TODO: fold & autoplay
 
-	case *message.SitOut:
-		sitOut := msg.Envelope.SitOut
-		pos := int(sitOut.GetPos())
+	case message.SitOut:
 
+		pos := msg.Pos
 		play.Table.Seat(pos).State = seat.Idle
 		// TODO: fold
 
-	case *message.ComeBack:
-		comeBack := msg.Envelope.ComeBack
-		pos := int(comeBack.GetPos())
+	case message.ComeBack:
+
+		pos := msg.Pos
 
 		play.Table.Seat(pos).State = seat.Ready
 
-	case *message.ChatMessage:
-		play.Broadcast.All <- msg
+	case message.ChatMessage:
 
-	case *message.AddBet:
+		play.Broadcast.Pass(event)
+
+	case message.AddBet:
+
 		if !play.Betting.IsActive() {
 			return
 		}
 
-		add := msg.Envelope.AddBet
-
-		pos := int(add.GetPos())
+		pos := msg.Pos
 		if pos != play.Betting.Pos {
 			return
 		}
 		//seat := play.Table.Seat(pos)
 
-		betType := bet.Type(add.Bet.GetType().String())
-		amount := add.Bet.GetAmount()
+		play.Betting.Bet <- msg.Bet
+		play.Broadcast.Pass(event)
 
-		play.Betting.Bet <- model.NewBet(betType, amount)
-		play.Broadcast.All <- msg
+	case message.DiscardCards:
 
-	case *message.DiscardCards:
 		play.Discarding.Discard <- msg
 
 	default:
-		log.Printf("Unknown message: %#v", msg.Payload())
+		log.Printf("Unknown message: %#v", msg)
 	}
 }
 

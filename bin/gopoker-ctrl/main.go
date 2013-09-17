@@ -14,6 +14,7 @@ import (
 )
 
 import (
+	"gopoker/event"
 	"gopoker/event/message"
 	"gopoker/model"
 	"gopoker/model/game"
@@ -44,13 +45,15 @@ func main() {
 	rand.Seed(time.Now().UnixNano())
 	model.LoadGames(*configDir)
 
+	guid := model.Guid(*roomID)
+
 	client, err := jsonrpc.Dial("tcp", "localhost:8081")
 	if err != nil {
 		log.Fatal("dialing error: ", err)
 	}
 
 	args := &rpc_service.CreateRoom{
-		ID:      *roomID,
+		Guid:    guid,
 		BetSize: *betSize,
 	}
 
@@ -67,14 +70,14 @@ func main() {
 			player := fmt.Sprintf("player-%d", pos)
 			amount := float64(rand.Intn(1000) + 1000)
 			call(client, "NodeRPC.NotifyRoom", &rpc_service.NotifyRoom{
-				ID:      *roomID,
-				Message: message.NotifyJoinTable(player, pos, amount),
+				Guid:  model.Guid(*roomID),
+				Event: event.NewEvent(message.JoinTable{model.Player(player), pos, amount}),
 			})
 		}
 	}
 
 	call(client, "NodeRPC.StartRoom", &rpc_service.StartRoom{
-		ID: *roomID,
+		Guid: guid,
 	})
 }
 

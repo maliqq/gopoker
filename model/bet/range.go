@@ -48,7 +48,7 @@ func (r *Range) AdjustByAvailable(available float64) {
 }
 
 // Proto - range to protobuf
-func (r *Range) ProtoRange() *protobuf.BetRange {
+func (r *Range) Proto() *protobuf.BetRange {
 	return &protobuf.BetRange{
 		Call: proto.Float64(r.Call),
 		Min:  proto.Float64(r.Min),

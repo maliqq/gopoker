@@ -30,7 +30,7 @@ func (n NodeRPC) CreateRoomHTTP(req *http.Request, createRoom *rpc_service.Creat
 func (n *NodeRPC) DeleteRoom(requestRoom *rpc_service.RequestRoom, r *rpc_service.CallResult) error {
 	log.Printf("[rpc] DeleteRoom args=%+v", requestRoom)
 
-	room := n.Node.Room(requestRoom.ID)
+	room := n.Node.Room(requestRoom.Guid)
 	n.Node.RemoveRoom(room)
 
 	return nil
@@ -40,8 +40,8 @@ func (n *NodeRPC) DeleteRoom(requestRoom *rpc_service.RequestRoom, r *rpc_servic
 func (n *NodeRPC) NotifyRoom(notifyRoom *rpc_service.NotifyRoom, r *rpc_service.CallResult) error {
 	log.Printf("[rpc] NotifyRoom args=%+v", notifyRoom)
 
-	room := n.Node.Room(notifyRoom.ID)
-	room.Recv <- notifyRoom.Message
+	room := n.Node.Room(notifyRoom.Guid)
+	room.Recv <- notifyRoom.Event
 
 	return nil
 }
@@ -50,7 +50,7 @@ func (n *NodeRPC) NotifyRoom(notifyRoom *rpc_service.NotifyRoom, r *rpc_service.
 func (n *NodeRPC) StartRoom(startRoom *rpc_service.StartRoom, r *rpc_service.CallResult) error {
 	log.Printf("[rpc] StartRoom args=%+v", startRoom)
 
-	room := n.Node.Room(startRoom.ID)
+	room := n.Node.Room(startRoom.Guid)
 	room.Start()
 
 	return nil
@@ -60,7 +60,7 @@ func (n *NodeRPC) StartRoom(startRoom *rpc_service.StartRoom, r *rpc_service.Cal
 func (n *NodeRPC) PausePlay(requestRoom *rpc_service.RequestRoom, r *rpc_service.CallResult) error {
 	log.Printf("[rpc] PausePlayargs=%+v", requestRoom)
 
-	room := n.Node.Room(requestRoom.ID)
+	room := n.Node.Room(requestRoom.Guid)
 	room.Pause()
 
 	return nil
@@ -70,7 +70,7 @@ func (n *NodeRPC) PausePlay(requestRoom *rpc_service.RequestRoom, r *rpc_service
 func (n *NodeRPC) ResumePlay(requestRoom *rpc_service.RequestRoom, r *rpc_service.CallResult) error {
 	log.Printf("[rpc] ResumePlay args=%+v", requestRoom)
 
-	room := n.Node.Room(requestRoom.ID)
+	room := n.Node.Room(requestRoom.Guid)
 	room.Resume()
 
 	return nil
@@ -78,7 +78,7 @@ func (n *NodeRPC) ResumePlay(requestRoom *rpc_service.RequestRoom, r *rpc_servic
 
 // CloseRoom - close room
 func (n *NodeRPC) CloseRoom(requestRoom *rpc_service.RequestRoom, r *rpc_service.CallResult) error {
-	room := n.Node.Room(requestRoom.ID)
+	room := n.Node.Room(requestRoom.Guid)
 	log.Printf("[rpc] CloseRoom args=%+v", requestRoom)
 
 	room.Close()
@@ -87,14 +87,14 @@ func (n *NodeRPC) CloseRoom(requestRoom *rpc_service.RequestRoom, r *rpc_service
 }
 
 func (n *NodeRPC) Login(login *rpc_service.Login, r *rpc_service.LoginResult) error {
-	r.SessionID, r.Success = n.Node.Login(login.Username, login.Password)
+	r.Session, r.Success = n.Node.Login(login.Username, login.Password)
 	log.Printf("[prc] Login username=%s", login.Username)
 
 	return nil
 }
 
 func (n *NodeRPC) Logout(logout *rpc_service.Logout, r *rpc_service.CallResult) error {
-	n.Node.Logout(logout.SessionID)
+	n.Node.Logout(logout.Session)
 	log.Printf("[rpc] Logout args=%+v", logout)
 
 	return nil

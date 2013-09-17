@@ -210,7 +210,7 @@ func (h *Hand) PrintString() string {
 }
 
 // Proto - protobuf representation of hand
-func (h *Hand) ProtoHand() *protobuf.Hand {
+func (h *Hand) Proto() *protobuf.Hand {
 	return &protobuf.Hand{
 		Rank: protobuf.Rank(
 			protobuf.Rank_value[string(h.Rank)],
@@ -219,6 +219,15 @@ func (h *Hand) ProtoHand() *protobuf.Hand {
 		High:   h.High.Binary(),
 		Value:  h.Value.Binary(),
 		Kicker: h.Kicker.Binary(),
+	}
+}
+
+func UnmarshalProto(protoHand *protobuf.Hand) *Hand {
+	return &Hand{
+		Rank:   hand.Rank(protoHand.Rank.String()),
+		High:   BinaryCards(protoHand.High),
+		Value:  BinaryCards(protoHand.Value),
+		Kicker: BinaryCards(protoHand.Kicker),
 	}
 }
 

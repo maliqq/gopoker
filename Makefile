@@ -24,11 +24,11 @@ build-all:
 	gofmt -w .
 
 test-all:
-	go test gopoker/ai
-	go test gopoker/model
-	go test gopoker/play
-	go test gopoker/play/context
-	go test gopoker/event/message
+	go test gopoker/test/ai
+	go test gopoker/test/model
+	go test gopoker/test/play
+	go test gopoker/test/play/context
+	go test gopoker/test/event/message
 
 install-all:
 	go install gopoker/bin/gopoker-bot
@@ -37,5 +37,5 @@ install-all:
 	go install gopoker/bin/gopoker-server
 
 clean-all:
-	rm event/message/*.pb.go
+	rm event/message/format/protobuf/*.pb.go
 	rm gopoker-*

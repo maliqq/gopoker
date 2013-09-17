@@ -7,11 +7,9 @@ import (
 // NotifyAddBet - create new add bet
 func NewAddBet(pos int, bet *Bet) *Message {
 	return &Message{
-		Payload: &Payload{
-			AddBet: &AddBet{
-				Pos: proto.Int32(int32(pos)),
-				Bet: bet,
-			},
+		AddBet: &AddBet{
+			Pos: proto.Int32(int32(pos)),
+			Bet: bet,
 		},
 	}
 }
@@ -19,11 +17,9 @@ func NewAddBet(pos int, bet *Bet) *Message {
 // NotifyRequireBet - create new require bet
 func NewRequireBet(pos int, betRange *BetRange) *Message {
 	return &Message{
-		Payload: &Payload{
-			RequireBet: &RequireBet{
-				Pos:      proto.Int32(int32(pos)),
-				BetRange: betRange,
-			},
+		RequireBet: &RequireBet{
+			Pos:      proto.Int32(int32(pos)),
+			BetRange: betRange,
 		},
 	}
 }
@@ -31,10 +27,8 @@ func NewRequireBet(pos int, betRange *BetRange) *Message {
 // NotifyBettingComplete - notify betting complete
 func NewBettingComplete(total float64) *Message {
 	return &Message{
-		Payload: &Payload{
-			BettingComplete: &BettingComplete{
-				Pot: proto.Float64(total),
-			},
+		BettingComplete: &BettingComplete{
+			Pot: proto.Float64(total),
 		},
 	}
 }

@@ -30,6 +30,6 @@ func (gp *GamePlay) discard(p model.Player, cards poker.Cards) {
 	if cardsNum > 0 {
 		newCards := gp.Deal.Discard(p, cards)
 
-		gp.Broadcast.One(p) <- message.DealPocket{pos, newCards.Proto(), deal.Discard}
+		gp.Broadcast.One(p) <- message.DealCards{pos, newCards, deal.Discard}
 	}
 }

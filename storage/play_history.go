@@ -13,6 +13,8 @@ import (
 
 import (
 	"gopoker/event/message"
+	"gopoker/model"
+	"gopoker/poker"
 )
 
 const DefaultCollectionName = "play_history"
@@ -35,12 +37,12 @@ type PlayHistoryEntry struct {
 	ID         bson.ObjectId `bson:"_id"`
 	Start      time.Time
 	Stop       time.Time
-	Play       *message.Play `bson:"play"`
-	Winners    map[string]float64
-	KnownCards map[string]message.Cards
+	Play       *message.PlayStart `bson:"play"`
+	Winners    map[model.Player]float64
+	KnownCards map[model.Player]poker.Cards
 	Pot        float64
 	Rake       float64
-	Log        []*message.Message
+	Log        []message.Message
 }
 
 // NewPlay - create new play
@@ -48,8 +50,8 @@ func NewPlayHistoryEntry() *PlayHistoryEntry {
 	return &PlayHistoryEntry{
 		ID:         NewObjectID(),
 		Start:      time.Now(),
-		Winners:    map[string]float64{},
-		KnownCards: map[string]message.Cards{},
+		Winners:    map[model.Player]float64{},
+		KnownCards: map[model.Player]poker.Cards{},
 	}
 }
 

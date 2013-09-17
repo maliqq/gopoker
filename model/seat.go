@@ -147,7 +147,7 @@ func (seat *Seat) AdvanceStack(amount float64) {
 }
 
 // Proto - seat to protobuf
-func (seat *Seat) ProtoSeat() *protobuf.Seat {
+func (seat *Seat) Proto() *protobuf.Seat {
 	return &protobuf.Seat{
 		State: protobuf.SeatState(
 			protobuf.SeatState_value[string(seat.State)],

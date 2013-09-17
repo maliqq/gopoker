@@ -8,7 +8,7 @@ import (
 
 import (
 	"gopoker/poker/card"
-	"gopoker/util/console"
+	"gopoker/util"
 )
 
 // Card - struct of kind and suit
@@ -59,7 +59,7 @@ func (c Card) Byte() byte {
 
 // ConsoleString - colorified unicode string
 func (c Card) ConsoleString() string {
-	return console.Color(c.suit.Color(), c.UnicodeString())
+	return util.Color(c.suit.Color(), c.UnicodeString())
 }
 
 // NewCard - new card from byte

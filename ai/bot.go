@@ -12,6 +12,8 @@ import (
 	zeromq_client "gopoker/client/zmq"
 	"gopoker/event/message"
 	"gopoker/model"
+	"gopoker/model/bet"
+	"gopoker/model/deal"
 	"gopoker/poker"
 	"gopoker/util"
 )
@@ -68,49 +70,50 @@ func (b *Bot) Join(roomID string, pos int, amount float64) {
 
 // Play - start bot
 func (b *Bot) Play() {
-	for msg := range b.zmqConn.Recv {
+	for event := range b.zmqConn.Recv {
 		//log.Printf("received msg: %s", msg)
 
-		switch msg.Payload().(type) {
-		case *message.PlayStart:
-			start := msg.Envelope.PlayStart
+		switch msg := event.Message.(type) {
+		case message.PlayStart:
 
 			b.cards = poker.Cards{}
 			b.board = poker.Cards{}
 			b.pot = 0.
 			b.opponentsNum = 6
-			b.stake = model.NewStake(start.Play.Stake.GetBigBlind())
+			b.stake = msg.Stake
 
-		case *message.StreetStart:
-			b.street = msg.Envelope.StreetStart.GetName()
+		case message.StreetStart:
 
-		case *message.BettingComplete:
-			b.pot = msg.Envelope.BettingComplete.GetPot()
+			b.street = msg.Name
+
+		case message.BettingComplete:
+
+			b.pot = msg.Pot
 			b.bet = 0.
 
-		case *message.DealCards:
-			deal := msg.Envelope.DealCards
-			switch deal.GetType() {
-			case message.DealType_Board:
-				b.board = b.board.Append(poker.BinaryCards(deal.Cards))
+		case message.DealCards:
 
-			case message.DealType_Hole:
-				b.cards = b.cards.Append(poker.BinaryCards(deal.Cards))
+			switch msg.Type {
+			case deal.Board:
+				b.board = b.board.Append(msg.Cards)
+
+			case deal.Hole:
+				b.cards = b.cards.Append(msg.Cards)
 			}
 
-		case *message.RequireBet:
-			req := msg.Envelope.RequireBet
-			if int(req.GetPos()) == b.pos {
+		case message.RequireBet:
+
+			if msg.Pos == b.pos {
 				// pause
 				<-time.After(1 * time.Second)
 				// our turn
-				b.decide(req.BetRange)
+				b.decide(msg.Range)
 			}
 
-		case *message.AddBet:
-			bet := msg.Envelope.AddBet
-			if int(bet.GetPos()) == b.pos {
-				b.bet = bet.Bet.GetAmount()
+		case message.AddBet:
+
+			if msg.Pos == b.pos {
+				b.bet = msg.Bet.Amount
 			}
 		}
 	}
@@ -142,7 +145,7 @@ func (b *Bot) addBet(newBet *model.Bet) {
 	b.zmqConn.Send <- message.AddBet{b.pos, newBet}
 }
 
-func (b *Bot) decide(betRange *message.BetRange) {
+func (b *Bot) decide(betRange *bet.Range) {
 	var decision decision
 
 	if len(b.cards) != 2 {
@@ -170,8 +173,8 @@ const (
 	allIn
 )
 
-func (b *Bot) invoke(decision decision, betRange *message.BetRange) {
-	call, minRaise, maxRaise := betRange.GetCall(), betRange.GetMin(), betRange.GetMax()
+func (b *Bot) invoke(decision decision, betRange *bet.Range) {
+	call, minRaise, maxRaise := betRange.Call, betRange.Min, betRange.Max
 
 	log.Printf("decision=%#v call=%.2f minRaise=%.2f maxRaise=%.2f", decision, call, minRaise, maxRaise)
 

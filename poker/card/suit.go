@@ -5,7 +5,7 @@ import (
 )
 
 import (
-	"gopoker/util/console"
+	"gopoker/util"
 )
 
 // Suit - 0..3 integer value of suit
@@ -29,10 +29,10 @@ var (
 	suitsUnicode = []string{"♠", "♥", "♦", "♣"}
 
 	colors = map[Suit]string{
-		Spade:   console.Yellow,
-		Heart:   console.Red,
-		Diamond: console.Cyan,
-		Club:    console.Green,
+		Spade:   util.Yellow,
+		Heart:   util.Red,
+		Diamond: util.Cyan,
+		Club:    util.Green,
 	}
 )
 

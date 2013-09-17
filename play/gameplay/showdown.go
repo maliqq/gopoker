@@ -22,7 +22,7 @@ func (gp *GamePlay) ShowHands(ranking hand.Ranking, withBoard bool) ShowdownHand
 		if pocket, hand := d.Rank(player, ranking, withBoard); hand != nil {
 			hands[player] = hand
 
-			gp.Broadcast.All <- message.ShowHand{pos, player, pocket, hand, hand.PrintString()}
+			gp.Broadcast.All <- message.ShowHand{pos, player, pocket, *hand, hand.PrintString()}
 		}
 	}
 

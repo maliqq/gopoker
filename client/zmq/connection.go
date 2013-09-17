@@ -22,8 +22,8 @@ type Connection struct {
 	sender     *zmq.Socket
 	subscriber *zmq.Socket
 
-	Send event.MessageChannel
-	Recv event.MessageChannel
+	Send chan message.Message
+	Recv event.Channel
 }
 
 // NewConnection - create new connection
@@ -50,8 +50,8 @@ func NewConnection(publisher, receiver string, topic string) *Connection {
 		subscriber: subscriber,
 		sender:     sender,
 
-		Send: make(event.MessageChannel, 100),
-		Recv: make(event.MessageChannel, 100),
+		Send: make(chan message.Message, 100),
+		Recv: make(event.Channel, 100),
 	}
 
 	go conn.send()
@@ -64,7 +64,8 @@ func (conn *Connection) send() {
 	for {
 		select {
 		case msg := <-conn.Send:
-			data, err := proto.Marshal(msg)
+			event := event.NewEvent(msg)
+			data, err := proto.Marshal(event.Proto())
 			if err != nil {
 				log.Printf("marshal error: %s", err)
 			} else {
@@ -86,11 +87,11 @@ func (conn *Connection) receive() {
 		data := parts[1]
 		//log.Printf("received %d bytes for %s", len(data), topic)
 
-		msg := &message.Message{}
-		if err = proto.Unmarshal(data, msg); err != nil {
+		event := &event.Event{}
+		if err = event.UnmarshalProto(data); err != nil {
 			log.Printf("unmarshal error: %s", err)
 		} else {
-			conn.Recv <- msg
+			conn.Recv <- event
 		}
 	}
 }

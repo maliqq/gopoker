@@ -3,39 +3,44 @@ package event
 import (
 	"fmt"
 	"log"
-	"time"
 )
 
 import (
-	_ "code.google.com/p/goprotobuf/proto"
+	"gopoker/util"
 )
 
-import (
-	"gopoker/event/message"
-	"gopoker/util/console"
-)
+// Channel - channel of messages
 
-// MessageChannel - channel of messages
-type MessageChannel chan *message.Message
-
-type Group string
+type Topic string
 
 const (
-	Observer Group = "observer"
-	Watcher  Group = "watcher"
-	Player   Group = "player"
+	Default Topic = "default"
 )
+
+type Role string
+
+const (
+	System Role = "system"
+	User   Role = "user"
+)
+
+type Subscriber struct {
+	Key     string
+	Role    Role
+	Channel *Channel
+}
 
 // Broker - pubsub broker
 type Broker struct {
-	exchange map[Group]map[string]*MessageChannel
+	exchange map[Topic]map[string]Subscriber
 }
 
 // Notify - route
 type Notify struct {
 	All    bool
 	None   bool
-	Group  Group
+	Topic  Topic
+	Role   Role
 	One    string
 	Only   []string
 	Except []string
@@ -43,23 +48,20 @@ type Notify struct {
 
 // NewBroker - create new broker
 func NewBroker() *Broker {
-	return &Broker{
-		exchange: map[Group]map[string]*MessageChannel{
-			Observer: map[string]*MessageChannel{},
-			Watcher:  map[string]*MessageChannel{},
-			Player:   map[string]*MessageChannel{},
-		},
+	exchange := map[Topic]map[string]Subscriber{
+		Default: map[string]Subscriber{},
 	}
+	return &Broker{exchange}
 }
 
 // Bind - bind receiver
-func (broker *Broker) Bind(group Group, key string, receiver *MessageChannel) {
-	broker.exchange[group][key] = receiver
+func (broker *Broker) Bind(topic Topic, subscriber Subscriber) {
+	broker.exchange[topic][subscriber.Key] = subscriber
 }
 
 // Unbind - unbind receiver
-func (broker *Broker) Unbind(group Group, key string) {
-	delete(broker.exchange[group], key)
+func (broker *Broker) Unbind(topic Topic, key string) {
+	delete(broker.exchange[topic], key)
 }
 
 // RouteType - route type to string
@@ -70,8 +72,11 @@ func (n *Notify) RouteType() string {
 	if n.One != "" {
 		return "one"
 	}
-	if n.Group != "" {
-		return string(n.Group)
+	if n.Topic != "" {
+		return string(n.Topic)
+	}
+	if n.Role != "" {
+		return string(n.Role)
 	}
 	if len(n.Except) != 0 {
 		return "except"
@@ -105,49 +110,44 @@ func (n *Notify) String() string {
 	return s
 }
 
-func (broker *Broker) send(group Group, key string, msg *message.Message) {
-	if receiver, ok := broker.exchange[group][key]; ok {
-		// sign message with timestamp
-		if msg.Timestamp == 0 {
-			msg.Timestamp = time.Now().Unix()
-		}
-		//
-		*receiver <- msg
+func (broker *Broker) send(topic Topic, key string, event *Event) {
+	if subscriber, ok := broker.exchange[topic][key]; ok {
+		*subscriber.Channel <- event
 	}
 }
 
 // Dispatch - dispatch message
-func (broker *Broker) Dispatch(n *Notify, msg *message.Message) {
-	log.Println(console.Color(console.Cyan, fmt.Sprintf("%s %s", n, msg)))
+func (broker *Broker) Dispatch(n Notify, event *Event) {
+	log.Println(util.Color(util.Cyan, fmt.Sprintf("%s %s", n, event)))
 
-	// notify observers
-	defer broker.dispatchGroup(Observer, n, msg)
 	if n.None {
 		return
 	}
 
-	// notify one from group
-	if n.One != "" && n.Group != "" {
-		broker.send(n.Group, n.One, msg)
+	// notify one from topic
+	if n.One != "" && n.Topic != "" {
+		broker.send(n.Topic, n.One, event)
 		return
 	}
 
-	// notify all group
-	if n.Group != "" {
-		broker.dispatchGroup(n.Group, n, msg)
-
+	// notify all topic
+	if n.Topic != "" {
+		broker.dispatchTopic(n.Topic, n, event)
 		return
 	}
 
 	// notify all
 	if n.All {
-		broker.dispatchGroup(Player, n, msg)
-		broker.dispatchGroup(Watcher, n, msg)
+		for topic, _ := range broker.exchange {
+			broker.dispatchTopic(topic, n, event)
+		}
 	}
 }
 
-func (broker *Broker) dispatchGroup(group Group, n *Notify, msg *message.Message) {
-	for key := range broker.exchange[group] {
+func (broker *Broker) dispatchTopic(topic Topic, n Notify, event *Event) {
+	for key, subscriber := range broker.exchange[topic] {
+		role := subscriber.Role
+
 		if !n.All {
 			var skip bool
 
@@ -176,6 +176,10 @@ func (broker *Broker) dispatchGroup(group Group, n *Notify, msg *message.Message
 			}
 		}
 
-		broker.send(group, key, msg)
+		if n.Role != "" && n.Role != role {
+			continue
+		}
+
+		broker.send(topic, key, event)
 	}
 }

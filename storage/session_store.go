@@ -26,7 +26,7 @@ type SessionStore struct {
 }
 
 type SessionData struct {
-	PlayerID model.Player `json:player_id`
+	Player model.Player `json:player`
 }
 
 func OpenSessionStore(config *SessionStoreConfig) (*SessionStore, error) {

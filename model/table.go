@@ -162,7 +162,7 @@ func (t *Table) String() string {
 func (t *Table) Proto() *protobuf.Table {
 	seats := make([]*protobuf.Seat, t.Size)
 	for i, seat := range t.Seats {
-		seats[i] = seat.ProtoSeat()
+		seats[i] = seat.Proto()
 	}
 	return &protobuf.Table{
 		Size:   proto.Int32(int32(t.Size)),

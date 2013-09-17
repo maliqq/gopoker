@@ -1,7 +1,7 @@
 package noderpc
 
 import (
-	"gopoker/event/message"
+	"gopoker/event"
 	"gopoker/model"
 	"gopoker/play/mode"
 )
@@ -14,7 +14,7 @@ type CallResult struct {
 
 // CreateRoom - create room request
 type CreateRoom struct {
-	ID      string
+	Guid    model.Guid
 	BetSize float64
 	Game    *model.Game
 	Mix     *model.Mix
@@ -22,30 +22,30 @@ type CreateRoom struct {
 
 // RequestRoom - get room by id
 type RequestRoom struct {
-	ID string
+	Guid model.Guid
 }
 
 // StartRoom - start room by id
 type StartRoom struct {
-	ID   string
+	Guid model.Guid
 	Mode mode.Type
 }
 
 // NotifyRoom - send protocol message
 type NotifyRoom struct {
-	ID      string
-	Message *message.Message
+	Guid  model.Guid
+	Event *event.Event
 }
 
 // ConnectGateway - connect node ZMQ gateway
 type ConnectGateway struct {
-	RoomID   string
-	PlayerID string
+	Room   model.Guid
+	Player model.Player
 }
 
 // DisconnectGateway - disconnect node ZMQ gateway
 type DisconnectGateway struct {
-	PlayerID string
+	Player model.Player
 }
 
 type Login struct {
@@ -54,10 +54,10 @@ type Login struct {
 }
 
 type LoginResult struct {
-	SessionID string
-	Success   bool
+	Session model.Guid
+	Success bool
 }
 
 type Logout struct {
-	SessionID string
+	Session model.Guid
 }

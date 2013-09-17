@@ -5,10 +5,6 @@ import (
 )
 
 import (
-	"code.google.com/p/goprotobuf/proto"
-)
-
-import (
 	"gopoker/event/message"
 	"gopoker/model"
 )
@@ -17,24 +13,24 @@ import (
 type Discarding struct {
 	*model.Deal
 	Seat     *model.Seat
-	Required *message.RequireDiscard
+	Required message.RequireDiscard
 
-	Discard chan *message.Message
+	Discard chan message.Message
 }
 
 // NewDiscarding - create new discarding context
 func NewDiscarding(d *model.Deal) *Discarding {
 	return &Discarding{
-		Required: &message.RequireDiscard{},
-		Discard:  make(chan *message.Message),
+		Required: message.RequireDiscard{},
+		Discard:  make(chan message.Message),
 	}
 }
 
 // RequireDiscard - require discard
-func (discarding *Discarding) RequireDiscard(pos int, seat *model.Seat) *message.Message {
+func (discarding *Discarding) RequireDiscard(pos int, seat *model.Seat) message.RequireDiscard {
 	discarding.Seat = seat
-	discarding.Required.Pos = proto.Int32(int32(pos))
-	return message.RequireDiscard{discarding.Required}
+	discarding.Required.Pos = pos
+	return discarding.Required
 }
 
 // Start - start discarding
@@ -42,7 +38,7 @@ func (discarding *Discarding) Start() {
 	for {
 		select {
 		case msg := <-discarding.Discard:
-			payload := msg.Envelope.DiscardCards
+			payload := msg.(message.DiscardCards)
 			seat := discarding.Seat
 			cards := payload.Cards
 

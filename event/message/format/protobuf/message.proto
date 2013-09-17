@@ -1,4 +1,5 @@
 package protobuf;
+
 import "event/message/format/protobuf/message_betting.proto";
 import "event/message/format/protobuf/message_deal.proto";
 import "event/message/format/protobuf/message_play.proto";
@@ -7,22 +8,22 @@ import "event/message/format/protobuf/message_table.proto";
 
 // ErrorMessage - notify error
 message ErrorMessage {
-  required string Message = 1;
+  required string Error = 1;
 }
 
 // ChatMessage - notify chat message
 message ChatMessage {
   required int32 pos = 1;
-  required string Message = 2;
+  required string Body = 2;
 }
 
 // DealerMessage - notify dealer message
 message DealerMessage {
-  required string Message = 1;
+  required string Body = 1;
 }
 
 // Payload - different message types container
-message Payload {
+message Message {
   optional ErrorMessage ErrorMessage = 1;
   optional ChatMessage ChatMessage = 2;
   optional DealerMessage DealerMessage = 3;
@@ -65,9 +66,9 @@ message Payload {
 }*/
 
 // Message - envelope wrapper
-message Message {
-  required string Event = 1;
+message Event {
+  required string Type = 1;
   required int64 Timestamp = 2;
   //optional Notify Notify = 3;
-  required Payload Payload = 4;
+  required Message Message = 4;
 }

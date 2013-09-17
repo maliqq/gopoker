@@ -151,7 +151,7 @@ func (stake *Stake) MarshalJSON() ([]byte, error) {
 }
 
 // Proto - stake to protobuf
-func (stake *Stake) ProtoStake() *protobuf.Stake {
+func (stake *Stake) Proto() *protobuf.Stake {
 	return &protobuf.Stake{
 		BigBlind:   proto.Float64(stake.BigBlindAmount()),
 		SmallBlind: proto.Float64(stake.SmallBlindAmount()),

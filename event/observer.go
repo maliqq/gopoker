@@ -1,24 +1,28 @@
 package event
 
-type MessageObserver struct {
-	Recv       MessageChannel
-	Observable MessageHandler
+type Handler interface {
+	HandleEvent(*Event)
 }
 
-func NewMessageObserver(observable MessageHandler) *MessageObserver {
-	observer := MessageObserver{Observable: observable}
+type Observer struct {
+	Recv    Channel
+	Handler Handler
+}
+
+func NewObserver(handler Handler) *Observer {
+	observer := Observer{Handler: handler}
 	observer.Start()
 	return &observer
 }
 
-func (observer *MessageObserver) Start() {
-	observer.Recv = make(MessageChannel)
+func (observer *Observer) Start() {
+	observer.Recv = make(Channel)
 	go observer.receive()
 }
 
-func (observer *MessageObserver) receive() {
+func (observer *Observer) receive() {
 	for {
 		msg := <-observer.Recv
-		observer.Observable.HandleMessage(msg)
+		observer.Handler.HandleEvent(msg)
 	}
 }

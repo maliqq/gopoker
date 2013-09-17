@@ -1,80 +1,58 @@
 package play
 
 import (
+	"gopoker/event"
 	"gopoker/event/message"
-	"gopoker/model"
-	"gopoker/model/bet"
-	"gopoker/poker"
-	"gopoker/poker/hand"
+	"gopoker/model/deal"
 )
 
-func (l *Logger) HandleMessage(msg *message.Message) {
-	switch msg.Payload().(type) {
-	case *message.RequireBet:
-	case *message.RequireDiscard:
+func (l *Logger) HandleEvent(event *event.Event) {
+	switch msg := event.Message.(type) {
+	case message.RequireBet:
+	case message.RequireDiscard:
 
-	case *message.DealCards:
-		payload := msg.Envelope.DealCards
-
-		if payload.GetType() == message.DealType_Board {
+	case message.DealCards:
+		if msg.Type == deal.Board {
 			l.Printf("Dealt %s [%s]\n",
-				payload.GetType(),
-				poker.BinaryCards(payload.Cards).PrintString(),
+				msg.Type,
+				msg.Cards.PrintString(),
 			)
 		} else {
 			l.Printf("Dealt %s [%s] to %d\n",
-				payload.GetType(),
-				poker.BinaryCards(payload.Cards).PrintString(),
-				payload.GetPos(),
+				msg.Type,
+				msg.Cards.PrintString(),
+				msg.Pos,
 			)
 		}
 
-	case *message.MoveButton:
-		payload := msg.Envelope.MoveButton
-
+	case message.MoveButton:
 		l.Printf("Button is %d\n",
-			payload.GetPos()+1,
+			msg.Pos+1,
 		)
 
-	case *message.AddBet:
-		payload := msg.Envelope.AddBet
-		betType := payload.Bet.GetType().String()
-
+	case message.AddBet:
 		l.Printf("Seat %d: %s\n",
-			payload.GetPos(),
-			model.NewBet(bet.Type(betType), payload.Bet.GetAmount()),
+			msg.Pos,
+			msg.Bet,
 		)
 
-	case *message.StreetStart:
-		payload := msg.Envelope.StreetStart
-
-		l.Printf("=== %s\n", payload.GetName())
+	case message.StreetStart:
+		l.Printf("=== %s\n", msg.Name)
 
 	case *message.ShowHand:
-		payload := msg.Envelope.ShowHand
-		protoHand := payload.Hand
-		hand := poker.Hand{
-			Rank:   hand.Rank(protoHand.Rank.String()),
-			High:   poker.BinaryCards(protoHand.High),
-			Value:  poker.BinaryCards(protoHand.Value),
-			Kicker: poker.BinaryCards(protoHand.Kicker),
-		}
-
 		l.Printf("Seat %d: shows [%s] (%s)\n",
-			payload.GetPos(),
-			poker.BinaryCards(payload.Cards).PrintString(),
-			hand.PrintString(),
+			msg.Pos,
+			msg.Cards.PrintString(),
+			msg.Hand.PrintString(),
 		)
 
 	case *message.Winner:
-		payload := msg.Envelope.Winner
-
 		l.Printf("Seat %d: wins %.2f\n",
-			payload.GetPos(),
-			payload.GetAmount(),
+			msg.Pos,
+			msg.Amount,
 		)
 
 	default:
-		l.Printf("got %s\n", msg.Envelope)
+		l.Printf("got %s\n", msg)
 	}
 }

@@ -11,26 +11,26 @@ func (node *Node) Auth(key string) (model.Player, bool) {
 	var player model.Player
 
 	if result != nil {
-		player = result.PlayerID
+		player = result.Player
 	}
 
 	return player, player == ""
 }
 
-func (node *Node) Login(username string, password string) (string, bool) {
+func (node *Node) Login(username string, password string) (model.Guid, bool) {
 	user := node.Store.FindUserByUsername(username)
-	var sessionID string
+	var sessionID model.Guid
 	if user != nil {
 		if user.MatchPassword(password) {
 			sessionID = NewSessionID()
-			node.SessionStore.Set(sessionID, storage.SessionData{
-				PlayerID: model.Player(user.PlayerID),
+			node.SessionStore.Set(string(sessionID), storage.SessionData{
+				Player: model.Player(user.Player),
 			})
 		}
 	}
 	return sessionID, sessionID == ""
 }
 
-func (node *Node) Logout(sessionID string) {
-	node.SessionStore.Del(sessionID)
+func (node *Node) Logout(session model.Guid) {
+	node.SessionStore.Del(string(session))
 }

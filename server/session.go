@@ -7,8 +7,7 @@ import (
 
 import (
 	"gopoker/event"
-	"gopoker/event/message"
-	"gopoker/util"
+	"gopoker/model"
 )
 
 // Connection - client connection
@@ -20,21 +19,21 @@ type Connection interface {
 
 // Session - client session
 type Session struct {
-	ID         string
+	ID         model.Guid
 	Connection Connection
-	Recv       event.MessageChannel
-	Send       *event.MessageChannel
+	Recv       event.Channel
+	Send       *event.Channel
 }
 
-func NewSessionID() string {
-	return util.RandomUuid()
+func NewSessionID() model.Guid {
+	return model.RandomGuid()
 }
 
 // NewSession - create new session
-func NewSession(id string, connection Connection) *Session {
+func NewSession(id model.Guid, connection Connection) *Session {
 	return &Session{
 		ID:         id,
-		Recv:       make(event.MessageChannel),
+		Recv:       make(event.Channel),
 		Connection: connection,
 	}
 }
@@ -51,9 +50,9 @@ func (session *Session) Start() {
 func (session *Session) read() {
 Loop:
 	for {
-		var message message.Message
+		event := &event.Event{}
 
-		err := session.Connection.Receive(&message)
+		err := session.Connection.Receive(event)
 		if err != nil {
 			switch err {
 			case io.EOF:
@@ -67,13 +66,13 @@ Loop:
 
 		}
 
-		*session.Send <- &message
+		*session.Send <- event
 	}
 }
 
 func (session *Session) write() {
-	for message := range session.Recv {
-		err := session.Connection.Send(message)
+	for event := range session.Recv {
+		err := session.Connection.Send(event)
 		if err != nil {
 			log.Printf("[session] write error: %s", err)
 

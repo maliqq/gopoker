@@ -1,5 +1,9 @@
 package protobuf
 
+import (
+	"code.google.com/p/goprotobuf/proto"
+)
+
 /*
 import (
 	"fmt"
@@ -8,9 +12,6 @@ import (
 	"time"
 )
 
-import (
-	"code.google.com/p/goprotobuf/proto"
-)
 
 NewMessage - create new message with payload
 func NewMessage(payload interface{}) *Message {
@@ -45,3 +46,19 @@ func (msg *Message) Payload2() Payload {
 	return nil
 }
 */
+
+func NewErrorMessage(err error) *Message {
+	return &Message{
+		ErrorMessage: &ErrorMessage{
+			Error: proto.String(err.Error()),
+		},
+	}
+}
+
+func NewChatMessage(body string) *Message {
+	return &Message{
+		ChatMessage: &ChatMessage{
+			Body: proto.String(body),
+		},
+	}
+}

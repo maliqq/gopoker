@@ -5,6 +5,7 @@ import (
 )
 
 import (
+	"gopoker/model"
 	"gopoker/storage"
 )
 
@@ -13,7 +14,7 @@ type Node struct {
 	Name   string
 	Config *Config
 
-	Rooms map[string]*Room
+	Rooms map[model.Guid]*Room
 
 	ZMQGateway *NodeZMQ
 
@@ -27,7 +28,7 @@ func NewNode(name string, config *Config) *Node {
 	node := &Node{
 		Name:   name,
 		Config: config,
-		Rooms:  map[string]*Room{},
+		Rooms:  map[model.Guid]*Room{},
 	}
 
 	if config.Store != nil {
@@ -79,15 +80,15 @@ func (n *Node) connectSessionStore() {
 }
 
 // Room - get room
-func (n *Node) Room(id string) *Room {
-	room, _ := n.Rooms[id]
+func (n *Node) Room(guid model.Guid) *Room {
+	room, _ := n.Rooms[guid]
 
 	return room
 }
 
 // AddRoom - add room
 func (n *Node) AddRoom(room *Room) bool {
-	n.Rooms[room.ID] = room
+	n.Rooms[room.Guid] = room
 
 	if n.Config.Logdir != "" {
 		room.createLogger(n.Config.Logdir)
@@ -101,6 +102,6 @@ func (n *Node) AddRoom(room *Room) bool {
 
 // RemoveRoom - remove room
 func (n *Node) RemoveRoom(room *Room) bool {
-	delete(n.Rooms, room.ID)
+	delete(n.Rooms, room.Guid)
 	return true
 }
