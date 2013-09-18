@@ -15,7 +15,7 @@ func (gp *GamePlay) MoveButton() {
 	gp.Betting.Pos = gp.Table.Button
 
 	gp.Broadcast.Notify(
-		message.MoveButton{gp.Table.Button},
+		&message.MoveButton{gp.Table.Button},
 	).All()
 }
 
@@ -29,7 +29,7 @@ func (gp *GamePlay) postSmallBlind(pos int) {
 	}
 
 	gp.Broadcast.Notify(
-		message.AddBet{pos, newBet},
+		&message.AddBet{pos, newBet},
 	).All()
 }
 
@@ -43,7 +43,7 @@ func (gp *GamePlay) postBigBlind(pos int) {
 	}
 
 	gp.Broadcast.Notify(
-		message.AddBet{pos, newBet},
+		&message.AddBet{pos, newBet},
 	).All()
 }
 

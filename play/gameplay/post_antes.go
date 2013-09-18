@@ -15,7 +15,7 @@ func (gp *GamePlay) PostAntes() {
 		gp.Betting.AddBet(newBet)
 
 		gp.Broadcast.Notify(
-			message.AddBet{pos, newBet},
+			&message.AddBet{pos, newBet},
 		).All()
 	}
 }

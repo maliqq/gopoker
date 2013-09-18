@@ -28,7 +28,7 @@ func (gp *GamePlay) BringIn() Transition {
 
 	gp.Table.SetButton(minPos)
 	gp.Broadcast.Notify(
-		message.MoveButton{minPos},
+		&message.MoveButton{minPos},
 	).All()
 
 	seat := gp.Table.Seat(minPos)

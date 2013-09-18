@@ -87,7 +87,8 @@ func (conn *Connection) receive() {
 		//log.Printf("received %d bytes for %s", len(data), topic)
 
 		event := &event.Event{}
-		if err = event.UnmarshalProto(data); err != nil {
+
+		if err = event.Unproto(data); err != nil {
 			log.Printf("unmarshal error: %s", err)
 		} else {
 			conn.Recv <- event

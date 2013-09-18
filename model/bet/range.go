@@ -56,7 +56,7 @@ func (r *Range) Proto() *protobuf.BetRange {
 	}
 }
 
-func (r *Range) UnmarshalProto(protoRange *protobuf.BetRange) {
+func (r *Range) Unproto(protoRange *protobuf.BetRange) {
 	newRange := Range{
 		Call: protoRange.GetCall(),
 		Min:  protoRange.GetMin(),

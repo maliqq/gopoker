@@ -222,8 +222,8 @@ func (h *Hand) Proto() *protobuf.Hand {
 	}
 }
 
-func UnmarshalProto(protoHand *protobuf.Hand) *Hand {
-	return &Hand{
+func (h *Hand) Unproto(protoHand *protobuf.Hand) {
+	*h = Hand{
 		Rank:   hand.Rank(protoHand.Rank.String()),
 		High:   BinaryCards(protoHand.High),
 		Value:  BinaryCards(protoHand.Value),

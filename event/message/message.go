@@ -1,8 +1,8 @@
 package message
 
 import (
-	"reflect"
 	"fmt"
+	"reflect"
 )
 
 import (
@@ -17,6 +17,7 @@ import (
 type Message interface {
 	EventMessage()
 	Proto() *protobuf.Message
+	Unproto(*protobuf.Message)
 }
 
 // type register
@@ -41,37 +42,37 @@ func InstanceFor(name string) Message {
 	if instance, found := types[name]; found {
 		return instance
 	}
-	
+
 	fmt.Printf("type: %s", name)
 	panic("unknown message type")
 }
 
 func init() {
-	register("AddBet", AddBet{})
-	register("RequireBet", RequireBet{})
-	register("BettingComplete", BettingComplete{})
-	
-	register("DealCards", DealCards{})
-	register("RequireDiscard", RequireDiscard{})
-	register("Discarded", Discarded{})
-	register("DiscardCards", DiscardCards{})
-	
-	register("PlayStart", PlayStart{})
-	register("StreetStart", StreetStart{})
-	register("PlayStop", PlayStop{})
-	
-	register("ShowHand", ShowHand{})
-	register("ShowCards", ShowCards{})
-	register("Winner", Winner{})
-	
-	register("MoveButton", MoveButton{})
-	register("JoinTable", JoinTable{})
-	register("SitOut", SitOut{})
-	register("ComeBack", ComeBack{})
-	register("LeaveTable", LeaveTable{})
-	
-	register("ErrorMessage", ErrorMessage{})
-	register("ChatMessage", ChatMessage{})
+	register("AddBet", &AddBet{})
+	register("RequireBet", &RequireBet{})
+	register("BettingComplete", &BettingComplete{})
+
+	register("DealCards", &DealCards{})
+	register("RequireDiscard", &RequireDiscard{})
+	register("Discarded", &Discarded{})
+	register("DiscardCards", &DiscardCards{})
+
+	register("PlayStart", &PlayStart{})
+	register("StreetStart", &StreetStart{})
+	register("PlayStop", &PlayStop{})
+
+	register("ShowHand", &ShowHand{})
+	register("ShowCards", &ShowCards{})
+	register("Winner", &Winner{})
+
+	register("MoveButton", &MoveButton{})
+	register("JoinTable", &JoinTable{})
+	register("SitOut", &SitOut{})
+	register("ComeBack", &ComeBack{})
+	register("LeaveTable", &LeaveTable{})
+
+	register("ErrorMessage", &ErrorMessage{})
+	register("ChatMessage", &ChatMessage{})
 }
 
 // AddBet

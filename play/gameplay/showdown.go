@@ -23,7 +23,7 @@ func (gp *GamePlay) ShowHands(ranking hand.Ranking, withBoard bool) ShowdownHand
 			hands[player] = hand
 
 			gp.Broadcast.Notify(
-				message.ShowHand{pos, player, pocket, *hand, hand.PrintString()},
+				&message.ShowHand{pos, player, pocket, *hand, hand.PrintString()},
 			).All()
 		}
 	}
@@ -86,7 +86,7 @@ func (gp *GamePlay) Winners(highHands ShowdownHands, lowHands ShowdownHands) {
 			seat := gp.Table.Seat(pos)
 			seat.AdvanceStack(amount)
 			gp.Broadcast.Notify(
-				message.Winner{pos, winner, amount},
+				&message.Winner{pos, winner, amount},
 			).All()
 		}
 	}
@@ -102,7 +102,7 @@ func (gp *GamePlay) Winner(pos int) {
 
 		winner := seat.Player
 		gp.Broadcast.Notify(
-			message.Winner{pos, winner, amount},
+			&message.Winner{pos, winner, amount},
 		).All()
 	}
 }

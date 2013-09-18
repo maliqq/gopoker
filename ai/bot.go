@@ -65,7 +65,7 @@ func (b *Bot) Join(roomID string, pos int, amount float64) {
 	b.stack = amount
 
 	log.Printf("joining table...")
-	b.zmqConn.Send <- message.JoinTable{b.ID, pos, amount}
+	b.zmqConn.Send <- &message.JoinTable{b.ID, pos, amount}
 }
 
 // Play - start bot
@@ -74,7 +74,7 @@ func (b *Bot) Play() {
 		//log.Printf("received msg: %s", msg)
 
 		switch msg := event.Message.(type) {
-		case message.PlayStart:
+		case *message.PlayStart:
 
 			b.cards = poker.Cards{}
 			b.board = poker.Cards{}
@@ -82,16 +82,16 @@ func (b *Bot) Play() {
 			b.opponentsNum = 6
 			b.stake = msg.Stake
 
-		case message.StreetStart:
+		case *message.StreetStart:
 
 			b.street = msg.Name
 
-		case message.BettingComplete:
+		case *message.BettingComplete:
 
 			b.pot = msg.Pot
 			b.bet = 0.
 
-		case message.DealCards:
+		case *message.DealCards:
 
 			switch msg.Type {
 			case deal.Board:
@@ -101,7 +101,7 @@ func (b *Bot) Play() {
 				b.cards = b.cards.Append(msg.Cards)
 			}
 
-		case message.RequireBet:
+		case *message.RequireBet:
 
 			if msg.Pos == b.pos {
 				// pause
@@ -110,7 +110,7 @@ func (b *Bot) Play() {
 				b.decide(msg.Range)
 			}
 
-		case message.AddBet:
+		case *message.AddBet:
 
 			if msg.Pos == b.pos {
 				b.bet = msg.Bet.Amount
@@ -142,7 +142,7 @@ func (b *Bot) call(amount float64) {
 
 func (b *Bot) addBet(newBet *model.Bet) {
 	log.Printf("=== %s", newBet)
-	b.zmqConn.Send <- message.AddBet{b.pos, newBet}
+	b.zmqConn.Send <- &message.AddBet{b.pos, newBet}
 }
 
 func (b *Bot) decide(betRange *bet.Range) {

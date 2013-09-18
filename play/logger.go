@@ -28,10 +28,10 @@ func (l *Logger) Handle(observer *event.Observer) {
 
 func (l *Logger) HandleEvent(event *event.Event) {
 	switch msg := event.Message.(type) {
-	case message.RequireBet:
-	case message.RequireDiscard:
+	case *message.RequireBet:
+	case *message.RequireDiscard:
 
-	case message.DealCards:
+	case *message.DealCards:
 
 		if msg.Type == deal.Board {
 			l.Printf("Dealt %s [%s]\n",
@@ -46,20 +46,20 @@ func (l *Logger) HandleEvent(event *event.Event) {
 			)
 		}
 
-	case message.MoveButton:
+	case *message.MoveButton:
 
 		l.Printf("Button is %d\n",
 			msg.Pos+1,
 		)
 
-	case message.AddBet:
+	case *message.AddBet:
 
 		l.Printf("Seat %d: %s\n",
 			msg.Pos,
 			msg.Bet,
 		)
 
-	case message.StreetStart:
+	case *message.StreetStart:
 
 		l.Printf("=== %s\n", msg.Name)
 

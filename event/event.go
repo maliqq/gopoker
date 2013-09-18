@@ -43,14 +43,25 @@ func (event *Event) UnmarshalJSON(data []byte) error {
 
 	json.Unmarshal(*raw["_type"], &event.Type)
 	json.Unmarshal(*raw["timestamp"], &event.Timestamp)
-	
+
 	event.Message = message.InstanceFor(event.Type)
 	json.Unmarshal(*raw["message"], &event.Message)
 
 	return nil
 }
 
-func (event *Event) UnmarshalProto(data []byte) error {
+func (event *Event) Unproto(data []byte) error {
+	raw := &protobuf.Event{}
+	err := proto.Unmarshal(data, raw)
+	if err != nil {
+		return err
+	}
+
+	event.Timestamp = raw.GetTimestamp()
+	event.Type = raw.GetType()
+	event.Message = message.InstanceFor(event.Type)
+	event.Message.Unproto(raw.Message)
+
 	return nil
 }
 

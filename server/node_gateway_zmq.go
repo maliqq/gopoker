@@ -104,7 +104,7 @@ func (gw *NodeZMQ) receive() {
 			event := &event.Event{}
 			guid := string(data[0])
 
-			err := event.UnmarshalProto(data[1])
+			err := event.Unproto(data[1])
 			if err != nil {
 				log.Printf("[zmq] unmarshal error: %s", err)
 			} else {

@@ -142,7 +142,7 @@ func (betting *Betting) ForceBet(pos int, seat *model.Seat, betType bet.Type, st
 }
 
 // RequireBet - require action
-func (betting *Betting) RequireBet(pos int, seat *model.Seat, limit game.Limit, stake *model.Stake) message.RequireBet {
+func (betting *Betting) RequireBet(pos int, seat *model.Seat, limit game.Limit, stake *model.Stake) *message.RequireBet {
 	betting.Pos = pos
 	betting.Seat = seat
 
@@ -154,7 +154,7 @@ func (betting *Betting) RequireBet(pos int, seat *model.Seat, limit game.Limit, 
 		betting.BetRange.AdjustByAvailable(seat.Stack)
 	}
 
-	return message.RequireBet{betting.Pos, betting.BetRange}
+	return &message.RequireBet{betting.Pos, betting.BetRange}
 }
 
 // AddBet - add action

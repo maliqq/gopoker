@@ -66,6 +66,6 @@ func (gp *GamePlay) ResetBetting() {
 
 	total := gp.Betting.Pot.Total()
 	gp.Broadcast.Notify(
-		message.BettingComplete{total},
+		&message.BettingComplete{total},
 	).All()
 }

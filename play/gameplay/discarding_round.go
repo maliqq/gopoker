@@ -28,14 +28,14 @@ func (gp *GamePlay) discard(p model.Player, cards poker.Cards) {
 	cardsNum := len(cards)
 
 	gp.Broadcast.Notify(
-		message.Discarded{pos, cardsNum},
+		&message.Discarded{pos, cardsNum},
 	).All()
 
 	if cardsNum > 0 {
 		newCards := gp.Deal.Discard(p, cards)
 
 		gp.Broadcast.Notify(
-			message.DealCards{pos, newCards, deal.Discard},
+			&message.DealCards{pos, newCards, deal.Discard},
 		).One(p)
 	}
 }

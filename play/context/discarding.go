@@ -27,10 +27,10 @@ func NewDiscarding(d *model.Deal) *Discarding {
 }
 
 // RequireDiscard - require discard
-func (discarding *Discarding) RequireDiscard(pos int, seat *model.Seat) message.RequireDiscard {
+func (discarding *Discarding) RequireDiscard(pos int, seat *model.Seat) *message.RequireDiscard {
 	discarding.Seat = seat
 	discarding.Required.Pos = pos
-	return discarding.Required
+	return &discarding.Required
 }
 
 // Start - start discarding
@@ -38,7 +38,7 @@ func (discarding *Discarding) Start() {
 	for {
 		select {
 		case msg := <-discarding.Discard:
-			payload := msg.(message.DiscardCards)
+			payload := msg.(*message.DiscardCards)
 			seat := discarding.Seat
 			cards := payload.Cards
 

@@ -40,7 +40,7 @@ func (b Bet) Proto() *protobuf.Bet {
 	}
 }
 
-func (b *Bet) UnmarshalProto(protoBet *protobuf.Bet) {
+func (b *Bet) Unproto(protoBet *protobuf.Bet) {
 	newBet := Bet{
 		Type:   bet.Type(protoBet.GetType()),
 		Amount: protoBet.GetAmount(),
