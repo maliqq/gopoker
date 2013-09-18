@@ -45,7 +45,7 @@ func (n *Node) StartZMQ() {
 
 	receiver, _ := context.NewSocket(zmq.PULL)
 	defer receiver.Close()
-	receiver.Bind(config.Receiver)
+	receiver.Connect(config.Receiver)
 
 	gw := &NodeZMQ{
 		Node: n,
@@ -100,7 +100,7 @@ func (gw *NodeZMQ) listen() {
 
 func (gw *NodeZMQ) receive() {
 	for {
-		for data, _ := gw.receiver.RecvMultipart(zmq.NOBLOCK); data != nil; {
+		for data, err := gw.receiver.RecvMultipart(zmq.NOBLOCK); err == nil; {
 			event := &event.Event{}
 			guid := string(data[0])
 

@@ -1,6 +1,11 @@
 package message
 
 import (
+	"reflect"
+	"fmt"
+)
+
+import (
 	"gopoker/event/message/protobuf"
 	"gopoker/model"
 	"gopoker/model/bet"
@@ -12,6 +17,61 @@ import (
 type Message interface {
 	EventMessage()
 	Proto() *protobuf.Message
+}
+
+// type register
+var types = map[string]Message{}
+
+func register(name string, instance Message) {
+	types[name] = instance
+}
+
+func TypeFor(instance Message) string {
+	typeName := reflect.TypeOf(instance).Name()
+
+	if typeName == "" {
+		fmt.Printf("msg: %#v", instance)
+		panic("unknown message type")
+	}
+
+	return typeName
+}
+
+func InstanceFor(name string) Message {
+	if instance, found := types[name]; found {
+		return instance
+	}
+	
+	fmt.Printf("type: %s", name)
+	panic("unknown message type")
+}
+
+func init() {
+	register("AddBet", AddBet{})
+	register("RequireBet", RequireBet{})
+	register("BettingComplete", BettingComplete{})
+	
+	register("DealCards", DealCards{})
+	register("RequireDiscard", RequireDiscard{})
+	register("Discarded", Discarded{})
+	register("DiscardCards", DiscardCards{})
+	
+	register("PlayStart", PlayStart{})
+	register("StreetStart", StreetStart{})
+	register("PlayStop", PlayStop{})
+	
+	register("ShowHand", ShowHand{})
+	register("ShowCards", ShowCards{})
+	register("Winner", Winner{})
+	
+	register("MoveButton", MoveButton{})
+	register("JoinTable", JoinTable{})
+	register("SitOut", SitOut{})
+	register("ComeBack", ComeBack{})
+	register("LeaveTable", LeaveTable{})
+	
+	register("ErrorMessage", ErrorMessage{})
+	register("ChatMessage", ChatMessage{})
 }
 
 // AddBet

@@ -26,13 +26,13 @@ func (play *Play) HandleEvent(event *event.Event) {
 			log.Printf("[protocol] error: %s", err)
 		}
 		// retranslate
-		play.Broadcast.Pass(event)
+		play.Broadcast.Pass(event).All()
 
 	case message.LeaveTable:
 
 		player := msg.Player
 		play.Table.RemovePlayer(player)
-		play.Broadcast.Pass(event)
+		play.Broadcast.Pass(event).All()
 		// TODO: fold & autoplay
 
 	case message.SitOut:
@@ -49,7 +49,7 @@ func (play *Play) HandleEvent(event *event.Event) {
 
 	case message.ChatMessage:
 
-		play.Broadcast.Pass(event)
+		play.Broadcast.Pass(event).All()
 
 	case message.AddBet:
 
@@ -64,7 +64,7 @@ func (play *Play) HandleEvent(event *event.Event) {
 		//seat := play.Table.Seat(pos)
 
 		play.Betting.Bet <- msg.Bet
-		play.Broadcast.Pass(event)
+		play.Broadcast.Pass(event).All()
 
 	case message.DiscardCards:
 

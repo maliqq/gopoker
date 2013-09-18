@@ -4,10 +4,9 @@ import (
 	"gopoker/event/message"
 )
 
-// Route - message with route
-type Route struct {
-	*Event
-	Notify
+type Notification struct {
+	Broker *Broker
+	Event  *Event
 }
 
 type messageChannel chan message.Message
@@ -18,78 +17,65 @@ type key interface {
 // Broadcast - broadcast hub
 type Broadcast struct {
 	*Broker
-	All   messageChannel
-	Route chan Route
 }
 
 // NewBroadcast - create new broadcast hub
 func NewBroadcast() *Broadcast {
-	broadcast := &Broadcast{
+	broadcast := Broadcast{
 		Broker: NewBroker(),
-		All:    make(chan message.Message),
-		Route:  make(chan Route),
 	}
-
-	go broadcast.receive()
-
-	return broadcast
+	return &broadcast
 }
 
-func (bcast *Broadcast) Pass(event *Event) {
-	bcast.Broker.Dispatch(Notify{All: true}, event)
-}
-
-func (bcast *Broadcast) receive() {
-	for {
-		select {
-		case msg := <-bcast.All:
-			bcast.Pass(NewEvent(msg))
-
-		case route := <-bcast.Route:
-			bcast.Broker.Dispatch(route.Notify, route.Event)
-		}
+func (bcast *Broadcast) Notify(msg message.Message) *Notification {
+	return &Notification{
+		Event:  NewEvent(msg),
+		Broker: bcast.Broker,
 	}
 }
 
-func (bcast *Broadcast) route(notify Notify) messageChannel {
-	channel := make(messageChannel)
+func (bcast *Broadcast) Pass(event *Event) *Notification {
+	return &Notification{
+		Event:  event,
+		Broker: bcast.Broker,
+	}
+}
 
-	go func() {
-		msg := <-channel
-		event := NewEvent(msg)
-		bcast.Route <- Route{event, notify}
-	}()
+func (n *Notification) route(notify Notify) {
+	n.Broker.Dispatch(notify, n.Event)
+}
 
-	return channel
+func (n *Notification) All() {
+	n.route(Notify{All: true})
 }
 
 // One - route to one receiver
-func (bcast *Broadcast) One(key key) messageChannel {
-	return bcast.route(Notify{
+func (n *Notification) One(key key) {
+	n.route(Notify{
 		One: key.String(),
 	})
 }
 
 // Except - route to all except
-func (bcast *Broadcast) Except(keys ...key) messageChannel {
+func (n *Notification) Except(keys ...key) {
 	except := make([]string, len(keys))
 	for i, a := range keys {
 		except[i] = a.String()
 	}
 
-	return bcast.route(Notify{
+	n.route(Notify{
 		Except: except,
 	})
 }
 
 // Only - route to only
-func (bcast *Broadcast) Only(keys ...key) messageChannel {
+func (n *Notification) Only(keys ...key) {
 	only := make([]string, len(keys))
 	for i, a := range keys {
 		only[i] = a.String()
 	}
 
-	return bcast.route(Notify{
+	n.route(Notify{
 		Only: only,
 	})
 }

@@ -92,7 +92,7 @@ func (n *Notify) RouteType() string {
 }
 
 // String - route to string
-func (n *Notify) String() string {
+func (n Notify) String() string {
 	s := fmt.Sprintf("[notify] %s", n.RouteType())
 
 	if n.One != "" {

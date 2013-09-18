@@ -27,10 +27,14 @@ func (gp *GamePlay) BringIn() Transition {
 	}
 
 	gp.Table.SetButton(minPos)
-	gp.Broadcast.All <- message.MoveButton{minPos}
+	gp.Broadcast.Notify(
+		message.MoveButton{minPos},
+	).All()
 
 	seat := gp.Table.Seat(minPos)
-	gp.Broadcast.One(seat.Player) <- gp.Betting.RequireBet(minPos, seat, gp.Game.Limit, gp.Stake)
+	gp.Broadcast.Notify(
+		gp.Betting.RequireBet(minPos, seat, gp.Game.Limit, gp.Stake),
+	).One(seat.Player)
 
 	return Next
 }

@@ -64,8 +64,7 @@ func (conn *Connection) send() {
 	for {
 		select {
 		case msg := <-conn.Send:
-			event := event.NewEvent(msg)
-			data, err := proto.Marshal(event.Proto())
+			data, err := proto.Marshal(event.NewEvent(msg).Proto())
 			if err != nil {
 				log.Printf("marshal error: %s", err)
 			} else {

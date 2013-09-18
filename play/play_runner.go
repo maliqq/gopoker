@@ -53,7 +53,7 @@ func (play *Play) run() {
 	}
 
 	// notify about play start
-	play.Broadcast.All <- message.PlayStart{}
+	play.Broadcast.Notify(message.PlayStart{}).All()
 
 	// rotate game
 	if play.Mix != nil {
@@ -83,8 +83,9 @@ func (play *Play) run() {
 	// run streets
 Streets:
 	for _, street := range street.Get(play.Game.Group) {
+
 		log.Printf("[play] street %s\n", street)
-		play.Broadcast.All <- message.StreetStart{string(street)}
+		play.Broadcast.Notify(message.StreetStart{string(street)}).All()
 
 		play.Street = street
 
@@ -122,9 +123,10 @@ Streets:
 
 		play.GamePlay.Winners(highHands, lowHands)
 	}
+
 	// deal stop
 	log.Println("[play] deal stop")
-	play.Broadcast.All <- message.PlayStop{}
+	play.Broadcast.Notify(message.PlayStop{}).All()
 
 	play.scheduleNextDeal()
 }

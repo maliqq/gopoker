@@ -38,7 +38,9 @@ Loop:
 				pos := active[0]
 				seat := gp.Table.Seat(pos)
 
-				gp.Broadcast.One(seat.Player) <- gp.Betting.RequireBet(pos, seat, gp.Game.Limit, gp.Stake)
+				gp.Broadcast.Notify(
+					gp.Betting.RequireBet(pos, seat, gp.Game.Limit, gp.Stake),
+				).One(seat.Player)
 
 				continue Loop
 			}
@@ -63,5 +65,7 @@ func (gp *GamePlay) ResetBetting() {
 	}
 
 	total := gp.Betting.Pot.Total()
-	gp.Broadcast.All <- message.BettingComplete{total}
+	gp.Broadcast.Notify(
+		message.BettingComplete{total},
+	).All()
 }

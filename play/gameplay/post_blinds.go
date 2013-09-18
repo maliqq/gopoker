@@ -14,7 +14,9 @@ func (gp *GamePlay) MoveButton() {
 	gp.Table.MoveButton()
 	gp.Betting.Pos = gp.Table.Button
 
-	gp.Broadcast.All <- message.MoveButton{gp.Table.Button}
+	gp.Broadcast.Notify(
+		message.MoveButton{gp.Table.Button},
+	).All()
 }
 
 func (gp *GamePlay) postSmallBlind(pos int) {
@@ -26,7 +28,9 @@ func (gp *GamePlay) postSmallBlind(pos int) {
 		log.Fatalf("Error adding small blind for %d: %s", pos, err)
 	}
 
-	gp.Broadcast.All <- message.AddBet{pos, newBet}
+	gp.Broadcast.Notify(
+		message.AddBet{pos, newBet},
+	).All()
 }
 
 func (gp *GamePlay) postBigBlind(pos int) {
@@ -38,7 +42,9 @@ func (gp *GamePlay) postBigBlind(pos int) {
 		log.Fatalf("Error adding big blind for %d: %s", pos, err)
 	}
 
-	gp.Broadcast.All <- message.AddBet{pos, newBet}
+	gp.Broadcast.Notify(
+		message.AddBet{pos, newBet},
+	).All()
 }
 
 // PostBlinds - post blinds

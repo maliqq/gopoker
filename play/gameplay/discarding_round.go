@@ -14,7 +14,9 @@ func (gp *GamePlay) StartDiscardingRound() Transition {
 	for _, pos := range gp.Table.AllSeats().InPlay() {
 		seat := gp.Table.Seat(pos)
 
-		gp.Broadcast.One(seat.Player) <- discarding.RequireDiscard(pos, seat)
+		gp.Broadcast.Notify(
+			discarding.RequireDiscard(pos, seat),
+		).One(seat.Player)
 	}
 
 	return Next
@@ -25,11 +27,15 @@ func (gp *GamePlay) discard(p model.Player, cards poker.Cards) {
 
 	cardsNum := len(cards)
 
-	gp.Broadcast.All <- message.Discarded{pos, cardsNum}
+	gp.Broadcast.Notify(
+		message.Discarded{pos, cardsNum},
+	).All()
 
 	if cardsNum > 0 {
 		newCards := gp.Deal.Discard(p, cards)
 
-		gp.Broadcast.One(p) <- message.DealCards{pos, newCards, deal.Discard}
+		gp.Broadcast.Notify(
+			message.DealCards{pos, newCards, deal.Discard},
+		).One(p)
 	}
 }
