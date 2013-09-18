@@ -2,7 +2,7 @@ package server
 
 import (
 	"log"
-	"time"
+	_"time"
 )
 
 import (
@@ -11,8 +11,8 @@ import (
 )
 
 import (
-	"gopoker/event"
 	"gopoker/model"
+	"gopoker/event"
 	rpc_service "gopoker/server/noderpc"
 )
 
@@ -64,29 +64,7 @@ func (n *Node) StartZMQ() {
 	n.ZMQGateway = gw
 
 	go gw.listen()
-	go gw.receive()
-	gw.accept()
-}
-
-func (gw *NodeZMQ) accept() {
-	for {
-		select {
-		case req := <-gw.connect:
-			log.Printf("[zmq] connect request: %+v", req)
-			stop := make(chan int)
-			gw.connections[req.Player] = stop
-			go gw.startConnection(req.Player, req.Room, &stop)
-
-		case req := <-gw.disconnect:
-			log.Printf("[zmq] disconnect request: %+v", req)
-			player := model.Player(req.Player)
-			stop, ok := gw.connections[player]
-			if ok {
-				stop <- 1
-				delete(gw.connections, player)
-			}
-		}
-	}
+	gw.receive()
 }
 
 func (gw *NodeZMQ) listen() {
@@ -100,26 +78,39 @@ func (gw *NodeZMQ) listen() {
 
 func (gw *NodeZMQ) receive() {
 	for {
-		for data, _ := gw.receiver.RecvMultipart(zmq.NOBLOCK); data != nil; {
-			event := &event.Event{}
-			guid := string(data[0])
-
-			err := event.UnmarshalProto(data[1])
-			if err != nil {
-				log.Printf("[zmq] unmarshal error: %s", err)
-			} else {
-				room := gw.Node.Rooms[model.Guid(guid)]
-				room.Recv <- event
-			}
+		data, err := gw.receiver.RecvMultipart(zmq.NOBLOCK)
+		if err != nil {
+			log.Fatalf("[zmq] receive error: %s", err)
 		}
-		time.Sleep(1e6)
+
+		player := model.Player(data[0])
+		guid := model.Guid(data[1])
+
+		if _, connected := gw.connections[player]; !connected {
+			go gw.startConnection(player, guid)
+		}
+	
+		event := &event.Event{}
+		if err = event.UnmarshalProto(data[2]); err != nil {
+			log.Printf("[zmq] unmarshal error: %s", err)
+		} else {
+			room := gw.Node.Rooms[model.Guid(guid)]
+			room.Recv <- event
+		}
 	}
 }
 
-func (gw *NodeZMQ) startConnection(player model.Player, guid model.Guid, stop *chan int) {
-	recv := make(event.Channel, 100)
-
+func (gw *NodeZMQ) startConnection(player model.Player, guid model.Guid) {
 	room := gw.Node.Rooms[guid]
+
+	// make it stoppable
+	stop := make(chan int)
+
+	gw.connections[player] = stop
+	defer delete(gw.connections, player)
+
+	// bind to broadcast hub
+	recv := make(event.Channel, 100)
 
 	room.Broadcast.Bind(player, &recv)
 	defer room.Broadcast.Unbind(player)
@@ -131,7 +122,7 @@ Loop:
 			//log.Printf("[zmq] sending %s to %s", msg, playerID)
 			gw.send(event, player)
 
-		case <-*stop:
+		case <-stop:
 			log.Printf("[zmq] stop connection for %s", player)
 
 			break Loop

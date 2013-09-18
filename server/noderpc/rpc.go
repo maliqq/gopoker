@@ -1,14 +1,20 @@
 package noderpc
 
 import (
-	"gopoker/event"
 	"gopoker/model"
 	"gopoker/play/mode"
 )
 
+type Status string
+
+const (
+	Ok Status = "ok"
+	Error Status = "error"
+)
+
 // CallResult - RPC call result
 type CallResult struct {
-	Status  string
+	Status  Status
 	Message string
 }
 
@@ -29,12 +35,6 @@ type RequestRoom struct {
 type StartRoom struct {
 	Guid model.Guid
 	Mode mode.Type
-}
-
-// NotifyRoom - send protocol message
-type NotifyRoom struct {
-	Guid  model.Guid
-	Event *event.Event
 }
 
 // ConnectGateway - connect node ZMQ gateway
