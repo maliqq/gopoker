@@ -1,4 +1,4 @@
-package zmq
+package client
 
 import (
 	"log"
@@ -15,7 +15,7 @@ import (
 )
 
 // Connection - 0mq connection
-type Connection struct {
+type ZmqGatewayConnection struct {
 	topic string
 
 	context    *zmq.Context
@@ -27,7 +27,7 @@ type Connection struct {
 }
 
 // NewConnection - create new connection
-func NewConnection(publisher, receiver string, topic string) *Connection {
+func ConnectZmqGateway(publisher, receiver string, topic string) *ZmqGatewayConnection {
 	context, _ := zmq.NewContext()
 
 	subscriber, _ := context.NewSocket(zmq.SUB)
@@ -43,7 +43,7 @@ func NewConnection(publisher, receiver string, topic string) *Connection {
 		log.Printf("receiver bind success")
 	}
 
-	conn := &Connection{
+	conn := &ZmqGatewayConnection{
 		topic: topic,
 
 		context:    context,
@@ -60,7 +60,7 @@ func NewConnection(publisher, receiver string, topic string) *Connection {
 	return conn
 }
 
-func (conn *Connection) send() {
+func (conn *ZmqGatewayConnection) send() {
 	for {
 		select {
 		case msg := <-conn.Send:
@@ -75,7 +75,7 @@ func (conn *Connection) send() {
 }
 
 // Start - start loop
-func (conn *Connection) receive() {
+func (conn *ZmqGatewayConnection) receive() {
 	for {
 		parts, err := conn.subscriber.RecvMultipart(0)
 		if err != nil {
@@ -96,7 +96,7 @@ func (conn *Connection) receive() {
 	}
 }
 
-func (conn *Connection) Close() {
+func (conn *ZmqGatewayConnection) Close() {
 	conn.subscriber.Close()
 	conn.sender.Close()
 	conn.context.Close()

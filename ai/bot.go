@@ -9,7 +9,7 @@ import (
 )
 
 import (
-	zeromq_client "gopoker/client/zmq"
+	"gopoker/client"
 	"gopoker/event/message"
 	"gopoker/model"
 	"gopoker/model/bet"
@@ -38,7 +38,7 @@ type Bot struct {
 
 	*context
 
-	zmqConn *zeromq_client.Connection
+	zmqConn *client.ZmqGatewayConnection
 }
 
 // NewBot - create new bot
@@ -50,7 +50,7 @@ func NewBot(id, publisher, receiver string) *Bot {
 
 	return &Bot{
 		ID:      model.Player(id),
-		zmqConn: zeromq_client.NewConnection(publisher, receiver, id),
+		zmqConn: client.ConnectZmqGateway(publisher, receiver, id),
 		context: &context{
 			cards: poker.Cards{},
 			board: poker.Cards{},

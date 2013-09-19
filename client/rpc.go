@@ -1,4 +1,4 @@
-package rpc
+package client
 
 import (
 	"fmt"
@@ -12,21 +12,21 @@ import (
 )
 
 // Connection - RPC tcp connection
-type Connection struct {
+type RpcClient struct {
 	*rpc.Client
 }
 
-func NewConnection(rpcAddr string) *Connection {
+func NewConnection(rpcAddr string) *RpcClient {
 	client, err := jsonrpc.Dial("tcp", rpcAddr)
 	if err != nil {
 		log.Fatal("dialing error: ", err)
 	}
-	return &Connection{
+	return &RpcClient{
 		Client: client,
 	}
 }
 
-func (c *Connection) Call(method string, args interface{}) rpc_service.CallResult {
+func (c *RpcClient) Call(method string, args interface{}) rpc_service.CallResult {
 	var result rpc_service.CallResult
 
 	err := c.Client.Call(fmt.Sprintf("NodeRPC.%s", method), args, &result)
