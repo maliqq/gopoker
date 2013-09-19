@@ -206,8 +206,8 @@ var Mixes = map[game.MixedGame][]MixOptions{
 // LoadGames - load games from config dir
 func LoadGames(configDir string) {
 	ReadConfig(configDir, GamesConfigFile, &Games)
-	log.Printf("games loaded: %d", len(Games))
+	log.Printf("[config] games loaded: %d", len(Games))
 
 	ReadConfig(configDir, MixesConfigFile, &Mixes)
-	log.Printf("mixes loaded: %d", len(Mixes))
+	log.Printf("[config] mixes loaded: %d", len(Mixes))
 }
