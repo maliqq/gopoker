@@ -10,19 +10,17 @@ type Observer struct {
 }
 
 func NewObserver(handler Handler) *Observer {
-	observer := Observer{Handler: handler}
-	observer.Start()
-	return &observer
-}
-
-func (observer *Observer) Start() {
-	observer.Recv = make(Channel)
+	observer := Observer{
+		Handler: handler,
+		Recv:    make(Channel),
+	}
 	go observer.receive()
+	return &observer
 }
 
 func (observer *Observer) receive() {
 	for {
-		msg := <-observer.Recv
-		observer.Handler.HandleEvent(msg)
+		event := <-observer.Recv
+		observer.Handler.HandleEvent(event)
 	}
 }

@@ -28,7 +28,7 @@ func register(name string, instance Message) {
 }
 
 func TypeFor(instance Message) string {
-	typeName := reflect.TypeOf(instance).Name()
+	typeName := reflect.Indirect(reflect.ValueOf(instance)).Type().Name()
 
 	if typeName == "" {
 		fmt.Printf("msg: %#v", instance)
