@@ -46,7 +46,7 @@ func NewBot(id, publisher, receiver string) *Bot {
 	if id == "" {
 		id = util.RandomUuid()
 	}
-	log.SetPrefix(fmt.Sprintf("[bot#%s]", id))
+	log.SetPrefix(fmt.Sprintf("[bot#%s] ", id))
 
 	return &Bot{
 		ID:      model.Player(id),
