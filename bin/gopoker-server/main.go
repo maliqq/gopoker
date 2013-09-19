@@ -5,6 +5,7 @@ package main
 //
 import (
 	"flag"
+	"log"
 	"runtime"
 )
 
@@ -24,6 +25,8 @@ var (
 
 func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
+
+	log.SetPrefix("[server] ")
 
 	flag.Parse()
 	model.LoadGames(*configDir)
