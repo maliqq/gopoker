@@ -23,9 +23,6 @@ func NewLogger(writer io.Writer) *Logger {
 	}
 }
 
-func (l *Logger) Handle(observer *event.Observer) {
-}
-
 func (l *Logger) HandleEvent(event *event.Event) {
 	switch msg := event.Message.(type) {
 	case *message.RequireBet:
@@ -80,6 +77,6 @@ func (l *Logger) HandleEvent(event *event.Event) {
 
 	default:
 
-		l.Printf("got %s\n", msg)
+		l.Printf("got %s\n", event)
 	}
 }
