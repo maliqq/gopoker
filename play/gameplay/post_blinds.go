@@ -10,7 +10,7 @@ import (
 )
 
 // MoveButton - move table button
-func (gp *GamePlay) MoveButton() {
+func (gp *Gameplay) MoveButton() {
 	gp.Table.MoveButton()
 	gp.Betting.Pos = gp.Table.Button
 
@@ -19,7 +19,7 @@ func (gp *GamePlay) MoveButton() {
 	).All()
 }
 
-func (gp *GamePlay) postSmallBlind(pos int) {
+func (gp *Gameplay) postSmallBlind(pos int) {
 	t := gp.Table
 	newBet := gp.Betting.ForceBet(pos, t.Seat(pos), bet.SmallBlind, gp.Stake)
 
@@ -33,7 +33,7 @@ func (gp *GamePlay) postSmallBlind(pos int) {
 	).All()
 }
 
-func (gp *GamePlay) postBigBlind(pos int) {
+func (gp *Gameplay) postBigBlind(pos int) {
 	t := gp.Table
 	newBet := gp.Betting.ForceBet(pos, t.Seat(pos), bet.BigBlind, gp.Stake)
 
@@ -48,7 +48,7 @@ func (gp *GamePlay) postBigBlind(pos int) {
 }
 
 // PostBlinds - post blinds
-func (gp *GamePlay) PostBlinds() {
+func (gp *Gameplay) PostBlinds() {
 	t := gp.Table
 
 	active := t.AllSeats().Active()

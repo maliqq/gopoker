@@ -11,7 +11,7 @@ import (
 type ShowdownHands map[model.Player]*poker.Hand
 
 // ShowHands - show hands for players in pot
-func (gp *GamePlay) ShowHands(ranking hand.Ranking, withBoard bool) ShowdownHands {
+func (gp *Gameplay) ShowHands(ranking hand.Ranking, withBoard bool) ShowdownHands {
 	d := gp.Deal
 
 	hands := ShowdownHands{}
@@ -48,7 +48,7 @@ func best(sidePot *model.SidePot, hands ShowdownHands) (model.Player, *poker.Han
 }
 
 // Winners - show pot winners
-func (gp *GamePlay) Winners(highHands ShowdownHands, lowHands ShowdownHands) {
+func (gp *Gameplay) Winners(highHands ShowdownHands, lowHands ShowdownHands) {
 	hi := highHands != nil
 	lo := lowHands != nil
 
@@ -93,7 +93,7 @@ func (gp *GamePlay) Winners(highHands ShowdownHands, lowHands ShowdownHands) {
 }
 
 // Winner - single winner
-func (gp *GamePlay) Winner(pos int) {
+func (gp *Gameplay) Winner(pos int) {
 	for _, sidePot := range gp.Betting.Pot.SidePots() {
 		amount := sidePot.Total()
 

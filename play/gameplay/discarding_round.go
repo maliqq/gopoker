@@ -8,7 +8,7 @@ import (
 )
 
 // StartDiscardingRound - start discarding round
-func (gp *GamePlay) StartDiscardingRound() Transition {
+func (gp *Gameplay) StartDiscardingRound() Transition {
 	discarding := gp.Discarding
 
 	for _, pos := range gp.Table.AllSeats().InPlay() {
@@ -22,7 +22,7 @@ func (gp *GamePlay) StartDiscardingRound() Transition {
 	return Next
 }
 
-func (gp *GamePlay) discard(p model.Player, cards poker.Cards) {
+func (gp *Gameplay) discard(p model.Player, cards poker.Cards) {
 	pos, _ := gp.Table.Pos(p)
 
 	cardsNum := len(cards)

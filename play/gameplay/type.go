@@ -19,8 +19,8 @@ const (
 	Next Transition = "next"
 )
 
-// GamePlay - gameplay context
-type GamePlay struct {
+// Gameplay - gameplay context
+type Gameplay struct {
 	// dealt cards context
 	Deal *model.Deal
 
@@ -46,9 +46,9 @@ type GamePlay struct {
 	Exit     chan int                `json:"-"`
 }
 
-// NewGamePlay - create gameplay context
-func NewGamePlay() *GamePlay {
-	return &GamePlay{
+// NewGameplay - create gameplay context
+func NewGameplay() *Gameplay {
+	return &Gameplay{
 		Broadcast: event.NewBroadcast(),
 		NextDeal:  make(chan (<-chan time.Time)),
 		Exit:      make(chan int),

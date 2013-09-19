@@ -6,7 +6,7 @@ import (
 )
 
 // DealHole - deal hole cards
-func (gp *GamePlay) DealHole(cardsNum int) {
+func (gp *Gameplay) DealHole(cardsNum int) {
 	for _, pos := range gp.Table.AllSeats().InPlay() {
 		player := gp.Table.Player(pos)
 
@@ -19,7 +19,7 @@ func (gp *GamePlay) DealHole(cardsNum int) {
 }
 
 // DealDoor - deal door cards
-func (gp *GamePlay) DealDoor(cardsNum int) {
+func (gp *Gameplay) DealDoor(cardsNum int) {
 	for _, pos := range gp.Table.AllSeats().InPlay() {
 		player := gp.Table.Player(pos)
 
@@ -32,7 +32,7 @@ func (gp *GamePlay) DealDoor(cardsNum int) {
 }
 
 // DealBoard - deal board cards
-func (gp *GamePlay) DealBoard(cardsNum int) {
+func (gp *Gameplay) DealBoard(cardsNum int) {
 	cards := gp.Deal.DealBoard(cardsNum)
 
 	gp.Broadcast.Notify(

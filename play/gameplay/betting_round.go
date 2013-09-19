@@ -11,7 +11,7 @@ const (
 )
 
 // StartBettingRound - start betting round
-func (gp *GamePlay) StartBettingRound() Transition {
+func (gp *Gameplay) StartBettingRound() Transition {
 	//gp.Broadcast.All <- message.NotifyBettingStart(gp.Betting)
 	go gp.Betting.Start()
 
@@ -56,7 +56,7 @@ Loop:
 }
 
 // ResetBetting - complete betting round
-func (gp *GamePlay) ResetBetting() {
+func (gp *Gameplay) ResetBetting() {
 	gp.Betting.Clear(gp.Table.Button)
 
 	for _, pos := range gp.Table.AllSeats().InPlay() {

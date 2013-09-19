@@ -6,7 +6,7 @@ import (
 )
 
 // PostAntes - post antes
-func (gp *GamePlay) PostAntes() {
+func (gp *Gameplay) PostAntes() {
 	for _, pos := range gp.Table.AllSeats().Active() {
 		seat := gp.Table.Seat(pos)
 
