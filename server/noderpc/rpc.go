@@ -37,17 +37,6 @@ type StartRoom struct {
 	Mode mode.Type
 }
 
-// ConnectGateway - connect node ZMQ gateway
-type ConnectGateway struct {
-	Room   model.Guid
-	Player model.Player
-}
-
-// DisconnectGateway - disconnect node ZMQ gateway
-type DisconnectGateway struct {
-	Player model.Player
-}
-
 type Login struct {
 	Username string
 	Password string

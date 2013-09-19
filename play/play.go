@@ -6,7 +6,6 @@ import (
 
 import (
 	"gopoker/event"
-	"gopoker/event/message/protobuf"
 	"gopoker/model"
 	"gopoker/play/context"
 	"gopoker/play/gameplay"
@@ -70,14 +69,5 @@ func (play *Play) receive() {
 		case newState := <-play.stateChange:
 			play.HandleStateChange(newState)
 		}
-	}
-}
-
-// Proto - play to protobuf
-func (play *Play) ProtoPlay() *protobuf.Play {
-	return &protobuf.Play{
-		Table: play.Table.Proto(),
-		Game:  play.Game.Proto(),
-		Stake: play.Stake.Proto(),
 	}
 }

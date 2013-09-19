@@ -16,7 +16,7 @@ func (play *Play) HandleEvent(event *event.Event) {
 	log.Printf(util.Color(util.Yellow, event.String()))
 
 	switch msg := event.Message.(type) {
-	case message.JoinTable:
+	case *message.JoinTable:
 
 		player, pos, amount := msg.Player, msg.Pos, msg.Amount
 		_, err := play.Table.AddPlayer(player, pos, amount)
@@ -26,32 +26,32 @@ func (play *Play) HandleEvent(event *event.Event) {
 			log.Printf("[protocol] error: %s", err)
 		}
 		// retranslate
-		play.Broadcast.Pass(event)
+		play.Broadcast.Pass(event).All()
 
-	case message.LeaveTable:
+	case *message.LeaveTable:
 
 		player := msg.Player
 		play.Table.RemovePlayer(player)
-		play.Broadcast.Pass(event)
+		play.Broadcast.Pass(event).All()
 		// TODO: fold & autoplay
 
-	case message.SitOut:
+	case *message.SitOut:
 
 		pos := msg.Pos
 		play.Table.Seat(pos).State = seat.Idle
 		// TODO: fold
 
-	case message.ComeBack:
+	case *message.ComeBack:
 
 		pos := msg.Pos
 
 		play.Table.Seat(pos).State = seat.Ready
 
-	case message.ChatMessage:
+	case *message.ChatMessage:
 
-		play.Broadcast.Pass(event)
+		play.Broadcast.Pass(event).All()
 
-	case message.AddBet:
+	case *message.AddBet:
 
 		if !play.Betting.IsActive() {
 			return
@@ -64,9 +64,9 @@ func (play *Play) HandleEvent(event *event.Event) {
 		//seat := play.Table.Seat(pos)
 
 		play.Betting.Bet <- msg.Bet
-		play.Broadcast.Pass(event)
+		play.Broadcast.Pass(event).All()
 
-	case message.DiscardCards:
+	case *message.DiscardCards:
 
 		play.Discarding.Discard <- msg
 

@@ -1,4 +1,4 @@
-package cli
+package main
 
 import (
 	"bufio"
@@ -28,7 +28,7 @@ type Connection struct {
 
 // Reply - reply to play
 func (c *Connection) Reply(msg message.Message) {
-	c.Server.Recv <- event.NewEvent(msg)
+	c.Server.Recv <- event.New(msg)
 }
 
 // Handle - handle protocol message
@@ -36,7 +36,7 @@ func (c *Connection) Handle(event *event.Event) {
 	log.Println(util.Color(util.Green, fmt.Sprintf("[receive] %s", event)))
 
 	switch msg := event.Message.(type) {
-	case message.RequireBet:
+	case *message.RequireBet:
 
 		fmt.Printf("%s\n", msg)
 
@@ -57,10 +57,10 @@ func (c *Connection) Handle(event *event.Event) {
 		}
 
 		if newBet != nil {
-			c.Reply(message.AddBet{pos, newBet})
+			c.Reply(&message.AddBet{pos, newBet})
 		}
 
-	case message.RequireDiscard:
+	case *message.RequireDiscard:
 
 		pos := msg.Pos
 		seat := c.Server.Table.Seat(pos)
@@ -72,9 +72,9 @@ func (c *Connection) Handle(event *event.Event) {
 			cards = readCards()
 		}
 
-		c.Reply(message.DiscardCards{pos, cards})
+		c.Reply(&message.DiscardCards{pos, cards})
 
-	case message.DealCards:
+	case *message.DealCards:
 
 		if msg.Type == deal.Board {
 			fmt.Printf("Dealt %s %s\n", msg.Type, msg.Cards.ConsoleString())
@@ -82,25 +82,25 @@ func (c *Connection) Handle(event *event.Event) {
 			fmt.Printf("Dealt %s %s to %d\n", msg.Type, msg.Cards.ConsoleString(), msg.Pos)
 		}
 
-	case message.MoveButton:
+	case *message.MoveButton:
 		pos := msg.Pos
 
 		fmt.Printf("Button is %d\n", pos+1)
 
-	case message.AddBet:
+	case *message.AddBet:
 
 		pos := msg.Pos
 		player := c.Server.Table.Player(pos)
 
 		fmt.Printf("Player %s: %s\n", player, msg.Bet)
 
-	case message.BettingComplete:
+	case *message.BettingComplete:
 
 		pot := msg.Pot
 
 		fmt.Printf("Pot size: %.2f\nBoard: %s\n", pot, c.Server.Deal.Board.ConsoleString())
 
-	case message.ShowHand:
+	case *message.ShowHand:
 
 		pos := msg.Pos
 		hand := msg.Hand
@@ -108,7 +108,7 @@ func (c *Connection) Handle(event *event.Event) {
 
 		fmt.Printf("Player %s has %s (%s)\n", player, msg.Cards.ConsoleString(), hand.PrintString())
 
-	case message.Winner:
+	case *message.Winner:
 
 		pos := msg.Pos
 		amount := msg.Amount

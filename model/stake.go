@@ -160,7 +160,11 @@ func (stake *Stake) Proto() *protobuf.Stake {
 	}
 }
 
-func (stake *Stake) UnmarshalProto(protoStake *protobuf.Stake) {
-	// FIXME
-	*stake = Stake{}
+func (stake *Stake) Unproto(p *protobuf.Stake) {
+	*stake = Stake{
+		BigBlind:   p.GetBigBlind(),
+		SmallBlind: p.GetSmallBlind(),
+		Ante:       p.GetAnte(),
+		BringIn:    p.GetBringIn(),
+	}
 }

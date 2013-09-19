@@ -117,13 +117,12 @@ func (game *Game) Proto() *protobuf.Game {
 	}
 }
 
-func (g *Game) UnmarshalProto(protoGame *protobuf.Game) {
-	newGame := NewGame(
-		game.LimitedGame(protoGame.GetType().String()),
-		game.Limit(protoGame.GetLimit().String()),
-		int(protoGame.GetTableSize()),
+func (g *Game) Unproto(p *protobuf.Game) {
+	*g = *NewGame(
+		game.LimitedGame(p.GetType().String()),
+		game.Limit(p.GetLimit().String()),
+		int(p.GetTableSize()),
 	)
-	*g = *newGame
 }
 
 func (g *Game) UnmarshalJSON(data []byte) error {

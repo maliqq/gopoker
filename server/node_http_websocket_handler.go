@@ -9,7 +9,7 @@ import (
 )
 
 import (
-	websocket_client "gopoker/client/ws"
+	"gopoker/client/websocket_client"
 	"gopoker/event/message"
 	"gopoker/model"
 )

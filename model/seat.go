@@ -159,7 +159,10 @@ func (seat *Seat) Proto() *protobuf.Seat {
 	}
 }
 
-func (seat *Seat) UnmarshalProto(protoSeat *protobuf.Seat) {
-	// FIXME
-	*seat = Seat{}
+func (seat *Seat) Unproto(p *protobuf.Seat) {
+	*seat = Seat{
+		State: seatState.State(p.GetState().String()),
+		Stack: p.GetStack(),
+		Bet:   p.GetBet(),
+	}
 }

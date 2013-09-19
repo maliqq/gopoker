@@ -30,6 +30,14 @@ type Subscriber struct {
 	Channel *Channel
 }
 
+func SubscribeUser(key string, channel *Channel) Subscriber {
+	return Subscriber{Key: key, Role: User, Channel: channel}
+}
+
+func SubscribeSystem(key string, channel *Channel) Subscriber {
+	return Subscriber{Key: key, Role: System, Channel: channel}
+}
+
 // Broker - pubsub broker
 type Broker struct {
 	exchange map[Topic]map[string]Subscriber
@@ -92,7 +100,7 @@ func (n *Notify) RouteType() string {
 }
 
 // String - route to string
-func (n *Notify) String() string {
+func (n Notify) String() string {
 	s := fmt.Sprintf("[notify] %s", n.RouteType())
 
 	if n.One != "" {

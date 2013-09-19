@@ -17,7 +17,6 @@ import (
 	"gopoker/model"
 	"gopoker/model/game"
 
-	"gopoker/client/cli"
 	"gopoker/play"
 )
 
@@ -57,7 +56,7 @@ func main() {
 
 	play.Start()
 
-	conn := &cli.Connection{
+	conn := &Connection{
 		Server: play,
 	}
 
@@ -86,7 +85,7 @@ func createPlay(me *event.Channel) *play.Play {
 	for i, player := range players {
 		if i < size {
 			play.Broadcast.Bind(player, me)
-			play.Recv <- event.NewEvent(message.JoinTable{player, i, stack})
+			play.Recv <- event.New(&message.JoinTable{player, i, stack})
 		}
 	}
 

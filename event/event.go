@@ -3,7 +3,6 @@ package event
 import (
 	"encoding/json"
 	"fmt"
-	"reflect"
 	"time"
 )
 
@@ -17,28 +16,16 @@ import (
 )
 
 type Event struct {
-	Type      string          `json:_type`
-	Timestamp int64           `json:timestamp`
-	Message   message.Message `json:message`
+	Type      string          `json:_type bson:_type`
+	Timestamp int64           `json:timestamp bson:timestamp`
+	Message   message.Message `json:message bson:message`
 }
 
 type Channel chan *Event
 
-func getType(msg message.Message) string {
-	msgType := reflect.TypeOf(msg)
-	typeName := msgType.Name()
-
-	if typeName == "" {
-		fmt.Printf("msg: %#v", msg)
-		panic("unknown message type")
-	}
-
-	return typeName
-}
-
-func NewEvent(msg message.Message) *Event {
+func New(msg message.Message) *Event {
 	event := Event{
-		Type:      getType(msg),
+		Type:      message.TypeFor(msg),
 		Timestamp: time.Now().Unix(),
 		Message:   msg,
 	}
@@ -56,19 +43,31 @@ func (event *Event) UnmarshalJSON(data []byte) error {
 
 	json.Unmarshal(*raw["_type"], &event.Type)
 	json.Unmarshal(*raw["timestamp"], &event.Timestamp)
-	/*
-		msg := message.Type(msgType)
-		json.Unmarshal(*raw["message"], &msg)
-	*/
+
+	event.Message = message.InstanceFor(event.Type)
+	json.Unmarshal(*raw["message"], &event.Message)
+
 	return nil
 }
 
-func (event *Event) UnmarshalProto(data []byte) error {
+func (event *Event) Unproto(data []byte) error {
+	raw := &protobuf.Event{}
+	err := proto.Unmarshal(data, raw)
+
+	if err != nil {
+		return err
+	}
+
+	event.Timestamp = raw.GetTimestamp()
+	event.Type = raw.GetType()
+	event.Message = message.InstanceFor(event.Type)
+	event.Message.Unproto(raw.Message)
+
 	return nil
 }
 
 func (e *Event) String() string {
-	return fmt.Sprintf("%#v", e)
+	return fmt.Sprintf("[%s %s %#v]", e.Type, e.Timestamp, e.Message)
 }
 
 func (e *Event) Proto() *protobuf.Event {

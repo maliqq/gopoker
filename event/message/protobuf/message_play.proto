@@ -82,21 +82,15 @@ message Deal {
 }
 
 // Play - play info
-message Play {
+message PlayStart {
   required Game Game = 1;
   required Table Table = 2;
   required Stake Stake = 3;
 //  optional Deal Deal = 4;
 }
 
-// PlayStart - notify play start
-message PlayStart {
-  optional Play Play = 1;
-}
-
 // PlayStop - notify play stop
 message PlayStop {
-  optional Play Play = 1;
 }
 
 // StreetStart - notify street start

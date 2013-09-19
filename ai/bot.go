@@ -9,13 +9,18 @@ import (
 )
 
 import (
-	zeromq_client "gopoker/client/zmq"
+	"gopoker/client/zmq_client"
+	"gopoker/event"
 	"gopoker/event/message"
 	"gopoker/model"
 	"gopoker/model/bet"
 	"gopoker/model/deal"
 	"gopoker/poker"
 	"gopoker/util"
+)
+
+import (
+	"code.google.com/p/goprotobuf/proto"
 )
 
 type context struct {
@@ -38,19 +43,20 @@ type Bot struct {
 
 	*context
 
-	zmqConn *zeromq_client.Connection
+	zmqConn *zmq_client.NodeZMQ
 }
 
 // NewBot - create new bot
-func NewBot(id, publisher, receiver string) *Bot {
+func NewBot(id, room, publisher, receiver string) *Bot {
 	if id == "" {
 		id = util.RandomUuid()
 	}
-	log.SetPrefix(fmt.Sprintf("[bot#%s]", id))
+	log.SetPrefix(fmt.Sprintf("[bot#%s] ", id))
 
 	return &Bot{
 		ID:      model.Player(id),
-		zmqConn: zeromq_client.NewConnection(publisher, receiver, id),
+		roomID:  room,
+		zmqConn: zmq_client.ConnectZmqGateway(publisher, receiver, id),
 		context: &context{
 			cards: poker.Cards{},
 			board: poker.Cards{},
@@ -59,22 +65,23 @@ func NewBot(id, publisher, receiver string) *Bot {
 }
 
 // Join - join player
-func (b *Bot) Join(roomID string, pos int, amount float64) {
-	b.roomID = roomID
+func (b *Bot) Join(pos int, amount float64) {
 	b.pos = pos
 	b.stack = amount
 
 	log.Printf("joining table...")
-	b.zmqConn.Send <- message.JoinTable{b.ID, pos, amount}
+
+	b.sendMultipart(&message.JoinTable{b.ID, pos, amount})
 }
 
 // Play - start bot
 func (b *Bot) Play() {
-	for event := range b.zmqConn.Recv {
-		//log.Printf("received msg: %s", msg)
+	for data := range b.zmqConn.Recv {
+		event := b.receiveMultipart(data)
+		log.Printf("received: %s", event)
 
 		switch msg := event.Message.(type) {
-		case message.PlayStart:
+		case *message.PlayStart:
 
 			b.cards = poker.Cards{}
 			b.board = poker.Cards{}
@@ -82,16 +89,16 @@ func (b *Bot) Play() {
 			b.opponentsNum = 6
 			b.stake = msg.Stake
 
-		case message.StreetStart:
+		case *message.StreetStart:
 
 			b.street = msg.Name
 
-		case message.BettingComplete:
+		case *message.BettingComplete:
 
 			b.pot = msg.Pot
 			b.bet = 0.
 
-		case message.DealCards:
+		case *message.DealCards:
 
 			switch msg.Type {
 			case deal.Board:
@@ -101,7 +108,7 @@ func (b *Bot) Play() {
 				b.cards = b.cards.Append(msg.Cards)
 			}
 
-		case message.RequireBet:
+		case *message.RequireBet:
 
 			if msg.Pos == b.pos {
 				// pause
@@ -110,13 +117,42 @@ func (b *Bot) Play() {
 				b.decide(msg.Range)
 			}
 
-		case message.AddBet:
+		case *message.AddBet:
 
 			if msg.Pos == b.pos {
 				b.bet = msg.Bet.Amount
 			}
 		}
 	}
+}
+
+func (b *Bot) sendMultipart(msg message.Message) {
+	data, err := proto.Marshal(event.New(msg).Proto())
+	if err != nil {
+		log.Printf("marshal error: %s", err)
+	} else {
+		multipart := [][]byte{
+			[]byte(b.ID),
+			[]byte(b.roomID),
+			data,
+		}
+		//log.Printf("sending %d bytes", len(data))
+		b.zmqConn.Send <- multipart
+	}
+}
+
+func (b *Bot) receiveMultipart(multipart [][]byte) *event.Event {
+	//topic := multipart[0]
+	data := multipart[1]
+	//log.Printf("received %d bytes for %s", len(data), topic)
+
+	event := &event.Event{}
+	if err := event.Unproto(data); err != nil {
+		log.Printf("unmarshal error: %s", err)
+		return nil
+	}
+
+	return event
 }
 
 func (b *Bot) check() {
@@ -142,7 +178,7 @@ func (b *Bot) call(amount float64) {
 
 func (b *Bot) addBet(newBet *model.Bet) {
 	log.Printf("=== %s", newBet)
-	b.zmqConn.Send <- message.AddBet{b.pos, newBet}
+	b.sendMultipart(&message.AddBet{b.pos, newBet})
 }
 
 func (b *Bot) decide(betRange *bet.Range) {
