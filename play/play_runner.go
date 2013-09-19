@@ -72,16 +72,16 @@ func (play *Play) run() {
 	if play.Game.HasAnte || play.Stake.HasAnte() {
 		log.Println("[play] post antes")
 
-		play.GamePlay.PostAntes()
-		play.GamePlay.ResetBetting()
+		play.Gameplay.PostAntes()
+		play.Gameplay.ResetBetting()
 	}
 
 	// post blinds
 	if play.Game.HasBlinds {
 		log.Println("[play] post blinds")
 
-		play.GamePlay.MoveButton()
-		play.GamePlay.PostBlinds()
+		play.Gameplay.MoveButton()
+		play.Gameplay.PostBlinds()
 	}
 
 	// run streets
@@ -110,7 +110,7 @@ Streets:
 	inPot := play.Table.AllSeats().InPot()
 	if len(inPot) == 1 {
 		// last player left
-		play.GamePlay.Winner(inPot[0])
+		play.Gameplay.Winner(inPot[0])
 	} else {
 		// showdown
 		log.Println("[play] showdown")
@@ -118,14 +118,14 @@ Streets:
 		var highHands, lowHands gameplay.ShowdownHands
 
 		if play.Game.Lo != "" {
-			lowHands = play.GamePlay.ShowHands(play.Game.Lo, play.Game.HasBoard)
+			lowHands = play.Gameplay.ShowHands(play.Game.Lo, play.Game.HasBoard)
 		}
 
 		if play.Game.Hi != "" {
-			highHands = play.GamePlay.ShowHands(play.Game.Hi, play.Game.HasBoard)
+			highHands = play.Gameplay.ShowHands(play.Game.Hi, play.Game.HasBoard)
 		}
 
-		play.GamePlay.Winners(highHands, lowHands)
+		play.Gameplay.Winners(highHands, lowHands)
 	}
 
 	// deal stop

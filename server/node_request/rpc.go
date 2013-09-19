@@ -1,23 +1,9 @@
-package noderpc
+package node_request
 
 import (
 	"gopoker/model"
 	"gopoker/play/mode"
 )
-
-type Status string
-
-const (
-	Ok Status = "ok"
-	Error Status = "error"
-)
-
-// CallResult - RPC call result
-type CallResult struct {
-	Status  Status
-	Message string
-}
-
 // CreateRoom - create room request
 type CreateRoom struct {
 	Guid    model.Guid

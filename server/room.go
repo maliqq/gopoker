@@ -23,20 +23,11 @@ type Room struct {
 }
 
 // NewRoom - create new room
-func NewRoom(createRoom *rpc_service.CreateRoom) *Room {
-	var variation model.Variation
-
-	if createRoom.Mix != nil {
-		variation = createRoom.Mix
-	} else {
-		variation = createRoom.Game
-	}
-
-	stake := model.NewStake(createRoom.BetSize)
+func NewRoom(guid model.Guid, variation model.Variation, stake model.Stake) *Room {
 	newPlay := play.NewPlay(variation, stake)
 
 	room := &Room{
-		Guid:     createRoom.Guid,
+		Guid:     guid,
 		Play:     newPlay,
 		Waiting:  map[string]*Session{},
 		Watchers: map[string]*Session{},

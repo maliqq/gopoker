@@ -10,31 +10,46 @@ import (
 	"gopoker/play/context"
 	"gopoker/play/gameplay"
 	"gopoker/play/mode"
+	"gopoker/play/street"
+)
+
+type State string
+
+// States
+const (
+	Waiting State = "waiting"
+	Active  State = "active"
+	Paused  State = "paused"
+	Closed  State = "closed"
 )
 
 // Play - play
 type Play struct {
 	// players action context
-	*gameplay.GamePlay
+	*gameplay.Gameplay
 
-	// finite state machine
-	FSM
+	// current state
+	State       State
+	// current mode
+	Mode mode.Type
+	// current stage
+	Stage string
+	// current street
+	Street street.Type
+
 	// receive protocol messages
-	Recv event.Channel `json:"-"`
+	Call event.Channel `json:"-"`
 }
 
 // NewPlay - create new play
 func NewPlay(variation model.Variation, stake *model.Stake) *Play {
-	gp := gameplay.NewGamePlay()
+	gp := gameplay.NewGameplay()
 	gp.Stake = stake
 
 	play := &Play{
-		GamePlay: gp,
-		FSM: FSM{
-			State:       Waiting,
-			stateChange: make(chan State),
-			Mode:        mode.Cash, // FIXME
-		},
+		Gameplay: gp,
+		State:       Waiting,
+		Mode:        mode.Cash, // FIXME
 		Recv: make(event.Channel),
 	}
 
@@ -63,11 +78,11 @@ func (play *Play) String() string {
 func (play *Play) receive() {
 	for {
 		select {
-		case event := <-play.Recv:
-			play.HandleEvent(event)
-
-		case newState := <-play.stateChange:
-			play.HandleStateChange(newState)
+		case call := <-play.Call:
+			switch args := call.(rpc.Call).(type) {
+			case rpc.AddBet:
+				play.AddBet(...)
+			}
 		}
 	}
 }

@@ -1,4 +1,4 @@
-package nodehttp
+package node_response
 
 import (
 	"gopoker/poker"

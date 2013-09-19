@@ -8,6 +8,13 @@ import (
 	"gopoker/storage"
 )
 
+// Defaults
+const (
+	DefaultAPIPath       = "/_api"
+	DefaultRPCPath       = "/_rpc"
+	DefaultWebSocketPath = "/_ws"
+)
+
 // HTTPConfig - http config
 type HTTPConfig struct {
 	Addr          string
@@ -43,28 +50,28 @@ type Config struct {
 }
 
 // APIPathOr - API path or default
-func (httpConfig *HTTPConfig) APIPathOr(defaultPath string) string {
+func (httpConfig *HTTPConfig) GetAPIPath() string {
 	apiPath := httpConfig.APIPath
 	if apiPath == "" {
-		return defaultPath
+		return DefaultAPIPath
 	}
 	return apiPath
 }
 
 // WebSocketPathOr - websocket path or default
-func (httpConfig *HTTPConfig) WebSocketPathOr(defaultPath string) string {
+func (httpConfig *HTTPConfig) GetWebSocketPath() string {
 	webSocketPath := httpConfig.WebSocketPath
 	if webSocketPath == "" {
-		return defaultPath
+		return DefaultWebSocketPath
 	}
 	return webSocketPath
 }
 
 // RPCPathOr - RPC path or default
-func (httpConfig *HTTPConfig) RPCPathOr(defaultPath string) string {
+func (httpConfig *HTTPConfig) GetRPCPath() string {
 	rpcPath := httpConfig.RPCPath
 	if rpcPath == "" {
-		return defaultPath
+		return DefaultRPCPath
 	}
 	return rpcPath
 }

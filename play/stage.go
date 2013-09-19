@@ -20,28 +20,28 @@ var (
 	BringIn = Stage{"bring-in", func(play *Play) gameplay.Transition {
 		log.Println("[play] bring in")
 
-		return play.GamePlay.BringIn()
+		return play.Gameplay.BringIn()
 	}}
 
 	// Betting - betting stage
 	Betting = Stage{"betting", func(play *Play) gameplay.Transition {
 		//log.Println("[play] betting")
 
-		return play.GamePlay.StartBettingRound()
+		return play.Gameplay.StartBettingRound()
 	}}
 
 	// Discarding - discarding stage
 	Discarding = Stage{"discarding", func(play *Play) gameplay.Transition {
 		log.Println("[play] discarding")
 
-		return play.GamePlay.StartDiscardingRound()
+		return play.Gameplay.StartDiscardingRound()
 	}}
 
 	// BigBets - big bets stage
 	BigBets = Stage{"big-bets", func(play *Play) gameplay.Transition {
 		log.Println("[play] big bets")
 
-		return play.GamePlay.BigBets()
+		return play.Gameplay.BigBets()
 	}}
 )
 
@@ -59,13 +59,13 @@ func (d dealing) stage(play *Play) gameplay.Transition {
 
 	switch d.Type {
 	case deal.Hole:
-		play.GamePlay.DealHole(n)
+		play.Gameplay.DealHole(n)
 
 	case deal.Door:
-		play.GamePlay.DealDoor(n)
+		play.Gameplay.DealDoor(n)
 
 	case deal.Board:
-		play.GamePlay.DealBoard(n)
+		play.Gameplay.DealBoard(n)
 	}
 
 	return gameplay.Next

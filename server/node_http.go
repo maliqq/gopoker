@@ -13,13 +13,6 @@ import (
 	gorilla_json "github.com/gorilla/rpc/json"
 )
 
-// Defaults
-const (
-	DefaultAPIPath       = "/_api"
-	DefaultRPCPath       = "/_rpc"
-	DefaultWebSocketPath = "/_ws"
-)
-
 // NodeHTTP - http server
 type NodeHTTP struct {
 	*Node
@@ -60,18 +53,18 @@ func (n *Node) drawRoutes(router *gorilla_mux.Router) {
 	rpc.RegisterCodec(gorilla_json.NewCodec(), "application/json")
 
 	// handle RPC
-	router.HandleFunc(config.RPCPathOr(DefaultRPCPath), func(resp http.ResponseWriter, req *http.Request) {
+	router.HandleFunc(config.GetRPCPath(), func(resp http.ResponseWriter, req *http.Request) {
 		RespondCORS(resp)
 		resp.Write([]byte{0xA})
 	}).Methods("OPTIONS")
 
-	router.HandleFunc(config.RPCPathOr(DefaultRPCPath), func(resp http.ResponseWriter, req *http.Request) {
+	router.HandleFunc(config.GetRPCPath(), func(resp http.ResponseWriter, req *http.Request) {
 		RespondCORS(resp)
 		rpc.ServeHTTP(resp, req)
 	}).Methods("POST")
 
 	// handle WebSocket
-	router.Handle(config.WebSocketPathOr(DefaultWebSocketPath), websocket.Handler(nodeHTTP.WebSocketHandler))
+	router.Handle(config.GetWebSocketPath(), websocket.Handler(nodeHTTP.WebSocketHandler))
 }
 
 func (nodeHTTP *NodeHTTP) drawAPI(api *gorilla_mux.Router) {
