@@ -30,6 +30,14 @@ type Subscriber struct {
 	Channel *Channel
 }
 
+func SubscribeUser(key string, channel *Channel) Subscriber {
+	return Subscriber{Key: key, Role: User, Channel: channel}
+}
+
+func SubscribeSystem(key string, channel *Channel) Subscriber {
+	return Subscriber{Key: key, Role: System, Channel: channel}
+}
+
 // Broker - pubsub broker
 type Broker struct {
 	exchange map[Topic]map[string]Subscriber

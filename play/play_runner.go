@@ -53,7 +53,11 @@ func (play *Play) run() {
 	}
 
 	// notify about play start
-	play.Broadcast.Notify(&message.PlayStart{}).All()
+	play.Broadcast.Notify(&message.PlayStart{
+		Game:  play.Game,
+		Stake: play.Stake,
+		Table: play.Table,
+	}).All()
 
 	// rotate game
 	if play.Mix != nil {

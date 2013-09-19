@@ -28,7 +28,7 @@ type Connection struct {
 
 // Reply - reply to play
 func (c *Connection) Reply(msg message.Message) {
-	c.Server.Recv <- event.NewEvent(msg)
+	c.Server.Recv <- event.New(msg)
 }
 
 // Handle - handle protocol message

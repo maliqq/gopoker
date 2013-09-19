@@ -5,10 +5,12 @@ import (
 )
 
 // NotifyPlayStart - notify new play start
-func NewPlayStart(play *Play) *Message {
+func NewPlayStart(game *Game, stake *Stake, table *Table) *Message {
 	return &Message{
 		PlayStart: &PlayStart{
-			Play: play,
+			Game:  game,
+			Stake: stake,
+			Table: table,
 		},
 	}
 }

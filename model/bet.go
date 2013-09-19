@@ -40,12 +40,11 @@ func (b Bet) Proto() *protobuf.Bet {
 	}
 }
 
-func (b *Bet) Unproto(protoBet *protobuf.Bet) {
-	newBet := Bet{
-		Type:   bet.Type(protoBet.GetType()),
-		Amount: protoBet.GetAmount(),
+func (b *Bet) Unproto(p *protobuf.Bet) {
+	*b = Bet{
+		Type:   bet.Type(p.GetType()),
+		Amount: p.GetAmount(),
 	}
-	*b = newBet
 }
 
 // IsActive - check active bet (raise or call)

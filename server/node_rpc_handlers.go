@@ -36,16 +36,6 @@ func (n *NodeRPC) DeleteRoom(requestRoom *rpc_service.RequestRoom, r *rpc_servic
 	return nil
 }
 
-// NotifyRoom -send protocol message to room subscribers
-func (n *NodeRPC) NotifyRoom(notifyRoom *rpc_service.NotifyRoom, r *rpc_service.CallResult) error {
-	log.Printf("[rpc] NotifyRoom args=%+v", notifyRoom)
-
-	room := n.Node.Room(notifyRoom.Guid)
-	room.Recv <- notifyRoom.Event
-
-	return nil
-}
-
 // StartRoom - start room
 func (n *NodeRPC) StartRoom(startRoom *rpc_service.StartRoom, r *rpc_service.CallResult) error {
 	log.Printf("[rpc] StartRoom args=%+v", startRoom)
@@ -96,20 +86,6 @@ func (n *NodeRPC) Login(login *rpc_service.Login, r *rpc_service.LoginResult) er
 func (n *NodeRPC) Logout(logout *rpc_service.Logout, r *rpc_service.CallResult) error {
 	n.Node.Logout(logout.Session)
 	log.Printf("[rpc] Logout args=%+v", logout)
-
-	return nil
-}
-
-// ConnectGateway - connect gateway
-func (n *NodeRPC) ConnectGateway(connectReq *rpc_service.ConnectGateway, r *rpc_service.CallResult) error {
-	n.Node.ZMQGateway.connect <- *connectReq
-
-	return nil
-}
-
-// DisconnectGateway - disconnect gateway
-func (n *NodeRPC) DisconnectGateway(disconnectReq *rpc_service.DisconnectGateway, r *rpc_service.CallResult) error {
-	n.Node.ZMQGateway.disconnect <- *disconnectReq
 
 	return nil
 }

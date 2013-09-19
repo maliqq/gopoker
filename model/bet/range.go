@@ -56,11 +56,10 @@ func (r *Range) Proto() *protobuf.BetRange {
 	}
 }
 
-func (r *Range) Unproto(protoRange *protobuf.BetRange) {
-	newRange := Range{
-		Call: protoRange.GetCall(),
-		Min:  protoRange.GetMin(),
-		Max:  protoRange.GetMax(),
+func (r *Range) Unproto(p *protobuf.BetRange) {
+	*r = Range{
+		Call: p.GetCall(),
+		Min:  p.GetMin(),
+		Max:  p.GetMax(),
 	}
-	*r = newRange
 }

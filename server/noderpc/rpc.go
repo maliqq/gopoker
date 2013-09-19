@@ -1,7 +1,6 @@
 package noderpc
 
 import (
-	"gopoker/event"
 	"gopoker/model"
 	"gopoker/play/mode"
 )
@@ -29,23 +28,6 @@ type RequestRoom struct {
 type StartRoom struct {
 	Guid model.Guid
 	Mode mode.Type
-}
-
-// NotifyRoom - send protocol message
-type NotifyRoom struct {
-	Guid  model.Guid
-	Event *event.Event
-}
-
-// ConnectGateway - connect node ZMQ gateway
-type ConnectGateway struct {
-	Room   model.Guid
-	Player model.Player
-}
-
-// DisconnectGateway - disconnect node ZMQ gateway
-type DisconnectGateway struct {
-	Player model.Player
 }
 
 type Login struct {

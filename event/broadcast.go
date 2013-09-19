@@ -29,7 +29,7 @@ func NewBroadcast() *Broadcast {
 
 func (bcast *Broadcast) Notify(msg message.Message) *Notification {
 	return &Notification{
-		Event:  NewEvent(msg),
+		Event:  New(msg),
 		Broker: bcast.Broker,
 	}
 }
@@ -42,6 +42,7 @@ func (bcast *Broadcast) Pass(event *Event) *Notification {
 }
 
 func (n *Notification) route(notify Notify) {
+	notify.Topic = Default // FIXME
 	n.Broker.Dispatch(notify, n.Event)
 }
 
@@ -82,13 +83,7 @@ func (n *Notification) Only(keys ...key) {
 
 // Bind - bind receiver to hub
 func (bcast *Broadcast) Bind(key key, channel *Channel) {
-	subscriber := Subscriber{
-		Role:    User,
-		Key:     key.String(),
-		Channel: channel,
-	}
-
-	bcast.Broker.Bind(Default, subscriber)
+	bcast.Broker.Bind(Default, SubscribeUser(key.String(), channel))
 }
 
 // Unbind - unbind receiver from hub

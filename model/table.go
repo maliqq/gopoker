@@ -170,3 +170,18 @@ func (t *Table) Proto() *protobuf.Table {
 		Seats:  seats,
 	}
 }
+
+func (t *Table) Unproto(p *protobuf.Table) {
+	size := int(p.GetSize())
+	seats := make([]*Seat, size)
+	for i, pseat := range p.Seats {
+		seat := &Seat{}
+		seat.Unproto(pseat)
+		seats[i] = seat
+	}
+	*t = Table{
+		Seats:  seats,
+		Size:   size,
+		Button: int(p.GetButton()),
+	}
+}

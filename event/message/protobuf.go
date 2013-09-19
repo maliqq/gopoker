@@ -19,7 +19,10 @@ func (m *AddBet) Unproto(msg *protobuf.Message) {
 	p := msg.AddBet
 	bet := &model.Bet{}
 	bet.Unproto(p.Bet)
-	*m = AddBet{int(p.GetPos()), bet}
+	*m = AddBet{
+		int(p.GetPos()),
+		bet,
+	}
 }
 
 func (m RequireBet) Proto() *protobuf.Message {
@@ -29,7 +32,10 @@ func (m *RequireBet) Unproto(msg *protobuf.Message) {
 	p := msg.RequireBet
 	betRange := &bet.Range{}
 	betRange.Unproto(p.BetRange)
-	*m = RequireBet{int(p.GetPos()), betRange}
+	*m = RequireBet{
+		int(p.GetPos()),
+		betRange,
+	}
 }
 
 func (m BettingComplete) Proto() *protobuf.Message {
@@ -37,7 +43,9 @@ func (m BettingComplete) Proto() *protobuf.Message {
 }
 func (m *BettingComplete) Unproto(msg *protobuf.Message) {
 	p := msg.BettingComplete
-	*m = BettingComplete{p.GetPot()}
+	*m = BettingComplete{
+		p.GetPot(),
+	}
 }
 
 func (m DealCards) Proto() *protobuf.Message {
@@ -46,7 +54,11 @@ func (m DealCards) Proto() *protobuf.Message {
 func (m *DealCards) Unproto(msg *protobuf.Message) {
 	p := msg.DealCards
 	dealType := deal.Type(p.GetType().String())
-	*m = DealCards{int(p.GetPos()), poker.BinaryCards(p.Cards), dealType}
+	*m = DealCards{
+		int(p.GetPos()),
+		poker.BinaryCards(p.Cards),
+		dealType,
+	}
 }
 
 func (m RequireDiscard) Proto() *protobuf.Message {
@@ -54,7 +66,9 @@ func (m RequireDiscard) Proto() *protobuf.Message {
 }
 func (m *RequireDiscard) Unproto(msg *protobuf.Message) {
 	p := msg.RequireDiscard
-	*m = RequireDiscard{int(p.GetPos())}
+	*m = RequireDiscard{
+		int(p.GetPos()),
+	}
 }
 
 func (m Discarded) Proto() *protobuf.Message {
@@ -62,7 +76,10 @@ func (m Discarded) Proto() *protobuf.Message {
 }
 func (m *Discarded) Unproto(msg *protobuf.Message) {
 	p := msg.Discarded
-	*m = Discarded{int(p.GetPos()), int(p.GetNum())}
+	*m = Discarded{
+		int(p.GetPos()),
+		int(p.GetNum()),
+	}
 }
 
 func (m DiscardCards) Proto() *protobuf.Message {
@@ -70,15 +87,32 @@ func (m DiscardCards) Proto() *protobuf.Message {
 }
 func (m *DiscardCards) Unproto(msg *protobuf.Message) {
 	p := msg.DiscardCards
-	*m = DiscardCards{int(p.GetPos()), poker.BinaryCards(p.Cards)}
+	*m = DiscardCards{
+		int(p.GetPos()),
+		poker.BinaryCards(p.Cards),
+	}
 }
 
 func (m PlayStart) Proto() *protobuf.Message {
-	return protobuf.NewPlayStart(nil)
+	return protobuf.NewPlayStart(m.Game.Proto(), m.Stake.Proto(), m.Table.Proto())
 }
 func (m *PlayStart) Unproto(msg *protobuf.Message) {
-	//p := msg.PlayStart
-	*m = PlayStart{}
+	p := msg.PlayStart
+
+	game := &model.Game{}
+	game.Unproto(p.Game)
+
+	stake := &model.Stake{}
+	stake.Unproto(p.Stake)
+
+	table := &model.Table{}
+	table.Unproto(p.Table)
+
+	*m = PlayStart{
+		Game:  game,
+		Stake: stake,
+		Table: table,
+	}
 }
 
 func (m StreetStart) Proto() *protobuf.Message {
@@ -86,7 +120,9 @@ func (m StreetStart) Proto() *protobuf.Message {
 }
 func (m *StreetStart) Unproto(msg *protobuf.Message) {
 	p := msg.StreetStart
-	*m = StreetStart{p.GetName()}
+	*m = StreetStart{
+		p.GetName(),
+	}
 }
 
 func (m PlayStop) Proto() *protobuf.Message {
@@ -102,7 +138,12 @@ func (m ShowCards) Proto() *protobuf.Message {
 }
 func (m *ShowCards) Unproto(msg *protobuf.Message) {
 	p := msg.ShowCards
-	*m = ShowCards{int(p.GetPos()), p.GetMuck(), poker.BinaryCards(p.Cards), model.Player(p.GetPlayer())}
+	*m = ShowCards{
+		int(p.GetPos()),
+		p.GetMuck(),
+		poker.BinaryCards(p.Cards),
+		model.Player(p.GetPlayer()),
+	}
 }
 
 func (m ShowHand) Proto() *protobuf.Message {
@@ -133,7 +174,11 @@ func (m Winner) Proto() *protobuf.Message {
 }
 func (m *Winner) Unproto(msg *protobuf.Message) {
 	p := msg.Winner
-	*m = Winner{int(p.GetPos()), model.Player(p.GetPlayer()), p.GetAmount()}
+	*m = Winner{
+		int(p.GetPos()),
+		model.Player(p.GetPlayer()),
+		p.GetAmount(),
+	}
 }
 
 func (m MoveButton) Proto() *protobuf.Message {
@@ -141,15 +186,21 @@ func (m MoveButton) Proto() *protobuf.Message {
 }
 func (m *MoveButton) Unproto(msg *protobuf.Message) {
 	p := msg.MoveButton
-	*m = MoveButton{int(p.GetPos())}
+	*m = MoveButton{
+		int(p.GetPos()),
+	}
 }
 
 func (m JoinTable) Proto() *protobuf.Message {
 	return protobuf.NewJoinTable(m.Player.Proto(), m.Pos, m.Amount)
 }
 func (m *JoinTable) Unproto(msg *protobuf.Message) {
-	//p := msg.JoinTable
-	*m = JoinTable{}
+	p := msg.JoinTable
+	*m = JoinTable{
+		model.Player(p.GetPlayer()),
+		int(p.GetPos()),
+		p.GetAmount(),
+	}
 }
 
 func (m SitOut) Proto() *protobuf.Message {
@@ -157,7 +208,9 @@ func (m SitOut) Proto() *protobuf.Message {
 }
 func (m *SitOut) Unproto(msg *protobuf.Message) {
 	p := msg.SitOut
-	*m = SitOut{int(p.GetPos())}
+	*m = SitOut{
+		int(p.GetPos()),
+	}
 }
 
 func (m ComeBack) Proto() *protobuf.Message {
@@ -165,7 +218,9 @@ func (m ComeBack) Proto() *protobuf.Message {
 }
 func (m *ComeBack) Unproto(msg *protobuf.Message) {
 	p := msg.ComeBack
-	*m = ComeBack{int(p.GetPos())}
+	*m = ComeBack{
+		int(p.GetPos()),
+	}
 }
 
 func (m LeaveTable) Proto() *protobuf.Message {
@@ -173,7 +228,9 @@ func (m LeaveTable) Proto() *protobuf.Message {
 }
 func (m *LeaveTable) Unproto(msg *protobuf.Message) {
 	p := msg.LeaveTable
-	*m = LeaveTable{model.Player(p.GetPlayer())}
+	*m = LeaveTable{
+		model.Player(p.GetPlayer()),
+	}
 }
 
 func (m ErrorMessage) Proto() *protobuf.Message {
@@ -181,7 +238,9 @@ func (m ErrorMessage) Proto() *protobuf.Message {
 }
 func (m *ErrorMessage) Unproto(msg *protobuf.Message) {
 	p := msg.ErrorMessage
-	*m = ErrorMessage{fmt.Errorf(p.GetError())}
+	*m = ErrorMessage{
+		fmt.Errorf(p.GetError()),
+	}
 }
 
 func (m ChatMessage) Proto() *protobuf.Message {
@@ -189,5 +248,7 @@ func (m ChatMessage) Proto() *protobuf.Message {
 }
 func (m *ChatMessage) Unproto(msg *protobuf.Message) {
 	p := msg.ChatMessage
-	*m = ChatMessage{p.GetBody()}
+	*m = ChatMessage{
+		p.GetBody(),
+	}
 }

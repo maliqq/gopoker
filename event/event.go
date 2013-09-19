@@ -23,7 +23,7 @@ type Event struct {
 
 type Channel chan *Event
 
-func NewEvent(msg message.Message) *Event {
+func New(msg message.Message) *Event {
 	event := Event{
 		Type:      message.TypeFor(msg),
 		Timestamp: time.Now().Unix(),
@@ -53,6 +53,7 @@ func (event *Event) UnmarshalJSON(data []byte) error {
 func (event *Event) Unproto(data []byte) error {
 	raw := &protobuf.Event{}
 	err := proto.Unmarshal(data, raw)
+
 	if err != nil {
 		return err
 	}
@@ -66,7 +67,7 @@ func (event *Event) Unproto(data []byte) error {
 }
 
 func (e *Event) String() string {
-	return fmt.Sprintf("%#v", e)
+	return fmt.Sprintf("[%s %s %#v]", e.Type, e.Timestamp, e.Message)
 }
 
 func (e *Event) Proto() *protobuf.Event {

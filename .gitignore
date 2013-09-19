@@ -2,3 +2,5 @@
 /var/log/*.log
 /gopoker-*
 *.pb.go
+/*.sh
+/deps
