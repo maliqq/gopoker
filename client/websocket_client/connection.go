@@ -1,20 +1,20 @@
-package client
+package websocket_client
 
 import (
 	"code.google.com/p/go.net/websocket"
 )
 
 // Connection - websocket connection
-type WebSocketConnection struct {
+type Connection struct {
 	*websocket.Conn
 }
 
 // Send - write data
-func (conn *WebSocketConnection) Send(data interface{}) error {
+func (conn *Connection) Send(data interface{}) error {
 	return websocket.JSON.Send(conn.Conn, data)
 }
 
 // Receive - read data
-func (conn *WebSocketConnection) Receive(data interface{}) error {
+func (conn *Connection) Receive(data interface{}) error {
 	return websocket.JSON.Receive(conn.Conn, data)
 }
