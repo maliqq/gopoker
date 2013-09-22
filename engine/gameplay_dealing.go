@@ -5,7 +5,6 @@ import (
 	"gopoker/model/deal"
 )
 
-// DealHole - deal hole cards
 func (g *Gameplay) dealHole(cardsNum int) {
 	if cardsNum == 0 {
 		cardsNum = g.Game.PocketSize
@@ -16,7 +15,7 @@ func (g *Gameplay) dealHole(cardsNum int) {
 	for _, box := range ring.InPlay() {
 		player := box.Seat.Player
 
-		cards := g.Deal.DealPocket(player, cardsNum)
+		cards := g.d.DealPocket(player, cardsNum)
 
 		g.e.Notify(
 			&message.DealCards{box.Pos, cards, deal.Hole},
@@ -24,14 +23,13 @@ func (g *Gameplay) dealHole(cardsNum int) {
 	}
 }
 
-// DealDoor - deal door cards
 func (g *Gameplay) dealDoor(cardsNum int) {
 	ring := g.Table.Ring()
 
 	for _, box := range ring.InPlay() {
 		player := box.Seat.Player
 
-		cards := g.Deal.DealPocket(player, cardsNum)
+		cards := g.d.DealPocket(player, cardsNum)
 
 		g.e.Notify(
 			&message.DealCards{box.Pos, cards, deal.Door},
@@ -39,9 +37,8 @@ func (g *Gameplay) dealDoor(cardsNum int) {
 	}
 }
 
-// DealBoard - deal board cards
 func (g *Gameplay) dealBoard(cardsNum int) {
-	cards := g.Deal.DealBoard(cardsNum)
+	cards := g.d.DealBoard(cardsNum)
 
 	g.e.Notify(
 		&message.DealCards{0, cards, deal.Board},

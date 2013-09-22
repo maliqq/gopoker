@@ -1,4 +1,4 @@
-package engine
+package context
 
 import (
 	_"fmt"
@@ -19,7 +19,7 @@ const (
 )
 
 // Betting - betting context
-type BettingContext struct {
+type Betting struct {
 	raiseCount int // current raise count
 	bigBets    bool // big bets mode
 
@@ -29,14 +29,14 @@ type BettingContext struct {
 }
 
 // NewBetting - create new betting context
-func NewBettingContext() *BettingContext {
-	return &BettingContext{
+func NewBetting() *Betting {
+	return &Betting{
 		Pot: model.NewPot(),
 		BetRange: &bet.Range{},
 	}
 }
 
-func (ctx *BettingContext) NewRound(boxes []model.Box) {
+func (ctx *Betting) NewRound(boxes []model.Box) {
 	r := ring.New(len(boxes))
 	for _, box := range boxes {
 		r.Value = box
@@ -46,18 +46,18 @@ func (ctx *BettingContext) NewRound(boxes []model.Box) {
 }
 
 // BigBets - increase bets
-func (ctx *BettingContext) BigBets() {
+func (ctx *Betting) BigBets() {
 	ctx.bigBets = true
 }
 
 // Clear - clear betting context
-func (ctx *BettingContext) Clear() {
+func (ctx *Betting) Clear() {
 	ctx.raiseCount = 0
 	ctx.BetRange.Reset()
 }
 
 // RaiseRange - bet range for seat
-func (ctx *BettingContext) RaiseRange(limit game.Limit, stake *model.Stake) (float64, float64) {
+func (ctx *Betting) RaiseRange(limit game.Limit, stake *model.Stake) (float64, float64) {
 	bb := stake.BigBlindAmount()
 	seat := ctx.Round.Current()
 
@@ -81,7 +81,7 @@ func (ctx *BettingContext) RaiseRange(limit game.Limit, stake *model.Stake) (flo
 }
 
 // ForceBet - force action
-func (ctx *BettingContext) ForceBet(betType bet.Type, stake *model.Stake) *model.Bet {
+func (ctx *Betting) ForceBet(betType bet.Type, stake *model.Stake) *model.Bet {
 	amount := stake.Amount(betType)
 
 	ctx.BetRange.Call = amount
@@ -90,7 +90,7 @@ func (ctx *BettingContext) ForceBet(betType bet.Type, stake *model.Stake) *model
 }
 
 // RequireBet - require action
-func (ctx *BettingContext) RequireBet(limit game.Limit, stake *model.Stake) *message.RequireBet {
+func (ctx *Betting) RequireBet(limit game.Limit, stake *model.Stake) *message.RequireBet {
 	box := ctx.Round.Box()
 
 	if ctx.raiseCount >= DefaultMaxRaises {
@@ -105,7 +105,7 @@ func (ctx *BettingContext) RequireBet(limit game.Limit, stake *model.Stake) *mes
 }
 
 // AddBet - add action
-func (ctx *BettingContext) AddBet(newBet *model.Bet) error {
+func (ctx *Betting) AddBet(newBet *model.Bet) error {
 	seat := ctx.Round.Current()
 
 	log.Printf("[betting] %s %s\n", seat, newBet.String())
@@ -135,7 +135,7 @@ func (ctx *BettingContext) AddBet(newBet *model.Bet) error {
 }
 
 /*/ String - betting to string
-func (ctx *BettingContext) String() string {
+func (ctx *Betting) String() string {
 	return fmt.Sprintf("Pos %d BetRange %s raiseCount: %d bigBets: %t pot total: %.2f",
 		ctx.Pos,
 		ctx.BetRange,

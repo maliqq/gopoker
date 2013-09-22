@@ -11,15 +11,14 @@ import (
 type showdownHands map[model.Player]*poker.Hand
 
 // ShowHands - show hands for players in pot
-func (g *Gameplay) showHands(ranking hand.Ranking, withBoard bool) showdownHands {
-	d := g.Deal
+func (g *Gameplay) showHands(ranking hand.Ranking) showdownHands {
 	ring := g.Table.Ring()
 	hands := showdownHands{}
 
 	for _, box := range ring.InPot() {
 		player := box.Seat.Player
 
-		if pocket, hand := d.Rank(player, ranking, withBoard); hand != nil {
+		if pocket, hand := g.d.Rank(player, ranking); hand != nil {
 			hands[player] = hand
 
 			g.e.Notify(
@@ -120,11 +119,11 @@ func (g *Gameplay) showdown() {
 		var highHands, lowHands showdownHands
 
 		if g.Game.Lo != "" {
-			lowHands = g.showHands(g.Game.Lo, g.Game.HasBoard)
+			lowHands = g.showHands(g.Game.Lo)//, g.Game.HasBoard)
 		}
 
 		if g.Game.Hi != "" {
-			highHands = g.showHands(g.Game.Hi, g.Game.HasBoard)
+			highHands = g.showHands(g.Game.Hi)//, g.Game.HasBoard)
 		}
 
 		g.declareWinners(highHands, lowHands)

@@ -12,7 +12,7 @@ func (g *Gameplay) bringIn() {
 	ring := g.Table.Ring()
 
 	for i, box := range ring.Active() {
-		pocketCards := g.Deal.Pocket(box.Seat.Player)
+		pocketCards := g.d.Pocket(box.Seat.Player)
 
 		lastCard := pocketCards[len(pocketCards)-1]
 		if i == 0 {
@@ -26,7 +26,9 @@ func (g *Gameplay) bringIn() {
 	}
 
 	g.setButton(min.Pos)
+	
 	g.b.NewRound(ring.Active())
+
 	g.e.Notify(
 		g.b.RequireBet(g.Game.Limit, g.Stake),
 	).One(min.Seat.Player)

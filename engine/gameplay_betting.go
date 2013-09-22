@@ -23,7 +23,9 @@ func (g *Gameplay) processBetting() {
 	inPot := ring.InPot()
 
 	if len(inPot) < 2 || len(active) == 0 {
-		//break BettingRound
+		g.Street.Stop()
+
+		return
 	}
 
 	g.b.NewRound(active)
@@ -33,13 +35,7 @@ func (g *Gameplay) processBetting() {
 	).One(g.b.Round.Current().Player)
 }
 
-// StartBettingRound - start betting round
-func (g *Gameplay) startBettingRound() {
-	g.resetBetting()
-}
-
-// ResetBetting - complete betting round
-func (g *Gameplay) resetBetting() {
+func (g *Gameplay) completeBetting() {
 	g.b.Clear()
 	ring := g.Table.Ring()
 

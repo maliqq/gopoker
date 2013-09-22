@@ -48,7 +48,7 @@ func (i *Instance) AddChatMessage(msg *message.ChatMessage) {
 }
 
 func (i *Instance) AddBet(bet *model.Bet) {
-
+	
 /*	if !i.b.IsActive() {
 		return
 	}

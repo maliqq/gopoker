@@ -21,5 +21,5 @@ func (g *Gameplay) postAntes() {
 		g.b.Round.Move()
 	}
 
-	g.resetBetting()
+	g.completeBetting()
 }

@@ -1,37 +1,39 @@
 package engine
 
-type StageProcess struct {
-	Name string
-	If     func() bool
-	Before func()
-	Run    func()
-	After  func()
-	Notify bool
-}
+import (
+	"gopoker/engine/process"
+)
 
-type StageProcesses []StageProcess
+func (i *Instance) buildStages() process.Stages {
+	return process.Stages{
+		process.Stage{
+			Name: "rotate-game",
+			If: func() bool {
+				return i.Gameplay.gameRotation != nil
+			},
+			Run: i.Gameplay.rotateGame,
+		},
 
-func (procs StageProcesses) Process() {
-	for _, proc := range procs {
-		proc.Process()
-	}
-}
+		process.Stage{
+			Name: "post-antes",
+			If:   func() bool { return i.Game.HasAnte || i.Stake.HasAnte() },
+			Run:  i.Gameplay.postAntes,
+		},
 
-func (proc *StageProcess) Process() {
-	// stage condition
-	if proc.If != nil && !proc.If() {
-		return
-	}
+		process.Stage{
+			Name: "post-blinds",
+			If:   func() bool { return i.Game.HasBlinds },
+			Run:  i.Gameplay.postBlinds,
+		},
 
-	if proc.Before != nil {
-		proc.Before()
-	}
+		process.Stage{
+			Name: "streets",
+			Run:  nil,//i.processStreets,
+		},
 
-	if proc.Run != nil {
-		proc.Run()
-	}
-
-	if proc.After != nil {
-		proc.After()
+		process.Stage{
+			Name: "showdown",
+			Run:  i.showdown,
+		},
 	}
 }

@@ -9,7 +9,6 @@ import (
 	"gopoker/model/bet"
 )
 
-// MoveButton - move table button
 func (g *Gameplay) moveButton() {
 	g.Table.MoveButton()
 	g.e.Notify(
@@ -52,7 +51,6 @@ func (g *Gameplay) postBigBlind() {
 	g.b.Round.Move()
 }
 
-// PostBlinds - post blinds
 func (g *Gameplay) postBlinds() {
 	g.moveButton()
 
@@ -62,7 +60,8 @@ func (g *Gameplay) postBlinds() {
 	waiting := ring.Waiting()
 
 	if len(active)+len(waiting) < 2 {
-		log.Println("[g.stage.blinds] none waiting")
+		g.Stage.Stop() // stop stage
+		g.d.Stop() // stop deal
 
 		return
 	}
