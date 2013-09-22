@@ -60,8 +60,7 @@ func (g *Gameplay) postBlinds() {
 	waiting := ring.Waiting()
 
 	if len(active)+len(waiting) < 2 {
-		g.Stage.Stop() // stop stage
-		g.d.Stop() // stop deal
+		//${end_game}
 
 		return
 	}

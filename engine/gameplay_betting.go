@@ -23,7 +23,7 @@ func (g *Gameplay) processBetting() {
 	inPot := ring.InPot()
 
 	if len(inPot) < 2 || len(active) == 0 {
-		g.Street.Stop()
+		//${end_betting}
 
 		return
 	}

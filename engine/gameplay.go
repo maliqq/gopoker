@@ -2,9 +2,9 @@ package engine
 
 import (
 	"gopoker/hub"
-	"gopoker/engine/process"
 	"gopoker/model"
 	"gopoker/model/seat"
+  "gopoker/engine/context"
 	"gopoker/util"
 )
 
@@ -17,17 +17,16 @@ type Context struct {
 
 type Gameplay struct {
 	*Context
-	gameRotation *util.Rotation
+  gameRotation *util.Rotation
 
-  Stage process.Stage
-  Street process.Street
+	d *context.Deal
+	b *context.Betting
 
-	d *process.Deal
-	b *process.Betting
 	e *hub.Broker
 }
 
 func NewGameplay(context *Context) *Gameplay {
+
 	g := &Gameplay{
 		Context: context,
 		e: hub.NewBroker(),

@@ -45,7 +45,6 @@ func NewInstance(context *Context) *Instance {
 func (instance *Instance) doStart() {
 	fmt.Println("start...")
 	instance.State = Active
-	instance.d.Start()
 }
 
 func (instance *Instance) doPause() {
