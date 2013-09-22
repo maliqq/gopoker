@@ -7,11 +7,6 @@ import (
 )
 
 import (
-	"code.google.com/p/goprotobuf/proto"
-)
-
-import (
-	"gopoker/event/message/protobuf"
 	"gopoker/model/game"
 	"gopoker/poker/hand"
 )
@@ -42,7 +37,7 @@ type GameOptions struct {
 // Game - game
 type Game struct {
 	Type game.LimitedGame
-	game.Limit
+	Limit game.Limit
 	TableSize    int
 	*GameOptions `json:"-"`
 }
@@ -100,29 +95,6 @@ func (game *Game) IsMixed() bool {
 // String - game to string
 func (game *Game) String() string {
 	return fmt.Sprintf("%s %s", game.Type, game.Limit)
-}
-
-// Proto - game to proto
-func (game *Game) Proto() *protobuf.Game {
-	return &protobuf.Game{
-		Type: protobuf.GameType(
-			protobuf.GameType_value[string(game.Type)],
-		).Enum(),
-
-		Limit: protobuf.GameLimit(
-			protobuf.GameLimit_value[string(game.Limit)],
-		).Enum(),
-
-		TableSize: proto.Int32(int32(game.TableSize)),
-	}
-}
-
-func (g *Game) Unproto(p *protobuf.Game) {
-	*g = *NewGame(
-		game.LimitedGame(p.GetType().String()),
-		game.Limit(p.GetLimit().String()),
-		int(p.GetTableSize()),
-	)
 }
 
 func (g *Game) UnmarshalJSON(data []byte) error {

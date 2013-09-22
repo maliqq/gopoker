@@ -9,7 +9,6 @@ import (
 )
 
 import (
-	"gopoker/event/message/protobuf"
 	"gopoker/poker/card"
 	"gopoker/util"
 )
@@ -114,11 +113,6 @@ func (c Cards) Binary() []byte {
 	}
 
 	return b
-}
-
-// Proto - protobuf representation of card
-func (c Cards) Proto() protobuf.Cards {
-	return c.Binary()
 }
 
 // String - string representation of cards

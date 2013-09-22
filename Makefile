@@ -16,7 +16,7 @@ get-deps:
 	go get github.com/vmihailenco/msgpack
 
 build-all:
-	protoc --go_out=. event/message/protobuf/*.proto
+	#protoc --go_out=. event/message/protobuf/*.proto
 	go build gopoker/bin/gopoker-bot
 	go build gopoker/bin/gopoker-cli
 	go build gopoker/bin/gopoker-ctrl

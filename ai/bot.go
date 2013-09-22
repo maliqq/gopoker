@@ -10,8 +10,7 @@ import (
 
 import (
 	"gopoker/client/zmq_client"
-	"gopoker/event"
-	"gopoker/event/message"
+	"gopoker/message"
 	"gopoker/model"
 	"gopoker/model/bet"
 	"gopoker/model/deal"
@@ -71,7 +70,7 @@ func (b *Bot) Join(pos int, amount float64) {
 
 	log.Printf("joining table...")
 
-	b.sendMultipart(&message.JoinTable{b.ID, pos, amount})
+	b.sendMultipart(&message.Join{b.ID, pos, amount})
 }
 
 // Play - start bot

@@ -77,6 +77,10 @@ func (mix *Mix) IsMixed() bool {
 	return true
 }
 
+func (mix *Mix) RotateLen() int {
+	return len(mix.Games)
+}
+
 func (mix *Mix) UnmarshalJSON(data []byte) error {
 	var result struct {
 		Type      string

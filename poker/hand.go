@@ -6,7 +6,6 @@ import (
 )
 
 import (
-	"gopoker/event/message/protobuf"
 	"gopoker/poker/hand"
 )
 
@@ -207,28 +206,6 @@ func (h *Hand) PrintString() string {
 	}
 
 	return ""
-}
-
-// Proto - protobuf representation of hand
-func (h *Hand) Proto() *protobuf.Hand {
-	return &protobuf.Hand{
-		Rank: protobuf.Rank(
-			protobuf.Rank_value[string(h.Rank)],
-		).Enum(),
-
-		High:   h.High.Binary(),
-		Value:  h.Value.Binary(),
-		Kicker: h.Kicker.Binary(),
-	}
-}
-
-func (h *Hand) Unproto(protoHand *protobuf.Hand) {
-	*h = Hand{
-		Rank:   hand.Rank(protoHand.Rank.String()),
-		High:   BinaryCards(protoHand.High),
-		Value:  BinaryCards(protoHand.Value),
-		Kicker: BinaryCards(protoHand.Kicker),
-	}
 }
 
 type compareFunc func(*Hand, *Hand) int

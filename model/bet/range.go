@@ -1,13 +1,5 @@
 package bet
 
-import (
-	"code.google.com/p/goprotobuf/proto"
-)
-
-import (
-	"gopoker/event/message/protobuf"
-)
-
 // Range - bet range, how much to call and how much to raise
 type Range struct {
 	Call float64
@@ -18,11 +10,11 @@ type Range struct {
 // Reset - reset call and raise range
 func (r *Range) Reset() {
 	r.Call = 0.
-	r.ResetRaise()
+	r.Min, r.Max = 0., 0.
 }
 
 // ResetRaise - set min and max to 0.0
-func (r *Range) ResetRaise() {
+func (r *Range) DisableRaise() {
 	r.Min, r.Max = 0., 0.
 }
 
@@ -31,7 +23,7 @@ func (r *Range) SetRaise(min, max float64) {
 }
 
 // AdjustByAvailable - set raise range according to available stack
-func (r *Range) AdjustByAvailable(available float64) {
+func (r *Range) SetAvailable(available float64) {
 	minRaise, maxRaise := r.Min, r.Max
 
 	if available < maxRaise {
@@ -45,21 +37,4 @@ func (r *Range) AdjustByAvailable(available float64) {
 	}
 
 	r.Min, r.Max = minRaise, maxRaise
-}
-
-// Proto - range to protobuf
-func (r *Range) Proto() *protobuf.BetRange {
-	return &protobuf.BetRange{
-		Call: proto.Float64(r.Call),
-		Min:  proto.Float64(r.Min),
-		Max:  proto.Float64(r.Max),
-	}
-}
-
-func (r *Range) Unproto(p *protobuf.BetRange) {
-	*r = Range{
-		Call: p.GetCall(),
-		Min:  p.GetMin(),
-		Max:  p.GetMax(),
-	}
 }

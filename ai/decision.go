@@ -5,7 +5,7 @@ import (
 )
 
 import (
-	"gopoker/calc"
+	"gopoker/poker/math"
 	"gopoker/poker"
 )
 
@@ -17,7 +17,7 @@ type decision struct {
 }
 
 func (b *Bot) decidePreflop(cards poker.Cards) decision {
-	group := calc.SklanskyMalmuthGroup(cards[0], cards[1])
+	group := math.SklanskyMalmuthGroup(cards[0], cards[1])
 
 	log.Printf("group=%d", group)
 
@@ -55,7 +55,7 @@ func (b *Bot) decidePreflop(cards poker.Cards) decision {
 }
 
 func (b *Bot) decideBoard(cards, board poker.Cards) decision {
-	chances := calc.ChancesAgainstN{OpponentsNum: b.opponentsNum}.WithBoard(cards, board)
+	chances := math.ChancesAgainstN{OpponentsNum: b.opponentsNum}.WithBoard(cards, board)
 
 	log.Printf("chances=%s", chances)
 

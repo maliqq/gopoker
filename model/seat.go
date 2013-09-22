@@ -5,11 +5,6 @@ import (
 )
 
 import (
-	"code.google.com/p/goprotobuf/proto"
-)
-
-import (
-	"gopoker/event/message/protobuf"
 	"gopoker/model/bet"
 	seatState "gopoker/model/seat"
 )
@@ -144,25 +139,4 @@ func (seat *Seat) SetStack(amount float64) {
 // AdvanceStack - add stack to seat
 func (seat *Seat) AdvanceStack(amount float64) {
 	seat.Stack += amount
-}
-
-// Proto - seat to protobuf
-func (seat *Seat) Proto() *protobuf.Seat {
-	return &protobuf.Seat{
-		State: protobuf.SeatState(
-			protobuf.SeatState_value[string(seat.State)],
-		).Enum(),
-
-		Stack: proto.Float64(seat.Stack),
-
-		Bet: proto.Float64(seat.Bet),
-	}
-}
-
-func (seat *Seat) Unproto(p *protobuf.Seat) {
-	*seat = Seat{
-		State: seatState.State(p.GetState().String()),
-		Stack: p.GetStack(),
-		Bet:   p.GetBet(),
-	}
 }

@@ -5,11 +5,6 @@ import (
 )
 
 import (
-	"code.google.com/p/goprotobuf/proto"
-)
-
-import (
-	"gopoker/event/message/protobuf"
 	"gopoker/model/bet"
 )
 
@@ -30,21 +25,6 @@ func (b Bet) String() string {
 // PrintString - bet to print string
 func (b Bet) PrintString() string {
 	return b.String()
-}
-
-// Proto - bet to protobuf
-func (b Bet) Proto() *protobuf.Bet {
-	return &protobuf.Bet{
-		Type:   protobuf.BetType(protobuf.BetType_value[string(b.Type)]).Enum(),
-		Amount: proto.Float64(b.Amount),
-	}
-}
-
-func (b *Bet) Unproto(p *protobuf.Bet) {
-	*b = Bet{
-		Type:   bet.Type(p.GetType()),
-		Amount: p.GetAmount(),
-	}
 }
 
 // IsActive - check active bet (raise or call)

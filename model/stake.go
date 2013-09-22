@@ -6,11 +6,6 @@ import (
 )
 
 import (
-	"code.google.com/p/goprotobuf/proto"
-)
-
-import (
-	"gopoker/event/message/protobuf"
 	"gopoker/model/bet"
 )
 
@@ -148,23 +143,4 @@ func (stake *Stake) MarshalJSON() ([]byte, error) {
 		data["BringIn"] = stake.BringInAmount()
 	}
 	return json.Marshal(data)
-}
-
-// Proto - stake to protobuf
-func (stake *Stake) Proto() *protobuf.Stake {
-	return &protobuf.Stake{
-		BigBlind:   proto.Float64(stake.BigBlindAmount()),
-		SmallBlind: proto.Float64(stake.SmallBlindAmount()),
-		Ante:       proto.Float64(stake.AnteAmount()),
-		BringIn:    proto.Float64(stake.BringInAmount()),
-	}
-}
-
-func (stake *Stake) Unproto(p *protobuf.Stake) {
-	*stake = Stake{
-		BigBlind:   p.GetBigBlind(),
-		SmallBlind: p.GetSmallBlind(),
-		Ante:       p.GetAnte(),
-		BringIn:    p.GetBringIn(),
-	}
 }

@@ -2,60 +2,71 @@ package model
 
 import (
 	"fmt"
-)
-
-import (
-	"code.google.com/p/goprotobuf/proto"
-)
-
-import (
-	"gopoker/event/message/protobuf"
-	"gopoker/model/position"
+  "container/ring"
 )
 
 // Table - players seating
 type Table struct {
 	Size   int // number of seats
-	Button int
+	Button int // button position
+	Cursor int // acting player
 
 	Seats   Seats
-	seating map[Player]int
+
+	ring *ring.Ring
+	seating Seating
 }
 
 // NewTable - create table by size
 func NewTable(size int) *Table {
-	return &Table{
+	seats := NewSeats(size)
+	t := Table{
 		Size:    size,
-		Seats:   NewSeats(size),
-		seating: map[Player]int{},
+		Seats:   seats,
 	}
+	t.createSeating()
+	t.createRing()
+
+	return &t
+}
+
+func (t *Table) createRing() {
+  r := ring.New(t.Size)
+  
+  for i := 0; i < t.Size; i++ {
+    r.Value = Box{Pos: i, Seat: t.Seats[i]}
+    r = r.Next()
+  }
+
+  r = r.Move(t.Button)
+
+  t.ring = r
+}
+
+func (t *Table) Ring() *Ring {
+	return &Ring{t.ring}
 }
 
 // MoveButton - move button to next position
 func (t *Table) MoveButton() {
-	t.SetButton(t.Button + 1)
+	t.ring = t.ring.Move(1)
+	t.Button = t.ring.Value.(Box).Pos
 }
 
 // SetButton - set button to specified position
 func (t *Table) SetButton(pos int) {
-	t.Button = position.Cycle(pos, t.Size)
+	if t.Button != pos {
+		t.ring = t.ring.Move(pos - t.Button)
+		t.Button = t.ring.Value.(Box).Pos
+	}
 }
 
-// Register - register user at specified position
-func (t *Table) Register(player Player, pos int) {
-	t.seating[player] = pos
+func (t *Table) createSeating() {
+	t.seating = NewSeating()
 }
 
-// Unregister - unregister user from specified position
-func (t *Table) Unregister(player Player) {
-	delete(t.seating, player)
-}
-
-// Seating - get player seating
 func (t *Table) Seating(player Player) (int, bool) {
-	pos, found := t.seating[player]
-
-	return pos, found
+	return t.seating.Check(player)
 }
 
 // AddSeating - add player seating at pos
@@ -67,7 +78,7 @@ func (t *Table) AddSeating(player Player, pos int) (*Seat, error) {
 		return nil, err
 	}
 
-	t.Register(player, pos)
+	t.seating.Add(player, pos)
 
 	return seat, nil
 }
@@ -76,15 +87,15 @@ func (t *Table) AddSeating(player Player, pos int) (*Seat, error) {
 func (t *Table) RemoveSeating(pos int) (*Seat, error) {
 	seat := t.Seat(pos)
 
-	t.Unregister(seat.Player)
 	seat.Clear()
+	t.seating.Remove(seat.Player)
 
 	return seat, nil
 }
 
 // Pos - get position for player
 func (t *Table) Pos(player Player) (int, error) {
-	pos, found := t.seating[player]
+	pos, found := t.seating.Check(player)
 	if !found {
 		return 0, fmt.Errorf("Player not found.")
 	}
@@ -93,24 +104,9 @@ func (t *Table) Pos(player Player) (int, error) {
 
 // Seat - get seat for position
 func (t *Table) Seat(pos int) *Seat {
-	return t.Seats[pos]
+	return t.Seats.At(pos)
 }
 
-// AllSeats - get all seats for table
-func (t *Table) AllSeats() seatSlice {
-	return t.Seats.From(t.Button)
-}
-
-// AllPlayers - get all players for table
-func (t *Table) AllPlayers() []Player {
-	players := []Player{}
-	for player := range t.seating {
-		players = append(players, player)
-	}
-	return players
-}
-
-// Player - get player for position
 func (t *Table) Player(pos int) Player {
 	return t.Seat(pos).Player
 }
@@ -155,33 +151,5 @@ func (t *Table) RemovePlayer(player Player) (*Seat, error) {
 
 // String - table to string
 func (t *Table) String() string {
-	return fmt.Sprintf("size: %d button: %d\n%s", t.Size, t.Button, t.Seats)
-}
-
-// Proto - table to protobuf
-func (t *Table) Proto() *protobuf.Table {
-	seats := make([]*protobuf.Seat, t.Size)
-	for i, seat := range t.Seats {
-		seats[i] = seat.Proto()
-	}
-	return &protobuf.Table{
-		Size:   proto.Int32(int32(t.Size)),
-		Button: proto.Int32(int32(t.Button)),
-		Seats:  seats,
-	}
-}
-
-func (t *Table) Unproto(p *protobuf.Table) {
-	size := int(p.GetSize())
-	seats := make([]*Seat, size)
-	for i, pseat := range p.Seats {
-		seat := &Seat{}
-		seat.Unproto(pseat)
-		seats[i] = seat
-	}
-	*t = Table{
-		Seats:  seats,
-		Size:   size,
-		Button: int(p.GetButton()),
-	}
+	return fmt.Sprintf("size: %d button: %d\n%s", t.Size, t.Button + 1, t.Seats)
 }
