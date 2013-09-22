@@ -23,12 +23,12 @@ import (
 
 // Connection - console connection
 type Connection struct {
-	Server *play.Play
+	Instance *engine.Instance
 }
 
 // Reply - reply to play
 func (c *Connection) Reply(msg message.Message) {
-	c.Server.Recv <- event.New(msg)
+	c.Instance.Recv <- event.New(msg)
 }
 
 // Handle - handle protocol message
