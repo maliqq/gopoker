@@ -18,33 +18,12 @@ const (
 	DefaultMaxRaises = 8 // TODO into game options
 )
 
-type Round struct {
-	*ring.Ring
-}
-
-func (r *Round) Box() model.Box {
-	return r.Ring.Value.(model.Box)
-}
-
-func (r *Round) Pos() int {
-	return r.Box().Pos
-}
-
-func (r *Round) Current() *model.Seat {
-	return r.Box().Seat
-}
-
-func (r *Round) Move() {
-	r.Ring = r.Ring.Move(1)
-}
-
 // Betting - betting context
 type BettingContext struct {
 	raiseCount int // current raise count
 	bigBets    bool // big bets mode
 
-	Round *Round
-	
+	Round *Round	
 	Pot      *model.Pot
 	BetRange *bet.Range
 }
