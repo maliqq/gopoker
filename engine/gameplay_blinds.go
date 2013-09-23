@@ -51,7 +51,7 @@ func (g *Gameplay) postBigBlind() {
 	g.b.Round.Move()
 }
 
-func (g *Gameplay) postBlinds() {
+func (g *Gameplay) postBlinds(exit chan bool) {
 	g.moveButton()
 
 	ring := g.Table.Ring()
@@ -60,10 +60,11 @@ func (g *Gameplay) postBlinds() {
 	waiting := ring.Waiting()
 
 	if len(active)+len(waiting) < 2 {
-		//${end_game}
-
+		exit <- true
 		return
 	}
+	defer close(exit)
+
 	//headsUp := len(active) == 2 && len(waiting) == 0 || len(active) == 1 && len(waiting) == 1
 	g.b.NewRound(active)
 

@@ -10,7 +10,7 @@ const (
 	DefaultTimer = 30
 )
 
-func (g *Gameplay) processBetting() {
+func (g *Gameplay) processBetting(skip chan bool) {
 	ring := g.Table.Ring()
 
 	for _, box := range ring.InPlay() {
@@ -23,10 +23,10 @@ func (g *Gameplay) processBetting() {
 	inPot := ring.InPot()
 
 	if len(inPot) < 2 || len(active) == 0 {
-		//${end_betting}
-
+		skip <- true
 		return
 	}
+	defer close(skip)
 
 	g.b.NewRound(active)
 

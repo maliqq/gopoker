@@ -8,27 +8,35 @@ import (
 )
 
 func buildStreets(g *Gameplay) []Street {
-	betting := Stage{
-		Type: stage.Betting,
-		Do:   func() {},
+	betting := StageExit{
+		Stage: Stage{
+			Type: stage.Betting,
+		},
+		Do: func(chan bool) {},
 	}
 
-	discarding := Stage{
-		Type: stage.Discarding,
-		Do:   func() {},
+	discarding := StageDo{
+		Stage: Stage{
+			Type: stage.Discarding,
+		},
+		Do: func() {},
 	}
 
-	bigBets := Stage{
-		Type: stage.BigBets,
-		Do:   g.turnOnBigBets,
+	bigBets := StageDo{
+		Stage: Stage{
+			Type: stage.BigBets,
+		},
+		Do: g.turnOnBigBets,
 	}
 
-	bringIn := Stage{
-		Type: stage.BringIn,
-		Do:   g.bringIn,
+	bringIn := StageDo{
+		Stage: Stage{
+			Type: stage.BringIn,
+		},
+		Do: g.bringIn,
 	}
 
-	dealing := func(dealType deal.Type, cardsNum int) Stage {
+	dealing := func(dealType deal.Type, cardsNum int) StageDo {
 		n := cardsNum
 
 		var f func()
@@ -41,9 +49,11 @@ func buildStreets(g *Gameplay) []Street {
 			f = func() { g.dealDoor(n) }
 		}
 
-		return Stage{
-			Type: stage.Dealing,
-			Do:   f,
+		return StageDo{
+			Stage: Stage{
+				Type: stage.Dealing,
+			},
+			Do: f,
 		}
 	}
 
