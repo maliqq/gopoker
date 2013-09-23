@@ -12,12 +12,11 @@ type Stage struct {
   Type     stage.Type
   If       func() bool
   Before   func()
-  Do       func()
   After    func()
   Notify   bool
 }
 
-func (process *Stage) Run() {
+func (process *Stage) do(doFunc func()) {
   if process.If != nil && !process.If() {
     return
   }
@@ -28,20 +27,11 @@ func (process *Stage) Run() {
     process.Before()
   }
 
-  if process.Do != nil {
-    process.Do()
+  if doFunc != nil {
+    doFunc()
   }
 
   if process.After != nil {
     process.After()
   }
 }
-
-type Stages []Stage
-
-func (processes Stages) Run() {
-  for _, process := range processes {
-    process.Run()
-  }
-}
-

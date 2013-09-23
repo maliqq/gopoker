@@ -5,7 +5,7 @@ import (
 	"gopoker/model/bet"
 )
 
-func (g *Gameplay) postAntes() {
+func (g *Gameplay) postAntes() () {
 
 	active := g.Table.Ring().Active()
 	g.b.NewRound(active)
@@ -23,3 +23,4 @@ func (g *Gameplay) postAntes() {
 
 	g.completeBetting()
 }
+
