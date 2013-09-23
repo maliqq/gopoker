@@ -1,8 +1,8 @@
 package engine
 
 import (
-	"gopoker/poker"
 	"gopoker/model"
+	"gopoker/poker"
 )
 
 func (g *Gameplay) bringIn() {
@@ -26,7 +26,7 @@ func (g *Gameplay) bringIn() {
 	}
 
 	g.setButton(min.Pos)
-	
+
 	g.b.NewRound(ring.Active())
 
 	g.e.Notify(

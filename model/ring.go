@@ -1,61 +1,61 @@
 package model
 
 import (
-  "container/ring"
+	"container/ring"
 )
 
 import (
-  "gopoker/model/seat"
+	"gopoker/model/seat"
 )
 
 type Ring struct {
-  *ring.Ring
+	*ring.Ring
 }
 
 type Box struct {
-  Pos int
-  Seat *Seat
+	Pos  int
+	Seat *Seat
 }
 
 func (r *Ring) Where(f func(seat *Seat) bool) []Box {
-  index := []Box{}
-  r.Do(func(value interface{}) {
-    box := value.(Box)
-    if f(box.Seat) {
-      index = append(index, box)
-    }
-  })
+	index := []Box{}
+	r.Do(func(value interface{}) {
+		box := value.(Box)
+		if f(box.Seat) {
+			index = append(index, box)
+		}
+	})
 
-  return index
+	return index
 }
 
 func (r *Ring) Active() []Box {
-  return r.Where(func(s *Seat) bool {
-    return s.State == seat.Play || s.State == seat.PostBB
-  })
+	return r.Where(func(s *Seat) bool {
+		return s.State == seat.Play || s.State == seat.PostBB
+	})
 }
 
 func (r *Ring) Waiting() []Box {
-  return r.Where(func(s *Seat) bool {
-    return s.State == seat.WaitBB
-  })
+	return r.Where(func(s *Seat) bool {
+		return s.State == seat.WaitBB
+	})
 }
 
 func (r *Ring) Playing() []Box {
-  return r.Where(func(s *Seat) bool {
-    return s.State == seat.Play
-  })
+	return r.Where(func(s *Seat) bool {
+		return s.State == seat.Play
+	})
 }
 
 func (r *Ring) InPlay() []Box {
-  return r.Where(func(s *Seat) bool {
-    return s.State == seat.Play || s.State == seat.Bet
-  })
+	return r.Where(func(s *Seat) bool {
+		return s.State == seat.Play || s.State == seat.Bet
+	})
 }
 
 // InPot - get all seats in pot
 func (r *Ring) InPot() []Box {
-  return r.Where(func(s *Seat) bool {
-    return s.State == seat.Play || s.State == seat.Bet || s.State == seat.AllIn
-  })
+	return r.Where(func(s *Seat) bool {
+		return s.State == seat.Play || s.State == seat.Bet || s.State == seat.AllIn
+	})
 }

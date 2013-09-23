@@ -5,8 +5,8 @@ import (
 )
 
 import (
-	"gopoker/poker/math"
 	"gopoker/poker"
+	"gopoker/poker/math"
 )
 
 type decision struct {

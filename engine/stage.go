@@ -1,37 +1,37 @@
 package engine
 
 import (
-  "log"
+	"log"
 )
 
 import (
-  "gopoker/engine/stage"
+	"gopoker/engine/stage"
 )
 
 type Stage struct {
-  Type     stage.Type
-  If       func() bool
-  Before   func()
-  After    func()
-  Notify   bool
+	Type   stage.Type
+	If     func() bool
+	Before func()
+	After  func()
+	Notify bool
 }
 
 func (process *Stage) do(doFunc func()) {
-  if process.If != nil && !process.If() {
-    return
-  }
+	if process.If != nil && !process.If() {
+		return
+	}
 
-  log.Printf("[stage] start %s", process.Type)
+	log.Printf("[stage] start %s", process.Type)
 
-  if process.Before != nil {
-    process.Before()
-  }
+	if process.Before != nil {
+		process.Before()
+	}
 
-  if doFunc != nil {
-    doFunc()
-  }
+	if doFunc != nil {
+		doFunc()
+	}
 
-  if process.After != nil {
-    process.After()
-  }
+	if process.After != nil {
+		process.After()
+	}
 }

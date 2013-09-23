@@ -29,7 +29,7 @@ func (i *Instance) SitOut(msg *message.Seat) {
 	pos := msg.Pos
 	i.Table.Seat(pos).State = seat.Idle
 	i.e.Notify(&message.SeatState{
-		Pos: pos,
+		Pos:   pos,
 		State: seat.Idle,
 	}).All()
 }
@@ -38,7 +38,7 @@ func (i *Instance) ComeBack(msg *message.Seat) {
 	pos := msg.Pos
 	i.Table.Seat(pos).State = seat.Ready
 	i.e.Notify(&message.SeatState{
-		Pos: pos,
+		Pos:   pos,
 		State: seat.Ready,
 	}).All()
 }
@@ -48,18 +48,18 @@ func (i *Instance) AddChatMessage(msg *message.ChatMessage) {
 }
 
 func (i *Instance) AddBet(bet *model.Bet) {
-	
-/*	if !i.b.IsActive() {
-		return
-	}
 
-	pos := msg.Pos
-	if pos != i.Betting.Pos {
-		return
-	}
-	//seat := i.Table.Seat(pos)
+	/*	if !i.b.IsActive() {
+			return
+		}
 
-	i.b.Bet <- msg.Bet
-	i.e.Pass(event).All()
+		pos := msg.Pos
+		if pos != i.Betting.Pos {
+			return
+		}
+		//seat := i.Table.Seat(pos)
+
+		i.b.Bet <- msg.Bet
+		i.e.Pass(event).All()
 	*/
 }

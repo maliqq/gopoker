@@ -1,10 +1,10 @@
 package engine
 
 import (
-  "gopoker/engine/street"
+	"gopoker/engine/street"
 )
 
 type Street struct {
-  street.Type
-  Stages
+	street.Type
+	Stages
 }

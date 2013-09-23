@@ -1,8 +1,8 @@
 package model
 
 import (
+	"container/ring"
 	"fmt"
-  "container/ring"
 )
 
 // Table - players seating
@@ -11,9 +11,9 @@ type Table struct {
 	Button int // button position
 	Cursor int // acting player
 
-	Seats   Seats
+	Seats Seats
 
-	ring *ring.Ring
+	ring    *ring.Ring
 	seating Seating
 }
 
@@ -21,8 +21,8 @@ type Table struct {
 func NewTable(size int) *Table {
 	seats := NewSeats(size)
 	t := Table{
-		Size:    size,
-		Seats:   seats,
+		Size:  size,
+		Seats: seats,
 	}
 	t.createSeating()
 	t.createRing()
@@ -31,16 +31,16 @@ func NewTable(size int) *Table {
 }
 
 func (t *Table) createRing() {
-  r := ring.New(t.Size)
-  
-  for i := 0; i < t.Size; i++ {
-    r.Value = Box{Pos: i, Seat: t.Seats[i]}
-    r = r.Next()
-  }
+	r := ring.New(t.Size)
 
-  r = r.Move(t.Button)
+	for i := 0; i < t.Size; i++ {
+		r.Value = Box{Pos: i, Seat: t.Seats[i]}
+		r = r.Next()
+	}
 
-  t.ring = r
+	r = r.Move(t.Button)
+
+	t.ring = r
 }
 
 func (t *Table) Ring() *Ring {
@@ -151,5 +151,5 @@ func (t *Table) RemovePlayer(player Player) (*Seat, error) {
 
 // String - table to string
 func (t *Table) String() string {
-	return fmt.Sprintf("size: %d button: %d\n%s", t.Size, t.Button + 1, t.Seats)
+	return fmt.Sprintf("size: %d button: %d\n%s", t.Size, t.Button+1, t.Seats)
 }

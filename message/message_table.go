@@ -2,18 +2,18 @@ package message
 
 import (
 	"gopoker/model"
-  "gopoker/model/seat"
+	"gopoker/model/seat"
 )
 
 type Seat struct {
-  Pos int
+	Pos int
 }
 
 func (Seat) EventMessage() {}
 
 type SeatState struct {
-  Pos int
-  State seat.State
+	Pos   int
+	State seat.State
 }
 
 func (SeatState) EventMessage() {}

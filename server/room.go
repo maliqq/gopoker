@@ -40,7 +40,7 @@ func (r *Room) createLogger(dir string) {
 	if err != nil {
 		log.Fatal("cant open logger file", err)
 	}
-	
+
 	logger := play.NewLogger(f)
 	logger.Subscribe(r.Hub)
 }
