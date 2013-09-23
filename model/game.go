@@ -36,8 +36,8 @@ type GameOptions struct {
 
 // Game - game
 type Game struct {
-	Type game.LimitedGame
-	Limit game.Limit
+	Type         game.LimitedGame
+	Limit        game.Limit
 	TableSize    int
 	*GameOptions `json:"-"`
 }

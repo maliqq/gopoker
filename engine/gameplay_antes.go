@@ -9,12 +9,12 @@ func (g *Gameplay) postAntes() {
 
 	active := g.Table.Ring().Active()
 	g.b.NewRound(active)
-	
+
 	for _, box := range active {
 		newBet := g.b.ForceBet(bet.Ante, g.Stake)
 
 		g.b.AddBet(newBet)
-		
+
 		g.e.Notify(
 			&message.AddBet{box.Pos, newBet},
 		).All()

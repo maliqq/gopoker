@@ -4,6 +4,7 @@ import (
 	"gopoker/model"
 	"gopoker/play/mode"
 )
+
 // CreateRoom - create room request
 type CreateRoom struct {
 	Guid    model.Guid

@@ -1,7 +1,7 @@
 package model
 
 import (
-  "testing"
+	"testing"
 )
 
 func TestRing(t *testing.T) {

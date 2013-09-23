@@ -119,11 +119,11 @@ func (g *Gameplay) showdown() {
 		var highHands, lowHands showdownHands
 
 		if g.Game.Lo != "" {
-			lowHands = g.showHands(g.Game.Lo)//, g.Game.HasBoard)
+			lowHands = g.showHands(g.Game.Lo) //, g.Game.HasBoard)
 		}
 
 		if g.Game.Hi != "" {
-			highHands = g.showHands(g.Game.Hi)//, g.Game.HasBoard)
+			highHands = g.showHands(g.Game.Hi) //, g.Game.HasBoard)
 		}
 
 		g.declareWinners(highHands, lowHands)

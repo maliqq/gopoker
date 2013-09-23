@@ -6,8 +6,8 @@ import (
 )
 
 import (
-	"gopoker/engine/street"
 	"gopoker/engine/mode"
+	"gopoker/engine/street"
 )
 
 type State string
@@ -28,8 +28,8 @@ type Instance struct {
 	*Gameplay
 	State       State
 	StateChange chan InstanceStateChange
-	Street street.Type
-	Mode mode.Type
+	Street      street.Type
+	Mode        mode.Type
 }
 
 func NewInstance(context *Context) *Instance {

@@ -2,7 +2,7 @@ package server
 
 import (
 	"log"
-	_"time"
+	_ "time"
 )
 
 import (

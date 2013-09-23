@@ -1,9 +1,9 @@
 package context
 
 import (
-	_"fmt"
-	"log"
 	"container/ring"
+	_ "fmt"
+	"log"
 )
 
 import (
@@ -20,10 +20,10 @@ const (
 
 // Betting - betting context
 type Betting struct {
-	raiseCount int // current raise count
+	raiseCount int  // current raise count
 	bigBets    bool // big bets mode
 
-	Round *Round	
+	Round    *Round
 	Pot      *model.Pot
 	BetRange *bet.Range
 }
@@ -31,7 +31,7 @@ type Betting struct {
 // NewBetting - create new betting context
 func NewBetting() *Betting {
 	return &Betting{
-		Pot: model.NewPot(),
+		Pot:      model.NewPot(),
 		BetRange: &bet.Range{},
 	}
 }

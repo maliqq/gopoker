@@ -1,19 +1,19 @@
 package hub
 
 type Broker struct {
-  *Exchange
+	*Exchange
 }
 
-func NewBroker() *Broker{
-  broker := Broker{
-    Exchange: NewExchange(),
-  }
-  return &broker
+func NewBroker() *Broker {
+	broker := Broker{
+		Exchange: NewExchange(),
+	}
+	return &broker
 }
 
 func (broker *Broker) Notify(message interface{}) Notify {
-  return Notify{
-    Exchange: broker.Exchange,
-    Message: message,
-  }
+	return Notify{
+		Exchange: broker.Exchange,
+		Message:  message,
+	}
 }
