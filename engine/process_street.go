@@ -12,7 +12,9 @@ func buildStreets(g *Gameplay) []Street {
 		Stage: Stage{
 			Type: stage.Betting,
 		},
-		Do: func(chan bool) {},
+		Do: func(chan bool) {
+
+		},
 	}
 
 	discarding := StageDo{

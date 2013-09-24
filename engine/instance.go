@@ -6,6 +6,7 @@ import (
 )
 
 import (
+	"gopoker/event"
 	"gopoker/engine/mode"
 	"gopoker/engine/street"
 )
@@ -26,25 +27,37 @@ type InstanceStateChange struct {
 
 type Instance struct {
 	*Gameplay
+	
+	Recv 		event.Channel
+
 	State       State
-	StateChange chan InstanceStateChange
+	stateChange chan InstanceStateChange
 	Street      street.Type
 	Mode        mode.Type
 }
 
 func NewInstance(context *Context) *Instance {
-	instance := Instance{
+	instance := &Instance{
 		State:       Waiting,
-		StateChange: make(chan InstanceStateChange),
+		stateChange: make(chan InstanceStateChange),
+		Recv: make(event.Channel),
 		Gameplay:    NewGameplay(context),
 	}
 
-	return &instance
+	go instance.receive()
+
+	return instance
 }
 
 func (instance *Instance) doStart() {
 	fmt.Println("start...")
 	instance.State = Active
+
+	instance.BettingProcess = NewBettingProcess(instance.Gameplay)
+	instance.DealProcess = NewDealProcess(instance.Gameplay)
+
+	instance.BettingProcess.Run()
+	instance.DealProcess.Run()
 }
 
 func (instance *Instance) doPause() {
@@ -70,7 +83,7 @@ func (instance *Instance) processStateChange(event InstanceStateChange) bool {
 			return false
 		}
 	case Waiting:
-		if event.NewState != Active || event.NewState != Closed {
+		if event.NewState != Active && event.NewState != Closed {
 			return false
 		}
 	}
@@ -83,11 +96,12 @@ func (instance *Instance) processStateChange(event InstanceStateChange) bool {
 	return true
 }
 
-func (instance *Instance) Run() {
+func (instance *Instance) receive() {
 RunLoop:
 	for {
 		select {
-		case event := <-instance.StateChange:
+		case <-instance.Recv:
+		case event := <-instance.stateChange:
 			if !instance.processStateChange(event) {
 				break
 			}
@@ -99,7 +113,7 @@ RunLoop:
 			PauseLoop:
 				for {
 					select {
-					case event := <-instance.StateChange:
+					case event := <-instance.stateChange:
 						if instance.processStateChange(event) {
 							break PauseLoop
 						}
@@ -108,6 +122,8 @@ RunLoop:
 			case Closed:
 				break RunLoop
 			}
+		default:
 		}
+
 	}
 }

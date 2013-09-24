@@ -12,17 +12,18 @@ import (
 
 import (
 	"gopoker/event"
-	"gopoker/event/message"
+	"gopoker/message"
 
 	"gopoker/model"
 	"gopoker/model/game"
 
-	"gopoker/play"
+	"gopoker/engine"
 )
 
 var (
 	logfile     = flag.String("logfile", "", "Log file path")
 	betsize     = flag.Float64("betsize", 20., "Bet size")
+	tablesize     = flag.Int("tablesize", 6, "Table size")
 	mixedGame   = flag.String("mix", "", "Mix to play")
 	limitedGame = flag.String("game", "Texas", "Game to play")
 )
@@ -40,54 +41,58 @@ func main() {
 	model.LoadGames(*configDir)
 
 	if *logfile != "" {
-		w, err := os.Create(*logfile)
-
-		if err != nil {
-			panic(err.Error())
-		}
-
-		defer w.Close()
-		log.SetOutput(w)
+		log := createLog()
+		defer log.Close()
 	}
 
+	instance := createInstance()
+	fmt.Printf("%+v\n", instance)
+	
 	me := make(event.Channel, 100)
-	play := createPlay(&me)
-	fmt.Printf("%s\n", play)
+	joinInstance(instance, me)
 
-	play.Start()
-
-	conn := &Connection{
-		Server: play,
-	}
-
-	for msg := range me {
-		conn.Handle(msg)
-	}
+	instance.Start()
+	
+	session := Session{instance}
+	session.Start(me)
 }
 
-func createPlay(me *event.Channel) *play.Play {
-	size := 3
-	stake := model.NewStake(*betsize)
-	//stake.WithAnte = true
+func createLog() *os.File {
+	w, err := os.Create(*logfile)
 
-	var variation model.Variation
-	if *mixedGame != "" {
-		variation = model.NewMix(game.MixedGame(*mixedGame), size)
-	} else {
-		variation = model.NewGame(game.LimitedGame(*limitedGame), game.FixedLimit, size)
+	if err != nil {
+		panic(err.Error())
 	}
 
-	play := play.NewPlay(variation, stake)
+	log.SetOutput(w)
 
-	players := []model.Player{"A", "B", "C", "D", "E", "F", "G", "H", "I"}
+	return w
+}
+
+func createInstance() *engine.Instance {
+	ctx := &engine.Context{
+		Stake: model.NewStake(*betsize),
+		Table: model.NewTable(*tablesize),
+	}
+
+	if *mixedGame != "" {
+		ctx.Mix = model.NewMix(game.MixedGame(*mixedGame), *tablesize)
+	} else {
+		ctx.Game = model.NewGame(game.LimitedGame(*limitedGame), game.FixedLimit, *tablesize)
+	}
+
+	return engine.NewInstance(ctx)
+}
+
+func joinInstance(instance *engine.Instance, me event.Channel) {
+	players := []string{"A", "B", "C", "D", "E", "F", "G", "H", "I"}
 	stack := 1500.
 
 	for i, player := range players {
-		if i < size {
-			play.Broadcast.Bind(player, me)
-			play.Recv <- event.New(&message.JoinTable{player, i, stack})
+		if i >= instance.Table.Size {
+			break
 		}
+		instance.Broker().Subscribe(player, me)
+		instance.JoinTable(&message.Join{model.Player(player), i, stack})
 	}
-
-	return play
 }

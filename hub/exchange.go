@@ -1,23 +1,30 @@
 package hub
 
 import (
-	"fmt"
+	"log"
+)
+
+import (
+	"gopoker/event"
+	"gopoker/util"
 )
 
 type Exchange struct {
-	endpoints map[EndpointKey]Endpoint
+	endpoints map[string]Endpoint
 }
 
 func NewExchange() *Exchange {
-	exchange := Exchange{
-		endpoints: map[EndpointKey]Endpoint{},
+	return &Exchange{
+		endpoints: map[string]Endpoint{},
 	}
-
-	return &exchange
 }
 
-func (exchange *Exchange) Dispatch(notification Notification) {
-	route := notification.Route
+func (exchange *Exchange) Subscribe(key string, channel event.Channel) {
+	exchange.endpoints[key] = Subscriber{channel}
+}
+
+func (exchange *Exchange) Dispatch(route Route, message interface{}) {
+	log.Printf(util.Colorf(util.Cyan, "[dispatch] %s %#v", route, message))
 
 	if route.None {
 		return
@@ -25,7 +32,7 @@ func (exchange *Exchange) Dispatch(notification Notification) {
 
 	if route.One != "" {
 		if endpoint, found := exchange.endpoints[route.One]; found {
-			fmt.Printf("%s", endpoint)
+			endpoint.Send(message)
 		}
 		return
 	}
@@ -63,6 +70,6 @@ func (exchange *Exchange) Dispatch(notification Notification) {
 			continue
 		}
 
-		//
+		endpoint.Send(message)
 	}
 }

@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"log"
 	"os"
 	"strconv"
 	"strings"
@@ -11,117 +10,113 @@ import (
 
 import (
 	"gopoker/event"
-	"gopoker/event/message"
+
+	"gopoker/message"
 	"gopoker/poker"
-	"gopoker/util"
 
 	"gopoker/model"
 	"gopoker/model/deal"
 
-	"gopoker/play"
+	"gopoker/engine"
 )
 
 // Connection - console connection
-type Connection struct {
+type Session struct {
 	Instance *engine.Instance
 }
 
 // Reply - reply to play
-func (c *Connection) Reply(msg message.Message) {
-	c.Instance.Recv <- event.New(msg)
+func (s *Session) Send(msg message.Message) {
+	s.Instance.Recv <- event.New(msg)
 }
 
-// Handle - handle protocol message
-func (c *Connection) Handle(event *event.Event) {
-	log.Println(util.Color(util.Green, fmt.Sprintf("[receive] %s", event)))
+func (s *Session) Start(recv event.Channel) {
+	for n := range recv {
+		switch msg := n.Message.(type) {
+		case *message.RequireBet:
 
-	switch msg := event.Message.(type) {
-	case *message.RequireBet:
+			fmt.Printf("%s\n", msg)
 
-		fmt.Printf("%s\n", msg)
+			var newBet *model.Bet
 
-		var newBet *model.Bet
+			pos := msg.Pos
+			seat := s.Instance.Table.Seat(pos)
 
-		pos := msg.Pos
-		seat := c.Server.Table.Seat(pos)
+			for newBet == nil {
+				betRange := msg.Range
+				newBet = readBet(betRange.Call, betRange.Call-seat.Bet)
 
-		for newBet == nil {
-			betRange := msg.Range
-			newBet = readBet(betRange.Call, betRange.Call-seat.Bet)
-
-			err := newBet.Validate(seat, betRange)
-			if err != nil {
-				fmt.Println(err.Error())
-				newBet = nil
+				err := newBet.Validate(seat, betRange)
+				if err != nil {
+					fmt.Println(err.Error())
+					newBet = nil
+				}
 			}
+
+			if newBet != nil {
+				s.Send(&message.AddBet{pos, newBet})
+			}
+
+		case *message.RequireDiscard:
+
+			pos := msg.Pos
+			seat := s.Instance.Table.Seat(pos)
+
+			d := s.Instance.Deal()
+			fmt.Printf("Your cards: [%s]\n", d.Pocket(seat.Player))
+
+			var cards poker.Cards
+			for cards == nil {
+				cards = readCards()
+			}
+
+			s.Send(&message.DiscardCards{pos, cards})
+
+		case *message.DealCards:
+			
+			if msg.Type == deal.Board {
+				fmt.Printf("Dealt %s %s\n", msg.Type, msg.Cards.ConsoleString())
+			} else {
+				fmt.Printf("Dealt %s %s to %d\n", msg.Type, msg.Cards.ConsoleString(), msg.Pos)
+			}
+
+		case *message.MoveButton:
+			
+			pos := msg.Pos
+
+			fmt.Printf("Button is %d\n", pos+1)
+
+		case *message.AddBet:
+			
+			pos := msg.Pos
+			player := s.Instance.Table.Player(pos)
+
+			fmt.Printf("Player %s: %s\n", player, msg.Bet)
+
+		case *message.BettingComplete:
+			
+			pot := msg.Pot
+
+			d := s.Instance.Deal()
+			fmt.Printf("Pot size: %.2f\nBoard: %s\n", pot, d.Board.ConsoleString())
+
+		case *message.ShowHand:
+			
+			pos := msg.Pos
+			hand := msg.Hand
+			player := s.Instance.Table.Player(pos)
+
+			fmt.Printf("Player %s has %s (%s)\n", player, msg.Cards.ConsoleString(), hand.PrintString())
+
+		case *message.Winner:
+			
+			pos := msg.Pos
+			amount := msg.Amount
+			player := s.Instance.Table.Player(pos)
+
+			fmt.Printf("Player %s won %.2f\n", player, amount)
+
 		}
-
-		if newBet != nil {
-			c.Reply(&message.AddBet{pos, newBet})
-		}
-
-	case *message.RequireDiscard:
-
-		pos := msg.Pos
-		seat := c.Server.Table.Seat(pos)
-
-		fmt.Printf("Your cards: [%s]\n", c.Server.Deal.Pocket(seat.Player))
-
-		var cards poker.Cards
-		for cards == nil {
-			cards = readCards()
-		}
-
-		c.Reply(&message.DiscardCards{pos, cards})
-
-	case *message.DealCards:
-
-		if msg.Type == deal.Board {
-			fmt.Printf("Dealt %s %s\n", msg.Type, msg.Cards.ConsoleString())
-		} else {
-			fmt.Printf("Dealt %s %s to %d\n", msg.Type, msg.Cards.ConsoleString(), msg.Pos)
-		}
-
-	case *message.MoveButton:
-		pos := msg.Pos
-
-		fmt.Printf("Button is %d\n", pos+1)
-
-	case *message.AddBet:
-
-		pos := msg.Pos
-		player := c.Server.Table.Player(pos)
-
-		fmt.Printf("Player %s: %s\n", player, msg.Bet)
-
-	case *message.BettingComplete:
-
-		pot := msg.Pot
-
-		fmt.Printf("Pot size: %.2f\nBoard: %s\n", pot, c.Server.Deal.Board.ConsoleString())
-
-	case *message.ShowHand:
-
-		pos := msg.Pos
-		hand := msg.Hand
-		player := c.Server.Table.Player(pos)
-
-		fmt.Printf("Player %s has %s (%s)\n", player, msg.Cards.ConsoleString(), hand.PrintString())
-
-	case *message.Winner:
-
-		pos := msg.Pos
-		amount := msg.Amount
-		player := c.Server.Table.Player(pos)
-
-		fmt.Printf("Player %s won %.2f\n", player, amount)
-		/*
-			case *message.ChangeGame:
-
-				payload := msg.Envelope.ChangeGame
-
-				fmt.Printf("Game changed to %s %s\n", payload.Type, payload.Limit)
-		*/
 	}
 }
 

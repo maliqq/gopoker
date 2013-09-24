@@ -6,23 +6,30 @@ import (
 
 import (
 	"gopoker/engine/stage"
+	"gopoker/engine/context"
 )
 
 type DealProcess struct {
-	g *Gameplay
 	Stages
 }
 
-func CreateDealProcess(g *Gameplay) *DealProcess {
-	p := &DealProcess{g: g}
-	p.buildStages()
+func NewDealProcess(g *Gameplay) *DealProcess {
+	g.d = context.NewDeal()
 
-	return p
+	return &DealProcess{
+		Stages: buildStages(g),
+	}
 }
 
-func (p *DealProcess) buildStages() {
-	g := p.g
-	p.Stages = Stages{
+func buildStages(g *Gameplay) Stages {
+	return Stages{
+		StageDo{
+			Stage: Stage{
+				Type: stage.PrepareSeats,
+			},
+			Do: g.prepareSeats,
+		},
+
 		StageDo{
 			Stage: Stage{
 				Type: stage.RotateGame,

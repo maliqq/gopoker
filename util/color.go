@@ -36,6 +36,6 @@ func Color(color string, s string) string {
 }
 
 // Colorf colorify std output
-func Colorf(color string, format string, args ...interface{}) {
-	fmt.Print(Color(color, fmt.Sprintf(format, args...)))
+func Colorf(color string, format string, args ...interface{}) string {
+	return Color(color, fmt.Sprintf(format, args...))
 }

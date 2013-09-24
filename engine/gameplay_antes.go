@@ -6,7 +6,6 @@ import (
 )
 
 func (g *Gameplay) postAntes() {
-
 	active := g.Table.Ring().Active()
 	g.b.NewRound(active)
 

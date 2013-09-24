@@ -2,7 +2,6 @@ package engine
 
 import (
 	"gopoker/engine/context"
-	"gopoker/hub"
 	"gopoker/model"
 	"gopoker/model/seat"
 	"gopoker/util"
@@ -20,16 +19,18 @@ type Gameplay struct {
 	gameRotation *util.Rotation
 
 	d *context.Deal
-	b *context.Betting
+	DealProcess *DealProcess
 
-	e *hub.Broker
+	b *context.Betting
+	BettingProcess *BettingProcess
+
+	e *context.Broker
 }
 
-func NewGameplay(context *Context) *Gameplay {
-
+func NewGameplay(ctx *Context) *Gameplay {
 	g := &Gameplay{
-		Context: context,
-		e:       hub.NewBroker(),
+		Context: ctx,
+		e:       context.NewBroker(),
 	}
 
 	if g.Mix != nil {
@@ -38,6 +39,18 @@ func NewGameplay(context *Context) *Gameplay {
 	}
 
 	return g
+}
+
+func (g *Gameplay) Betting() *context.Betting {
+	return g.b
+}
+
+func (g *Gameplay) Broker() *context.Broker {
+	return g.e
+}
+
+func (g *Gameplay) Deal() *context.Deal {
+	return g.d
 }
 
 func (g *Gameplay) setCurrentGame() {

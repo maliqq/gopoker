@@ -6,7 +6,7 @@ import (
 )
 
 type BettingProcess struct {
-	*context.Betting
+	Betting *context.Betting
 
 	Bet  chan *model.Bet
 	Next chan bool
@@ -14,41 +14,38 @@ type BettingProcess struct {
 	stop chan bool
 }
 
-/*
-func NewBetting() *Betting {
-  process := Betting{
-    Betting: context.NewBetting(),
-    Bet: make(chan *model.Bet),
-    Next: make(chan int),
-    stop: make(chan int),
-  }
+func NewBettingProcess(g *Gameplay) *BettingProcess {
+	g.b = context.NewBetting()
+	p := &BettingProcess{
+		Betting: g.b,
+	    Bet: make(chan *model.Bet),
+	    Next: make(chan bool),
+	    stop: make(chan bool),
+	  }
 
-  process.receive()
-
-  return process
-}
-*/
-
-func (process *BettingProcess) Start() {
-	process.Betting = context.NewBetting()
+  return p
 }
 
-func (process *BettingProcess) Stop() {
-	process.stop <- true
+func (p *BettingProcess) Run() {
+	go p.receive()
 }
 
-func (process *BettingProcess) receive() {
+func (p *BettingProcess) Stop() {
+	p.stop <- true
+}
+
+func (p *BettingProcess) receive() {
 BettingLoop:
 	for {
 		select {
-		case bet := <-process.Bet:
-			process.Betting.AddBet(bet)
-			process.Next <- true
+		case bet := <-p.Bet:
+			p.Betting.AddBet(bet)
+			p.Next <- true
 
-		case <-process.stop:
+		case <-p.stop:
 			break BettingLoop
 		}
 	}
 
-	process.Betting.Clear()
+	p.Betting.Clear()
 }
