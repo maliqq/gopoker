@@ -97,6 +97,7 @@ func (ctx *Betting) RequireBet(limit game.Limit, stake *model.Stake) *message.Re
 		ctx.BetRange.DisableRaise()
 	} else {
 		min, max := ctx.RaiseRange(limit, stake)
+		// FIXME
 		ctx.BetRange.SetRaise(min, max)
 		ctx.BetRange.SetAvailable(box.Seat.Stack)
 	}

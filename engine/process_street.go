@@ -1,8 +1,13 @@
 package engine
 
 import (
+	"time"
+)
+
+import (
 	"gopoker/engine/stage"
 	"gopoker/engine/street"
+	"gopoker/model"
 	"gopoker/model/deal"
 	"gopoker/model/game"
 )
@@ -12,8 +17,28 @@ func buildStreets(g *Gameplay) []Street {
 		Stage: Stage{
 			Type: stage.Betting,
 		},
-		Do: func(chan bool) {
+		Do: func(exit chan bool) {
 
+		BettingRound:
+			for {
+				done := make(chan bool)
+				timeout := time.After(100 * time.Second)
+				bet := make(chan model.Bet)
+
+				g.requireBetting(done)
+
+				select {
+				case <-done:
+					exit <- true
+					break BettingRound
+				
+				case <-timeout:
+					// process timeout
+				
+				case <-bet:
+					g.Betting.AddBet(bet)
+				}
+			}
 		},
 	}
 

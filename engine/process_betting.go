@@ -26,7 +26,7 @@ func NewBettingProcess(g *Gameplay) *BettingProcess {
   return p
 }
 
-func (p *BettingProcess) Run() {
+func (p *BettingProcess) Start() {
 	go p.receive()
 }
 

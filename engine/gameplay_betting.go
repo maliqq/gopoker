@@ -10,7 +10,7 @@ const (
 	DefaultTimer = 30
 )
 
-func (g *Gameplay) processBetting(skip chan bool) {
+func (g *Gameplay) requireBetting(skip chan bool) {
 	ring := g.Table.Ring()
 
 	for _, box := range ring.InPlay() {
