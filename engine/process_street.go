@@ -1,10 +1,6 @@
 package engine
 
 import (
-	"time"
-)
-
-import (
 	"gopoker/engine/stage"
 	"gopoker/engine/street"
 	"gopoker/model/deal"
@@ -16,37 +12,14 @@ func buildStreets(g *Gameplay) StreetStrategy {
 		Stage: Stage{
 			Type: stage.Betting,
 		},
-		Do: func(exit chan bool) {
-
-		BettingRound:
-			for {
-				done := make(chan bool)
-				timeout := time.After(100 * time.Second)
-
-				if !g.requireBetting(done) {
-					break BettingRound
-				}
-
-				select {
-				case <-done:
-					exit <- true
-					break BettingRound
-
-				case <-timeout:
-					// process timeout
-
-				case b := <-g.BettingProcess.Recv:
-					g.Betting().AddBet(b)
-				}
-			}
-		},
+		Do: g.bettingRound,
 	}
 
 	discarding := StageDo{
 		Stage: Stage{
 			Type: stage.Discarding,
 		},
-		Do: func() {},
+		Do: func() {}, // FIXME
 	}
 
 	bigBets := StageDo{

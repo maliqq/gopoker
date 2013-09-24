@@ -24,11 +24,10 @@ func (g *Gameplay) requireBetting(done chan bool) bool {
 	if len(inPot) < 2 {
 		done <- true //
 	}
-	defer close(done)
 
 	active := ring.Playing()
 	if len(active) == 0 {
-		return true // we're done current round
+		return false // we're done current round
 	}
 
 	g.b.NewRound(active)
@@ -37,7 +36,7 @@ func (g *Gameplay) requireBetting(done chan bool) bool {
 		g.b.RequireBet(g.Game.Limit, g.Stake),
 	).One(g.b.Round.Current().Player)
 
-	return false
+	return true
 }
 
 func (g *Gameplay) completeBetting() {

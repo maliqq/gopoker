@@ -5,12 +5,6 @@ import (
 	"time"
 )
 
-import (
-	"gopoker/engine/mode"
-	"gopoker/engine/street"
-	"gopoker/event"
-)
-
 type State string
 
 const (
@@ -28,19 +22,14 @@ type InstanceStateChange struct {
 type Instance struct {
 	*Gameplay
 
-	Recv event.Channel
-
 	State       State
 	stateChange chan InstanceStateChange
-	Street      street.Type
-	Mode        mode.Type
 }
 
 func NewInstance(context *Context) *Instance {
 	instance := &Instance{
 		State:       Waiting,
 		stateChange: make(chan InstanceStateChange),
-		Recv:        make(event.Channel),
 		Gameplay:    NewGameplay(context),
 	}
 
@@ -53,7 +42,6 @@ func (instance *Instance) doStart() {
 	fmt.Println("start...")
 	instance.State = Active
 
-	instance.BettingProcess = NewBettingProcess(instance.Gameplay)
 	instance.DealProcess = NewDealProcess(instance.Gameplay)
 	instance.DealProcess.Run()
 }
@@ -98,7 +86,7 @@ func (instance *Instance) receive() {
 RunLoop:
 	for {
 		select {
-		case <-instance.Recv:
+		//case <-instance.Recv:
 		case event := <-instance.stateChange:
 			if !instance.processStateChange(event) {
 				break

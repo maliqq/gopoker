@@ -8,15 +8,15 @@ import (
 )
 
 type Context struct {
-	Game  *model.Game
-	Stake *model.Stake
-	Mix   *model.Mix
-	Table *model.Table
+	Stake        *model.Stake
+	Table        *model.Table
+	Game         *model.Game
+	Mix          *model.Mix
+	gameRotation *util.Rotation
 }
 
 type Gameplay struct {
 	*Context
-	gameRotation *util.Rotation
 
 	d           *context.Deal
 	DealProcess *DealProcess
@@ -33,6 +33,7 @@ func NewGameplay(ctx *Context) *Gameplay {
 		e:       context.NewBroker(),
 	}
 
+	// FIXME
 	if g.Mix != nil {
 		g.gameRotation = util.NewRotation(g.Mix, 0)
 		g.setCurrentGame()

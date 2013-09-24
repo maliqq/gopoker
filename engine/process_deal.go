@@ -7,17 +7,48 @@ import (
 import (
 	"gopoker/engine/context"
 	"gopoker/engine/stage"
+	"gopoker/event"
 )
 
 type DealProcess struct {
+	g *Gameplay
 	StageStrategy
+	Recv event.Channel
+	Exit chan bool
 }
 
 func NewDealProcess(g *Gameplay) *DealProcess {
-	g.d = context.NewDeal()
-
 	return &DealProcess{
+		g:             g,
 		StageStrategy: buildStages(g),
+		Recv:          make(event.Channel),
+		Exit:          make(chan bool),
+	}
+}
+
+func (process *DealProcess) Run() {
+	go process.receive()
+	for {
+		process.g.d = context.NewDeal()
+		process.g.BettingProcess = NewBettingProcess(process.g)
+
+		if !process.StageStrategy.Run() {
+			process.Exit <- true
+			break
+		}
+	}
+}
+
+func (process *DealProcess) receive() {
+DealingLoop:
+	for {
+		select {
+		case <-process.Exit:
+			break DealingLoop
+
+		case msg := <-process.Recv:
+			log.Printf("GOT: %#v", msg)
+		}
 	}
 }
 

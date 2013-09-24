@@ -27,7 +27,7 @@ type Session struct {
 
 // Reply - reply to play
 func (s *Session) Send(msg message.Message) {
-	s.Instance.Recv <- event.New(msg)
+	s.Instance.DealProcess.Recv <- event.New(msg)
 }
 
 func (s *Session) Start(recv event.Channel) {

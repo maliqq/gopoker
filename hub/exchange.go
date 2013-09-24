@@ -1,12 +1,12 @@
 package hub
 
 import (
-	"log"
+	_ "log"
 )
 
 import (
 	"gopoker/event"
-	"gopoker/util"
+	_ "gopoker/util"
 )
 
 type Exchange struct {
@@ -24,7 +24,7 @@ func (exchange *Exchange) Subscribe(key string, channel event.Channel) {
 }
 
 func (exchange *Exchange) Dispatch(route Route, message interface{}) {
-	log.Printf(util.Colorf(util.Cyan, "[dispatch] %s %#v", route, message))
+	//log.Printf(util.Colorf(util.Cyan, "[dispatch] %s %#v", route, message))
 
 	if route.None {
 		return
