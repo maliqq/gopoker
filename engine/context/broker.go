@@ -1,9 +1,9 @@
 package context
 
 import (
+	"gopoker/event"
 	"gopoker/hub"
 	"gopoker/message"
-	"gopoker/event"
 )
 
 type Broker struct {
@@ -11,15 +11,15 @@ type Broker struct {
 }
 
 type Notify struct {
-	Exchange *hub.Exchange
-	Notification  *event.Notification
+	Exchange     *hub.Exchange
+	Notification *event.Notification
 }
 
 type key interface {
 	String() string
 }
 
-func NewBroker() *Broker{
+func NewBroker() *Broker {
 	return &Broker{hub.NewExchange()}
 }
 

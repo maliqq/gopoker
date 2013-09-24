@@ -6,9 +6,9 @@ import (
 )
 
 import (
-	"gopoker/event"
 	"gopoker/engine/mode"
 	"gopoker/engine/street"
+	"gopoker/event"
 )
 
 type State string
@@ -27,8 +27,8 @@ type InstanceStateChange struct {
 
 type Instance struct {
 	*Gameplay
-	
-	Recv 		event.Channel
+
+	Recv event.Channel
 
 	State       State
 	stateChange chan InstanceStateChange
@@ -40,7 +40,7 @@ func NewInstance(context *Context) *Instance {
 	instance := &Instance{
 		State:       Waiting,
 		stateChange: make(chan InstanceStateChange),
-		Recv: make(event.Channel),
+		Recv:        make(event.Channel),
 		Gameplay:    NewGameplay(context),
 	}
 
@@ -55,8 +55,6 @@ func (instance *Instance) doStart() {
 
 	instance.BettingProcess = NewBettingProcess(instance.Gameplay)
 	instance.DealProcess = NewDealProcess(instance.Gameplay)
-
-	instance.BettingProcess.Run()
 	instance.DealProcess.Run()
 }
 

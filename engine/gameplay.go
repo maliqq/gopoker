@@ -18,10 +18,10 @@ type Gameplay struct {
 	*Context
 	gameRotation *util.Rotation
 
-	d *context.Deal
+	d           *context.Deal
 	DealProcess *DealProcess
 
-	b *context.Betting
+	b              *context.Betting
 	BettingProcess *BettingProcess
 
 	e *context.Broker

@@ -22,7 +22,7 @@ func New(msg message.Message) *Notification {
 		Timestamp: time.Now().Unix(),
 		Message:   msg,
 	}
-	
+
 	return n
 }
 

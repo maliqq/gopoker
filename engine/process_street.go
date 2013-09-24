@@ -7,12 +7,11 @@ import (
 import (
 	"gopoker/engine/stage"
 	"gopoker/engine/street"
-	"gopoker/model"
 	"gopoker/model/deal"
 	"gopoker/model/game"
 )
 
-func buildStreets(g *Gameplay) []Street {
+func buildStreets(g *Gameplay) StreetStrategy {
 	betting := StageExit{
 		Stage: Stage{
 			Type: stage.Betting,
@@ -23,20 +22,21 @@ func buildStreets(g *Gameplay) []Street {
 			for {
 				done := make(chan bool)
 				timeout := time.After(100 * time.Second)
-				bet := make(chan model.Bet)
 
-				g.requireBetting(done)
+				if !g.requireBetting(done) {
+					break BettingRound
+				}
 
 				select {
 				case <-done:
 					exit <- true
 					break BettingRound
-				
+
 				case <-timeout:
 					// process timeout
-				
-				case <-bet:
-					g.Betting.AddBet(bet)
+
+				case b := <-g.BettingProcess.Recv:
+					g.Betting().AddBet(b)
 				}
 			}
 		},
@@ -87,11 +87,11 @@ func buildStreets(g *Gameplay) []Street {
 	switch g.Game.Group {
 	case game.Holdem:
 
-		return []Street{
+		return StreetStrategy{
 
 			Street{
 				street.Preflop,
-				Stages{
+				StageStrategy{
 					dealing(deal.Hole, 0),
 					betting,
 				},
@@ -99,7 +99,7 @@ func buildStreets(g *Gameplay) []Street {
 
 			Street{
 				street.Flop,
-				Stages{
+				StageStrategy{
 					dealing(deal.Board, 3),
 					betting,
 				},
@@ -107,7 +107,7 @@ func buildStreets(g *Gameplay) []Street {
 
 			Street{
 				street.Turn,
-				Stages{
+				StageStrategy{
 					dealing(deal.Board, 1),
 					bigBets,
 					betting,
@@ -116,7 +116,7 @@ func buildStreets(g *Gameplay) []Street {
 
 			Street{
 				street.River,
-				Stages{
+				StageStrategy{
 					dealing(deal.Board, 1),
 					betting,
 				},
@@ -125,18 +125,18 @@ func buildStreets(g *Gameplay) []Street {
 
 	case game.SevenCard:
 
-		return []Street{
+		return StreetStrategy{
 
 			Street{
 				street.Second,
-				Stages{
+				StageStrategy{
 					dealing(deal.Hole, 2),
 				},
 			},
 
 			Street{
 				street.Third,
-				Stages{
+				StageStrategy{
 					dealing(deal.Door, 1),
 					bringIn,
 					betting,
@@ -145,7 +145,7 @@ func buildStreets(g *Gameplay) []Street {
 
 			Street{
 				street.Fourth,
-				Stages{
+				StageStrategy{
 					dealing(deal.Door, 1),
 					betting,
 				},
@@ -153,7 +153,7 @@ func buildStreets(g *Gameplay) []Street {
 
 			Street{
 				street.Fifth,
-				Stages{
+				StageStrategy{
 					dealing(deal.Door, 1),
 					bigBets,
 					betting,
@@ -162,7 +162,7 @@ func buildStreets(g *Gameplay) []Street {
 
 			Street{
 				street.Sixth,
-				Stages{
+				StageStrategy{
 					dealing(deal.Door, 1),
 					betting,
 				},
@@ -170,7 +170,7 @@ func buildStreets(g *Gameplay) []Street {
 
 			Street{
 				street.Seventh,
-				Stages{
+				StageStrategy{
 					dealing(deal.Hole, 1),
 					betting,
 				},
@@ -179,11 +179,11 @@ func buildStreets(g *Gameplay) []Street {
 
 	case game.SingleDraw:
 
-		return []Street{
+		return StreetStrategy{
 
 			Street{
 				street.Predraw,
-				Stages{
+				StageStrategy{
 					dealing(deal.Hole, 5),
 					betting,
 					discarding,
@@ -192,7 +192,7 @@ func buildStreets(g *Gameplay) []Street {
 
 			Street{
 				street.Draw,
-				Stages{
+				StageStrategy{
 					bigBets,
 					betting,
 					discarding,
@@ -202,11 +202,11 @@ func buildStreets(g *Gameplay) []Street {
 
 	case game.TripleDraw:
 
-		return []Street{
+		return StreetStrategy{
 
 			Street{
 				street.FirstDraw,
-				Stages{
+				StageStrategy{
 					betting,
 					discarding,
 				},
@@ -214,7 +214,7 @@ func buildStreets(g *Gameplay) []Street {
 
 			Street{
 				street.SecondDraw,
-				Stages{
+				StageStrategy{
 					betting,
 					discarding,
 				},
@@ -222,14 +222,14 @@ func buildStreets(g *Gameplay) []Street {
 
 			Street{
 				street.ThirdDraw,
-				Stages{
+				StageStrategy{
 					betting,
 					discarding,
 				},
 			},
 		}
 	default:
-		return []Street{}
+		return StreetStrategy{}
 	}
 
 }

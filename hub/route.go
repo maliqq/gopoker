@@ -24,7 +24,7 @@ func (r Route) String() string {
 		return fmt.Sprintf("one [%s]", r.One)
 	}
 	if len(r.Except) != 0 {
-		return  fmt.Sprintf("except [%s]", r.Except)
+		return fmt.Sprintf("except [%s]", r.Except)
 	}
 	if len(r.Only) != 0 {
 		return fmt.Sprintf("only [%s]", r.Only)

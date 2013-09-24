@@ -23,7 +23,7 @@ import (
 var (
 	logfile     = flag.String("logfile", "", "Log file path")
 	betsize     = flag.Float64("betsize", 20., "Bet size")
-	tablesize     = flag.Int("tablesize", 6, "Table size")
+	tablesize   = flag.Int("tablesize", 6, "Table size")
 	mixedGame   = flag.String("mix", "", "Mix to play")
 	limitedGame = flag.String("game", "Texas", "Game to play")
 )
@@ -47,12 +47,12 @@ func main() {
 
 	instance := createInstance()
 	fmt.Printf("%+v\n", instance)
-	
+
 	me := make(event.Channel, 100)
 	joinInstance(instance, me)
 
 	instance.Start()
-	
+
 	session := Session{instance}
 	session.Start(me)
 }

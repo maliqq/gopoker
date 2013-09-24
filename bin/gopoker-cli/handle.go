@@ -73,7 +73,7 @@ func (s *Session) Start(recv event.Channel) {
 			s.Send(&message.DiscardCards{pos, cards})
 
 		case *message.DealCards:
-			
+
 			if msg.Type == deal.Board {
 				fmt.Printf("Dealt %s %s\n", msg.Type, msg.Cards.ConsoleString())
 			} else {
@@ -81,27 +81,27 @@ func (s *Session) Start(recv event.Channel) {
 			}
 
 		case *message.MoveButton:
-			
+
 			pos := msg.Pos
 
 			fmt.Printf("Button is %d\n", pos+1)
 
 		case *message.AddBet:
-			
+
 			pos := msg.Pos
 			player := s.Instance.Table.Player(pos)
 
 			fmt.Printf("Player %s: %s\n", player, msg.Bet)
 
 		case *message.BettingComplete:
-			
+
 			pot := msg.Pot
 
 			d := s.Instance.Deal()
 			fmt.Printf("Pot size: %.2f\nBoard: %s\n", pot, d.Board.ConsoleString())
 
 		case *message.ShowHand:
-			
+
 			pos := msg.Pos
 			hand := msg.Hand
 			player := s.Instance.Table.Player(pos)
@@ -109,7 +109,7 @@ func (s *Session) Start(recv event.Channel) {
 			fmt.Printf("Player %s has %s (%s)\n", player, msg.Cards.ConsoleString(), hand.PrintString())
 
 		case *message.Winner:
-			
+
 			pos := msg.Pos
 			amount := msg.Amount
 			player := s.Instance.Table.Player(pos)

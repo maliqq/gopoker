@@ -35,3 +35,7 @@ func (process *Stage) do(doFunc func()) {
 		process.After()
 	}
 }
+
+func (process *Stage) String() string {
+	return string(process.Type)
+}

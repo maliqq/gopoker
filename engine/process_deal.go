@@ -5,24 +5,24 @@ import (
 )
 
 import (
-	"gopoker/engine/stage"
 	"gopoker/engine/context"
+	"gopoker/engine/stage"
 )
 
 type DealProcess struct {
-	Stages
+	StageStrategy
 }
 
 func NewDealProcess(g *Gameplay) *DealProcess {
 	g.d = context.NewDeal()
 
 	return &DealProcess{
-		Stages: buildStages(g),
+		StageStrategy: buildStages(g),
 	}
 }
 
-func buildStages(g *Gameplay) Stages {
-	return Stages{
+func buildStages(g *Gameplay) StageStrategy {
+	return StageStrategy{
 		StageDo{
 			Stage: Stage{
 				Type: stage.PrepareSeats,

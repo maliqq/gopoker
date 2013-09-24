@@ -52,9 +52,9 @@ func (stage StageSkip) Run() (bool, bool) {
 	return false, doSkip
 }
 
-type Stages []StageProcess
+type StageStrategy []StageProcess
 
-func (stages Stages) Run() bool {
+func (stages StageStrategy) Run() bool {
 	for _, stage := range stages {
 		doExit, doSkip := stage.Run()
 		if doExit {

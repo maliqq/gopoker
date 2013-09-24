@@ -6,5 +6,11 @@ import (
 
 type Street struct {
 	street.Type
-	Stages
+	StageStrategy
 }
+
+func (process Street) String() string {
+	return string(process.Type)
+}
+
+type StreetStrategy []Street
