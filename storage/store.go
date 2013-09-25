@@ -2,8 +2,11 @@ package storage
 
 import (
 	"database/sql"
+)
+
+import (
 	_ "github.com/bmizerany/pq" // import pq sql
-	"log"
+	"github.com/golang/glog"
 )
 
 import (
@@ -66,7 +69,7 @@ func (store *Store) FindUserByUsername(username string) *User {
 	var passwordEncrypted, passwordSalt sql.NullString
 	if err := row.Scan(&user.Player, &passwordEncrypted, &passwordSalt); err != nil {
 		if err != sql.ErrNoRows {
-			log.Printf("[store] error querying user: %s", err)
+			glog.Warningf("[store] error querying user: %s", err)
 		}
 		return nil
 	}

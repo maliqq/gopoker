@@ -1,9 +1,12 @@
 package server
 
 import (
-	"log"
 	"os"
 	"path"
+)
+
+import (
+	"github.com/golang/glog"
 )
 
 import (
@@ -38,7 +41,7 @@ func NewRoom(guid model.Guid, variation model.Variation, stake model.Stake) *Roo
 func (r *Room) createLogger(dir string) {
 	f, err := os.OpenFile(path.Join(dir, string(r.Guid)+".log"), os.O_CREATE|os.O_RDWR|os.O_APPEND, 0755)
 	if err != nil {
-		log.Fatal("cant open logger file", err)
+		glog.Fatalf("cant open logger file", err)
 	}
 
 	logger := play.NewLogger(f)

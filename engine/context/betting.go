@@ -2,8 +2,10 @@ package context
 
 import (
 	"container/ring"
-	_ "fmt"
-	"log"
+)
+
+import (
+	"github.com/golang/glog"
 )
 
 import (
@@ -109,7 +111,7 @@ func (ctx *Betting) RequireBet(limit game.Limit, stake *model.Stake) *message.Re
 func (ctx *Betting) AddBet(newBet *model.Bet) error {
 	seat := ctx.Round.Current()
 
-	log.Printf("[betting] %s %s\n", seat.Player, newBet.String())
+	glog.Infof("[betting] %s %s\n", seat.Player, newBet.String())
 
 	err := newBet.Validate(seat, ctx.BetRange)
 

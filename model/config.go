@@ -2,9 +2,12 @@ package model
 
 import (
 	"encoding/json"
-	"log"
 	"os"
 	"path"
+)
+
+import (
+	"github.com/golang/glog"
 )
 
 // ReadConfig - read config file
@@ -13,13 +16,13 @@ func ReadConfig(configDir, filename string, result interface{}) {
 	f, err := os.Open(filepath)
 
 	if err != nil {
-		log.Fatalf("Can't open %s: %s", filepath, err)
+		glog.Fatalf("Can't open %s: %s", filepath, err)
 	}
 
 	decoder := json.NewDecoder(f)
 
 	err = decoder.Decode(&result)
 	if err != nil {
-		log.Fatalf("Can't decode %s: %s", filepath, err)
+		glog.Fatalf("Can't decode %s: %s", filepath, err)
 	}
 }

@@ -1,7 +1,7 @@
 package hub
 
 import (
-	_ "log"
+	_ "github.com/golang/glog"
 )
 
 import (
@@ -28,7 +28,7 @@ func (exchange *Exchange) Handle(key string, recv *event.Service) {
 }
 
 func (exchange *Exchange) Dispatch(route Route, message interface{}) {
-	//log.Printf(util.Colorf(util.Cyan, "[dispatch] %s %#v", route, message))
+	//glog.Infof(util.Colorf(util.Cyan, "[dispatch] %s %#v", route, message))
 
 	if route.None {
 		return

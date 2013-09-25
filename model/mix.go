@@ -3,7 +3,10 @@ package model
 import (
 	"encoding/json"
 	"fmt"
-	"log"
+)
+
+import (
+	"github.com/golang/glog"
 )
 
 import (
@@ -32,9 +35,7 @@ func NewMix(gameType game.Type, tableSize int) *Mix {
 	mixedGame, success := gameType.(game.MixedGame)
 
 	if !success {
-		log.Printf("got: %#v\n", gameType)
-
-		panic("can't create mix")
+		glog.Fatalf("can't create mix for: %#v\n", gameType)
 	}
 
 	options := mixOptions(mixedGame)

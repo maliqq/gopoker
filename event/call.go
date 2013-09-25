@@ -5,6 +5,6 @@ import (
 )
 
 type Call struct {
-	Method string
+	Method  string
 	Message *message.Message
 }

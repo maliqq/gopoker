@@ -1,7 +1,7 @@
 package engine
 
 import (
-	"log"
+	"github.com/golang/glog"
 )
 
 import (
@@ -13,7 +13,7 @@ import (
 
 func (g *Gameplay) processStreets(skip chan bool) {
 	for _, street := range buildStreets(g) {
-		log.Printf("[street] %s", street)
+		glog.Infof("[street] %s", street)
 		if !street.Run() {
 			skip <- true
 			return

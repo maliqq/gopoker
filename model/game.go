@@ -2,8 +2,10 @@ package model
 
 import (
 	"encoding/json"
-	"fmt"
-	"log"
+)
+
+import (
+	"github.com/golang/glog"
 )
 
 import (
@@ -80,8 +82,7 @@ func NewGame(gameType game.Type, limit game.Limit, tableSize int) *Game {
 func gameOptions(limitedGame game.LimitedGame) *GameOptions {
 	gameOptions, success := Games[limitedGame]
 	if !success {
-		log.Printf("got: %#v", limitedGame)
-		panic("can't find options")
+		glog.Fatalf("can't find options for: %#v", limitedGame)
 	}
 
 	return gameOptions

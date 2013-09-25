@@ -1,7 +1,7 @@
 package engine
 
 import (
-	"log"
+	"github.com/golang/glog"
 )
 
 import (
@@ -21,7 +21,7 @@ func (process *Stage) do(doFunc func()) {
 		return
 	}
 
-	log.Printf("[stage] start %s", process)
+	glog.Infof("[stage] start %s", process)
 
 	if process.Before != nil {
 		process.Before()

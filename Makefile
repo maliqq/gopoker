@@ -14,6 +14,7 @@ get-deps:
 	go get github.com/jjeffery/stomp
 	go get github.com/streadway/amqp
 	go get github.com/vmihailenco/msgpack
+	go get github.com/golang/glog
 
 build-all:
 	#protoc --go_out=. event/message/protobuf/*.proto

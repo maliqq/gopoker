@@ -5,8 +5,11 @@ package main
 //
 import (
 	"flag"
-	"log"
 	"runtime"
+)
+
+import (
+	"github.com/golang/glog"
 )
 
 import (
@@ -26,7 +29,7 @@ var (
 func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 
-	log.SetPrefix("[server] ")
+	glog.SetPrefix("[server] ")
 
 	flag.Parse()
 	model.LoadGames(*configDir)

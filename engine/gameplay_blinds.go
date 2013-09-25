@@ -1,7 +1,7 @@
 package engine
 
 import (
-	"log"
+	"github.com/golang/glog"
 )
 
 import (
@@ -28,7 +28,7 @@ func (g *Gameplay) postSmallBlind() {
 
 	err := g.b.AddBet(newBet)
 	if err != nil {
-		log.Fatalf("Error adding small blind for %d: %s", g.b.Round.Pos(), err)
+		glog.Fatalf("Error adding small blind for %d: %s", g.b.Round.Pos(), err)
 	}
 
 	g.e.Notify(
@@ -42,7 +42,7 @@ func (g *Gameplay) postBigBlind() {
 
 	err := g.b.AddBet(newBet)
 	if err != nil {
-		log.Fatalf("Error adding big blind for %d: %s", g.b.Round.Pos(), err)
+		glog.Fatalf("Error adding big blind for %d: %s", g.b.Round.Pos(), err)
 	}
 
 	g.e.Notify(

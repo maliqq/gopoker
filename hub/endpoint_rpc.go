@@ -5,17 +5,17 @@ import (
 )
 
 import (
-	"gopoker/message"
 	"gopoker/event"
+	"gopoker/message"
 )
 
 type Receiver struct {
-	Instance *event.Service
-	instanceType reflect.Type
+	Instance        *event.Service
+	instanceType    reflect.Type
 	instanceMethods map[string]reflect.Method
 }
 
-func NewReceiver(recv *event.Service) *Receiver{
+func NewReceiver(recv *event.Service) *Receiver {
 	instanceType := reflect.TypeOf(recv)
 	msgType := reflect.TypeOf((*message.Message)(nil)).Elem()
 
@@ -45,8 +45,8 @@ func NewReceiver(recv *event.Service) *Receiver{
 	}
 
 	return &Receiver{
-		Instance: recv,
-		instanceType: instanceType,
+		Instance:        recv,
+		instanceType:    instanceType,
 		instanceMethods: methods,
 	}
 }

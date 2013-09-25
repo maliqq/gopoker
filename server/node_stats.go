@@ -1,11 +1,11 @@
 package server
 
 import (
+	"github.com/golang/glog"
 	"github.com/rcrowley/go-metrics"
 )
 
 import (
-	"log"
 	"time"
 )
 
@@ -69,6 +69,6 @@ func (w *NodeStatsWorker) count() {
 	w.paused.Update(paused)
 	w.inactive.Update(inactive)
 
-	log.Printf("[worker] [stats] %d rooms, %d waiting, %d active, %d paused, %d closed\n",
+	glog.Infof("[worker] [stats] %d rooms, %d waiting, %d active, %d paused, %d closed\n",
 		total, waiting, active, paused, inactive)
 }

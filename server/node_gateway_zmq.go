@@ -1,8 +1,7 @@
 package server
 
 import (
-	"log"
-	_ "time"
+	"github.com/golang/glog"
 )
 
 import (
@@ -105,12 +104,12 @@ Loop:
 	for {
 		select {
 		case event := <-recv:
-			log.Printf("[zmq] sending %s to %s", event, player)
+			glog.Infof("[zmq] sending %s to %s", event, player)
 
 			gw.send(event, player)
 
 		case <-stop:
-			log.Printf("[zmq] stop connection for %s", player)
+			glog.Infof("[zmq] stop connection for %s", player)
 
 			break Loop
 		}
@@ -120,7 +119,7 @@ Loop:
 func (gw *NodeZMQ) send(event *event.Event, player model.Player) {
 	data, err := proto.Marshal(event.Proto())
 	if err != nil {
-		log.Printf("[zmq] marshal error: %s", err)
+		glog.Warningf("[zmq] marshal error: %s", err)
 	} else {
 		gw.publish <- [][]byte{[]byte(player), data}
 	}

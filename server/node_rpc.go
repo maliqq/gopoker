@@ -1,10 +1,13 @@
 package server
 
 import (
-	"log"
 	"net"
 	"net/rpc"
 	"net/rpc/jsonrpc"
+)
+
+import (
+	"github.com/golang/glog"
 )
 
 // NodeRPC - node RPC service
@@ -23,20 +26,20 @@ func (n *Node) StartRPC() {
 	for {
 		c, err := l.Accept()
 		if err != nil {
-			log.Printf("[rpc] accept error: %s", c)
+			glog.Infof("[rpc] accept error: %s", c)
 			continue
 		}
 
-		log.Printf("[rpc] connection started: %v", c.RemoteAddr())
+		glog.Infof("[rpc] connection started: %v", c.RemoteAddr())
 		go server.ServeCodec(jsonrpc.NewServerCodec(c))
 	}
 }
 
 func listen(addr string) net.Listener {
-	log.Printf("[rpc] starting at %s", addr)
+	glog.Infof("[rpc] starting at %s", addr)
 	l, err := net.Listen("tcp", addr)
 	if err != nil {
-		log.Fatal("[rpc] listen error:", err)
+		glog.Fatalf("[rpc] listen error:", err)
 	}
 	return l
 }

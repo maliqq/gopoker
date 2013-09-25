@@ -1,8 +1,11 @@
 package engine
 
 import (
-	"fmt"
 	"time"
+)
+
+import (
+	"github.com/golang/glog"
 )
 
 type State string
@@ -39,7 +42,7 @@ func NewInstance(context *Context) *Instance {
 }
 
 func (instance *Instance) doStart() {
-	fmt.Println("start...")
+	glog.Info("start...")
 	instance.State = Active
 
 	instance.DealProcess = NewDealProcess(instance.Gameplay)
@@ -47,17 +50,17 @@ func (instance *Instance) doStart() {
 }
 
 func (instance *Instance) doPause() {
-	fmt.Println("pause...")
+	glog.Info("pause...")
 	instance.State = Paused
 }
 
 func (instance *Instance) doResume() {
-	fmt.Println("resume...")
+	glog.Info("resume...")
 	instance.State = Waiting
 }
 
 func (instance *Instance) doStop() {
-	fmt.Println("stop...")
+	glog.Info("stop...")
 	instance.State = Closed
 }
 

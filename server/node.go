@@ -1,7 +1,7 @@
 package server
 
 import (
-	"log"
+	"github.com/golang/glog"
 )
 
 import (
@@ -56,7 +56,7 @@ func (n *Node) connectStore() {
 	n.Store, err = storage.OpenStore(n.Config.Store)
 
 	if err != nil {
-		log.Fatalf("[store] can't open %s (%s): %s", n.Config.Store.Driver, n.Config.Store.ConnectionString, err)
+		glog.Fatalf("[store] can't open %s (%s): %s", n.Config.Store.Driver, n.Config.Store.ConnectionString, err)
 	}
 	log.Printf("[store] connected to %s", n.Config.Store)
 }
@@ -65,18 +65,18 @@ func (n *Node) connectPlayHistory() {
 	var err error
 	n.PlayHistory, err = storage.OpenPlayHistory(n.Config.PlayHistory)
 	if err != nil {
-		log.Fatalf("[store] can't open %s: %s", n.Config.PlayHistory.Host, err)
+		glog.Fatalf("[store] can't open %s: %s", n.Config.PlayHistory.Host, err)
 	}
-	log.Printf("[store] connected to %s", n.Config.PlayHistory)
+	glog.Printf("[store] connected to %s", n.Config.PlayHistory)
 }
 
 func (n *Node) connectSessionStore() {
 	var err error
 	n.SessionStore, err = storage.OpenSessionStore(n.Config.SessionStore)
 	if err != nil {
-		log.Fatalf("[store] can't open %#v: %s", n.Config.SessionStore, err)
+		glog.Fatalf("[store] can't open %#v: %s", n.Config.SessionStore, err)
 	}
-	log.Printf("[store] connected to %#v", n.Config.SessionStore)
+	glog.Infof("[store] connected to %#v", n.Config.SessionStore)
 }
 
 // Room - get room

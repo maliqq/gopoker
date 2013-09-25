@@ -2,11 +2,11 @@ package server
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 )
 
 import (
+	"github.com/golang/glog"
 	"github.com/gorilla/mux"
 )
 
@@ -165,7 +165,7 @@ func (nodeHTTP *NodeHTTP) Winners(resp http.ResponseWriter, req *http.Request) {
 	play, err := nodeHTTP.Node.PlayHistory.Find(id)
 
 	if err != nil {
-		log.Printf("[error] %s", err)
+		log.Errorf("[error] %s", err)
 
 		nodeHTTP.RespondJSONError(resp, err)
 	} else {
@@ -181,7 +181,7 @@ func (nodeHTTP *NodeHTTP) KnownCards(resp http.ResponseWriter, req *http.Request
 	play, err := nodeHTTP.Node.PlayHistory.Find(id)
 
 	if err != nil {
-		log.Printf("[error] %s", err)
+		log.Errorf("[error] %s", err)
 
 		nodeHTTP.RespondJSONError(resp, err)
 	} else {

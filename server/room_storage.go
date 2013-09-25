@@ -1,8 +1,11 @@
-package play
+package server
 
 import (
-	"log"
 	"time"
+)
+
+import (
+	"github.com/golang/glog"
 )
 
 import (
@@ -36,7 +39,7 @@ func (stor *Storage) HandleEvent(event *event.Event) {
 
 		stor.Current.Stop = time.Now()
 
-		log.Printf("[storage] saving %+v", stor.Current)
+		glog.Infof("[storage] saving %+v", stor.Current)
 
 		stor.History.Store(stor.Current)
 
@@ -56,6 +59,6 @@ func (stor *Storage) HandleEvent(event *event.Event) {
 
 	default:
 
-		log.Printf("[storage] got %#v", msg)
+		glog.Warningf("[storage] got %#v", msg)
 	}
 }

@@ -1,7 +1,7 @@
 package engine
 
 import (
-	"log"
+	"github.com/golang/glog"
 )
 
 import (
@@ -48,7 +48,7 @@ DealingLoop:
 			break DealingLoop
 
 		case notification := <-process.Recv:
-			log.Printf("GOT: %#v", notification)
+			glog.Infof("GOT: %#v", notification)
 			switch msg := notification.Message.(type) {
 			case *message.AddBet:
 				process.g.BettingProcess.Recv <- msg.Bet

@@ -1,7 +1,7 @@
 package engine
 
 import (
-	"log"
+	"github.com/golang/glog"
 )
 
 type StageProcess interface {
@@ -63,11 +63,11 @@ func (stages StageStrategy) Run() bool {
 	for _, stage := range stages {
 		doExit, doSkip := stage.Run()
 		if doExit {
-			log.Printf("[stage] exit %s", stage.String())
+			glog.Infof("[stage] exit %s", stage.String())
 			return false
 		}
 		if doSkip {
-			log.Printf("[stage] skip %s", stage.String())
+			glog.Infof("[stage] skip %s", stage.String())
 			break
 		}
 	}

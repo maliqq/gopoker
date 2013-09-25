@@ -1,8 +1,11 @@
 package engine
 
 import (
-	"log"
 	"time"
+)
+
+import (
+	"github.com/golang/glog"
 )
 
 import (
@@ -32,20 +35,20 @@ BettingRound:
 		timeout := time.After(100 * time.Second)
 
 		go g.requireBetting(done)
-		
+
 		doExit, doBreak := <-done
 		if doExit {
-			log.Printf("[betting] none waiting")
+			glog.Info("[betting] none waiting")
 			exit <- true
 		}
 		if doBreak {
-			log.Printf("[betting] done")
+			glog.Info("[betting] done")
 			break BettingRound
 		}
 
 		select {
 		case <-timeout:
-			log.Printf("[betting] timeout")
+			glog.Warning("[betting] timeout")
 			// process timeout
 		case b := <-g.BettingProcess.Recv:
 			g.Betting().AddBet(b)
