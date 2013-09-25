@@ -12,7 +12,7 @@ import (
 )
 
 import (
-	"gopoker/event/message"
+	"gopoker/message"
 	"gopoker/model"
 	"gopoker/poker"
 )
