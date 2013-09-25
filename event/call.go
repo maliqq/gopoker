@@ -1,6 +1,10 @@
 package event
 
+import (
+	"gopoker/message"
+)
+
 type Call struct {
 	Method string
-	Argument interface{}
+	Message *message.Message
 }
