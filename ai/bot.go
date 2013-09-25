@@ -70,16 +70,15 @@ func (b *Bot) Join(pos int, amount float64) {
 
 	log.Printf("joining table...")
 
-	b.sendMultipart(&message.Join{b.ID, pos, amount})
+	b.zmqConn.Send(&message.Join{b.ID, pos, amount})
 }
 
 // Play - start bot
 func (b *Bot) Play() {
-	for data := range b.zmqConn.Recv {
-		event := b.receiveMultipart(data)
-		log.Printf("received: %s", event)
+	for msg := range b.zmqConn.Recv {
+		log.Printf("received: %s", msg)
 
-		switch msg := event.Message.(type) {
+		switch msg.(type) {
 		case *message.PlayStart:
 
 			b.cards = poker.Cards{}
@@ -123,35 +122,6 @@ func (b *Bot) Play() {
 			}
 		}
 	}
-}
-
-func (b *Bot) sendMultipart(msg message.Message) {
-	data, err := proto.Marshal(event.New(msg).Proto())
-	if err != nil {
-		log.Printf("marshal error: %s", err)
-	} else {
-		multipart := [][]byte{
-			[]byte(b.ID),
-			[]byte(b.roomID),
-			data,
-		}
-		//log.Printf("sending %d bytes", len(data))
-		b.zmqConn.Send <- multipart
-	}
-}
-
-func (b *Bot) receiveMultipart(multipart [][]byte) *event.Event {
-	//topic := multipart[0]
-	data := multipart[1]
-	//log.Printf("received %d bytes for %s", len(data), topic)
-
-	event := &event.Event{}
-	if err := event.Unproto(data); err != nil {
-		log.Printf("unmarshal error: %s", err)
-		return nil
-	}
-
-	return event
 }
 
 func (b *Bot) check() {

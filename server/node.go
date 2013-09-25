@@ -21,8 +21,6 @@ type Node struct {
 	Store        *storage.Store
 	PlayHistory  *storage.PlayHistory
 	SessionStore *storage.SessionStore
-	
-	NodeService
 }
 
 // NewNode - create new node
@@ -60,7 +58,7 @@ func (n *Node) connectStore() {
 	if err != nil {
 		glog.Fatalf("[store] can't open %s (%s): %s", n.Config.Store.Driver, n.Config.Store.ConnectionString, err)
 	}
-	log.Printf("[store] connected to %s", n.Config.Store)
+	glog.Infof("[store] connected to %s", n.Config.Store)
 }
 
 func (n *Node) connectPlayHistory() {
@@ -69,7 +67,7 @@ func (n *Node) connectPlayHistory() {
 	if err != nil {
 		glog.Fatalf("[store] can't open %s: %s", n.Config.PlayHistory.Host, err)
 	}
-	glog.Printf("[store] connected to %s", n.Config.PlayHistory)
+	glog.Infof("[store] connected to %s", n.Config.PlayHistory)
 }
 
 func (n *Node) connectSessionStore() {

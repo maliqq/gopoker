@@ -15,7 +15,6 @@ import (
 	"gopoker/poker"
 	"gopoker/poker/hand"
 	"gopoker/poker/math"
-	"gopoker/server/node_response"
 )
 
 // Rooms - GET /rooms
@@ -79,12 +78,19 @@ func (nodeHTTP *NodeHTTP) CompareHands(resp http.ResponseWriter, req *http.Reque
 	h1, _ := poker.Detect[hand.High](&c1)
 	h2, _ := poker.Detect[hand.High](&c2)
 
-	s, _ := json.Marshal(&node_response.CompareResult{
+	result := struct {
+		A      *poker.Hand
+		B      *poker.Hand
+		Board  poker.Cards
+		Result int
+	} {
 		A:      h1,
 		B:      h2,
 		Board:  board,
 		Result: h1.Compare(h2),
-	})
+	}
+
+	s, _ := json.Marshal(result)
 
 	resp.Write([]byte(s))
 }
@@ -99,7 +105,14 @@ func (nodeHTTP *NodeHTTP) CalculateOdds(resp http.ResponseWriter, req *http.Requ
 	total := 10000
 	chances := math.ChancesAgainstOne{SamplesNum: total}.Preflop(a, b)
 
-	result := &node_response.OddsResult{
+	result := struct {
+		A     poker.Cards
+		B     poker.Cards
+		Total int
+		Wins  float64
+		Ties  float64
+		Loses float64
+	} {
 		A:     a,
 		B:     b,
 		Total: total,
@@ -116,7 +129,10 @@ func (nodeHTTP *NodeHTTP) RandomHand(resp http.ResponseWriter, req *http.Request
 	dealer := model.NewDealer()
 	board := dealer.Share(5)
 
-	h := make([]node_response.PocketHand, 9)
+	h := make([]struct {
+		Pocket poker.Cards
+		Hand   *poker.Hand
+	}, 9)
 	i := 0
 	for i < 9 {
 		pocket := dealer.Deal(2)
@@ -126,7 +142,10 @@ func (nodeHTTP *NodeHTTP) RandomHand(resp http.ResponseWriter, req *http.Request
 		h[i].Hand = hand
 		i++
 	}
-	deal := node_response.DealHand{
+	deal := struct {
+		Board   poker.Cards
+		Pockets interface{}
+	} {
 		Board:   board,
 		Pockets: h,
 	}

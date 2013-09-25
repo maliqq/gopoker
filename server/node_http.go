@@ -40,7 +40,7 @@ func (n *Node) drawRoutes(router *gorilla_mux.Router) {
 
 	// REST API
 	nodeHTTP := &NodeHTTP{n}
-	api := router.PathPrefix(config.APIPathOr(DefaultAPIPath)).Subrouter()
+	api := router.PathPrefix(config.GetAPIPath()).Subrouter()
 	nodeHTTP.drawAPI(api)
 
 	// JSON-RPC over HTTP

@@ -1,5 +1,6 @@
 package server
 
+/*
 type RoomService struct {
 	*Room
 }
@@ -55,3 +56,4 @@ func (n *NodeRPC) CloseRoom(requestRoom *rpc_service.RequestRoom, r *rpc_service
 
 	return nil
 }
+*/

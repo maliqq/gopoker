@@ -26,26 +26,3 @@ func StartStomp(addr string) *NodeStomp {
 
 	return &stomp
 }
-
-func NewNodeStompQueue() *NodeStompQueue {
-	queue := NodeStompQueue{}
-	return &queue
-}
-
-func (q *NodeStompQueue) Start() {
-}
-
-func (q *NodeStompQueue) Stop() {
-}
-
-func (q *NodeStompQueue) Enqueue(queue string, frame *stomp.Frame) error {
-	return nil
-}
-
-func (q *NodeStompQueue) Requeue(queue string, frame *stomp.Frame) error {
-	return nil
-}
-
-func (q *NodeStompQueue) Dequeue(queue string) (*stomp.Frame, error) {
-	return nil, nil
-}

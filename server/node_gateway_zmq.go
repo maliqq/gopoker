@@ -1,16 +1,17 @@
 package server
 
 import (
-	"github.com/golang/glog"
+	"encoding/json"
 )
 
 import (
-	"code.google.com/p/goprotobuf/proto"
+	"github.com/golang/glog"
 	zmq "github.com/alecthomas/gozmq"
 )
 
 import (
 	"gopoker/model"
+	"gopoker/message"
 )
 
 // NodeZMQ - node zeromq service
@@ -28,7 +29,7 @@ type NodeZMQ struct {
 // StartZMQ - start zeromq service
 func (n *Node) StartZMQ() {
 	config := n.Config.ZMQ
-	log.Printf("[zmq] starting service, receiver=%s publisher=%s", config.Receiver, config.Publisher)
+	glog.Infof("[zmq] starting service, receiver=%s publisher=%s", config.Receiver, config.Publisher)
 
 	context, _ := zmq.NewContext()
 	defer context.Close()
@@ -81,7 +82,7 @@ func (gw *NodeZMQ) receive() {
 
 			msg := &message.Message{}
 			if err = json.Unmarshal(multipart[2], msg); err != nil {
-				glog.Errorf("[zmq] unproto error: %s", err)
+				glog.Errorf("[zmq] unmarshal error: %s", err)
 			} else {
 				if room, found := gw.Node.Rooms[guid]; found {
 					room.Recv <- event

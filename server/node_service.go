@@ -1,5 +1,6 @@
 package server
 
+/*
 func (n *Node) CreateRoom() {
 	var variation model.Variation
 	if createRoom.Mix != nil {
@@ -21,3 +22,4 @@ func (n *Node) Login(username, password string) LoginResult {
 func (n *Node) Logout(session model.Guid) {
 	n.Node.Logout(session)
 }
+*/

@@ -6,6 +6,7 @@ import (
 	"log"
 	"math/rand"
 	"os"
+	"sync"
 	"time"
 )
 
@@ -40,11 +41,12 @@ func main() {
 
 	if *group > 0 {
 		log.Printf("starting %d bots...", *group)
+		var wg sync.WaitGroup
 		for i := 0; i < *group; i++ {
+			wg.Add(1)
 			go startBot(i)
 		}
-		for {
-		}
+		wg.Wait()
 	} else {
 		startBot(*pos)
 	}
