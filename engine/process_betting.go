@@ -25,7 +25,7 @@ func NewBettingProcess(g *Gameplay) *BettingProcess {
 	return p
 }
 
-func (g *Gameplay) bettingRound(exit chan bool) {
+func (g *Gameplay) processBetting(exit chan bool) {
 BettingRound:
 	for {
 		done := make(chan bool)

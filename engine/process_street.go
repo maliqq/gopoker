@@ -1,18 +1,33 @@
 package engine
 
 import (
+	"log"
+)
+
+import (
 	"gopoker/engine/stage"
 	"gopoker/engine/street"
 	"gopoker/model/deal"
 	"gopoker/model/game"
 )
 
+func (g *Gameplay) processStreets(skip chan bool) {
+	for _, street := range buildStreets(g) {
+		log.Printf("[street] %s", street)
+		if !street.Run() {
+			skip <- true
+			return
+		}
+	}
+	close(skip)
+}
+
 func buildStreets(g *Gameplay) StreetStrategy {
 	betting := StageExit{
 		Stage: Stage{
 			Type: stage.Betting,
 		},
-		Do: g.bettingRound,
+		Do: g.processBetting,
 	}
 
 	discarding := StageDo{
