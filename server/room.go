@@ -10,16 +10,15 @@ import (
 )
 
 import (
-	"gopoker/event"
 	"gopoker/model"
-	"gopoker/play"
+	"gopoker/engine"
 	"gopoker/storage"
 )
 
 // Room - play wrapper
 type Room struct {
 	Guid model.Guid
-	*play.Play
+	*engine.Instance
 	Waiting  map[string]*Session
 	Watchers map[string]*Session
 }

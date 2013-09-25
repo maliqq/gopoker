@@ -9,8 +9,7 @@ import (
 )
 
 import (
-	"gopoker/event"
-	"gopoker/event/message"
+	"gopoker/message"
 	"gopoker/storage"
 )
 
@@ -27,8 +26,8 @@ func NewStorage(history *storage.PlayHistory) *Storage {
 	}
 }
 
-func (stor *Storage) HandleEvent(event *event.Event) {
-	switch msg := event.Message.(type) {
+func (stor *Storage) Handle(msg *message.Message) {
+	switch message.(type) {
 	case *message.PlayStart:
 
 		stor.Current = storage.NewPlayHistoryEntry()

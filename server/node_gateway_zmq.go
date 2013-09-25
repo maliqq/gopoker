@@ -67,19 +67,21 @@ func (gw *NodeZMQ) receive() {
 	for {
 		multipart, err := gw.receiver.RecvMultipart(0)
 		if err != nil {
-			log.Printf("[zmq] PULL error: %s", err)
+			glog.Errorf("[zmq] PULL error: %s", err)
 		}
+
 		if multipart != nil && len(multipart) == 3 {
-			log.Printf("[zmq] PULL got multipart: %s", multipart)
+			glog.Infof("[zmq] PULL got multipart: %s", multipart)
+
 			player := model.Player(multipart[0])
 			guid := model.Guid(multipart[1])
 			if _, subscribed := gw.subscribers[player]; !subscribed {
 				go gw.subscribe(player, guid)
 			}
 
-			event := &event.Event{}
-			if err = event.Unproto(multipart[2]); err != nil {
-				log.Printf("[zmq] unproto error: %s", err)
+			msg := &message.Message{}
+			if err = json.Unmarshal(multipart[2], msg); err != nil {
+				glog.Errorf("[zmq] unproto error: %s", err)
 			} else {
 				if room, found := gw.Node.Rooms[guid]; found {
 					room.Recv <- event

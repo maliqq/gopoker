@@ -10,7 +10,7 @@ import (
 
 import (
 	"gopoker/client/websocket_client"
-	"gopoker/event/message"
+	"gopoker/message"
 	"gopoker/model"
 )
 

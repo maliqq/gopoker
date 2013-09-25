@@ -6,8 +6,7 @@ import (
 )
 
 import (
-	"gopoker/event"
-	"gopoker/event/message"
+	"gopoker/message"
 	"gopoker/model/deal"
 )
 
@@ -23,8 +22,8 @@ func NewLogger(writer io.Writer) *Logger {
 	}
 }
 
-func (l *Logger) HandleEvent(event *exchange.Event) {
-	switch msg := event.Message.(type) {
+func (l *Logger) HandleEvent(msg *message.Message) {
+	switch msg.(type) {
 	case *message.RequireBet:
 	case *message.RequireDiscard:
 

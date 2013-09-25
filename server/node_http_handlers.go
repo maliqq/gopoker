@@ -11,10 +11,10 @@ import (
 )
 
 import (
-	"gopoker/calc"
 	"gopoker/model"
 	"gopoker/poker"
 	"gopoker/poker/hand"
+	"gopoker/poker/math"
 	"gopoker/server/node_response"
 )
 
@@ -97,7 +97,7 @@ func (nodeHTTP *NodeHTTP) CalculateOdds(resp http.ResponseWriter, req *http.Requ
 	b, _ := poker.ParseCards(q.Get("b"))
 
 	total := 10000
-	chances := calc.ChancesAgainstOne{SamplesNum: total}.Preflop(a, b)
+	chances := math.ChancesAgainstOne{SamplesNum: total}.Preflop(a, b)
 
 	result := &node_response.OddsResult{
 		A:     a,
@@ -121,7 +121,6 @@ func (nodeHTTP *NodeHTTP) RandomHand(resp http.ResponseWriter, req *http.Request
 	for i < 9 {
 		pocket := dealer.Deal(2)
 		cards := append(pocket, board...)
-		//log.Printf("dealer=%s", dealer.String())
 		hand, _ := poker.Detect[hand.High](&cards)
 		h[i].Pocket = pocket
 		h[i].Hand = hand
@@ -149,7 +148,7 @@ func (nodeHTTP *NodeHTTP) Play(resp http.ResponseWriter, req *http.Request) {
 	play, err := nodeHTTP.Node.PlayHistory.Find(id)
 
 	if err != nil {
-		log.Printf("[error] %s", err)
+		glog.Errorf("[error] %s", err)
 
 		nodeHTTP.RespondJSONError(resp, err)
 	} else {
@@ -165,7 +164,7 @@ func (nodeHTTP *NodeHTTP) Winners(resp http.ResponseWriter, req *http.Request) {
 	play, err := nodeHTTP.Node.PlayHistory.Find(id)
 
 	if err != nil {
-		log.Errorf("[error] %s", err)
+		glog.Errorf("[error] %s", err)
 
 		nodeHTTP.RespondJSONError(resp, err)
 	} else {
@@ -181,7 +180,7 @@ func (nodeHTTP *NodeHTTP) KnownCards(resp http.ResponseWriter, req *http.Request
 	play, err := nodeHTTP.Node.PlayHistory.Find(id)
 
 	if err != nil {
-		log.Errorf("[error] %s", err)
+		glog.Errorf("[error] %s", err)
 
 		nodeHTTP.RespondJSONError(resp, err)
 	} else {

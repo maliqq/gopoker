@@ -21,6 +21,8 @@ type Node struct {
 	Store        *storage.Store
 	PlayHistory  *storage.PlayHistory
 	SessionStore *storage.SessionStore
+	
+	NodeService
 }
 
 // NewNode - create new node

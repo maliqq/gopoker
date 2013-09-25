@@ -10,7 +10,7 @@ import (
 )
 
 import (
-	"gopoker/play"
+	"gopoker/engine/state"
 )
 
 // StatsWorker - collect node stats
@@ -52,13 +52,13 @@ func (w *NodeStatsWorker) count() {
 	for _, room := range w.Node.Rooms {
 		total++
 		switch room.State {
-		case play.Waiting:
+		case state.Waiting:
 			waiting++
-		case play.Paused:
+		case state.Paused:
 			paused++
-		case play.Active:
+		case state.Active:
 			active++
-		case play.Closed:
+		case state.Closed:
 			inactive++
 		}
 	}
