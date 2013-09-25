@@ -21,7 +21,7 @@ func (process *Stage) do(doFunc func()) {
 		return
 	}
 
-	log.Printf("[stage] start %s", process.Type)
+	log.Printf("[stage] start %s", process)
 
 	if process.Before != nil {
 		process.Before()
@@ -36,6 +36,6 @@ func (process *Stage) do(doFunc func()) {
 	}
 }
 
-func (process *Stage) String() string {
+func (process Stage) String() string {
 	return string(process.Type)
 }

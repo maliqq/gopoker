@@ -34,14 +34,10 @@ BettingRound:
 		go g.requireBetting(done)
 		
 		doExit, doBreak := <-done
-		
-		log.Printf("DONE STATUS: %t %t", doExit, doBreak)
-
 		if doExit {
 			log.Printf("[betting] none waiting")
 			exit <- true
 		}
-
 		if doBreak {
 			log.Printf("[betting] done")
 			break BettingRound
@@ -55,4 +51,6 @@ BettingRound:
 			g.Betting().AddBet(b)
 		}
 	}
+
+	g.completeBetting()
 }

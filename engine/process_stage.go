@@ -1,7 +1,12 @@
 package engine
 
+import (
+	"log"
+)
+
 type StageProcess interface {
 	Run() (bool, bool)
+	String() string
 }
 
 type StageDo struct {
@@ -58,9 +63,11 @@ func (stages StageStrategy) Run() bool {
 	for _, stage := range stages {
 		doExit, doSkip := stage.Run()
 		if doExit {
+			log.Printf("[stage] exit %s", stage.String())
 			return false
 		}
 		if doSkip {
+			log.Printf("[stage] skip %s", stage.String())
 			break
 		}
 	}

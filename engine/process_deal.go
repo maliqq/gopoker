@@ -96,7 +96,7 @@ func buildStages(g *Gameplay) StageStrategy {
 			},
 			Do: func(skip chan bool) {
 				for _, street := range buildStreets(g) {
-					log.Printf("[street] %s", street.Type)
+					log.Printf("[street] %s", street)
 					if !street.Run() {
 						skip <- true
 						return
