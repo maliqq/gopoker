@@ -19,16 +19,17 @@ func NewExchange() *Exchange {
 	}
 }
 
-func (exchange *Exchange) Subscribe(key string, recv event.Channel) {
-	exchange.endpoints[key] = NewSubscriber(recv)
-}
-
-func (exchange *Exchange) Receive(key string, recv *event.Service) {
-	exchange.endpoints[key] = NewReceiver(recv)
-}
-
-func (exchange *Exchange) Handle(key string, recv *event.Observer) {
-	exchange.endpoints[key] = NewHandler(recv)
+func (exchange *Exchange) Bind(key string, recv interface{}) {
+	switch recv.(type) {
+	case *event.Channel:
+		exchange.endpoints[key] = NewSubscriber(recv.(event.Channel))
+	
+	case *event.Service:
+		exchange.endpoints[key] = NewReceiver(recv.(*event.Service))
+	
+	case *event.Observer:
+		exchange.endpoints[key] = NewHandler(recv.(*event.Observer))
+	}
 }
 
 func (exchange *Exchange) Dispatch(route Route, message interface{}) {

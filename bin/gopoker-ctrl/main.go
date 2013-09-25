@@ -5,18 +5,14 @@ package main
 //
 import (
 	"flag"
-	"log"
 	"math/rand"
-	"net/rpc"
-	"net/rpc/jsonrpc"
 	"time"
 )
 
 import (
 	"gopoker/model"
 	"gopoker/model/game"
-	rpc_service "gopoker/server/noderpc"
-	_ "gopoker/util"
+	"gopoker/client/rpc_client"
 )
 
 var (
@@ -40,39 +36,18 @@ func main() {
 	flag.Parse()
 	rand.Seed(time.Now().UnixNano())
 
-	log.SetPrefix("[ctrl] ")
-
 	model.LoadGames(*configDir)
 
 	guid := model.Guid(*roomID)
 
-	client, err := jsonrpc.Dial("tcp", "localhost:8081")
-	if err != nil {
-		log.Fatal("dialing error: ", err)
-	}
+	client := rpc_client.NewConnection("localhost:8081")
 
-	args := &rpc_service.CreateRoom{
-		Guid:    guid,
-		BetSize: *betSize,
-	}
-
+	var variation model.Variation
 	if *mixedGame != "" {
-		args.Mix = model.NewMix(game.MixedGame(*mixedGame), *tableSize)
+		variation = model.NewMix(game.MixedGame(*mixedGame), *tableSize)
 	} else {
-		args.Game = model.NewGame(game.LimitedGame(*limitedGame), game.Limit(*limit), *tableSize)
+		variation = model.NewGame(game.LimitedGame(*limitedGame), game.Limit(*limit), *tableSize)
 	}
 
-	call(client, "NodeRPC.CreateRoom", args)
-	call(client, "NodeRPC.StartRoom", &rpc_service.StartRoom{
-		Guid: guid,
-	})
-}
-
-func call(client *rpc.Client, method string, args interface{}) {
-	var result rpc_service.CallResult
-
-	err := client.Call(method, args, &result)
-	if err != nil {
-		log.Fatal("call error: ", err)
-	}
+	client.CreateRoom(guid, *betSize, variation)
 }
