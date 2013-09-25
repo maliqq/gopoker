@@ -5,7 +5,6 @@ import (
 )
 
 import (
-	"gopoker/event"
 	_ "gopoker/util"
 )
 
@@ -19,17 +18,8 @@ func NewExchange() *Exchange {
 	}
 }
 
-func (exchange *Exchange) Bind(key string, recv interface{}) {
-	switch recv.(type) {
-	case *event.Channel:
-		exchange.endpoints[key] = NewSubscriber(recv.(event.Channel))
-	
-	case *event.Service:
-		exchange.endpoints[key] = NewReceiver(recv.(*event.Service))
-	
-	case *event.Observer:
-		exchange.endpoints[key] = NewHandler(recv.(*event.Observer))
-	}
+func (exchange *Exchange) Bind(key string, recv Endpoint) {
+	exchange.endpoints[key] = recv
 }
 
 func (exchange *Exchange) Dispatch(route Route, message interface{}) {
