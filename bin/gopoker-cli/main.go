@@ -18,6 +18,7 @@ import (
 	"gopoker/model/game"
 
 	"gopoker/engine"
+	"gopoker/console"
 )
 
 var (
@@ -53,7 +54,7 @@ func main() {
 
 	instance.Start()
 
-	session := Session{instance}
+	session := console.Play{instance}
 	session.Start(me)
 }
 
@@ -92,7 +93,7 @@ func joinInstance(instance *engine.Instance, me event.Channel) {
 		if i >= instance.Table.Size {
 			break
 		}
-		instance.Broker().Subscribe(player, me)
+		instance.Broker().Bind(player, me)
 		instance.JoinTable(&message.Join{model.Player(player), i, stack})
 	}
 }
