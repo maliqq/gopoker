@@ -1,6 +1,7 @@
 package model
 
 import (
+	"fmt"
 	"encoding/json"
 )
 
@@ -54,8 +55,7 @@ func NewGame(gameType game.Type, limit game.Limit, tableSize int) *Game {
 	limitedGame, success := gameType.(game.LimitedGame)
 
 	if !success {
-		log.Printf("got: %#v", gameType)
-		panic("can't create game")
+		glog.Fatalf("can't create game with: %#v", gameType)
 	}
 
 	options := gameOptions(limitedGame)

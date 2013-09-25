@@ -61,8 +61,7 @@ func NewMix(gameType game.Type, tableSize int) *Mix {
 func mixOptions(g game.MixedGame) []MixOptions {
 	options, success := Mixes[g]
 	if !success {
-		log.Printf("got: %#v\n", g)
-		panic("can't populate mix with options")
+		glog.Fatalf("can't populate mix options with: %#v\n", g)
 	}
 
 	return options
