@@ -16,8 +16,6 @@ type Notification struct {
 	Message   message.Message `json:message bson:message`
 }
 
-type Channel chan *Notification
-
 func New(msg message.Message) *Notification {
 	n := &Notification{
 		Type:      message.TypeFor(msg),

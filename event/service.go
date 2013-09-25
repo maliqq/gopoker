@@ -24,7 +24,7 @@ type ServiceResponse struct {
   Message *message.Message
 }
 
-func NewReceiver(recv interface{}) *Service {
+func NewService(recv interface{}) *Service {
   instanceType := reflect.TypeOf(recv)
   msgType := reflect.TypeOf((*message.Message)(nil)).Elem()
 
