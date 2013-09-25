@@ -8,30 +8,25 @@ import (
 	"github.com/golang/glog"
 )
 
-type State string
-
-const (
-	Waiting State = "waiting"
-	Active  State = "active"
-	Paused  State = "paused"
-	Closed  State = "closed"
+import (
+	"gopoker/engine/state"
 )
 
 type InstanceStateChange struct {
 	Timeout  int
-	NewState State
+	NewState state.Type
 }
 
 type Instance struct {
 	*Gameplay
 
-	State       State
+	State       state.Type
 	stateChange chan InstanceStateChange
 }
 
 func NewInstance(context *Context) *Instance {
 	instance := &Instance{
-		State:       Waiting,
+		State:       state.Waiting,
 		stateChange: make(chan InstanceStateChange),
 		Gameplay:    NewGameplay(context),
 	}
@@ -43,7 +38,7 @@ func NewInstance(context *Context) *Instance {
 
 func (instance *Instance) doStart() {
 	glog.Info("start...")
-	instance.State = Active
+	instance.State = state.Active
 
 	instance.DealProcess = NewDealProcess(instance.Gameplay)
 	instance.DealProcess.Run()
@@ -51,28 +46,28 @@ func (instance *Instance) doStart() {
 
 func (instance *Instance) doPause() {
 	glog.Info("pause...")
-	instance.State = Paused
+	instance.State = state.Paused
 }
 
 func (instance *Instance) doResume() {
 	glog.Info("resume...")
-	instance.State = Waiting
+	instance.State = state.Waiting
 }
 
 func (instance *Instance) doStop() {
 	glog.Info("stop...")
-	instance.State = Closed
+	instance.State = state.Closed
 }
 
 func (instance *Instance) processStateChange(event InstanceStateChange) bool {
 	// check for correct transition
 	switch instance.State {
-	case Paused, Closed:
-		if event.NewState != Waiting {
+	case state.Paused, state.Closed:
+		if event.NewState != state.Waiting {
 			return false
 		}
-	case Waiting:
-		if event.NewState != Active && event.NewState != Closed {
+	case state.Waiting:
+		if event.NewState != state.Active && event.NewState != state.Closed {
 			return false
 		}
 	}
@@ -96,9 +91,11 @@ RunLoop:
 			}
 
 			switch event.NewState {
-			case Active:
+			
+			case state.Active:
 				instance.doStart()
-			case Paused:
+			
+			case state.Paused:
 			PauseLoop:
 				for {
 					select {
@@ -108,7 +105,8 @@ RunLoop:
 						}
 					}
 				}
-			case Closed:
+			
+			case state.Closed:
 				break RunLoop
 			}
 		default:
