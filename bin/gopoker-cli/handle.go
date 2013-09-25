@@ -35,7 +35,7 @@ func (s *Session) Start(recv event.Channel) {
 		switch msg := n.Message.(type) {
 		case *message.RequireBet:
 
-			fmt.Printf("%s\n", msg)
+			fmt.Printf("%s\n", msg.Range)
 
 			var newBet *model.Bet
 

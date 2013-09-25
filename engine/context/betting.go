@@ -109,7 +109,7 @@ func (ctx *Betting) RequireBet(limit game.Limit, stake *model.Stake) *message.Re
 func (ctx *Betting) AddBet(newBet *model.Bet) error {
 	seat := ctx.Round.Current()
 
-	log.Printf("[betting] %s %s\n", seat, newBet.String())
+	log.Printf("[betting] %s %s\n", seat.Player, newBet.String())
 
 	err := newBet.Validate(seat, ctx.BetRange)
 

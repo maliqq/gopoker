@@ -8,6 +8,7 @@ import (
 	"gopoker/engine/context"
 	"gopoker/engine/stage"
 	"gopoker/event"
+	"gopoker/message"
 )
 
 type DealProcess struct {
@@ -46,8 +47,12 @@ DealingLoop:
 		case <-process.Exit:
 			break DealingLoop
 
-		case msg := <-process.Recv:
-			log.Printf("GOT: %#v", msg)
+		case notification := <-process.Recv:
+			log.Printf("GOT: %#v", notification)
+			switch msg := notification.Message.(type) {
+			case *message.AddBet:
+				process.g.BettingProcess.Recv <- msg.Bet
+			}
 		}
 	}
 }

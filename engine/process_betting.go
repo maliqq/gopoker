@@ -31,23 +31,27 @@ BettingRound:
 		done := make(chan bool)
 		timeout := time.After(100 * time.Second)
 
-		if !g.requireBetting(done) {
+		go g.requireBetting(done)
+		
+		doExit, doBreak := <-done
+		
+		log.Printf("DONE STATUS: %t %t", doExit, doBreak)
+
+		if doExit {
+			log.Printf("[betting] none waiting")
+			exit <- true
+		}
+
+		if doBreak {
 			log.Printf("[betting] done")
 			break BettingRound
 		}
 
 		select {
-		case <-done:
-			log.Printf("[betting] none waiting")
-			exit <- true
-			break BettingRound
-
 		case <-timeout:
 			log.Printf("[betting] timeout")
 			// process timeout
-
 		case b := <-g.BettingProcess.Recv:
-			log.Printf("[betting] got %s", b)
 			g.Betting().AddBet(b)
 		}
 	}

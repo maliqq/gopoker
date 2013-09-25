@@ -10,7 +10,17 @@ const (
 	DefaultTimer = 30
 )
 
-func (g *Gameplay) requireBetting(done chan bool) bool {
+/*
+Continue betting normally:
+	false, false <- exit
+
+Done betting round:
+	false, true <- exit
+
+Go to showdown:
+	true, false <- exit
+*/
+func (g *Gameplay) requireBetting(exit chan bool) {
 	ring := g.Table.Ring()
 
 	for _, box := range ring.InPlay() {
@@ -20,23 +30,24 @@ func (g *Gameplay) requireBetting(done chan bool) bool {
 	}
 
 	inPot := ring.InPot()
-
 	if len(inPot) < 2 {
-		done <- true //
+		exit <- true
+		return
 	}
 
 	active := ring.Playing()
 	if len(active) == 0 {
-		return false // we're done current round
+		exit <- false
+		return
 	}
+
+	defer close(exit)
 
 	g.b.NewRound(active)
 
 	g.e.Notify(
 		g.b.RequireBet(g.Game.Limit, g.Stake),
 	).One(g.b.Round.Current().Player)
-
-	return true
 }
 
 func (g *Gameplay) completeBetting() {

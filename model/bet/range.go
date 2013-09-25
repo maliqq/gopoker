@@ -1,5 +1,9 @@
 package bet
 
+import (
+	"fmt"
+)
+
 // Range - bet range, how much to call and how much to raise
 type Range struct {
 	Call float64
@@ -37,4 +41,8 @@ func (r *Range) SetAvailable(available float64) {
 	}
 
 	r.Min, r.Max = minRaise, maxRaise
+}
+
+func (r *Range) String() string {
+	return fmt.Sprintf("Call=%.2f Raise min=%.2f max=%.2f", r.Call, r.Min, r.Max)
 }
