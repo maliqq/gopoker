@@ -23,8 +23,12 @@ func (exchange *Exchange) Subscribe(key string, recv event.Channel) {
 	exchange.endpoints[key] = NewSubscriber(recv)
 }
 
-func (exchange *Exchange) Handle(key string, recv *event.Service) {
+func (exchange *Exchange) Receive(key string, recv *event.Service) {
 	exchange.endpoints[key] = NewReceiver(recv)
+}
+
+func (exchange *Exchange) Handle(key string, recv *event.Observer) {
+	exchange.endpoints[key] = NewHandler(recv)
 }
 
 func (exchange *Exchange) Dispatch(route Route, message interface{}) {
