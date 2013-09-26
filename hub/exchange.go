@@ -8,6 +8,10 @@ import (
 	_ "gopoker/util"
 )
 
+type Endpoint interface {
+	Send(interface{})
+}
+
 type Exchange struct {
 	endpoints map[string]Endpoint
 }

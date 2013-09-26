@@ -13,14 +13,22 @@ type ZmqSocket struct {
   *zmq.Socket
 }
 
-func (s *ZmqSocket) Send(n *Notification) {
-  go s.Socket.Send(codec.JSON.Dump(n), 0)
+func (s *ZmqSocket) Send(message interface{}) {
+	n, ok := message.(*Notification)
+	if !ok {
+		return
+	}
+  	go s.Socket.Send(codec.JSON.Dump(n), 0)
 }
 
 type Websocket struct {
   *websocket.Conn
 }
 
-func (ws *Websocket) Send(n *Notification) {
-  ws.Conn.Write(codec.JSON.Dump(n))
+func (ws *Websocket) Send(message interface{}) {
+	n, ok := message.(*Notification)
+	if !ok {
+		return
+	}
+	ws.Conn.Write(codec.JSON.Dump(n))
 }
