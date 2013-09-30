@@ -58,9 +58,14 @@ func (observer *Observer) handlerFor(msgType string) (reflect.Method, bool) {
   return handler, ok
 }
 
-func (observer *Observer) Send(n *Notification) {
-  method, ok := observer.handlerFor(n.Type)
+func (observer *Observer) Send(message interface{}) {
+  n, ok := message.(*Notification)
   if !ok {
+    return
+  }
+
+  method, found := observer.handlerFor(n.Type)
+  if !found {
     return
   }
 

@@ -58,10 +58,14 @@ func NewService(recv interface{}) *Service {
   }
 }
 
-func (service *Service) Send(req *ServiceRequest) {
-  method, ok := service.instanceMethods[req.Method]
-  
+func (service *Service) Send(message interface{}) {
+  req, ok := message.(*ServiceRequest)
   if !ok {
+    return
+  }
+
+  method, found := service.instanceMethods[req.Method]
+  if !found {
     return
   }
   
