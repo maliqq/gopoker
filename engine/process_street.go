@@ -174,16 +174,15 @@ func buildStreets(g *Gameplay) StreetStrategy {
 				StageStrategy{
 					dealing(deal.Hole, 5),
 					betting,
-					discarding,
 				},
 			},
 
 			Street{
 				street.Draw,
 				StageStrategy{
+					discarding,
 					bigBets,
 					betting,
-					discarding,
 				},
 			},
 		}
@@ -191,28 +190,36 @@ func buildStreets(g *Gameplay) StreetStrategy {
 	case game.TripleDraw:
 
 		return StreetStrategy{
+			Street{
+				street.FirstDraw,
+				StageStrategy{
+					dealing(deal.Hole, 0),
+					betting,
+				},
+			},
 
 			Street{
 				street.FirstDraw,
 				StageStrategy{
-					betting,
 					discarding,
+					betting,
 				},
 			},
 
 			Street{
 				street.SecondDraw,
 				StageStrategy{
-					betting,
 					discarding,
+					bigBets,
+					betting,
 				},
 			},
 
 			Street{
 				street.ThirdDraw,
 				StageStrategy{
-					betting,
 					discarding,
+					betting,
 				},
 			},
 		}
